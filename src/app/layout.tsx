@@ -1,3 +1,8 @@
+// TODO: Add analytics after `npm install @vercel/analytics @vercel/speed-insights`
+// import { Analytics } from "@vercel/analytics/next";
+// import { SpeedInsights } from "@vercel/speed-insights/next";
+// Then add <Analytics /> and <SpeedInsights /> inside <body>
+
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 

@@ -41,7 +41,7 @@ export function CurrencyBreakdown() {
 
               {/* Middle: amount */}
               <p className="font-mono text-lg font-bold tracking-tight text-white leading-none tabular-nums">
-                {formatCompact(balance.available)}
+                {formatCompact(balance.available, balance.symbol)}
               </p>
 
               {/* Bottom: thin progress bar */}

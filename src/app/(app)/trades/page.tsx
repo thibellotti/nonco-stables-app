@@ -1,11 +1,19 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { PageTransition } from "@/components/ui/page-transition";
 import { SectionLabel } from "@/components/ui/section-label";
 import { recentTrades } from "@/lib/mock-data";
 import type { RecentTrade } from "@/lib/mock-data";
 import { formatMoney, timeAgo } from "@/lib/utils";
+
+// ---------------------------------------------------------------------------
+// Filter types
+// ---------------------------------------------------------------------------
+
+type SideFilter = "all" | "buy" | "sell";
+type SettlementFilter = "all" | "Spot" | "T+1" | "T+2";
 
 // Extend with additional trades for a fuller display
 const extraTrades: RecentTrade[] = [
@@ -70,6 +78,15 @@ function formatCompactVolume(value: number) {
 }
 
 export default function TradesPage() {
+  const [sideFilter, setSideFilter] = useState<SideFilter>("all");
+  const [settlementFilter, setSettlementFilter] = useState<SettlementFilter>("all");
+
+  const filteredTrades = allTrades.filter((trade) => {
+    if (sideFilter !== "all" && trade.side !== sideFilter) return false;
+    if (settlementFilter !== "all" && trade.settlement !== settlementFilter) return false;
+    return true;
+  });
+
   return (
     <PageTransition className="px-6 md:px-8 w-full space-y-8">
       {/* Hero Header */}
@@ -169,6 +186,55 @@ export default function TradesPage() {
         </motion.div>
       </div>
 
+      {/* Filter Bar */}
+      <div className="flex flex-wrap items-center gap-4">
+        {/* Side filter */}
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-mono uppercase tracking-[.15em] text-[var(--text-4)]">
+            Side
+          </span>
+          <div className="flex gap-1">
+            {(["all", "buy", "sell"] as const).map((value) => (
+              <button
+                key={value}
+                type="button"
+                onClick={() => setSideFilter(value)}
+                className={`font-mono text-[10px] uppercase tracking-[.08em] px-3 py-1 rounded-full transition-colors cursor-pointer ${
+                  sideFilter === value
+                    ? "bg-[var(--cyan-dim)] text-[var(--cyan)] border border-[rgba(5,224,248,0.2)]"
+                    : "text-[var(--text-4)] hover:text-[var(--text-3)]"
+                }`}
+              >
+                {value === "all" ? "All" : value === "buy" ? "Buy" : "Sell"}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Settlement filter */}
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-mono uppercase tracking-[.15em] text-[var(--text-4)]">
+            Settlement
+          </span>
+          <div className="flex gap-1">
+            {(["all", "Spot", "T+1", "T+2"] as const).map((value) => (
+              <button
+                key={value}
+                type="button"
+                onClick={() => setSettlementFilter(value)}
+                className={`font-mono text-[10px] uppercase tracking-[.08em] px-3 py-1 rounded-full transition-colors cursor-pointer ${
+                  settlementFilter === value
+                    ? "bg-[var(--cyan-dim)] text-[var(--cyan)] border border-[rgba(5,224,248,0.2)]"
+                    : "text-[var(--text-4)] hover:text-[var(--text-3)]"
+                }`}
+              >
+                {value === "all" ? "All" : value}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Trade History Table */}
       <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden">
         {/* Table Header Bar */}
@@ -195,7 +261,7 @@ export default function TradesPage() {
             </tr>
           </thead>
           <tbody>
-            {allTrades.map((trade, i) => (
+            {filteredTrades.map((trade, i) => (
               <motion.tr
                 key={trade.id}
                 initial={{ opacity: 0 }}
@@ -263,7 +329,10 @@ export default function TradesPage() {
         </table>
 
         {/* Footer */}
-        <div className="flex items-center justify-center px-6 py-4 border-t border-[var(--border)]">
+        <div className="flex items-center justify-between px-6 py-4 border-t border-[var(--border)]">
+          <span className="font-mono text-[10px] text-[var(--text-4)] tracking-[.08em]">
+            Showing {filteredTrades.length} of {allTrades.length} trades
+          </span>
           <button className="flex items-center gap-2 px-6 py-3 rounded-full border border-[var(--border)] text-[var(--text-3)] hover:text-white hover:border-[var(--border-outline)] transition-colors duration-200 cursor-pointer">
             <span className="font-mono text-[10px] font-bold uppercase tracking-[.15em]">View All Transactions</span>
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

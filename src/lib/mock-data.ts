@@ -426,3 +426,18 @@ export const recentTrades: RecentTrade[] = [
     timestamp: new Date(Date.now() - days(5) - hours(3)),
   },
 ];
+
+// ---------------------------------------------------------------------------
+// USD Exchange Rates
+// ---------------------------------------------------------------------------
+
+// Approximate USD exchange rates for portfolio valuation
+export const usdRates: Record<string, number> = {
+  USD: 1,
+  EUR: 1.08,
+  MXN: 0.058,
+  USDT: 1,
+  USDC: 1,
+  GBP: 1.27,
+  BRL: 0.195,
+};

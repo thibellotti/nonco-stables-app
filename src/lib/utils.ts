@@ -21,10 +21,10 @@ export function formatMoney(value: number) {
   }).format(value);
 }
 
-export function formatCompact(value: number) {
-  if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(1)}M`;
-  if (value >= 1_000) return `$${(value / 1_000).toFixed(0)}K`;
-  return `$${value}`;
+export function formatCompact(value: number, prefix = "$"): string {
+  if (value >= 1_000_000) return `${prefix}${(value / 1_000_000).toFixed(1)}M`;
+  if (value >= 1_000) return `${prefix}${(value / 1_000).toFixed(0)}K`;
+  return `${prefix}${value.toFixed(0)}`;
 }
 
 export function timeAgo(date: Date): string {

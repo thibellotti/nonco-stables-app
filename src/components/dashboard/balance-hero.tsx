@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { SectionLabel } from "@/components/ui/section-label";
 import { balances } from "@/lib/mock-data";
 import { formatMoney } from "@/lib/utils";
@@ -67,17 +70,16 @@ const areaPath = `${linePath} L${CHART_W},${CHART_H} L0,${CHART_H} Z`;
 // Period pills data
 // ---------------------------------------------------------------------------
 
-const periods = [
-  { label: "7D", active: false },
-  { label: "30D", active: true },
-  { label: "90D", active: false },
-];
+type Period = "7D" | "30D" | "90D";
+const periodOptions: Period[] = ["7D", "30D", "90D"];
 
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
 
 export function BalanceHero() {
+  const [activePeriod, setActivePeriod] = useState<Period>("30D");
+
   return (
     <section
       className="relative"
@@ -92,18 +94,19 @@ export function BalanceHero() {
 
         {/* Period selector */}
         <div className="flex gap-1.5">
-          {periods.map((p) => (
+          {periodOptions.map((p) => (
             <button
-              key={p.label}
+              key={p}
               type="button"
-              aria-pressed={p.active}
+              aria-pressed={activePeriod === p}
+              onClick={() => setActivePeriod(p)}
               className={
-                p.active
+                activePeriod === p
                   ? "font-mono text-[10px] uppercase tracking-[.1em] px-3 py-1 rounded-full bg-[var(--cyan-dim)] text-[var(--cyan)] border border-[rgba(5,224,248,0.2)] cursor-default"
                   : "font-mono text-[10px] uppercase tracking-[.1em] px-3 py-1 rounded-full bg-[rgba(255,255,255,0.03)] text-[var(--text-4)] cursor-pointer hover:bg-[rgba(255,255,255,0.06)] transition-colors"
               }
             >
-              {p.label}
+              {p}
             </button>
           ))}
         </div>
