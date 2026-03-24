@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { PageTransition } from "@/components/ui/page-transition";
 import { SectionLabel } from "@/components/ui/section-label";
 import { Button } from "@/components/ui/button";
 import { balances } from "@/lib/mock-data";
@@ -74,7 +74,7 @@ function BalanceCard({ balance }: { balance: (typeof balances)[number] }) {
   const topColor = colors?.border ?? "var(--cyan)";
 
   return (
-    <div className="bg-[#141414] border border-[#333] rounded-lg overflow-hidden group relative">
+    <div className="bg-[var(--bg-card)] border border-[var(--border-outline)] rounded-lg overflow-hidden group relative">
       {/* Hover color overlay */}
       <div
         className="absolute inset-0 opacity-0 group-hover:opacity-[0.04] transition-opacity duration-300 pointer-events-none"
@@ -97,10 +97,10 @@ function BalanceCard({ balance }: { balance: (typeof balances)[number] }) {
               <p className="text-lg font-bold text-white tracking-tight">
                 {meta.name}
               </p>
-              <p className="text-xs text-[#737373] mt-0.5">{balance.currency}</p>
+              <p className="text-xs text-[var(--text-3)] mt-0.5">{balance.currency}</p>
             </div>
           </div>
-          <span className="text-[10px] text-[#737373] font-mono">
+          <span className="text-[10px] text-[var(--text-3)] font-mono">
             {meta.address}
           </span>
         </div>
@@ -110,7 +110,7 @@ function BalanceCard({ balance }: { balance: (typeof balances)[number] }) {
           <p className="text-3xl font-mono font-bold text-white tabular-nums tracking-tight">
             {balance.symbol}{formatMoney(balance.available)}
           </p>
-          <p className="text-sm text-[#525252] font-mono mt-1 tabular-nums">
+          <p className="text-sm text-[var(--text-4)] font-mono mt-1 tabular-nums">
             ~${formatMoney(balance.available + balance.pending)} USD
           </p>
         </div>
@@ -122,34 +122,15 @@ function BalanceCard({ balance }: { balance: (typeof balances)[number] }) {
           </p>
         )}
 
-        {/* Actions */}
-        <div className="flex gap-3 pt-2 border-t border-[rgba(255,255,255,0.05)]">
+        {/* Actions — CSS-only hover, no JS event handlers */}
+        <div className="flex gap-3 pt-2 border-t border-[var(--border-subtle)]">
           <button
-            className="flex-1 py-2 text-xs font-bold uppercase tracking-wider bg-[rgba(255,255,255,0.05)] rounded text-[#737373] transition-colors duration-200 cursor-pointer"
-            style={{
-              // Use CSS custom properties for hover
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = `${topColor}15`;
-              e.currentTarget.style.color = topColor;
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.05)";
-              e.currentTarget.style.color = "#737373";
-            }}
+            className="flex-1 py-2.5 text-xs font-bold uppercase tracking-widest bg-[rgba(255,255,255,0.05)] rounded text-[var(--text-3)] transition-all duration-200 cursor-pointer hover:bg-[var(--cyan-dim)] hover:text-[var(--cyan)]"
           >
             Receive
           </button>
           <button
-            className="flex-1 py-2 text-xs font-bold uppercase tracking-wider bg-[rgba(255,255,255,0.05)] rounded text-[#737373] transition-colors duration-200 cursor-pointer"
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = `${topColor}15`;
-              e.currentTarget.style.color = topColor;
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.05)";
-              e.currentTarget.style.color = "#737373";
-            }}
+            className="flex-1 py-2.5 text-xs font-bold uppercase tracking-widest bg-[rgba(255,255,255,0.05)] rounded text-[var(--text-3)] transition-all duration-200 cursor-pointer hover:bg-[rgba(255,255,255,0.08)] hover:text-white"
           >
             Send
           </button>
@@ -170,12 +151,7 @@ export default function WalletPage() {
   );
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      className="px-6 md:px-8 w-full space-y-8"
-    >
+    <PageTransition className="px-6 md:px-8 w-full space-y-8">
       {/* Hero */}
       <div className="space-y-4">
         <SectionLabel>Wallet</SectionLabel>
@@ -184,7 +160,7 @@ export default function WalletPage() {
           ${formatMoney(totalValue)}
         </p>
 
-        <p className="text-sm text-[#737373]">
+        <p className="text-sm text-[var(--text-3)]">
           Managing assets across <span className="text-white font-bold">{balances.length} currencies</span>
         </p>
 
@@ -205,33 +181,37 @@ export default function WalletPage() {
         ))}
 
         {/* Request New Currency */}
-        <div className="border-2 border-dashed border-[#333] rounded-lg flex flex-col items-center justify-center p-8 hover:border-[var(--cyan)] hover:bg-[rgba(5,224,248,0.05)] cursor-pointer group transition-all duration-300">
+        <button
+          aria-label="Request new currency"
+          className="border-2 border-dashed border-[var(--border-outline)] rounded-lg flex flex-col items-center justify-center p-8 hover:border-[var(--cyan)] hover:bg-[var(--cyan-wash)] cursor-pointer group transition-all duration-300"
+        >
           <svg
-            className="w-10 h-10 text-[#333] group-hover:text-[var(--cyan)] transition-colors duration-300"
+            className="w-10 h-10 text-[var(--border-outline)] group-hover:text-[var(--cyan)] transition-colors duration-300"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
             strokeWidth={1.5}
+            aria-hidden="true"
           >
             <circle cx="12" cy="12" r="10" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v8M8 12h8" />
           </svg>
-          <p className="mt-3 text-sm font-medium text-[#333] group-hover:text-[var(--cyan)] transition-colors duration-300">
+          <p className="mt-3 text-sm font-medium text-[var(--border-outline)] group-hover:text-[var(--cyan)] transition-colors duration-300">
             Request New Currency
           </p>
-          <p className="mt-1 text-[10px] text-[#333] font-mono">
+          <p className="mt-1 text-[10px] text-[var(--border-outline)] font-mono">
             Add a new asset to your wallet
           </p>
-        </div>
+        </button>
       </div>
 
       {/* Recent Settlements */}
       <div>
         <SectionLabel>Recent Settlements</SectionLabel>
-        <div className="bg-[#141414] border border-[#333] rounded-lg overflow-hidden mt-4">
+        <div className="bg-[var(--bg-card)] border border-[var(--border-outline)] rounded-lg overflow-hidden mt-4">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-[rgba(255,255,255,0.05)]">
+              <tr className="border-b border-[var(--border-subtle)]">
                 <th className="px-8 py-5 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
                   Currency
                 </th>
@@ -253,7 +233,7 @@ export default function WalletPage() {
               {recentSettlements.map((s, i) => {
                 const colors = currencyColors[s.currency];
                 return (
-                  <tr key={s.id} className={`border-b border-[rgba(255,255,255,0.03)] hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-150 ${i % 2 === 1 ? "bg-[rgba(255,255,255,0.02)]" : ""}`}>
+                  <tr key={s.id} className={`border-b border-[var(--border-subtle)] hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-150 ${i % 2 === 1 ? "bg-[rgba(255,255,255,0.02)]" : ""}`}>
                     <td className="px-8 py-6">
                       <div className="flex items-center gap-2">
                         <CurrencyIcon currency={s.currency} size={28} />
@@ -261,7 +241,7 @@ export default function WalletPage() {
                       </div>
                     </td>
                     <td className="px-8 py-6 hidden sm:table-cell">
-                      <span className="text-xs text-[#737373]">{s.counterparty}</span>
+                      <span className="text-xs text-[var(--text-3)]">{s.counterparty}</span>
                     </td>
                     <td className="px-8 py-6 text-right">
                       <span className="font-mono text-sm font-bold text-white tabular-nums">
@@ -274,7 +254,7 @@ export default function WalletPage() {
                       </span>
                     </td>
                     <td className="px-8 py-6 text-right">
-                      <span className="text-[10px] text-[#525252] font-mono tabular-nums">
+                      <span className="text-[10px] text-[var(--text-4)] font-mono tabular-nums">
                         {timeAgo(s.timestamp)}
                       </span>
                     </td>
@@ -285,6 +265,6 @@ export default function WalletPage() {
           </table>
         </div>
       </div>
-    </motion.div>
+    </PageTransition>
   );
 }

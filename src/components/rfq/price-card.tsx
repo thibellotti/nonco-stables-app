@@ -85,7 +85,7 @@ const SETTLEMENTS: { key: Settlement; label: string }[] = [
 
 function SettlementTabs({ active, onChange }: { active: Settlement; onChange: (s: Settlement) => void }) {
   return (
-    <div className="flex gap-1 p-1 bg-[#242424] rounded-lg w-fit">
+    <div className="flex gap-1 p-1 bg-[var(--bg-highest)] rounded-lg w-fit">
       {SETTLEMENTS.map(({ key, label }) => (
         <button
           key={key}
@@ -142,20 +142,20 @@ function spread(bid: number, ask: number): string {
 
 function PriceSkeleton() {
   return (
-    <div className="bg-[#141414] border border-[#333] rounded-lg p-8">
+    <div className="bg-[var(--bg-card)] border border-[var(--border-outline)] rounded-lg p-8">
       <div className="animate-pulse space-y-5">
         <div className="flex items-center justify-between">
-          <div className="h-5 w-28 bg-[#242424] rounded" />
-          <div className="h-9 w-9 bg-[#242424] rounded-full" />
+          <div className="h-5 w-28 bg-[var(--bg-highest)] rounded" />
+          <div className="h-9 w-9 bg-[var(--bg-highest)] rounded-full" />
         </div>
-        <div className="h-8 w-40 bg-[#242424] rounded" />
+        <div className="h-8 w-40 bg-[var(--bg-highest)] rounded" />
         <div className="grid grid-cols-2 gap-4">
-          <div className="h-32 bg-[#242424] rounded-xl" />
-          <div className="h-32 bg-[#242424] rounded-xl" />
+          <div className="h-32 bg-[var(--bg-highest)] rounded-xl" />
+          <div className="h-32 bg-[var(--bg-highest)] rounded-xl" />
         </div>
         <div className="flex justify-between">
-          <div className="h-3 w-32 bg-[#242424] rounded" />
-          <div className="h-3 w-20 bg-[#242424] rounded" />
+          <div className="h-3 w-32 bg-[var(--bg-highest)] rounded" />
+          <div className="h-3 w-20 bg-[var(--bg-highest)] rounded" />
         </div>
       </div>
     </div>
@@ -173,15 +173,15 @@ function TradeFlash({ side, onDone }: { side: "buy" | "sell"; onDone: () => void
   }, [onDone]);
 
   return (
-    <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-[#141414]/95 backdrop-blur-sm">
+    <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-[var(--bg-card)]/95 backdrop-blur-sm">
       <div className="text-center space-y-2">
-        <div className="w-12 h-12 mx-auto rounded-full bg-[rgba(199,255,16,0.1)] flex items-center justify-center">
+        <div className="w-12 h-12 mx-auto rounded-full bg-[var(--green-dim)] flex items-center justify-center">
           <svg className="w-6 h-6 text-[var(--green)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
           </svg>
         </div>
         <p className="text-sm font-semibold text-white">Trade Executed!</p>
-        <p className="text-xs text-[#737373]">
+        <p className="text-xs text-[var(--text-3)]">
           {side === "buy" ? "Buy" : "Sell"} order confirmed
         </p>
       </div>
@@ -221,8 +221,8 @@ export function PriceCard({ quote, isLoading, onRefresh, onTrade }: PriceCardPro
   // ---------- Empty state ----------
   if (!quote && !isLoading) {
     return (
-      <div className="bg-[#141414] border border-[#333] rounded-lg p-8 flex items-center justify-center min-h-[200px]">
-        <p className="text-sm text-[#737373] text-center">
+      <div className="bg-[var(--bg-card)] border border-[var(--border-outline)] rounded-lg p-8 flex items-center justify-center min-h-[200px]">
+        <p className="text-sm text-[var(--text-3)] text-center">
           Request a quote to see pricing
         </p>
       </div>
@@ -250,13 +250,13 @@ export function PriceCard({ quote, isLoading, onRefresh, onTrade }: PriceCardPro
       className={cn(
         "relative overflow-hidden rounded-lg transition-all duration-300",
         expired
-          ? "bg-[#141414] border border-[#333]"
-          : "bg-[#141414] border border-[rgba(5,224,248,0.3)] shadow-[0_0_40px_rgba(5,224,248,0.06)]"
+          ? "bg-[var(--bg-card)] border border-[var(--border-outline)]"
+          : "bg-[var(--bg-card)] border border-[rgba(5,224,248,0.3)] shadow-[0_0_40px_rgba(5,224,248,0.06)]"
       )}
     >
       {/* Glow effect */}
       {!expired && !flash && (
-        <div className="absolute -right-20 -top-20 w-64 h-64 bg-[rgba(5,224,248,0.05)] rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute -right-20 -top-20 w-64 h-64 bg-[var(--cyan-wash)] rounded-full blur-[100px] pointer-events-none" />
       )}
 
       {/* Trade flash overlay */}
@@ -266,7 +266,7 @@ export function PriceCard({ quote, isLoading, onRefresh, onTrade }: PriceCardPro
       {expired && !flash && (
         <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-black/80 backdrop-blur-sm">
           <div className="text-center space-y-3">
-            <p className="text-sm font-medium text-[#737373]">Price expired</p>
+            <p className="text-sm font-medium text-[var(--text-3)]">Price expired</p>
             <Button variant="cyan" size="sm" onClick={onRefresh}>
               Refresh Quote
             </Button>
@@ -281,13 +281,13 @@ export function PriceCard({ quote, isLoading, onRefresh, onTrade }: PriceCardPro
             {/* Overlapping currency circles */}
             <div className="flex -space-x-2">
               <div
-                className="w-8 h-8 rounded-full border-2 border-[#141414] flex items-center justify-center text-[10px] font-mono font-bold"
+                className="w-8 h-8 rounded-full border-2 border-[var(--bg-card)] flex items-center justify-center text-[10px] font-mono font-bold"
                 style={{ backgroundColor: `${baseColor}20`, color: baseColor }}
               >
                 {base.slice(0, 2)}
               </div>
               <div
-                className="w-8 h-8 rounded-full border-2 border-[#141414] flex items-center justify-center text-[10px] font-mono font-bold"
+                className="w-8 h-8 rounded-full border-2 border-[var(--bg-card)] flex items-center justify-center text-[10px] font-mono font-bold"
                 style={{ backgroundColor: `${quoteColor}20`, color: quoteColor }}
               >
                 {quoteCcy.slice(0, 2)}
@@ -298,7 +298,7 @@ export function PriceCard({ quote, isLoading, onRefresh, onTrade }: PriceCardPro
                 {base}/{quoteCcy}
               </p>
               <p className="text-[10px] text-[var(--text-3)] font-mono uppercase mt-0.5">
-                Order #{Date.now().toString(36).toUpperCase().slice(-8)}
+                Order #NC-8849-RFQ
               </p>
             </div>
           </div>
@@ -318,7 +318,7 @@ export function PriceCard({ quote, isLoading, onRefresh, onTrade }: PriceCardPro
         {/* Buy / Sell columns */}
         <div className="grid grid-cols-2 gap-4">
           {/* BUY */}
-          <div className="bg-[#0a0a0a] rounded-xl border border-[rgba(255,255,255,0.05)] p-6 flex flex-col items-center gap-4">
+          <div className="bg-[var(--bg-card)] rounded-xl border border-[var(--border-subtle)] p-6 flex flex-col items-center gap-4">
             <span className="text-[10px] font-mono uppercase tracking-[.1em] text-[var(--cyan)] font-bold">
               Buy
             </span>
@@ -335,8 +335,8 @@ export function PriceCard({ quote, isLoading, onRefresh, onTrade }: PriceCardPro
           </div>
 
           {/* SELL */}
-          <div className="bg-[#0a0a0a] rounded-xl border border-[rgba(255,255,255,0.05)] p-6 flex flex-col items-center gap-4">
-            <span className="text-[10px] font-mono uppercase tracking-[.1em] text-[#e1b6ff] font-bold">
+          <div className="bg-[var(--bg-card)] rounded-xl border border-[var(--border-subtle)] p-6 flex flex-col items-center gap-4">
+            <span className="text-[10px] font-mono uppercase tracking-[.1em] text-[var(--purple)] font-bold">
               Sell
             </span>
             <span className="font-mono text-4xl sm:text-5xl font-bold text-white tabular-nums tracking-tight">
@@ -345,7 +345,7 @@ export function PriceCard({ quote, isLoading, onRefresh, onTrade }: PriceCardPro
             <button
               onClick={() => handleTrade("sell", bid)}
               disabled={expired}
-              className="w-full border border-[#e1b6ff] text-[#e1b6ff] rounded-full py-3 font-bold font-mono text-sm uppercase tracking-wider hover:bg-[rgba(225,182,255,0.1)] active:scale-95 transition-all duration-200 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full border border-[var(--purple)] text-[var(--purple)] rounded-full py-3 font-bold font-mono text-sm uppercase tracking-wider hover:bg-[var(--purple-dim)] active:scale-95 transition-all duration-200 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
             >
               Sell {base}
             </button>
@@ -353,11 +353,11 @@ export function PriceCard({ quote, isLoading, onRefresh, onTrade }: PriceCardPro
         </div>
 
         {/* Footer: balance + spread */}
-        <div className="flex items-center justify-between pt-4 border-t border-[rgba(255,255,255,0.05)]">
-          <span className="text-[11px] font-mono text-[#525252]">
+        <div className="flex items-center justify-between pt-4 border-t border-[var(--border-subtle)]">
+          <span className="text-[11px] font-mono text-[var(--text-4)]">
             Balance: ${formatMoney(balances.reduce((sum, b) => sum + b.available + b.pending, 0))}
           </span>
-          <span className="text-[11px] font-mono text-[#525252]">
+          <span className="text-[11px] font-mono text-[var(--text-4)]">
             Spread: {spread(bid, ask)}
           </span>
         </div>

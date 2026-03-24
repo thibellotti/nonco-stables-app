@@ -23,9 +23,9 @@ export function CategoryTabs({ active, onChange }: CategoryTabsProps) {
           key={tab.key}
           onClick={() => onChange(tab.key)}
           className={cn(
-            "shrink-0 rounded-full px-4 py-1.5 text-xs font-medium transition-colors duration-150 cursor-pointer",
+            "shrink-0 rounded-full px-4 py-1.5 font-sans text-xs font-medium transition-colors duration-150 cursor-pointer",
             active === tab.key
-              ? "bg-[var(--cyan-dim)] text-[var(--cyan)]"
+              ? "bg-[var(--cyan-dim)] text-[var(--cyan)] border border-[rgba(5,224,248,0.2)]"
               : "text-[var(--text-4)] hover:text-[var(--text-3)]"
           )}
         >

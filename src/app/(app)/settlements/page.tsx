@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { PageTransition } from "@/components/ui/page-transition";
 import { transactions } from "@/lib/mock-data";
 import { formatMoney, timeAgo } from "@/lib/utils";
 
@@ -50,12 +51,7 @@ export default function SettlementsPage() {
   const [activeTab, setActiveTab] = useState<Tab>("pending");
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      className="px-6 md:px-8 w-full space-y-8"
-    >
+    <PageTransition className="px-6 md:px-8 w-full space-y-8">
       {/* Header */}
       <div className="space-y-3">
         <div className="flex items-center gap-3">
@@ -81,7 +77,7 @@ export default function SettlementsPage() {
         >
           <span className="flex items-center gap-2">
             Pending
-            <span className="bg-[var(--amber)] text-black text-[10px] font-bold font-mono px-1.5 py-0.5 rounded-sm">
+            <span className="bg-[var(--amber-dim)] text-[var(--amber)] text-[10px] font-bold font-mono px-1.5 py-0.5 rounded-sm">
               {pendingSettlements.length}
             </span>
           </span>
@@ -116,7 +112,7 @@ export default function SettlementsPage() {
               {s.status === "processing" ? (
                 /* Processing card — animated conic-gradient border */
                 <div className="processing-border rounded-lg">
-                  <div className="bg-[#141414] rounded-[7px] p-6 flex flex-col justify-between h-64">
+                  <div className="bg-[var(--bg-card)] rounded-[7px] p-6 flex flex-col justify-between min-h-64">
                     {/* Top: pair + status */}
                     <div className="space-y-3">
                       <div className="flex items-start justify-between">
@@ -137,7 +133,7 @@ export default function SettlementsPage() {
 
                       {/* Amount */}
                       <div className="flex items-baseline gap-1.5">
-                        <span className="text-3xl font-bold font-mono text-white" style={{ fontVariantNumeric: "tabular-nums" }}>
+                        <span className="text-3xl font-bold font-mono text-white tabular-nums">
                           {formatMoney(s.amount)}
                         </span>
                         <span className="text-sm font-mono font-bold text-[var(--cyan)]">
@@ -172,7 +168,7 @@ export default function SettlementsPage() {
                 </div>
               ) : (
                 /* Awaiting cards */
-                <div className="bg-[#141414] rounded-lg border border-transparent hover:border-[rgba(255,255,255,0.05)] transition-colors duration-200 p-6 flex flex-col justify-between h-64">
+                <div className="bg-[var(--bg-card)] rounded-lg border border-transparent hover:border-[rgba(255,255,255,0.05)] transition-colors duration-200 p-6 flex flex-col justify-between min-h-64">
                   {/* Top: pair + status */}
                   <div className="space-y-3">
                     <div className="flex items-start justify-between">
@@ -192,7 +188,7 @@ export default function SettlementsPage() {
 
                     {/* Amount */}
                     <div className="flex items-baseline gap-1.5">
-                      <span className="text-3xl font-bold font-mono text-white" style={{ fontVariantNumeric: "tabular-nums" }}>
+                      <span className="text-3xl font-bold font-mono text-white tabular-nums">
                         {formatMoney(s.amount)}
                       </span>
                       <span className="text-sm font-mono font-bold text-[var(--cyan)]">
@@ -246,13 +242,16 @@ export default function SettlementsPage() {
                 Settlement History
               </span>
             </div>
-            <button className="font-mono text-[10px] font-bold uppercase tracking-[.15em] text-[var(--text-3)] hover:text-white transition-colors duration-200 cursor-pointer">
-              Export CSV
+            <button className="flex items-center gap-2 px-4 py-2 rounded-full border border-[rgba(255,255,255,0.1)] text-[var(--text-3)] hover:text-white hover:border-[rgba(255,255,255,0.2)] transition-colors duration-200 cursor-pointer">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M6 1v7M6 8L3.5 5.5M6 8l2.5-2.5M1 10h10" />
+              </svg>
+              <span className="font-mono text-[10px] font-medium uppercase tracking-[.1em]">Export CSV</span>
             </button>
           </div>
 
           {/* Table */}
-          <div className="bg-[#141414] rounded-lg border border-[rgba(255,255,255,0.05)] overflow-hidden">
+          <div className="bg-[var(--bg-card)] rounded-lg border border-[rgba(255,255,255,0.05)] overflow-hidden">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-[rgba(255,255,255,0.05)]">
@@ -278,7 +277,7 @@ export default function SettlementsPage() {
                       <span className="text-sm text-[var(--text-2)]">{t.description}</span>
                     </td>
                     <td className="px-8 py-6 text-right">
-                      <span className="font-mono text-sm font-bold text-white" style={{ fontVariantNumeric: "tabular-nums" }}>
+                      <span className="font-mono text-sm font-bold text-white tabular-nums">
                         {formatMoney(t.amount)}
                       </span>
                     </td>
@@ -297,7 +296,7 @@ export default function SettlementsPage() {
                       <span className="font-mono text-sm text-[var(--text-3)]">{t.counterparty}</span>
                     </td>
                     <td className="px-8 py-6 text-right hidden sm:table-cell">
-                      <span className="font-mono text-sm text-[var(--text-3)]" style={{ fontVariantNumeric: "tabular-nums" }}>
+                      <span className="font-mono text-sm text-[var(--text-3)] tabular-nums">
                         {timeAgo(t.timestamp)}
                       </span>
                     </td>
@@ -308,6 +307,6 @@ export default function SettlementsPage() {
           </div>
         </motion.div>
       )}
-    </motion.div>
+    </PageTransition>
   );
 }

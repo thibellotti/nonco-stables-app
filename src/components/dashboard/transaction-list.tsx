@@ -134,11 +134,11 @@ function TransactionRow({ tx }: { tx: (typeof transactions)[number] }) {
       <TxIcon type={tx.type} />
 
       <div className="flex-1 min-w-0">
-        <p className="text-sm text-[var(--text)] truncate font-medium">
+        <p className="text-sm text-[var(--text)] truncate font-medium font-sans">
           {tx.description}
         </p>
         {tx.counterparty && (
-          <p className="text-xs text-[var(--text-4)] mt-0.5 truncate">
+          <p className="text-xs text-[var(--text-4)] mt-0.5 truncate font-sans">
             {tx.counterparty}
           </p>
         )}
@@ -204,12 +204,12 @@ export function TransactionList({ filter }: TransactionListProps) {
       {groups.map((group) => (
         <div key={group.label}>
           {/* Date header */}
-          <div className="text-[10px] font-mono uppercase tracking-[.15em] text-[#737373] mb-4">
+          <div className="text-[10px] font-sans font-medium uppercase tracking-[.15em] text-[var(--text-3)] mb-4">
             {group.label}
           </div>
 
           {/* Grouped card */}
-          <div className="bg-[#141414] border border-[#333] rounded-lg divide-y divide-[rgba(255,255,255,0.05)] overflow-hidden">
+          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg divide-y divide-[rgba(255,255,255,0.05)] overflow-hidden">
             {group.items.map((tx) => (
               <TransactionRow key={tx.id} tx={tx} />
             ))}

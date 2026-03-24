@@ -38,17 +38,12 @@ const tabs = [
     ),
   },
   {
-    label: "Bank",
-    href: "/bank",
+    label: "Settle",
+    href: "/settlements",
     icon: (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <path d="M3 8L10 3l7 5" />
-        <path d="M5 8v7" />
-        <path d="M9 8v7" />
-        <path d="M13 8v7" />
-        <path d="M17 8v7" />
-        <path d="M3 15h14" />
-        <path d="M2 18h16" />
+        <circle cx="10" cy="10" r="8" />
+        <path d="M10 6v4l3 2" />
       </svg>
     ),
   },
@@ -70,7 +65,7 @@ export function BottomTabs() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 inset-x-0 z-50 flex lg:hidden bg-black border-t border-[rgba(255,255,255,0.05)] shadow-[0_-4px_20px_rgba(5,224,248,0.05)]">
+    <nav aria-label="Mobile navigation" className="fixed bottom-0 inset-x-0 z-50 flex lg:hidden bg-black border-t border-[rgba(255,255,255,0.05)] shadow-[0_-4px_20px_rgba(5,224,248,0.05)]">
       <div className="flex w-full justify-around items-center h-16 pb-[env(safe-area-inset-bottom)]">
         {tabs.map((tab) => {
           const isActive =

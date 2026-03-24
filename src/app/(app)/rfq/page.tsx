@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { motion } from "framer-motion";
+import { PageTransition } from "@/components/ui/page-transition";
 import { SectionLabel } from "@/components/ui/section-label";
 import { FavoritesGrid } from "@/components/rfq/favorites-grid";
 import { QuoteForm } from "@/components/rfq/quote-form";
@@ -66,12 +66,7 @@ export default function RFQPage() {
   );
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      className="px-6 md:px-8 w-full space-y-8"
-    >
+    <PageTransition className="px-6 md:px-8 w-full space-y-8">
       <SectionLabel>Favorites</SectionLabel>
       <FavoritesGrid onQuote={handleQuote} />
 
@@ -87,6 +82,6 @@ export default function RFQPage() {
 
       <SectionLabel>Recent Trades</SectionLabel>
       <RecentTrades extraTrades={sessionTrades} />
-    </motion.div>
+    </PageTransition>
   );
 }

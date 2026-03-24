@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { PageTransition } from "@/components/ui/page-transition";
 import { recentTrades } from "@/lib/mock-data";
 import type { RecentTrade } from "@/lib/mock-data";
 import { formatMoney, timeAgo } from "@/lib/utils";
@@ -69,12 +70,7 @@ function formatCompactVolume(value: number) {
 
 export default function TradesPage() {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      className="px-6 md:px-8 w-full space-y-8"
-    >
+    <PageTransition className="px-6 md:px-8 w-full space-y-8">
       {/* Hero Header */}
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div className="space-y-3">
@@ -88,12 +84,12 @@ export default function TradesPage() {
             Trades
           </h1>
         </div>
-        <div className="flex items-center gap-3 bg-[#141414] rounded-lg px-5 py-3 border border-[rgba(255,255,255,0.05)]">
+        <div className="flex items-center gap-3 bg-[var(--bg-card)] rounded-lg px-5 py-3 border border-[rgba(255,255,255,0.05)]">
           <span className="relative flex h-2.5 w-2.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--green)] opacity-75" />
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[var(--green)]" />
           </span>
-          <span className="font-mono text-xs font-bold tracking-[.1em] text-emerald-400">
+          <span className="font-mono text-xs font-bold tracking-[.1em] text-[var(--green)]">
             LIVE
           </span>
           <span className="font-mono text-[10px] text-[var(--text-3)]">
@@ -109,13 +105,13 @@ export default function TradesPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="bg-[#141414] rounded-lg p-8 border-t-2 border-[var(--cyan)] shadow-lg"
+          className="bg-[var(--bg-card)] rounded-lg p-8 border-t-2 border-[var(--cyan)] shadow-lg"
         >
           <span className="text-[10px] tracking-[.15em] uppercase font-mono text-[var(--text-3)]">
             Total Trades
           </span>
           <div className="flex items-baseline gap-3 mt-3">
-            <p className="text-5xl font-mono font-bold text-white" style={{ fontVariantNumeric: "tabular-nums" }}>
+            <p className="text-5xl font-mono font-bold text-white tabular-nums">
               {totalTrades}
             </p>
             <span className="flex items-center gap-1 text-xs font-mono text-[var(--cyan)]">
@@ -133,13 +129,13 @@ export default function TradesPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="bg-[#141414] rounded-lg p-8 border-t-2 border-[var(--cyan)] shadow-lg"
+          className="bg-[var(--bg-card)] rounded-lg p-8 border-t-2 border-[var(--purple)] shadow-lg"
         >
           <span className="text-[10px] tracking-[.15em] uppercase font-mono text-[var(--text-3)]">
             Total Volume
           </span>
           <div className="flex items-baseline gap-3 mt-3">
-            <p className="text-5xl font-mono font-bold text-white" style={{ fontVariantNumeric: "tabular-nums" }}>
+            <p className="text-5xl font-mono font-bold text-white tabular-nums">
               {formatCompactVolume(totalVolume)}
             </p>
             <span className="flex items-center gap-1 text-xs font-mono text-[var(--cyan)]">
@@ -157,18 +153,18 @@ export default function TradesPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="bg-[#141414] rounded-lg p-8 border-t-2 border-[var(--cyan)] shadow-lg"
+          className="bg-[var(--bg-card)] rounded-lg p-8 border-t-2 border-[var(--green)] shadow-lg"
         >
           <span className="text-[10px] tracking-[.15em] uppercase font-mono text-[var(--text-3)]">
             Avg Trade Size
           </span>
           <div className="flex items-baseline gap-3 mt-3">
-            <p className="text-5xl font-mono font-bold text-white" style={{ fontVariantNumeric: "tabular-nums" }}>
+            <p className="text-5xl font-mono font-bold text-white tabular-nums">
               {formatCompactVolume(avgSize)}
             </p>
-            <span className="flex items-center gap-1 text-xs font-mono text-[var(--cyan)]">
+            <span className="flex items-center gap-1 text-xs font-mono text-[var(--red)]">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                <path d="M6 9V3M6 3L3 6M6 3l3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M6 3v6M6 9L3 6M6 9l3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
               -3.1%
             </span>
@@ -178,7 +174,7 @@ export default function TradesPage() {
       </div>
 
       {/* Trade History Table */}
-      <div className="bg-[#141414] rounded-lg overflow-hidden shadow-2xl">
+      <div className="bg-[var(--bg-card)] rounded-lg overflow-hidden shadow-lg">
         {/* Table Header Bar */}
         <div className="p-8 flex items-center justify-between bg-[var(--bg-elevated)]">
           <div className="flex items-center gap-3">
@@ -245,14 +241,14 @@ export default function TradesPage() {
 
                 {/* Quantity */}
                 <td className="px-8 py-6 text-right">
-                  <span className="font-mono text-sm text-white" style={{ fontVariantNumeric: "tabular-nums" }}>
+                  <span className="font-mono text-sm text-white tabular-nums">
                     {formatMoney(trade.quantity)}
                   </span>
                 </td>
 
                 {/* Price */}
                 <td className="px-8 py-6 text-right">
-                  <span className="font-mono text-sm text-white" style={{ fontVariantNumeric: "tabular-nums" }}>
+                  <span className="font-mono text-sm text-white tabular-nums">
                     {trade.price.toFixed(4)}
                   </span>
                 </td>
@@ -266,7 +262,7 @@ export default function TradesPage() {
 
                 {/* Date */}
                 <td className="px-8 py-6 text-right hidden sm:table-cell">
-                  <span className="font-mono text-sm text-[var(--text-3)]" style={{ fontVariantNumeric: "tabular-nums" }}>
+                  <span className="font-mono text-sm text-[var(--text-3)] tabular-nums">
                     {timeAgo(trade.timestamp)}
                   </span>
                 </td>
@@ -285,6 +281,6 @@ export default function TradesPage() {
           </button>
         </div>
       </div>
-    </motion.div>
+    </PageTransition>
   );
 }

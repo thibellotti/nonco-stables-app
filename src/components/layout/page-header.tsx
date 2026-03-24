@@ -1,8 +1,6 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
 
 const pageTitles: Record<string, string> = {
   "/dashboard": "Dashboard",
@@ -12,15 +10,6 @@ const pageTitles: Record<string, string> = {
   "/settlements": "Settlements",
   "/wallet": "Wallet",
 };
-
-const navLinks = [
-  { label: "Dashboard", href: "/dashboard" },
-  { label: "RFQ", href: "/rfq" },
-  { label: "Trades", href: "/trades" },
-  { label: "Settlements", href: "/settlements" },
-  { label: "Bank", href: "/bank" },
-  { label: "Wallet", href: "/wallet" },
-];
 
 export function PageHeader() {
   const pathname = usePathname();
@@ -37,29 +26,6 @@ export function PageHeader() {
           <span className="text-sm text-[#525252] font-mono">Nonco /</span>
           <span className="text-sm text-[var(--cyan)] font-bold">{title}</span>
         </div>
-
-        {/* CENTER: Inline nav links (hidden on mobile) */}
-        <nav className="hidden md:flex items-center gap-6">
-          {navLinks.map((link) => {
-            const isActive =
-              pathname === link.href || pathname.startsWith(link.href + "/");
-
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={cn(
-                  "text-sm font-medium transition-opacity duration-200",
-                  isActive
-                    ? "text-[var(--cyan)] border-b-2 border-[var(--cyan)] pb-1"
-                    : "text-[#525252] hover:text-[var(--cyan)]"
-                )}
-              >
-                {link.label}
-              </Link>
-            );
-          })}
-        </nav>
 
         {/* RIGHT: Notifications + Avatar */}
         <div className="flex items-center gap-4">

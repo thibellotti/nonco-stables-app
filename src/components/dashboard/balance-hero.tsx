@@ -93,8 +93,10 @@ export function BalanceHero() {
         {/* Period selector */}
         <div className="flex gap-1.5">
           {periods.map((p) => (
-            <span
+            <button
               key={p.label}
+              type="button"
+              aria-pressed={p.active}
               className={
                 p.active
                   ? "font-mono text-[10px] uppercase tracking-[.1em] px-3 py-1 rounded-full bg-[var(--cyan-dim)] text-[var(--cyan)] border border-[rgba(5,224,248,0.2)] cursor-default"
@@ -102,7 +104,7 @@ export function BalanceHero() {
               }
             >
               {p.label}
-            </span>
+            </button>
           ))}
         </div>
       </div>
@@ -113,7 +115,7 @@ export function BalanceHero() {
           className="font-mono text-[56px] lg:text-[72px] font-bold tracking-tighter leading-none text-white"
           style={{ fontVariantNumeric: "tabular-nums slashed-zero" }}
         >
-          ${formatMoney(totalBalance)}
+          <span className="text-[0.65em] font-normal opacity-70">$</span>{formatMoney(totalBalance)}
         </p>
 
         {/* Change badge + period label */}

@@ -35,7 +35,7 @@ export default function LoginPage() {
             className="h-7 w-auto"
           />
           <div className="w-12 h-[2px] bg-[var(--cyan)] mt-5" />
-          <p className="text-lg font-light text-[#737373] mt-5">
+          <p className="text-lg font-light text-[var(--text-3)] mt-5">
             Institutional stablecoin payments
           </p>
         </div>
@@ -44,41 +44,45 @@ export default function LoginPage() {
         <form className="space-y-6" onSubmit={handleLogin}>
           {/* Email */}
           <div>
-            <label className="block text-[10px] uppercase font-mono tracking-[.15em] text-[#525252] mb-1.5 ml-1">
+            <label htmlFor="email" className="block text-[10px] uppercase font-mono tracking-[.15em] text-[var(--text-4)] mb-1.5 ml-1">
               Email
             </label>
             <input
+              id="email"
               type="email"
+              required
               placeholder="name@institution.com"
               autoComplete="email"
-              className="w-full bg-[#141414] border-0 ring-1 ring-[#333] focus:ring-2 focus:ring-[var(--cyan)] rounded-lg px-4 py-3.5 font-mono text-sm text-white placeholder:text-[#525252] outline-none transition-shadow duration-200"
+              className="w-full bg-[var(--bg-card)] border-0 ring-1 ring-[var(--border-outline)] focus:ring-2 focus:ring-[var(--cyan)] rounded-lg px-4 py-3.5 font-mono text-sm text-white placeholder:text-[var(--text-4)] outline-none transition-shadow duration-200"
             />
           </div>
 
           {/* Password */}
           <div>
             <div className="flex items-center justify-between mb-1.5 ml-1">
-              <label className="text-[10px] uppercase font-mono tracking-[.15em] text-[#525252]">
+              <label htmlFor="password" className="text-[10px] uppercase font-mono tracking-[.15em] text-[var(--text-4)]">
                 Password
               </label>
               <button
                 type="button"
-                className="text-[10px] font-mono tracking-[.1em] text-[#525252] hover:text-[var(--cyan)] transition-colors cursor-pointer"
+                className="text-[10px] font-mono tracking-[.1em] text-[var(--text-4)] hover:text-[var(--cyan)] transition-colors cursor-pointer py-1 px-2 -mr-2"
               >
                 Forgot?
               </button>
             </div>
             <div className="relative">
               <input
+                id="password"
                 type={showPassword ? "text" : "password"}
+                required
                 placeholder="Enter password"
                 autoComplete="current-password"
-                className="w-full bg-[#141414] border-0 ring-1 ring-[#333] focus:ring-2 focus:ring-[var(--cyan)] rounded-lg px-4 py-3.5 pr-12 font-mono text-sm text-white placeholder:text-[#525252] outline-none transition-shadow duration-200"
+                className="w-full bg-[var(--bg-card)] border-0 ring-1 ring-[var(--border-outline)] focus:ring-2 focus:ring-[var(--cyan)] rounded-lg px-4 py-3.5 pr-12 font-mono text-sm text-white placeholder:text-[var(--text-4)] outline-none transition-shadow duration-200"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#525252] hover:text-white transition-colors cursor-pointer p-1"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-4)] hover:text-white transition-colors cursor-pointer p-1"
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? (
@@ -108,11 +112,11 @@ export default function LoginPage() {
 
         {/* Divider */}
         <div className="flex items-center gap-3 my-8">
-          <div className="flex-1 h-px bg-[#333]" />
-          <span className="text-[11px] text-[#525252] font-mono whitespace-nowrap">
+          <div className="flex-1 h-px bg-[var(--border-outline)]" />
+          <span className="text-[11px] text-[var(--text-4)] font-mono whitespace-nowrap">
             Alternative Authentication
           </span>
-          <div className="flex-1 h-px bg-[#333]" />
+          <div className="flex-1 h-px bg-[var(--border-outline)]" />
         </div>
 
         {/* Social buttons */}
@@ -134,7 +138,7 @@ export default function LoginPage() {
           {/* Wallet */}
           <button
             type="button"
-            className="w-full flex items-center justify-center gap-2.5 border border-[#333] text-white rounded-full py-3 font-medium text-sm hover:bg-[#141414] active:scale-[0.98] transition-all duration-200 cursor-pointer"
+            className="w-full flex items-center justify-center gap-2.5 border border-[var(--border-outline)] text-white rounded-full py-3 font-medium text-sm hover:bg-[var(--bg-card)] active:scale-[0.98] transition-all duration-200 cursor-pointer"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
               <rect x="2" y="6" width="20" height="14" rx="2" />
@@ -146,7 +150,7 @@ export default function LoginPage() {
         </div>
 
         {/* Terms footer */}
-        <p className="text-[11px] text-[#525252] text-center mt-8 leading-relaxed">
+        <p className="text-[11px] text-[var(--text-4)] text-center mt-8 leading-relaxed">
           By continuing, you agree to our Terms of Service and Privacy Policy.
         </p>
       </div>

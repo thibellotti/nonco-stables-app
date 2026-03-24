@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { PageTransition } from "@/components/ui/page-transition";
 import { DeskOfferBanner } from "@/components/ui/desk-offer-banner";
 import { BalanceHero } from "@/components/dashboard/balance-hero";
 import { QuickActions } from "@/components/dashboard/quick-actions";
@@ -13,12 +13,7 @@ export default function DashboardPage() {
   const [filter, setFilter] = useState<string>("all");
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      className="px-6 md:px-8 w-full space-y-8"
-    >
+    <PageTransition className="px-6 md:px-8 w-full space-y-8">
       {/* Desk offer banner */}
       <DeskOfferBanner />
 
@@ -36,6 +31,6 @@ export default function DashboardPage() {
         <CategoryTabs active={filter} onChange={setFilter} />
         <TransactionList filter={filter} />
       </div>
-    </motion.div>
+    </PageTransition>
   );
 }

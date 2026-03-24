@@ -23,14 +23,10 @@ export function CurrencyBreakdown() {
             <div
               key={balance.currency}
               className={cn(
-                "bg-[#141414] border border-[#333] rounded-lg p-5",
+                "bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5",
                 "transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]",
-                "cursor-default group"
+                "cursor-default group hover:scale-[1.02]"
               )}
-              style={{
-                // Dynamic hover border via CSS custom property
-                "--hover-border": `${colors.border}4D`,
-              } as React.CSSProperties}
             >
               {/* Top: colored dot + currency symbol */}
               <div className="flex items-center gap-2 mb-3">
@@ -38,7 +34,7 @@ export function CurrencyBreakdown() {
                   className="w-2 h-2 rounded-full shrink-0"
                   style={{ backgroundColor: colors.border }}
                 />
-                <span className="font-mono text-xs uppercase tracking-wider text-[#737373]">
+                <span className="font-mono text-xs uppercase tracking-wider text-[var(--text-3)]">
                   {balance.currency}
                 </span>
               </div>
@@ -49,7 +45,7 @@ export function CurrencyBreakdown() {
               </p>
 
               {/* Bottom: thin progress bar */}
-              <div className="mt-4 h-1 w-full bg-[#1f1f1f] rounded-full overflow-hidden">
+              <div className="mt-4 h-1 w-full bg-[var(--bg-elevated)] rounded-full overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
                   style={{

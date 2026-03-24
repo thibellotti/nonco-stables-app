@@ -46,7 +46,7 @@ export function FavoritesGrid({ onQuote }: FavoritesGridProps) {
         return (
           <div
             key={fav.id}
-            className="bg-[#141414] border border-[#333] p-6 rounded-lg hover:bg-[#1a1a1a] h-44 flex flex-col justify-between group transition-colors duration-200"
+            className="bg-[var(--bg-card)] border border-[var(--border-outline)] p-6 rounded-lg hover:bg-[var(--bg-elevated)] h-44 flex flex-col justify-between group transition-colors duration-200"
           >
             {/* Top: pair code + name + star */}
             <div>
@@ -61,7 +61,7 @@ export function FavoritesGrid({ onQuote }: FavoritesGridProps) {
                 </div>
                 {/* Star icon */}
                 <svg
-                  className="w-4 h-4 text-[var(--cyan)]/50 group-hover:text-[var(--cyan)] transition-colors duration-200 shrink-0 mt-0.5"
+                  className="w-4 h-4 text-[var(--cyan)] opacity-50 group-hover:opacity-100 transition-opacity duration-200 shrink-0 mt-0.5"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                   aria-hidden="true"
@@ -76,9 +76,10 @@ export function FavoritesGrid({ onQuote }: FavoritesGridProps) {
               <input
                 type="text"
                 inputMode="numeric"
+                aria-label={`Quantity for ${fav.instrument.pair}`}
                 value={formatMoney(quantities[fav.id]).replace(/\.00$/, "")}
                 onChange={(e) => handleQuantityChange(fav.id, e.target.value)}
-                className="flex-1 min-w-0 bg-[#242424] rounded px-3 py-2 font-mono text-sm text-white placeholder:text-[#525252] focus:outline-none focus:ring-1 focus:ring-[var(--cyan)]/30 transition-colors"
+                className="flex-1 min-w-0 bg-[var(--bg-highest)] rounded px-3 py-2 font-mono text-sm text-white placeholder:text-[var(--text-4)] focus:outline-none focus:ring-1 focus:ring-[var(--cyan)] focus:ring-opacity-30 transition-colors"
               />
               <button
                 onClick={() => onQuote(fav.instrument, quantities[fav.id])}

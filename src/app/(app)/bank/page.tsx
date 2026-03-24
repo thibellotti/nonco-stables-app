@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { PageTransition } from "@/components/ui/page-transition";
 import { Badge } from "@/components/ui/badge";
 import { transactions, type TransactionType } from "@/lib/mock-data";
 import { cn, formatCompact, timeAgo } from "@/lib/utils";
@@ -45,12 +45,12 @@ const PAGE_SIZE = 10;
 
 const iconColors: Record<string, string> = {
   deposit: "var(--cyan)",
-  withdrawal: "#e1b6ff",
+  withdrawal: "var(--purple)",
 };
 
 const iconBgColors: Record<string, string> = {
   deposit: "rgba(5,224,248,0.1)",
-  withdrawal: "rgba(225,182,255,0.1)",
+  withdrawal: "var(--purple-dim)",
 };
 
 function TxIcon({ type }: { type: TransactionType }) {
@@ -100,8 +100,8 @@ function TxIcon({ type }: { type: TransactionType }) {
 const currencyPillColors: Record<string, { bg: string; text: string }> = {
   USD: { bg: "rgba(5,224,248,0.1)", text: "var(--cyan)" },
   EUR: { bg: "rgba(56,189,248,0.1)", text: "#38bdf8" },
-  MXN: { bg: "rgba(199,255,16,0.1)", text: "#c7ff10" },
-  USDT: { bg: "rgba(161,36,248,0.1)", text: "#a124f8" },
+  MXN: { bg: "var(--green-dim)", text: "var(--green)" },
+  USDT: { bg: "var(--purple-dim)", text: "var(--purple)" },
   USDC: { bg: "rgba(99,102,241,0.1)", text: "#6366f1" },
 };
 
@@ -127,7 +127,7 @@ function TransactionRow({
           <TxIcon type={tx.type} />
           <div className="min-w-0">
             <p className="text-sm text-white font-medium truncate">{tx.description}</p>
-            <p className="text-[10px] text-[#525252] font-mono mt-0.5 truncate">
+            <p className="text-[10px] text-[var(--text-4)] font-mono mt-0.5 truncate">
               REF-{tx.id.toUpperCase()}
             </p>
           </div>
@@ -136,7 +136,7 @@ function TransactionRow({
 
       {/* Counterparty */}
       <td className="px-8 py-6 hidden md:table-cell">
-        <span className="text-xs text-[#737373] truncate">
+        <span className="text-xs text-[var(--text-3)] truncate">
           {tx.counterparty ?? "—"}
         </span>
       </td>
@@ -167,7 +167,7 @@ function TransactionRow({
       {/* Time + Status */}
       <td className="px-8 py-6 text-right">
         <div className="flex flex-col items-end gap-1">
-          <span className="text-[10px] text-[#525252] font-mono tabular-nums">
+          <span className="text-[10px] text-[var(--text-4)] font-mono tabular-nums">
             {timeAgo(tx.timestamp)}
           </span>
           {tx.status === "pending" && <Badge variant="amber">Pending</Badge>}
@@ -212,18 +212,13 @@ export default function BankPage() {
   const netFlow = totalDeposits - totalWithdrawals;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      className="px-6 md:px-8 w-full space-y-8"
-    >
+    <PageTransition className="px-6 md:px-8 w-full space-y-8">
       {/* Header */}
       <div className="space-y-3">
         <div className="flex items-center gap-3">
           <div className="w-[2px] h-4 bg-[var(--cyan)] rounded-full" />
-          <span className="font-mono text-[10px] font-medium uppercase tracking-[.15em] text-[#737373]">
-            Banking &amp; Flows
+          <span className="font-mono text-[10px] font-medium uppercase tracking-[.15em] text-[var(--text-3)]">
+            {"Banking & Flows"}
           </span>
         </div>
         <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-white">
@@ -234,7 +229,7 @@ export default function BankPage() {
       {/* KPI Row */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Deposits */}
-        <div className="bg-[#141414] rounded-lg p-8 border-t-2 border-[var(--cyan)] relative overflow-hidden group shadow-lg">
+        <div className="bg-[var(--bg-card)] rounded-lg p-8 border-t-2 border-[var(--cyan)] relative overflow-hidden group shadow-lg">
           <span className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)]">
             Total Deposits (30d)
           </span>
@@ -250,19 +245,19 @@ export default function BankPage() {
             {bankTransactions.filter((tx) => tx.type === "deposit").length} transactions
           </p>
           {/* Watermark icon */}
-          <svg className="absolute -right-4 -bottom-4 w-16 h-16 opacity-[0.05] group-hover:opacity-[0.1] transition-opacity duration-300" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <svg className="absolute -right-4 -bottom-4 w-16 h-16 opacity-[0.06] group-hover:opacity-[0.1] transition-opacity duration-300" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M23 6l-9.5 9.5-5-5L1 18" />
             <path d="M17 6h6v6" />
           </svg>
         </div>
 
         {/* Withdrawals */}
-        <div className="bg-[#141414] rounded-lg p-8 border-t-2 border-[#e1b6ff] relative overflow-hidden group shadow-lg">
+        <div className="bg-[var(--bg-card)] rounded-lg p-8 border-t-2 border-[var(--purple)] relative overflow-hidden group shadow-lg">
           <span className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)]">
             Total Withdrawals (30d)
           </span>
           <div className="flex items-baseline gap-3 mt-3">
-            <p className="text-5xl font-bold font-mono text-[#e1b6ff] tabular-nums">
+            <p className="text-5xl font-bold font-mono text-[var(--purple)] tabular-nums">
               -{formatCompact(totalWithdrawals)}
             </p>
           </div>
@@ -270,19 +265,19 @@ export default function BankPage() {
             {bankTransactions.filter((tx) => tx.type === "withdrawal").length} transactions
           </p>
           {/* Watermark icon */}
-          <svg className="absolute -right-4 -bottom-4 w-16 h-16 opacity-[0.05] group-hover:opacity-[0.1] transition-opacity duration-300" viewBox="0 0 24 24" fill="none" stroke="#e1b6ff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <svg className="absolute -right-4 -bottom-4 w-16 h-16 opacity-[0.06] group-hover:opacity-[0.1] transition-opacity duration-300" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M23 18l-9.5-9.5-5 5L1 6" />
             <path d="M17 18h6v-6" />
           </svg>
         </div>
 
         {/* Net Flow */}
-        <div className="bg-[#141414] rounded-lg p-8 border-t-2 border-[#c7ff10] relative overflow-hidden group shadow-lg">
+        <div className="bg-[var(--bg-card)] rounded-lg p-8 border-t-2 border-[var(--green)] relative overflow-hidden group shadow-lg">
           <span className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)]">
             Net Flow (30d)
           </span>
           <div className="flex items-baseline gap-3 mt-3">
-            <p className="text-5xl font-bold font-mono text-[#c7ff10] tabular-nums">
+            <p className="text-5xl font-bold font-mono text-[var(--green)] tabular-nums">
               {netFlow >= 0 ? "+" : ""}{formatCompact(netFlow)}
             </p>
           </div>
@@ -290,18 +285,18 @@ export default function BankPage() {
             This month
           </p>
           {/* Watermark icon */}
-          <svg className="absolute -right-4 -bottom-4 w-16 h-16 opacity-[0.05] group-hover:opacity-[0.1] transition-opacity duration-300" viewBox="0 0 24 24" fill="none" stroke="#c7ff10" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <svg className="absolute -right-4 -bottom-4 w-16 h-16 opacity-[0.06] group-hover:opacity-[0.1] transition-opacity duration-300" viewBox="0 0 24 24" fill="none" stroke="var(--green)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M3 21h18M3 10h18M3 7l9-4 9 4M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3" />
           </svg>
         </div>
       </div>
 
       {/* Filter Section */}
-      <div className="bg-[#141414] rounded-lg border border-[rgba(255,255,255,0.05)]">
+      <div className="bg-[var(--bg-card)] rounded-lg border border-[rgba(255,255,255,0.05)]">
         {/* Filter bar */}
         <div className="flex items-center justify-between px-8 py-5 border-b border-[rgba(255,255,255,0.05)]">
           {/* Pill toggle */}
-          <div className="flex bg-black rounded-full border border-[#333] p-1">
+          <div className="flex bg-black rounded-full border border-[var(--border)] p-1">
             {tabs.map((tab) => (
               <button
                 key={tab.key}
@@ -310,7 +305,7 @@ export default function BankPage() {
                   "shrink-0 rounded-full px-6 py-2 text-[10px] font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer",
                   filter === tab.key
                     ? "bg-[var(--cyan)] text-black"
-                    : "text-[#525252] hover:text-white"
+                    : "text-[var(--text-4)] hover:text-white"
                 )}
               >
                 {tab.label}
@@ -320,7 +315,7 @@ export default function BankPage() {
 
           {/* Search */}
           <div className="relative hidden sm:block">
-            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#525252]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-4)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             <input
@@ -328,14 +323,14 @@ export default function BankPage() {
               placeholder="Search transactions..."
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-              className="bg-black rounded-sm pl-10 pr-4 py-2 text-xs font-mono text-white placeholder:text-[#525252] border border-[#333] focus:border-[var(--cyan)] focus:outline-none transition-colors w-64"
+              className="bg-black rounded-lg pl-10 pr-4 py-2 text-xs font-mono text-white placeholder:text-[var(--text-4)] border border-[var(--border)] focus:border-[var(--cyan)] focus:outline-none transition-colors w-64"
             />
           </div>
         </div>
 
         {/* Transaction table */}
         {paginated.length === 0 ? (
-          <div className="py-16 text-center text-[#525252] text-sm font-mono">
+          <div className="py-16 text-center text-[var(--text-4)] text-sm font-mono">
             No transactions found
           </div>
         ) : (
@@ -371,14 +366,14 @@ export default function BankPage() {
 
         {/* Footer: pagination */}
         <div className="flex items-center justify-between px-8 py-4 border-t border-[rgba(255,255,255,0.05)]">
-          <span className="text-[11px] font-mono text-[#525252]">
+          <span className="text-[11px] font-mono text-[var(--text-4)]">
             Showing {(page - 1) * PAGE_SIZE + 1}-{Math.min(page * PAGE_SIZE, filtered.length)} of {filtered.length} Transactions
           </span>
           <div className="flex gap-1">
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page <= 1}
-              className="px-3 py-1.5 text-[10px] font-mono font-bold uppercase rounded border border-[#333] text-[#525252] hover:text-white hover:border-[#525252] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+              className="px-3 py-1.5 text-[10px] font-mono font-bold uppercase rounded border border-[var(--border)] text-[var(--text-4)] hover:text-white hover:border-[var(--text-4)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
             >
               Prev
             </button>
@@ -390,7 +385,7 @@ export default function BankPage() {
                   "w-8 h-8 text-[10px] font-mono font-bold rounded transition-colors cursor-pointer",
                   p === page
                     ? "bg-[var(--cyan)] text-black"
-                    : "text-[#525252] hover:text-white border border-[#333] hover:border-[#525252]"
+                    : "text-[var(--text-4)] hover:text-white border border-[var(--border)] hover:border-[var(--text-4)]"
                 )}
               >
                 {p}
@@ -399,13 +394,13 @@ export default function BankPage() {
             <button
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={page >= totalPages}
-              className="px-3 py-1.5 text-[10px] font-mono font-bold uppercase rounded border border-[#333] text-[#525252] hover:text-white hover:border-[#525252] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+              className="px-3 py-1.5 text-[10px] font-mono font-bold uppercase rounded border border-[var(--border)] text-[var(--text-4)] hover:text-white hover:border-[var(--text-4)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
             >
               Next
             </button>
           </div>
         </div>
       </div>
-    </motion.div>
+    </PageTransition>
   );
 }
