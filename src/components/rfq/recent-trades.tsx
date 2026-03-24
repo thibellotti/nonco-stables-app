@@ -21,19 +21,19 @@ export function RecentTrades({ extraTrades = [] }: RecentTradesProps) {
       <table className="w-full">
         <thead>
           <tr className="border-b border-[var(--border)]">
-            <th className="px-6 py-4 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
+            <th className="px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
               Pair
             </th>
-            <th className="px-6 py-4 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
+            <th className="px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
               Side
             </th>
-            <th className="px-6 py-4 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden sm:table-cell">
+            <th className="px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden sm:table-cell">
               Quantity @ Price
             </th>
-            <th className="px-6 py-4 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden md:table-cell">
+            <th className="px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden md:table-cell">
               Settlement
             </th>
-            <th className="px-6 py-4 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
+            <th className="px-6 py-3 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
               Time
             </th>
           </tr>

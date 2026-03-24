@@ -10,7 +10,7 @@ export function Card({ children, className, padding = true }: CardProps) {
   return (
     <div
       className={cn(
-        "bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden transition-all duration-200 hover:border-[var(--border-outline)]",
+        "bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden transition-all duration-200",
         padding && "p-5",
         className
       )}

@@ -38,10 +38,7 @@ export function useCountdown(initialSeconds: number = 30): UseCountdownReturn {
   }, [start]);
 
   useEffect(() => {
-    if (!isRunning || timeLeft <= 0) {
-      if (timeLeft <= 0) setIsRunning(false);
-      return;
-    }
+    if (!isRunning) return;
 
     intervalRef.current = setInterval(() => {
       setTimeLeft((prev) => {
@@ -55,7 +52,7 @@ export function useCountdown(initialSeconds: number = 30): UseCountdownReturn {
     }, 1000);
 
     return cleanup;
-  }, [isRunning, timeLeft <= 0, cleanup]);
+  }, [isRunning, cleanup]);
 
   const isExpired = timeLeft <= 0 && !isRunning;
   const isUrgent = timeLeft > 0 && timeLeft <= 10;

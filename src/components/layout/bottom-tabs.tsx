@@ -28,22 +28,27 @@ const tabs = [
     ),
   },
   {
+    label: "Bank",
+    href: "/bank",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M3 8L10 3l7 5" />
+        <path d="M5 8v7" />
+        <path d="M9 8v7" />
+        <path d="M13 8v7" />
+        <path d="M17 8v7" />
+        <path d="M3 15h14" />
+        <path d="M2 18h16" />
+      </svg>
+    ),
+  },
+  {
     label: "Trades",
     href: "/trades",
     icon: (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M2 6h12m0 0l-3-3m3 3l-3 3" />
         <path d="M18 14H6m0 0l3-3m-3 3l3 3" />
-      </svg>
-    ),
-  },
-  {
-    label: "Settle",
-    href: "/settlements",
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <circle cx="10" cy="10" r="8" />
-        <path d="M10 6v4l3 2" />
       </svg>
     ),
   },
@@ -90,7 +95,7 @@ export function BottomTabs() {
               >
                 {tab.icon}
               </span>
-              <span className="text-[10px] font-mono uppercase tracking-widest mt-1">{tab.label}</span>
+              <span className="text-[10px] font-sans uppercase tracking-widest mt-1">{tab.label}</span>
             </Link>
           );
         })}

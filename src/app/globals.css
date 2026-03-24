@@ -148,13 +148,13 @@ body {
   background: var(--bg-card);
   border-radius: 0.5rem;
   z-index: 0;
-  overflow: hidden;
 }
 .processing-border::before {
   content: '';
   position: absolute;
   z-index: -1;
   inset: -2px;
+  border-radius: calc(0.5rem + 2px);
   background: conic-gradient(from 0deg, #05e0f8, #38bdf8, transparent 60%);
   animation: rotate-conic 2s linear infinite;
 }

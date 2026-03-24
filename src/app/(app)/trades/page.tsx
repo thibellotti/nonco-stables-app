@@ -240,7 +240,7 @@ export default function TradesPage() {
         {/* Table Header Bar */}
         <div className="px-6 py-4 flex items-center justify-between bg-[var(--bg-elevated)]">
           <SectionLabel>Trade History</SectionLabel>
-          <button className="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--border)] text-[var(--text-3)] hover:text-white hover:border-[var(--border-outline)] transition-colors duration-200 cursor-pointer">
+          <button type="button" className="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--border)] text-[var(--text-3)] hover:text-white hover:border-[var(--border-outline)] transition-colors duration-200 cursor-pointer">
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M6 1v7M6 8L3.5 5.5M6 8l2.5-2.5M1 10h10" />
             </svg>
@@ -333,7 +333,7 @@ export default function TradesPage() {
           <span className="font-mono text-[10px] text-[var(--text-4)] tracking-[.08em]">
             Showing {filteredTrades.length} of {allTrades.length} trades
           </span>
-          <button className="flex items-center gap-2 px-6 py-3 rounded-full border border-[var(--border)] text-[var(--text-3)] hover:text-white hover:border-[var(--border-outline)] transition-colors duration-200 cursor-pointer">
+          <button type="button" className="flex items-center gap-2 px-6 py-3 rounded-full border border-[var(--border)] text-[var(--text-3)] hover:text-white hover:border-[var(--border-outline)] transition-colors duration-200 cursor-pointer">
             <span className="font-mono text-[10px] font-bold uppercase tracking-[.15em]">View All Transactions</span>
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M2.5 6h7M6.5 3L9.5 6l-3 3" />

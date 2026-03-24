@@ -110,7 +110,7 @@ export function Sidebar() {
               )}
             >
               <span className="mr-3 shrink-0">{item.icon}</span>
-              <span className="text-[10px] tracking-[0.15em] uppercase font-mono">{item.label}</span>
+              <span className="text-[10px] tracking-[0.15em] uppercase font-sans">{item.label}</span>
             </Link>
           );
         })}

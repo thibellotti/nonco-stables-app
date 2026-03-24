@@ -157,8 +157,8 @@ export const balances: Balance[] = [
   { currency: "USD", available: 425_000, pending: 35_000, symbol: "$" },
   { currency: "EUR", available: 182_000, pending: 12_500, symbol: "\u20AC" },
   { currency: "MXN", available: 3_450_000, pending: 875_000, symbol: "MX$" },
-  { currency: "USDT", available: 310_000, pending: 48_000, symbol: "\u20AE" },
-  { currency: "USDC", available: 280_000, pending: 51_500, symbol: "\u20B3" },
+  { currency: "USDT", available: 310_000, pending: 48_000, symbol: "$" },
+  { currency: "USDC", available: 280_000, pending: 51_500, symbol: "$" },
 ];
 
 // ---------------------------------------------------------------------------

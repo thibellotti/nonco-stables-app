@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { type Transaction, type TransactionType } from "@/lib/mock-data";
 import { cn, formatCompact, timeAgo } from "@/lib/utils";
+import { currencyColors } from "@/lib/currency-colors";
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -69,13 +70,10 @@ function TxIcon({ type }: { type: TransactionType }) {
 // Currency pill colors
 // ---------------------------------------------------------------------------
 
-const currencyPillColors: Record<string, { bg: string; text: string }> = {
-  USD: { bg: "rgba(5,224,248,0.1)", text: "var(--cyan)" },
-  EUR: { bg: "rgba(56,189,248,0.1)", text: "#38bdf8" },
-  MXN: { bg: "var(--green-dim)", text: "var(--green)" },
-  USDT: { bg: "var(--purple-dim)", text: "var(--purple)" },
-  USDC: { bg: "rgba(99,102,241,0.1)", text: "#6366f1" },
-};
+// Currency pill colors derived from shared currency-colors module
+const currencyPillColors: Record<string, { bg: string; text: string }> = Object.fromEntries(
+  Object.entries(currencyColors).map(([k, v]) => [k, { bg: v.bg, text: v.text }])
+);
 
 // ---------------------------------------------------------------------------
 // Transaction row
@@ -143,7 +141,7 @@ function TransactionRow({
             {timeAgo(tx.timestamp)}
           </span>
           {tx.status === "pending" && <Badge variant="amber">Pending</Badge>}
-          {tx.status === "failed" && <Badge variant="purple">Failed</Badge>}
+          {tx.status === "failed" && <Badge variant="red">Failed</Badge>}
           {tx.status === "completed" && (
             <span className="font-mono text-[10px] font-medium tracking-[.04em] text-[var(--green)]">
               COMPLETED

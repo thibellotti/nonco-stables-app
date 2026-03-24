@@ -23,7 +23,7 @@ export function PageHeader() {
       <div className="flex items-center justify-between h-full px-6 lg:px-8">
         {/* LEFT: Breadcrumb */}
         <div className="flex items-center gap-1.5">
-          <span className="text-sm text-[var(--text-4)] font-mono">Nonco /</span>
+          <span className="text-sm text-[var(--text-4)] font-sans">Nonco /</span>
           <span className="text-sm text-[var(--cyan)] font-bold">{title}</span>
         </div>
 

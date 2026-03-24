@@ -47,7 +47,7 @@ function AnimatedNumber({
     }
     raf = requestAnimationFrame(tick);
 
-    return () => cancelAnimationFrame(raf);
+    return () => { cancelAnimationFrame(raf); hasAnimated.current = false; };
   }, [value]);
 
   const formatted = formatter ? formatter(display) : formatMoney(display);
@@ -245,6 +245,18 @@ export function BalanceHero() {
         className="relative h-[180px] lg:h-[220px] mt-4 cursor-crosshair"
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
+        onTouchMove={(e) => {
+          const touch = e.touches[0];
+          if (touch) {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const x = touch.clientX - rect.left;
+            const pct = x / rect.width;
+            const idx = Math.round(pct * (chartPoints.length - 1));
+            setHoverIdx(Math.max(0, Math.min(chartPoints.length - 1, idx)));
+            setHoverX(x);
+          }
+        }}
+        onTouchEnd={() => { setHoverIdx(null); }}
       >
         <svg
           width="100%"

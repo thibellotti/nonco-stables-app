@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { type Transaction } from "@/lib/mock-data";
 import { formatMoney, timeAgo } from "@/lib/utils";
 import { SectionLabel } from "@/components/ui/section-label";
+import { currencyColors } from "@/lib/currency-colors";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -26,7 +27,7 @@ export function CompletedTable({ settlements }: CompletedTableProps) {
       {/* Settlement History Header */}
       <div className="flex items-center justify-between">
         <SectionLabel>Settlement History</SectionLabel>
-        <button className="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--border)] text-[var(--text-3)] hover:text-white hover:border-[var(--border-outline)] transition-colors duration-200 cursor-pointer">
+        <button type="button" className="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--border)] text-[var(--text-3)] hover:text-white hover:border-[var(--border-outline)] transition-colors duration-200 cursor-pointer">
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M6 1v7M6 8L3.5 5.5M6 8l2.5-2.5M1 10h10" />
           </svg>
@@ -66,13 +67,13 @@ export function CompletedTable({ settlements }: CompletedTableProps) {
                   </span>
                 </td>
                 <td className="px-6 py-4">
-                  <span className={`inline-flex items-center px-2.5 py-1 rounded text-[10px] font-mono font-bold ${
-                    t.currency === "USDT"
-                      ? "bg-[rgba(5,224,248,0.1)] text-[var(--cyan)]"
-                      : t.currency === "USDC"
-                      ? "bg-[rgba(38,117,255,0.1)] text-blue-400"
-                      : "bg-[rgba(255,255,255,0.06)] text-[var(--text-2)]"
-                  }`}>
+                  <span
+                    className="inline-flex items-center px-2.5 py-1 rounded text-[10px] font-mono font-bold"
+                    style={{
+                      backgroundColor: currencyColors[t.currency]?.bg ?? "rgba(255,255,255,0.06)",
+                      color: currencyColors[t.currency]?.text ?? "var(--text-2)",
+                    }}
+                  >
                     {t.currency}
                   </span>
                 </td>

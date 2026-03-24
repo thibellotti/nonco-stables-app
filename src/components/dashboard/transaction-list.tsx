@@ -15,9 +15,9 @@ const iconColors: Record<TransactionType, string> = {
 
 const iconBgColors: Record<TransactionType, string> = {
   deposit: "rgba(5,224,248,0.1)",
-  withdrawal: "rgba(168,85,247,0.1)",
-  trade: "rgba(34,197,94,0.1)",
-  settlement: "rgba(245,158,11,0.1)",
+  withdrawal: "var(--purple-dim)",
+  trade: "var(--green-dim)",
+  settlement: "var(--amber-dim)",
 };
 
 function TxIcon({ type }: { type: TransactionType }) {

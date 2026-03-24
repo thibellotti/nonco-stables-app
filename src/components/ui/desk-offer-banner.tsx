@@ -3,9 +3,19 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
+// Module-level: survives remounts but resets on full page reload
+let bannerStartTime: number | null = null;
+
 export function DeskOfferBanner() {
+  const TOTAL_SECONDS = 272;
+
+  if (bannerStartTime === null) {
+    bannerStartTime = Date.now();
+  }
+
+  const elapsed = Math.floor((Date.now() - bannerStartTime) / 1000);
   const [dismissed, setDismissed] = useState(false);
-  const [countdown, setCountdown] = useState(272); // 4:32 in seconds
+  const [countdown, setCountdown] = useState(Math.max(0, TOTAL_SECONDS - elapsed));
 
   useEffect(() => {
     if (dismissed) return;

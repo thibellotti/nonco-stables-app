@@ -3,7 +3,7 @@
 import { PageTransition } from "@/components/ui/page-transition";
 import { SectionLabel } from "@/components/ui/section-label";
 import { Button } from "@/components/ui/button";
-import { balances } from "@/lib/mock-data";
+import { balances, usdRates } from "@/lib/mock-data";
 import { formatMoney, timeAgo } from "@/lib/utils";
 import { currencyColors } from "@/lib/currency-colors";
 
@@ -111,7 +111,7 @@ function BalanceCard({ balance }: { balance: (typeof balances)[number] }) {
             {balance.symbol}{formatMoney(balance.available)}
           </p>
           <p className="text-sm text-[var(--text-4)] font-mono mt-1 tabular-nums">
-            ~${formatMoney(balance.available + balance.pending)} USD
+            ~${formatMoney((balance.available + balance.pending) * (usdRates[balance.currency] ?? 1))} USD
           </p>
         </div>
 
@@ -125,11 +125,13 @@ function BalanceCard({ balance }: { balance: (typeof balances)[number] }) {
         {/* Actions — CSS-only hover, no JS event handlers */}
         <div className="flex gap-3 pt-2 border-t border-[var(--border)]">
           <button
+            type="button"
             className="flex-1 py-2.5 text-xs font-bold uppercase tracking-widest bg-[rgba(255,255,255,0.05)] rounded text-[var(--text-3)] transition-all duration-200 cursor-pointer hover:bg-[var(--cyan-dim)] hover:text-[var(--cyan)]"
           >
             Receive
           </button>
           <button
+            type="button"
             className="flex-1 py-2.5 text-xs font-bold uppercase tracking-widest bg-[rgba(255,255,255,0.05)] rounded text-[var(--text-3)] transition-all duration-200 cursor-pointer hover:bg-[rgba(255,255,255,0.08)] hover:text-white"
           >
             Send
@@ -146,7 +148,7 @@ function BalanceCard({ balance }: { balance: (typeof balances)[number] }) {
 
 export default function WalletPage() {
   const totalValue = balances.reduce(
-    (sum, b) => sum + b.available + b.pending,
+    (sum, b) => sum + (b.available + b.pending) * (usdRates[b.currency] ?? 1),
     0
   );
 
@@ -187,6 +189,7 @@ export default function WalletPage() {
 
         {/* Request New Currency */}
         <button
+          type="button"
           aria-label="Request new currency"
           className="border-2 border-dashed border-[var(--border-outline)] rounded-lg flex flex-col items-center justify-center p-8 hover:border-[var(--cyan)] hover:bg-[var(--cyan-wash)] cursor-pointer group transition-all duration-300"
         >

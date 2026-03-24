@@ -151,7 +151,10 @@ export default function LoginPage() {
 
         {/* Terms footer */}
         <p className="text-[11px] text-[var(--text-4)] text-center mt-8 leading-relaxed">
-          By continuing, you agree to our Terms of Service and Privacy Policy.
+          By continuing, you agree to our{" "}
+          <a href="#" className="text-[var(--text-3)] hover:text-[var(--cyan)] transition-colors underline underline-offset-4 decoration-[var(--border)]">Terms of Service</a>
+          {" "}and{" "}
+          <a href="#" className="text-[var(--text-3)] hover:text-[var(--cyan)] transition-colors underline underline-offset-4 decoration-[var(--border)]">Privacy Policy</a>.
         </p>
       </div>
 
