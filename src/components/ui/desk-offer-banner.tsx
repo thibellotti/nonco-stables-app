@@ -1,44 +1,73 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
 export function DeskOfferBanner() {
   const [dismissed, setDismissed] = useState(false);
+  const [countdown, setCountdown] = useState(272); // 4:32 in seconds
+
+  useEffect(() => {
+    if (dismissed) return;
+    const interval = setInterval(() => {
+      setCountdown((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [dismissed]);
+
   if (dismissed) return null;
 
+  const mins = Math.floor(countdown / 60);
+  const secs = countdown % 60;
+
   return (
-    <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-[var(--bg-card)] border border-[var(--border)] relative overflow-hidden">
+    <div className="relative flex items-center gap-3 px-4 py-3.5 rounded-lg bg-[var(--bg-card)] border border-[var(--border)] overflow-hidden">
+      {/* Animated gradient background */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(90deg, rgba(5,224,248,0.06) 0%, rgba(5,224,248,0.02) 40%, transparent 70%)",
+          animation: "banner-shimmer 4s ease-in-out infinite",
+        }}
+      />
+
       {/* Cyan left accent bar */}
       <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-[var(--cyan)]" />
 
-      {/* Pulsing dot */}
-      <div className="relative ml-2">
-        <div className="w-2 h-2 rounded-full bg-[var(--cyan)]" />
-        <div className="absolute inset-0 w-2 h-2 rounded-full bg-[var(--cyan)] animate-ping" />
+      {/* Pulsing dot — bigger and more visible */}
+      <div className="relative ml-2 shrink-0">
+        <div className="w-2.5 h-2.5 rounded-full bg-[var(--cyan)]" />
+        <div className="absolute inset-0 w-2.5 h-2.5 rounded-full bg-[var(--cyan)] animate-ping opacity-75" />
       </div>
 
       {/* Content */}
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0 relative">
         <p className="text-sm font-medium">
           Trading desk has{" "}
-          <span className="text-[var(--cyan)] font-mono">USDT at 17.42</span> —
+          <span className="text-[var(--cyan)] font-mono font-bold">USDT at 17.42</span> —
           limited inventory
         </p>
-        <p className="text-xs text-[var(--text-4)] mt-0.5">
-          5 min remaining · 2M USDT available
-        </p>
+        <div className="flex items-center gap-3 mt-0.5">
+          <p className="text-xs text-[var(--text-4)]">
+            2M USDT available
+          </p>
+          <span className="text-[10px] text-[var(--text-4)]">&middot;</span>
+          <span className="text-xs font-mono tabular-nums text-[var(--amber)]">
+            Expires in {mins}:{secs.toString().padStart(2, "0")}
+          </span>
+        </div>
       </div>
 
       {/* Actions */}
-      <Button variant="cyan" size="sm">
+      <Button variant="cyan" size="sm" className="relative shrink-0">
         View
       </Button>
 
       {/* Dismiss */}
       <button
         onClick={() => setDismissed(true)}
-        className="text-[var(--text-4)] hover:text-[var(--text-3)] transition-colors p-1 cursor-pointer"
+        className="relative text-[var(--text-4)] hover:text-[var(--text-3)] transition-colors p-1 cursor-pointer shrink-0"
         aria-label="Dismiss offer"
       >
         <svg

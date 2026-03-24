@@ -44,3 +44,18 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Banner shimmer animation for desk offer */
+@keyframes banner-shimmer {
+  0%, 100% { opacity: 0.6; transform: translateX(-5%); }
+  50% { opacity: 1; transform: translateX(5%); }
+}
+
+/* Scrollbar-none utility */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
