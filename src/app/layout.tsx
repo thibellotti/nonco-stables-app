@@ -7,6 +7,10 @@ import { PageHeader } from "@/components/layout/page-header";
 export const metadata: Metadata = {
   title: "Nonco Stables",
   description: "Institutional stablecoin payments platform",
+  icons: {
+    icon: "/icon.svg",
+    apple: "/icon.svg",
+  },
 };
 
 export const viewport: Viewport = {
