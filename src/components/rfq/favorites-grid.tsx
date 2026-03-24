@@ -1,10 +1,26 @@
 "use client";
 
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { favorites, type Instrument } from "@/lib/mock-data";
 import { formatMoney } from "@/lib/utils";
+
+// ---------------------------------------------------------------------------
+// Currency full names for display
+// ---------------------------------------------------------------------------
+
+const currencyNames: Record<string, string> = {
+  MXN: "Mexican Peso",
+  EUR: "Euro",
+  BRL: "Brazilian Real",
+  USD: "US Dollar",
+  GBP: "British Pound",
+  USDT: "Tether",
+  USDC: "USD Coin",
+};
+
+// ---------------------------------------------------------------------------
+// Favorites Grid
+// ---------------------------------------------------------------------------
 
 interface FavoritesGridProps {
   onQuote: (instrument: Instrument, quantity: number) => void;
@@ -23,37 +39,55 @@ export function FavoritesGrid({ onQuote }: FavoritesGridProps) {
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
       {favorites.map((fav) => {
         const [base, quote] = fav.instrument.pair.split("/");
+        const baseName = currencyNames[base] ?? base;
         return (
-          <Card key={fav.id} className="p-4 flex flex-col gap-3">
-            <div className="flex items-baseline gap-1">
-              <span className="text-base font-semibold text-[var(--text)]">
-                {base}
-              </span>
-              <span className="text-base font-semibold text-[var(--text-4)]">
-                /{quote}
-              </span>
+          <div
+            key={fav.id}
+            className="bg-[#141414] border border-[#333] p-6 rounded-lg hover:bg-[#1a1a1a] h-44 flex flex-col justify-between group transition-colors duration-200"
+          >
+            {/* Top: pair code + name + star */}
+            <div>
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-[10px] text-[var(--text-3)] font-mono uppercase tracking-wider">
+                    {base}/{quote}
+                  </p>
+                  <p className="text-lg font-bold tracking-tight text-white mt-1">
+                    {baseName}
+                  </p>
+                </div>
+                {/* Star icon */}
+                <svg
+                  className="w-4 h-4 text-[var(--cyan)]/50 group-hover:text-[var(--cyan)] transition-colors duration-200 shrink-0 mt-0.5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  aria-hidden="true"
+                >
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              </div>
             </div>
 
-            <input
-              type="text"
-              inputMode="numeric"
-              value={formatMoney(quantities[fav.id]).replace(/\.00$/, "")}
-              onChange={(e) => handleQuantityChange(fav.id, e.target.value)}
-              className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-3 py-2 text-sm font-mono text-[var(--text)] placeholder:text-[var(--text-4)] focus:border-[var(--cyan)] focus:outline-none focus:ring-1 focus:ring-[var(--cyan)]/20 transition-colors"
-            />
-
-            <Button
-              variant="cyan"
-              size="sm"
-              className="w-full"
-              onClick={() => onQuote(fav.instrument, quantities[fav.id])}
-            >
-              Quote
-            </Button>
-          </Card>
+            {/* Bottom: quantity + quote button */}
+            <div className="flex gap-2">
+              <input
+                type="text"
+                inputMode="numeric"
+                value={formatMoney(quantities[fav.id]).replace(/\.00$/, "")}
+                onChange={(e) => handleQuantityChange(fav.id, e.target.value)}
+                className="flex-1 min-w-0 bg-[#242424] rounded px-3 py-2 font-mono text-sm text-white placeholder:text-[#525252] focus:outline-none focus:ring-1 focus:ring-[var(--cyan)]/30 transition-colors"
+              />
+              <button
+                onClick={() => onQuote(fav.instrument, quantities[fav.id])}
+                className="shrink-0 bg-[var(--cyan)] text-black text-[10px] font-bold uppercase tracking-wider rounded-full px-5 py-2 hover:brightness-110 active:scale-95 transition-all duration-200 cursor-pointer"
+              >
+                Quote
+              </button>
+            </div>
+          </div>
         );
       })}
     </div>

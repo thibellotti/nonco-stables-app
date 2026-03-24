@@ -2,9 +2,6 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { SectionLabel } from "@/components/ui/section-label";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { transactions } from "@/lib/mock-data";
 import { formatMoney, timeAgo } from "@/lib/utils";
 
@@ -57,31 +54,44 @@ export default function SettlementsPage() {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      className="p-6 lg:px-10 lg:py-8 space-y-6"
+      className="px-6 md:px-8 w-full space-y-8"
     >
-      <SectionLabel>Settlements</SectionLabel>
+      {/* Header */}
+      <div className="space-y-3">
+        <div className="flex items-center gap-3">
+          <div className="w-[2px] h-4 bg-[var(--cyan)] rounded-full" />
+          <span className="font-mono text-[10px] font-medium uppercase tracking-[.15em] text-[var(--text-3)]">
+            Institutional Settlements
+          </span>
+        </div>
+        <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-white">
+          Post-Trade Clearing
+        </h1>
+      </div>
 
-      {/* Tabs */}
-      <div className="flex gap-1 bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-1 w-fit">
+      {/* Tab Navigation — underline style */}
+      <div className="flex gap-8 border-b border-[rgba(255,255,255,0.05)]">
         <button
           onClick={() => setActiveTab("pending")}
-          className={`px-4 py-1.5 rounded-md font-mono text-xs font-medium transition-all duration-200 cursor-pointer ${
+          className={`pb-4 font-mono text-sm transition-colors duration-200 cursor-pointer ${
             activeTab === "pending"
-              ? "bg-[var(--bg-elevated)] text-[var(--text)]"
-              : "text-[var(--text-4)] hover:text-[var(--text-3)]"
+              ? "text-[var(--cyan)] border-b-2 border-[var(--cyan)] font-bold"
+              : "text-[var(--text-3)] hover:text-white border-b-2 border-transparent"
           }`}
         >
-          Pending
-          <span className="ml-2 inline-flex items-center justify-center w-4 h-4 rounded-full bg-[var(--cyan-dim)] text-[var(--cyan)] text-[10px] font-bold">
-            {pendingSettlements.length}
+          <span className="flex items-center gap-2">
+            Pending
+            <span className="bg-[var(--amber)] text-black text-[10px] font-bold font-mono px-1.5 py-0.5 rounded-sm">
+              {pendingSettlements.length}
+            </span>
           </span>
         </button>
         <button
           onClick={() => setActiveTab("completed")}
-          className={`px-4 py-1.5 rounded-md font-mono text-xs font-medium transition-all duration-200 cursor-pointer ${
+          className={`pb-4 font-mono text-sm transition-colors duration-200 cursor-pointer ${
             activeTab === "completed"
-              ? "bg-[var(--bg-elevated)] text-[var(--text)]"
-              : "text-[var(--text-4)] hover:text-[var(--text-3)]"
+              ? "text-[var(--cyan)] border-b-2 border-[var(--cyan)] font-bold"
+              : "text-[var(--text-3)] hover:text-white border-b-2 border-transparent"
           }`}
         >
           Completed
@@ -94,7 +104,7 @@ export default function SettlementsPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
-          className="grid grid-cols-1 lg:grid-cols-3 gap-3"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           {pendingSettlements.map((s, i) => (
             <motion.div
@@ -103,68 +113,118 @@ export default function SettlementsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.06, duration: 0.3 }}
             >
-              {/* Animated border wrapper for processing items */}
-              <div className={`relative rounded-lg ${s.status === 'processing' ? 'p-px' : ''}`}
-                style={s.status === 'processing' ? {
-                  background: 'conic-gradient(from var(--border-angle, 0deg), var(--cyan), transparent 30%, transparent 70%, var(--cyan))',
-                  animation: 'spin-border 4s linear infinite',
-                } : undefined}
-              >
-                <Card className={s.status === 'processing' ? 'rounded-[7px]' : ''}>
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <div className="flex items-center gap-3">
-                        <span className="font-mono text-base font-semibold text-[var(--text)]">
-                          {s.pair}
+              {s.status === "processing" ? (
+                /* Processing card — animated conic-gradient border */
+                <div className="processing-border rounded-lg">
+                  <div className="bg-[#141414] rounded-[7px] p-6 flex flex-col justify-between h-64">
+                    {/* Top: pair + status */}
+                    <div className="space-y-3">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <span className="font-mono text-[10px] uppercase tracking-[.15em] text-[var(--text-3)]">
+                            {s.settlement}
+                          </span>
+                          <p className="text-xl font-bold text-white mt-0.5">{s.pair}</p>
+                        </div>
+                        <span className="flex items-center gap-1.5 bg-[rgba(5,224,248,0.1)] text-[var(--cyan)] text-[10px] font-bold font-mono px-2 py-1 rounded-sm">
+                          <span className="relative flex h-1.5 w-1.5">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--cyan)] opacity-75" />
+                            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[var(--cyan)]" />
+                          </span>
+                          PROCESSING
                         </span>
-                        <Badge
-                          variant={s.status === "processing" ? "cyan" : "amber"}
-                        >
-                          {s.status === "processing"
-                            ? "Processing"
-                            : "Awaiting settlement"}
-                        </Badge>
                       </div>
-                      <p className="text-[var(--text-3)] text-xs mt-1">
-                        {s.counterparty}
-                      </p>
+
+                      {/* Amount */}
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="text-3xl font-bold font-mono text-white" style={{ fontVariantNumeric: "tabular-nums" }}>
+                          {formatMoney(s.amount)}
+                        </span>
+                        <span className="text-sm font-mono font-bold text-[var(--cyan)]">
+                          {s.pair.split("/")[0]}
+                        </span>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <p className="font-mono text-base font-semibold text-[var(--text)]">
+
+                    {/* Bottom: counterparty, due, progress */}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-mono text-[var(--text-3)]">{s.counterparty}</span>
+                        <span className="text-[10px] font-mono text-[var(--text-3)]">Due {s.dueDate}</span>
+                      </div>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-[10px] font-mono text-[var(--text-3)]">Progress</span>
+                        <span className="text-[10px] font-mono font-bold text-white">{s.progress}%</span>
+                      </div>
+                      <div className="h-1.5 rounded-full bg-[rgba(255,255,255,0.06)] overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${s.progress}%` }}
+                          transition={{ delay: 0.3 + i * 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                          className="h-full rounded-full"
+                          style={{
+                            background: "linear-gradient(90deg, var(--cyan-dark, #0a8a9e), var(--cyan))",
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                /* Awaiting cards */
+                <div className="bg-[#141414] rounded-lg border border-transparent hover:border-[rgba(255,255,255,0.05)] transition-colors duration-200 p-6 flex flex-col justify-between h-64">
+                  {/* Top: pair + status */}
+                  <div className="space-y-3">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <span className="font-mono text-[10px] uppercase tracking-[.15em] text-[var(--text-3)]">
+                          {s.settlement}
+                        </span>
+                        <p className="text-xl font-bold text-white mt-0.5">{s.pair}</p>
+                      </div>
+                      <span className="flex items-center gap-1.5 bg-[rgba(249,226,32,0.1)] text-[var(--amber)] text-[10px] font-bold font-mono px-2 py-1 rounded-sm">
+                        <span className="relative flex h-1.5 w-1.5">
+                          <span className="inline-flex rounded-full h-1.5 w-1.5 bg-[var(--amber)]" />
+                        </span>
+                        AWAITING
+                      </span>
+                    </div>
+
+                    {/* Amount */}
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="text-3xl font-bold font-mono text-white" style={{ fontVariantNumeric: "tabular-nums" }}>
                         {formatMoney(s.amount)}
-                      </p>
-                      <p className="font-mono text-[10px] font-medium uppercase tracking-[.08em] text-[var(--text-4)] mt-0.5">
+                      </span>
+                      <span className="text-sm font-mono font-bold text-[var(--cyan)]">
                         {s.pair.split("/")[0]}
-                      </p>
+                      </span>
                     </div>
                   </div>
 
-                  {/* Settlement timeline */}
-                  <div className="flex items-center justify-between text-xs text-[var(--text-4)] mb-2">
-                    <span>
-                      {s.settlement} — Due{" "}
-                      <span className="text-[var(--text-2)]">{s.dueDate}</span>
-                    </span>
-                    <span className="font-mono">{s.progress}%</span>
+                  {/* Bottom: counterparty, due, progress */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-mono text-[var(--text-3)]">{s.counterparty}</span>
+                      <span className="text-[10px] font-mono text-[var(--text-3)]">Due {s.dueDate}</span>
+                    </div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-[10px] font-mono text-[var(--text-3)]">Progress</span>
+                      <span className="text-[10px] font-mono font-bold text-white">{s.progress}%</span>
+                    </div>
+                    <div className="h-1.5 rounded-full bg-[rgba(255,255,255,0.06)] overflow-hidden">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${s.progress}%` }}
+                        transition={{ delay: 0.3 + i * 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                        className="h-full rounded-full"
+                        style={{
+                          background: "linear-gradient(90deg, #d97706, var(--amber))",
+                        }}
+                      />
+                    </div>
                   </div>
-
-                  {/* Progress bar — rounded with gradient fill */}
-                  <div className="h-1.5 rounded-full bg-[var(--bg-muted)] overflow-hidden">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${s.progress}%` }}
-                      transition={{ delay: 0.3 + i * 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                      className="h-full rounded-full"
-                      style={{
-                        background:
-                          s.status === "processing"
-                            ? "linear-gradient(90deg, var(--cyan-dark), var(--cyan))"
-                            : "linear-gradient(90deg, #d97706, var(--amber))",
-                      }}
-                    />
-                  </div>
-                </Card>
-              </div>
+                </div>
+              )}
             </motion.div>
           ))}
         </motion.div>
@@ -176,62 +236,76 @@ export default function SettlementsPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
+          className="space-y-8"
         >
-          <Card padding={false}>
-            <div className="px-5 py-3 border-b border-[var(--border)]">
-              <span className="font-mono text-[10px] font-medium uppercase tracking-[.08em] text-[var(--text-4)]">
+          {/* Settlement History Header */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-[2px] h-4 bg-[var(--cyan)] rounded-full" />
+              <span className="font-mono text-[10px] font-medium uppercase tracking-[.15em] text-[var(--text-3)]">
                 Settlement History
               </span>
             </div>
+            <button className="font-mono text-[10px] font-bold uppercase tracking-[.15em] text-[var(--text-3)] hover:text-white transition-colors duration-200 cursor-pointer">
+              Export CSV
+            </button>
+          </div>
 
-            {/* Table header */}
-            <div className="grid grid-cols-[1.5fr_1fr_1fr] sm:grid-cols-[1.5fr_1fr_1fr_1fr_1fr] gap-4 px-5 py-2.5 text-[var(--text-4)]">
-              <span className="font-mono text-[10px] font-medium uppercase tracking-[.08em]">
-                Description
-              </span>
-              <span className="font-mono text-[10px] font-medium uppercase tracking-[.08em] text-right">
-                Amount
-              </span>
-              <span className="font-mono text-[10px] font-medium uppercase tracking-[.08em]">
-                Currency
-              </span>
-              <span className="font-mono text-[10px] font-medium uppercase tracking-[.08em] hidden sm:block">
-                Counterparty
-              </span>
-              <span className="font-mono text-[10px] font-medium uppercase tracking-[.08em] text-right hidden sm:block">
-                Date
-              </span>
-            </div>
-
-            {/* Rows */}
-            <div className="divide-y divide-[var(--border)]">
-              {completedSettlements.map((t, i) => (
-                <motion.div
-                  key={t.id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: i * 0.05, duration: 0.3 }}
-                  className={`grid grid-cols-[1.5fr_1fr_1fr] sm:grid-cols-[1.5fr_1fr_1fr_1fr_1fr] gap-4 px-5 py-3 items-center hover:bg-[var(--bg-elevated)] transition-colors duration-150 ${i % 2 === 1 ? 'bg-[rgba(255,255,255,0.01)]' : ''}`}
-                >
-                  <span className="text-sm text-[var(--text-2)] truncate">
-                    {t.description}
-                  </span>
-                  <span className="font-mono text-sm text-[var(--text)] text-right font-medium">
-                    {formatMoney(t.amount)}
-                  </span>
-                  <span>
-                    <Badge variant="default">{t.currency}</Badge>
-                  </span>
-                  <span className="text-sm text-[var(--text-3)] truncate hidden sm:block">
-                    {t.counterparty}
-                  </span>
-                  <span className="font-mono text-xs text-[var(--text-3)] text-right hidden sm:block">
-                    {timeAgo(t.timestamp)}
-                  </span>
-                </motion.div>
-              ))}
-            </div>
-          </Card>
+          {/* Table */}
+          <div className="bg-[#141414] rounded-lg border border-[rgba(255,255,255,0.05)] overflow-hidden">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-[rgba(255,255,255,0.05)]">
+                  <th className="px-8 py-5 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)]">Description</th>
+                  <th className="px-8 py-5 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] text-right">Amount</th>
+                  <th className="px-8 py-5 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)]">Currency</th>
+                  <th className="px-8 py-5 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] hidden sm:table-cell">Counterparty</th>
+                  <th className="px-8 py-5 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] text-right hidden sm:table-cell">Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {completedSettlements.map((t, i) => (
+                  <motion.tr
+                    key={t.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: i * 0.05, duration: 0.3 }}
+                    className={`border-b border-[rgba(255,255,255,0.03)] hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-150 ${
+                      i % 2 === 1 ? "bg-[rgba(255,255,255,0.02)]" : ""
+                    }`}
+                  >
+                    <td className="px-8 py-6">
+                      <span className="text-sm text-[var(--text-2)]">{t.description}</span>
+                    </td>
+                    <td className="px-8 py-6 text-right">
+                      <span className="font-mono text-sm font-bold text-white" style={{ fontVariantNumeric: "tabular-nums" }}>
+                        {formatMoney(t.amount)}
+                      </span>
+                    </td>
+                    <td className="px-8 py-6">
+                      <span className={`inline-flex items-center px-2.5 py-1 rounded text-[10px] font-mono font-bold ${
+                        t.currency === "USDT"
+                          ? "bg-[rgba(5,224,248,0.1)] text-[var(--cyan)]"
+                          : t.currency === "USDC"
+                          ? "bg-[rgba(38,117,255,0.1)] text-blue-400"
+                          : "bg-[rgba(255,255,255,0.06)] text-[var(--text-2)]"
+                      }`}>
+                        {t.currency}
+                      </span>
+                    </td>
+                    <td className="px-8 py-6 hidden sm:table-cell">
+                      <span className="font-mono text-sm text-[var(--text-3)]">{t.counterparty}</span>
+                    </td>
+                    <td className="px-8 py-6 text-right hidden sm:table-cell">
+                      <span className="font-mono text-sm text-[var(--text-3)]" style={{ fontVariantNumeric: "tabular-nums" }}>
+                        {timeAgo(t.timestamp)}
+                      </span>
+                    </td>
+                  </motion.tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </motion.div>
       )}
     </motion.div>

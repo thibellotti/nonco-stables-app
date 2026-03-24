@@ -70,7 +70,7 @@ export default function RFQPage() {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      className="p-6 lg:px-10 lg:py-8 space-y-6"
+      className="px-6 md:px-8 w-full space-y-8"
     >
       <SectionLabel>Favorites</SectionLabel>
       <FavoritesGrid onQuote={handleQuote} />

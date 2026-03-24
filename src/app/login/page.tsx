@@ -1,90 +1,164 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-/**
- * Static login page — no auth logic.
- * Lives outside the (app) route group so the sidebar/shell is not rendered.
- */
 export default function LoginPage() {
+  const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    router.push("/dashboard");
+  };
+
   return (
-    <div className="flex items-center justify-center min-h-dvh bg-[var(--bg)]">
-      <div className="w-full max-w-sm px-6 flex flex-col items-center text-center">
-        {/* Logo */}
-        <div className="mb-8">
-          <h1 className="font-mono text-2xl tracking-tight">
-            <span className="font-bold text-[var(--text)]">NONCO</span>{" "}
-            <span className="font-light text-[var(--text-3)]">STABLES</span>
-          </h1>
-          <p className="text-[var(--text-4)] text-xs mt-2 tracking-wide uppercase">
+    <div className="relative flex min-h-dvh items-center justify-center bg-black">
+      {/* Top decorative glow */}
+      <div
+        className="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px]"
+        style={{
+          background: "rgba(5,224,248,0.05)",
+          filter: "blur(120px)",
+        }}
+      />
+
+      {/* Centered form container */}
+      <div className="w-full max-w-[400px] px-6">
+        {/* Header */}
+        <div className="flex flex-col items-center mb-12">
+          {/* Official Nonco Stables wordmark */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/nonco-stables-logo.svg"
+            alt="Nonco Stables"
+            className="h-7 w-auto"
+          />
+          <div className="w-12 h-[2px] bg-[var(--cyan)] mt-5" />
+          <p className="text-lg font-light text-[#737373] mt-5">
             Institutional stablecoin payments
           </p>
         </div>
 
-        {/* Email / Password form */}
-        <form className="w-full space-y-3" onSubmit={(e) => e.preventDefault()}>
-          <input
-            type="email"
-            placeholder="Email address"
-            autoComplete="email"
-            className="w-full rounded-full bg-[var(--bg-card)] border border-[var(--border)] px-5 py-3 text-sm text-[var(--text)] placeholder:text-[var(--text-4)] outline-none focus:border-[var(--cyan)] transition-colors duration-200"
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            autoComplete="current-password"
-            className="w-full rounded-full bg-[var(--bg-card)] border border-[var(--border)] px-5 py-3 text-sm text-[var(--text)] placeholder:text-[var(--text-4)] outline-none focus:border-[var(--cyan)] transition-colors duration-200"
-          />
-          <Button variant="cyan" size="lg" className="w-full" type="submit">
+        {/* Form */}
+        <form className="space-y-6" onSubmit={handleLogin}>
+          {/* Email */}
+          <div>
+            <label className="block text-[10px] uppercase font-mono tracking-[.15em] text-[#525252] mb-1.5 ml-1">
+              Email
+            </label>
+            <input
+              type="email"
+              placeholder="name@institution.com"
+              autoComplete="email"
+              className="w-full bg-[#141414] border-0 ring-1 ring-[#333] focus:ring-2 focus:ring-[var(--cyan)] rounded-lg px-4 py-3.5 font-mono text-sm text-white placeholder:text-[#525252] outline-none transition-shadow duration-200"
+            />
+          </div>
+
+          {/* Password */}
+          <div>
+            <div className="flex items-center justify-between mb-1.5 ml-1">
+              <label className="text-[10px] uppercase font-mono tracking-[.15em] text-[#525252]">
+                Password
+              </label>
+              <button
+                type="button"
+                className="text-[10px] font-mono tracking-[.1em] text-[#525252] hover:text-[var(--cyan)] transition-colors cursor-pointer"
+              >
+                Forgot?
+              </button>
+            </div>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter password"
+                autoComplete="current-password"
+                className="w-full bg-[#141414] border-0 ring-1 ring-[#333] focus:ring-2 focus:ring-[var(--cyan)] rounded-lg px-4 py-3.5 pr-12 font-mono text-sm text-white placeholder:text-[#525252] outline-none transition-shadow duration-200"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#525252] hover:text-white transition-colors cursor-pointer p-1"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94" />
+                    <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19" />
+                    <line x1="1" y1="1" x2="23" y2="23" />
+                  </svg>
+                ) : (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Sign In */}
+          <button
+            type="submit"
+            className="w-full bg-[var(--cyan)] hover:shadow-[0_0_25px_rgba(5,224,248,0.3)] text-black font-bold py-4 rounded-full active:scale-[0.98] transition-all duration-200 cursor-pointer text-sm tracking-wide"
+          >
             Sign In
-          </Button>
+          </button>
         </form>
 
         {/* Divider */}
-        <div className="flex items-center gap-3 w-full my-5">
-          <div className="flex-1 h-px bg-[var(--border)]" />
-          <span className="text-[var(--text-4)] text-xs">or continue with</span>
-          <div className="flex-1 h-px bg-[var(--border)]" />
+        <div className="flex items-center gap-3 my-8">
+          <div className="flex-1 h-px bg-[#333]" />
+          <span className="text-[11px] text-[#525252] font-mono whitespace-nowrap">
+            Alternative Authentication
+          </span>
+          <div className="flex-1 h-px bg-[#333]" />
         </div>
 
-        {/* OAuth buttons */}
-        <div className="w-full space-y-3">
-          <Button variant="white" size="lg" className="w-full">
+        {/* Social buttons */}
+        <div className="space-y-3">
+          {/* Google */}
+          <button
+            type="button"
+            className="w-full flex items-center justify-center gap-2.5 bg-white text-black rounded-full py-3 font-medium text-sm hover:bg-white/90 active:scale-[0.98] transition-all duration-200 cursor-pointer"
+          >
             <svg width="18" height="18" viewBox="0 0 24 24" className="shrink-0">
-              <path
-                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
-                fill="#4285F4"
-              />
-              <path
-                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                fill="#34A853"
-              />
-              <path
-                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18A11.96 11.96 0 001 12c0 1.94.46 3.77 1.18 5.41l3.66-2.84z"
-                fill="#FBBC05"
-              />
-              <path
-                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                fill="#EA4335"
-              />
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18A11.96 11.96 0 001 12c0 1.94.46 3.77 1.18 5.41l3.66-2.84z" fill="#FBBC05" />
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
             </svg>
             Continue with Google
-          </Button>
+          </button>
 
-          <Button variant="ghost" size="lg" className="w-full">
+          {/* Wallet */}
+          <button
+            type="button"
+            className="w-full flex items-center justify-center gap-2.5 border border-[#333] text-white rounded-full py-3 font-medium text-sm hover:bg-[#141414] active:scale-[0.98] transition-all duration-200 cursor-pointer"
+          >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
               <rect x="2" y="6" width="20" height="14" rx="2" />
               <path d="M2 10h20" />
               <circle cx="16" cy="16" r="1.5" />
             </svg>
             Connect Wallet
-          </Button>
+          </button>
         </div>
 
-        {/* Footer */}
-        <p className="text-[var(--text-4)] text-[10px] mt-8 leading-relaxed">
-          By continuing, you agree to our Terms of Service
+        {/* Terms footer */}
+        <p className="text-[11px] text-[#525252] text-center mt-8 leading-relaxed">
+          By continuing, you agree to our Terms of Service and Privacy Policy.
         </p>
+      </div>
+
+      {/* Bottom fixed badge */}
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 opacity-20">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        </svg>
+        <span className="text-[11px] font-mono text-white tracking-wider">
+          Sovereign Encryption Active
+        </span>
       </div>
     </div>
   );

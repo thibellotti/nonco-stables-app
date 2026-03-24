@@ -70,7 +70,7 @@ export function BottomTabs() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 inset-x-0 z-50 flex lg:hidden bg-[var(--bg-card)] border-t border-[var(--border)]">
+    <nav className="fixed bottom-0 inset-x-0 z-50 flex lg:hidden bg-black border-t border-[rgba(255,255,255,0.05)] shadow-[0_-4px_20px_rgba(5,224,248,0.05)]">
       <div className="flex w-full justify-around items-center h-16 pb-[env(safe-area-inset-bottom)]">
         {tabs.map((tab) => {
           const isActive =
@@ -81,14 +81,21 @@ export function BottomTabs() {
               key={tab.href}
               href={tab.href}
               className={cn(
-                "flex flex-col items-center justify-center gap-1 flex-1 py-2 transition-colors duration-150",
+                "flex flex-col items-center justify-center gap-0.5 flex-1 py-2 transition-all duration-200",
                 isActive
                   ? "text-[var(--cyan)]"
-                  : "text-[var(--text-4)]"
+                  : "text-[#525252]"
               )}
             >
-              {tab.icon}
-              <span className="text-[10px] font-medium">{tab.label}</span>
+              <span
+                className={cn(
+                  "flex items-center justify-center",
+                  isActive && "bg-[rgba(5,224,248,0.05)] rounded-full px-4 py-1"
+                )}
+              >
+                {tab.icon}
+              </span>
+              <span className="text-[10px] font-mono uppercase tracking-widest mt-1">{tab.label}</span>
             </Link>
           );
         })}

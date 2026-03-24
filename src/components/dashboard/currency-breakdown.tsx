@@ -23,44 +23,39 @@ export function CurrencyBreakdown() {
             <div
               key={balance.currency}
               className={cn(
-                "relative p-4 rounded-lg overflow-hidden",
-                "bg-[var(--bg-card)] border border-[var(--border)]",
+                "bg-[#141414] border border-[#333] rounded-lg p-5",
                 "transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]",
-                "hover:border-[rgba(255,255,255,0.12)] hover:shadow-[0_0_30px_rgba(5,224,248,0.03)]",
-                "group cursor-default"
+                "cursor-default group"
               )}
+              style={{
+                // Dynamic hover border via CSS custom property
+                "--hover-border": `${colors.border}4D`,
+              } as React.CSSProperties}
             >
-              {/* Currency icon circle + code */}
-              <div className="flex items-center gap-2.5 mb-3">
+              {/* Top: colored dot + currency symbol */}
+              <div className="flex items-center gap-2 mb-3">
                 <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-bold font-mono shrink-0"
-                  style={{ backgroundColor: colors.bg, color: colors.text }}
-                >
-                  {balance.symbol}
-                </div>
-                <span className="text-xs font-medium text-[var(--text-3)] uppercase tracking-wider">
+                  className="w-2 h-2 rounded-full shrink-0"
+                  style={{ backgroundColor: colors.border }}
+                />
+                <span className="font-mono text-xs uppercase tracking-wider text-[#737373]">
                   {balance.currency}
                 </span>
               </div>
 
-              {/* Amount */}
-              <p className="font-mono text-lg font-bold tracking-tight text-[var(--text)] leading-none">
+              {/* Middle: amount */}
+              <p className="font-mono text-lg font-bold tracking-tight text-white leading-none tabular-nums">
                 {formatCompact(balance.available)}
               </p>
 
-              {/* Subtitle */}
-              <p className="text-[10px] text-[var(--text-4)] mt-1 font-mono uppercase tracking-wider">
-                Available
-              </p>
-
-              {/* Progress bar */}
-              <div className="mt-3 h-[2px] w-full bg-[var(--border-subtle)] rounded-full overflow-hidden">
+              {/* Bottom: thin progress bar */}
+              <div className="mt-4 h-1 w-full bg-[#1f1f1f] rounded-full overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
                   style={{
                     width: `${pct}%`,
                     backgroundColor: colors.border,
-                    opacity: 0.6,
+                    opacity: 0.5,
                   }}
                 />
               </div>

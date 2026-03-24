@@ -3,7 +3,7 @@ import { transactions, type TransactionType } from "@/lib/mock-data";
 import { cn, formatCompact, timeAgo } from "@/lib/utils";
 
 // ---------------------------------------------------------------------------
-// Icons per transaction type — simple SVGs
+// Icons per transaction type
 // ---------------------------------------------------------------------------
 
 const iconColors: Record<TransactionType, string> = {
@@ -24,7 +24,6 @@ function TxIcon({ type }: { type: TransactionType }) {
   const color = iconColors[type];
 
   const paths: Record<TransactionType, React.ReactNode> = {
-    // Arrow down-left (deposit)
     deposit: (
       <path
         d="M14 6L6 14M6 14h5.5M6 14V8.5"
@@ -34,7 +33,6 @@ function TxIcon({ type }: { type: TransactionType }) {
         strokeLinejoin="round"
       />
     ),
-    // Arrow up-right (withdrawal)
     withdrawal: (
       <path
         d="M6 14L14 6M14 6H8.5M14 6v5.5"
@@ -44,7 +42,6 @@ function TxIcon({ type }: { type: TransactionType }) {
         strokeLinejoin="round"
       />
     ),
-    // Double horizontal arrow (trade)
     trade: (
       <path
         d="M4 7.5h12M16 7.5l-3-3M4 12.5h12M4 12.5l3 3"
@@ -54,7 +51,6 @@ function TxIcon({ type }: { type: TransactionType }) {
         strokeLinejoin="round"
       />
     ),
-    // Diamond (settlement)
     settlement: (
       <path
         d="M10 3L17 10L10 17L3 10L10 3Z"
@@ -129,9 +125,9 @@ function TransactionRow({ tx }: { tx: (typeof transactions)[number] }) {
   return (
     <div
       className={cn(
-        "flex items-center gap-3.5 py-3 lg:py-3.5 px-3 -mx-3 rounded-lg cursor-pointer",
-        "transition-all duration-150 ease-[cubic-bezier(0.16,1,0.3,1)]",
-        "hover:bg-[var(--bg-elevated)]"
+        "flex items-center gap-3.5 p-4",
+        "transition-colors duration-150 ease-[cubic-bezier(0.16,1,0.3,1)]",
+        "hover:bg-[rgba(255,255,255,0.02)] cursor-pointer"
       )}
     >
       {/* Left: icon + text */}
@@ -180,36 +176,7 @@ function TransactionRow({ tx }: { tx: (typeof transactions)[number] }) {
 }
 
 // ---------------------------------------------------------------------------
-// Date group header
-// ---------------------------------------------------------------------------
-
-function DateGroupHeader({ label }: { label: string }) {
-  return (
-    <div className="sticky top-0 z-10 py-2 mt-2 first:mt-0">
-      <div className="flex items-center gap-3">
-        <span className="font-mono text-[10px] font-medium uppercase tracking-[.12em] text-[var(--text-4)] shrink-0">
-          {label}
-        </span>
-        <div className="flex-1 h-px bg-gradient-to-r from-[var(--border)] to-transparent" />
-      </div>
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Divider between rows (gradient line, not harsh border)
-// ---------------------------------------------------------------------------
-
-function RowDivider() {
-  return (
-    <div className="mx-3">
-      <div className="h-px bg-gradient-to-r from-transparent via-[var(--border-subtle)] to-transparent" />
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Transaction list (filtered + grouped by date)
+// Transaction list (filtered + grouped by date into cards)
 // ---------------------------------------------------------------------------
 
 interface TransactionListProps {
@@ -233,16 +200,20 @@ export function TransactionList({ filter }: TransactionListProps) {
   const groups = groupByDate(filtered);
 
   return (
-    <div className="mt-3">
+    <div className="mt-3 space-y-6">
       {groups.map((group) => (
         <div key={group.label}>
-          <DateGroupHeader label={group.label} />
-          {group.items.map((tx, i) => (
-            <div key={tx.id}>
-              <TransactionRow tx={tx} />
-              {i < group.items.length - 1 && <RowDivider />}
-            </div>
-          ))}
+          {/* Date header */}
+          <div className="text-[10px] font-mono uppercase tracking-[.15em] text-[#737373] mb-4">
+            {group.label}
+          </div>
+
+          {/* Grouped card */}
+          <div className="bg-[#141414] border border-[#333] rounded-lg divide-y divide-[rgba(255,255,255,0.05)] overflow-hidden">
+            {group.items.map((tx) => (
+              <TransactionRow key={tx.id} tx={tx} />
+            ))}
+          </div>
         </div>
       ))}
     </div>

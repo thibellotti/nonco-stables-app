@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useCountdown } from "@/hooks/use-countdown";
 import { type Quote, balances } from "@/lib/mock-data";
 import { cn, formatMoney } from "@/lib/utils";
+import { currencyColors } from "@/lib/currency-colors";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -41,7 +41,6 @@ function CountdownRing({ progress, isUrgent, formatted }: { progress: number; is
         viewBox={`0 0 ${TIMER_SIZE} ${TIMER_SIZE}`}
         className="-rotate-90"
       >
-        {/* Track */}
         <circle
           cx={TIMER_SIZE / 2}
           cy={TIMER_SIZE / 2}
@@ -50,7 +49,6 @@ function CountdownRing({ progress, isUrgent, formatted }: { progress: number; is
           stroke="var(--border)"
           strokeWidth={TIMER_STROKE}
         />
-        {/* Progress */}
         <circle
           cx={TIMER_SIZE / 2}
           cy={TIMER_SIZE / 2}
@@ -86,39 +84,17 @@ const SETTLEMENTS: { key: Settlement; label: string }[] = [
 ];
 
 function SettlementTabs({ active, onChange }: { active: Settlement; onChange: (s: Settlement) => void }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [sliderStyle, setSliderStyle] = useState<React.CSSProperties>({});
-
-  useEffect(() => {
-    if (!containerRef.current) return;
-    const activeIdx = SETTLEMENTS.findIndex((s) => s.key === active);
-    const buttons = containerRef.current.querySelectorAll<HTMLButtonElement>('[data-tab]');
-    const btn = buttons[activeIdx];
-    if (btn) {
-      setSliderStyle({
-        transform: `translateX(${btn.offsetLeft - 4}px)`,
-        width: `${btn.offsetWidth}px`,
-      });
-    }
-  }, [active]);
-
   return (
-    <div ref={containerRef} className="relative flex gap-0.5 p-1 bg-[var(--bg-elevated)] rounded-lg w-fit">
-      {/* Sliding indicator */}
-      <div
-        className="absolute top-1 h-[calc(100%-8px)] bg-[var(--cyan-dim)] rounded-md transition-all duration-250"
-        style={{ ...sliderStyle, transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
-      />
+    <div className="flex gap-1 p-1 bg-[#242424] rounded-lg w-fit">
       {SETTLEMENTS.map(({ key, label }) => (
         <button
           key={key}
-          data-tab={key}
           onClick={() => onChange(key)}
           className={cn(
-            "relative z-10 px-3 py-1.5 rounded-md text-xs font-medium transition-colors duration-200 cursor-pointer",
+            "px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer",
             active === key
-              ? "text-[var(--cyan)]"
-              : "text-[var(--text-4)] hover:text-[var(--text-3)]"
+              ? "bg-[var(--cyan)] text-black"
+              : "bg-transparent text-[var(--text-3)] hover:text-white"
           )}
         >
           {label}
@@ -166,23 +142,23 @@ function spread(bid: number, ask: number): string {
 
 function PriceSkeleton() {
   return (
-    <Card className="p-6">
+    <div className="bg-[#141414] border border-[#333] rounded-lg p-8">
       <div className="animate-pulse space-y-5">
         <div className="flex items-center justify-between">
-          <div className="h-5 w-28 bg-[var(--bg-elevated)] rounded" />
-          <div className="h-9 w-9 bg-[var(--bg-elevated)] rounded-full" />
+          <div className="h-5 w-28 bg-[#242424] rounded" />
+          <div className="h-9 w-9 bg-[#242424] rounded-full" />
         </div>
-        <div className="h-8 w-40 bg-[var(--bg-elevated)] rounded" />
+        <div className="h-8 w-40 bg-[#242424] rounded" />
         <div className="grid grid-cols-2 gap-4">
-          <div className="h-28 bg-[var(--bg-elevated)] rounded-lg" />
-          <div className="h-28 bg-[var(--bg-elevated)] rounded-lg" />
+          <div className="h-32 bg-[#242424] rounded-xl" />
+          <div className="h-32 bg-[#242424] rounded-xl" />
         </div>
         <div className="flex justify-between">
-          <div className="h-3 w-32 bg-[var(--bg-elevated)] rounded" />
-          <div className="h-3 w-20 bg-[var(--bg-elevated)] rounded" />
+          <div className="h-3 w-32 bg-[#242424] rounded" />
+          <div className="h-3 w-20 bg-[#242424] rounded" />
         </div>
       </div>
-    </Card>
+    </div>
   );
 }
 
@@ -197,15 +173,15 @@ function TradeFlash({ side, onDone }: { side: "buy" | "sell"; onDone: () => void
   }, [onDone]);
 
   return (
-    <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-[var(--bg-card)]/95 backdrop-blur-sm">
+    <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-[#141414]/95 backdrop-blur-sm">
       <div className="text-center space-y-2">
-        <div className="w-12 h-12 mx-auto rounded-full bg-[var(--green)]/10 flex items-center justify-center">
+        <div className="w-12 h-12 mx-auto rounded-full bg-[rgba(199,255,16,0.1)] flex items-center justify-center">
           <svg className="w-6 h-6 text-[var(--green)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <p className="text-sm font-semibold text-[var(--text)]">Trade Executed!</p>
-        <p className="text-xs text-[var(--text-3)]">
+        <p className="text-sm font-semibold text-white">Trade Executed!</p>
+        <p className="text-xs text-[#737373]">
           {side === "buy" ? "Buy" : "Sell"} order confirmed
         </p>
       </div>
@@ -245,11 +221,11 @@ export function PriceCard({ quote, isLoading, onRefresh, onTrade }: PriceCardPro
   // ---------- Empty state ----------
   if (!quote && !isLoading) {
     return (
-      <Card className="p-8 flex items-center justify-center min-h-[200px]">
-        <p className="text-sm text-[var(--text-3)] text-center">
+      <div className="bg-[#141414] border border-[#333] rounded-lg p-8 flex items-center justify-center min-h-[200px]">
+        <p className="text-sm text-[#737373] text-center">
           Request a quote to see pricing
         </p>
-      </Card>
+      </div>
     );
   }
 
@@ -266,16 +242,31 @@ export function PriceCard({ quote, isLoading, onRefresh, onTrade }: PriceCardPro
   const premium = forwardPremium(quote, settlement);
   const expired = isExpired || timeLeft <= 0;
 
+  const baseColor = currencyColors[base]?.border ?? "var(--cyan)";
+  const quoteColor = currencyColors[quoteCcy]?.border ?? "#6366f1";
+
   return (
-    <Card padding={false} className={cn("relative overflow-hidden", !expired && !flash && "pulse-glow-active")}>
+    <div
+      className={cn(
+        "relative overflow-hidden rounded-lg transition-all duration-300",
+        expired
+          ? "bg-[#141414] border border-[#333]"
+          : "bg-[#141414] border border-[rgba(5,224,248,0.3)] shadow-[0_0_40px_rgba(5,224,248,0.06)]"
+      )}
+    >
+      {/* Glow effect */}
+      {!expired && !flash && (
+        <div className="absolute -right-20 -top-20 w-64 h-64 bg-[rgba(5,224,248,0.05)] rounded-full blur-[100px] pointer-events-none" />
+      )}
+
       {/* Trade flash overlay */}
       {flash && <TradeFlash side={flash} onDone={clearFlash} />}
 
       {/* Expired overlay */}
       {expired && !flash && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-[var(--bg)]/80 backdrop-blur-sm">
+        <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-black/80 backdrop-blur-sm">
           <div className="text-center space-y-3">
-            <p className="text-sm font-medium text-[var(--text-3)]">Price expired</p>
+            <p className="text-sm font-medium text-[#737373]">Price expired</p>
             <Button variant="cyan" size="sm" onClick={onRefresh}>
               Refresh Quote
             </Button>
@@ -283,12 +274,33 @@ export function PriceCard({ quote, isLoading, onRefresh, onTrade }: PriceCardPro
         </div>
       )}
 
-      <div className={cn("p-6 space-y-5", expired && !flash && "opacity-30 pointer-events-none")}>
-        {/* Header: pair + timer */}
+      <div className={cn("p-8 space-y-6", expired && !flash && "opacity-30 pointer-events-none")}>
+        {/* Header: pair circles + name + timer */}
         <div className="flex items-center justify-between">
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-lg font-semibold text-[var(--text)]">{base}</span>
-            <span className="text-lg font-semibold text-[var(--text-4)]">/ {quoteCcy}</span>
+          <div className="flex items-center gap-4">
+            {/* Overlapping currency circles */}
+            <div className="flex -space-x-2">
+              <div
+                className="w-8 h-8 rounded-full border-2 border-[#141414] flex items-center justify-center text-[10px] font-mono font-bold"
+                style={{ backgroundColor: `${baseColor}20`, color: baseColor }}
+              >
+                {base.slice(0, 2)}
+              </div>
+              <div
+                className="w-8 h-8 rounded-full border-2 border-[#141414] flex items-center justify-center text-[10px] font-mono font-bold"
+                style={{ backgroundColor: `${quoteColor}20`, color: quoteColor }}
+              >
+                {quoteCcy.slice(0, 2)}
+              </div>
+            </div>
+            <div>
+              <p className="text-3xl font-bold tracking-tighter text-white">
+                {base}/{quoteCcy}
+              </p>
+              <p className="text-[10px] text-[var(--text-3)] font-mono uppercase mt-0.5">
+                Order #{Date.now().toString(36).toUpperCase().slice(-8)}
+              </p>
+            </div>
           </div>
           <CountdownRing progress={progress} isUrgent={isUrgent} formatted={formatted} />
         </div>
@@ -303,57 +315,53 @@ export function PriceCard({ quote, isLoading, onRefresh, onTrade }: PriceCardPro
           )}
         </div>
 
-        {/* Buy / Sell cards */}
+        {/* Buy / Sell columns */}
         <div className="grid grid-cols-2 gap-4">
-          {/* BUY — prominent */}
-          <div className="bg-[var(--bg-elevated)] rounded-lg p-5 flex flex-col items-center gap-3 border border-[rgba(5,224,248,0.08)]">
-            <span className="text-[10px] font-mono uppercase tracking-[.1em] text-[var(--cyan)]">
+          {/* BUY */}
+          <div className="bg-[#0a0a0a] rounded-xl border border-[rgba(255,255,255,0.05)] p-6 flex flex-col items-center gap-4">
+            <span className="text-[10px] font-mono uppercase tracking-[.1em] text-[var(--cyan)] font-bold">
               Buy
             </span>
-            <span className="font-mono text-2xl lg:text-3xl font-bold text-[var(--text)] tabular-nums">
+            <span className="font-mono text-4xl sm:text-5xl font-bold text-white tabular-nums tracking-tight">
               {ask.toFixed(4)}
             </span>
-            <Button
-              variant="cyan"
-              size="md"
-              className="w-full"
+            <button
               onClick={() => handleTrade("buy", ask)}
               disabled={expired}
+              className="w-full bg-[var(--cyan)] text-black rounded-full py-3 font-bold font-mono text-sm uppercase tracking-wider hover:brightness-110 active:scale-95 transition-all duration-200 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
             >
               Buy {base}
-            </Button>
+            </button>
           </div>
 
-          {/* SELL — subdued */}
-          <div className="bg-[var(--bg-elevated)] rounded-lg p-5 flex flex-col items-center gap-3">
-            <span className="text-[10px] font-mono uppercase tracking-[.1em] text-[var(--text-4)]">
+          {/* SELL */}
+          <div className="bg-[#0a0a0a] rounded-xl border border-[rgba(255,255,255,0.05)] p-6 flex flex-col items-center gap-4">
+            <span className="text-[10px] font-mono uppercase tracking-[.1em] text-[#e1b6ff] font-bold">
               Sell
             </span>
-            <span className="font-mono text-2xl font-bold text-[var(--text)] tabular-nums">
+            <span className="font-mono text-4xl sm:text-5xl font-bold text-white tabular-nums tracking-tight">
               {bid.toFixed(4)}
             </span>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="w-full"
+            <button
               onClick={() => handleTrade("sell", bid)}
               disabled={expired}
+              className="w-full border border-[#e1b6ff] text-[#e1b6ff] rounded-full py-3 font-bold font-mono text-sm uppercase tracking-wider hover:bg-[rgba(225,182,255,0.1)] active:scale-95 transition-all duration-200 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
             >
               Sell {base}
-            </Button>
+            </button>
           </div>
         </div>
 
         {/* Footer: balance + spread */}
-        <div className="flex items-center justify-between pt-1 border-t border-[var(--border)]">
-          <span className="text-[11px] font-mono text-[var(--text-4)]">
+        <div className="flex items-center justify-between pt-4 border-t border-[rgba(255,255,255,0.05)]">
+          <span className="text-[11px] font-mono text-[#525252]">
             Balance: ${formatMoney(balances.reduce((sum, b) => sum + b.available + b.pending, 0))}
           </span>
-          <span className="text-[11px] font-mono text-[var(--text-4)]">
+          <span className="text-[11px] font-mono text-[#525252]">
             Spread: {spread(bid, ask)}
           </span>
         </div>
       </div>
-    </Card>
+    </div>
   );
 }
