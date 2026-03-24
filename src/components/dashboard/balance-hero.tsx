@@ -1,9 +1,65 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { SectionLabel } from "@/components/ui/section-label";
 import { balances } from "@/lib/mock-data";
 import { formatMoney } from "@/lib/utils";
+
+// ---------------------------------------------------------------------------
+// AnimatedNumber — count-up with easeOutExpo, animates only on first mount
+// ---------------------------------------------------------------------------
+
+function AnimatedNumber({
+  value,
+  prefix = "",
+  suffix = "",
+  formatter,
+  className,
+  style,
+}: {
+  value: number;
+  prefix?: React.ReactNode;
+  suffix?: string;
+  formatter?: (n: number) => string;
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  const [display, setDisplay] = useState(0);
+  const hasAnimated = useRef(false);
+
+  useEffect(() => {
+    if (hasAnimated.current) return;
+    hasAnimated.current = true;
+
+    const duration = 1000;
+    const start = performance.now();
+    const easeOutExpo = (t: number) =>
+      t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+
+    let raf: number;
+    function tick(now: number) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      setDisplay(value * easeOutExpo(progress));
+      if (progress < 1) {
+        raf = requestAnimationFrame(tick);
+      }
+    }
+    raf = requestAnimationFrame(tick);
+
+    return () => cancelAnimationFrame(raf);
+  }, [value]);
+
+  const formatted = formatter ? formatter(display) : formatMoney(display);
+
+  return (
+    <span className={className} style={style}>
+      {prefix}
+      {formatted}
+      {suffix}
+    </span>
+  );
+}
 
 // ---------------------------------------------------------------------------
 // Derived data
@@ -74,11 +130,40 @@ type Period = "7D" | "30D" | "90D";
 const periodOptions: Period[] = ["7D", "30D", "90D"];
 
 // ---------------------------------------------------------------------------
+// Chart coord helper — maps data index to SVG Y, matching smoothPath logic
+// ---------------------------------------------------------------------------
+
+function chartY(idx: number): number {
+  const pad = 8;
+  return (
+    CHART_H -
+    ((chartPoints[idx] - minY) / range) * (CHART_H - pad * 2) -
+    pad
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
 
 export function BalanceHero() {
   const [activePeriod, setActivePeriod] = useState<Period>("30D");
+  const [hoverIdx, setHoverIdx] = useState<number | null>(null);
+  const [hoverX, setHoverX] = useState(0);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const pct = x / rect.width;
+    const idx = Math.round(pct * (chartPoints.length - 1));
+    const clamped = Math.max(0, Math.min(chartPoints.length - 1, idx));
+    setHoverIdx(clamped);
+    setHoverX(x);
+  };
+
+  const handleMouseLeave = () => {
+    setHoverIdx(null);
+  };
 
   return (
     <section
@@ -118,7 +203,12 @@ export function BalanceHero() {
           className="font-mono text-[56px] lg:text-[72px] font-bold tracking-tighter leading-none text-white"
           style={{ fontVariantNumeric: "tabular-nums slashed-zero" }}
         >
-          <span className="text-[0.65em] font-normal opacity-70">$</span>{formatMoney(totalBalance)}
+          <AnimatedNumber
+            value={totalBalance}
+            prefix={
+              <span className="text-[0.65em] font-normal opacity-70">$</span>
+            }
+          />
         </p>
 
         {/* Change badge + period label */}
@@ -150,8 +240,12 @@ export function BalanceHero() {
         </div>
       </div>
 
-      {/* Full-width area chart */}
-      <div className="relative h-[180px] lg:h-[220px] mt-4">
+      {/* Full-width area chart — interactive */}
+      <div
+        className="relative h-[180px] lg:h-[220px] mt-4 cursor-crosshair"
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+      >
         <svg
           width="100%"
           height="100%"
@@ -226,11 +320,71 @@ export function BalanceHero() {
             cy={lastPt.y}
             r="12"
             fill="var(--cyan)"
-            opacity="0.15"
+            opacity={hoverIdx !== null ? "0.05" : "0.15"}
           />
           {/* Current dot — solid center */}
-          <circle cx={lastPt.x} cy={lastPt.y} r="4" fill="var(--cyan)" />
+          <circle
+            cx={lastPt.x}
+            cy={lastPt.y}
+            r="4"
+            fill="var(--cyan)"
+            opacity={hoverIdx !== null ? "0.3" : "1"}
+          />
         </svg>
+
+        {/* Hover tooltip, vertical line + dot */}
+        {hoverIdx !== null && (
+          <>
+            {/* Vertical line */}
+            <div
+              className="absolute top-0 bottom-0 w-px pointer-events-none"
+              style={{
+                left: hoverX,
+                background:
+                  "linear-gradient(to bottom, transparent, var(--cyan), transparent)",
+                opacity: 0.25,
+              }}
+            />
+
+            {/* Hover dot — positioned via percentage */}
+            <div
+              className="absolute w-2 h-2 rounded-full pointer-events-none"
+              style={{
+                left: hoverX - 4,
+                top: `${(chartY(hoverIdx) / CHART_H) * 100}%`,
+                background: "var(--cyan)",
+                boxShadow: "0 0 8px rgba(5,224,248,0.5)",
+              }}
+            />
+
+            {/* Tooltip card */}
+            <div
+              className="absolute pointer-events-none z-10 bg-[var(--bg-card)] border border-[var(--border)] rounded px-2.5 py-1.5 shadow-lg"
+              style={{
+                left:
+                  hoverX > 160
+                    ? hoverX - 120
+                    : hoverX + 12,
+                top: `${(chartY(hoverIdx) / CHART_H) * 100}%`,
+                transform: "translateY(-50%)",
+              }}
+            >
+              <div className="text-[10px] font-mono text-[var(--text-4)] mb-0.5">
+                Mar {hoverIdx + 1}
+              </div>
+              <div
+                className="text-xs font-mono font-semibold text-white"
+                style={{ fontVariantNumeric: "tabular-nums" }}
+              >
+                $
+                {formatMoney(
+                  totalBalance *
+                    (chartPoints[hoverIdx] / chartPoints[chartPoints.length - 1]),
+                )}
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Stats row — below chart */}
@@ -244,7 +398,12 @@ export function BalanceHero() {
             className="font-mono text-xl font-semibold text-white mt-1"
             style={{ fontVariantNumeric: "tabular-nums slashed-zero" }}
           >
-            ${(totalAvailable / 1_000_000).toFixed(2)}M
+            <AnimatedNumber
+              value={totalAvailable}
+              prefix="$"
+              suffix="M"
+              formatter={(n) => (n / 1_000_000).toFixed(2)}
+            />
           </div>
         </div>
 
@@ -259,7 +418,12 @@ export function BalanceHero() {
             className="font-mono text-xl font-semibold text-[var(--amber)] mt-1"
             style={{ fontVariantNumeric: "tabular-nums slashed-zero" }}
           >
-            ${(totalPending / 1_000_000).toFixed(2)}M
+            <AnimatedNumber
+              value={totalPending}
+              prefix="$"
+              suffix="M"
+              formatter={(n) => (n / 1_000_000).toFixed(2)}
+            />
           </div>
         </div>
 
@@ -274,7 +438,10 @@ export function BalanceHero() {
             className="font-mono text-xl font-semibold text-white mt-1"
             style={{ fontVariantNumeric: "tabular-nums slashed-zero" }}
           >
-            {balances.length}
+            <AnimatedNumber
+              value={balances.length}
+              formatter={(n) => Math.round(n).toString()}
+            />
           </div>
         </div>
       </div>

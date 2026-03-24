@@ -8,10 +8,23 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Nonco Stables",
-  description: "Institutional stablecoin payments platform",
+  description: "Institutional stablecoin settlement platform",
   icons: {
-    icon: "/icon.svg",
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
     apple: "/icon.svg",
+  },
+  openGraph: {
+    title: "Nonco Stables",
+    description: "Institutional stablecoin settlement platform",
+    type: "website",
+    siteName: "Nonco Stables",
+  },
+  twitter: {
+    card: "summary",
+    title: "Nonco Stables",
+    description: "Institutional stablecoin settlement platform",
   },
 };
 

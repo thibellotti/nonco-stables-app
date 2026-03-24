@@ -53,8 +53,23 @@ export function DeskOfferBanner() {
             2M USDT available
           </p>
           <span className="text-[10px] text-[var(--text-4)]">&middot;</span>
-          <span className="text-xs font-mono tabular-nums text-[var(--amber)]">
-            Expires in {mins}:{secs.toString().padStart(2, "0")}
+          <span className="inline-flex items-center gap-1.5">
+            {/* Mini countdown ring */}
+            <svg width="20" height="20" viewBox="0 0 20 20" className="shrink-0">
+              <circle cx="10" cy="10" r="8" fill="none" stroke="var(--bg-elevated)" strokeWidth="2" />
+              <circle
+                cx="10" cy="10" r="8" fill="none"
+                stroke={countdown < 60 ? "var(--amber)" : "var(--cyan)"}
+                strokeWidth="2"
+                strokeDasharray={50.27}
+                strokeDashoffset={50.27 * (1 - countdown / 272)}
+                strokeLinecap="round"
+                transform="rotate(-90 10 10)"
+              />
+            </svg>
+            <span className="text-xs font-mono tabular-nums text-[var(--amber)]">
+              {mins}:{secs.toString().padStart(2, "0")}
+            </span>
           </span>
         </div>
       </div>
