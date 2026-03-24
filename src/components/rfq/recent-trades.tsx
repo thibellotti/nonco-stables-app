@@ -17,7 +17,7 @@ export function RecentTrades({ extraTrades = [] }: RecentTradesProps) {
   }
 
   return (
-    <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden">
+    <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden overflow-x-auto">
       <table className="w-full">
         <thead>
           <tr className="border-b border-[var(--border)]">

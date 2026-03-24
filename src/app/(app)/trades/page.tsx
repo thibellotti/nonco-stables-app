@@ -112,19 +112,19 @@ export default function TradesPage() {
       </div>
 
       {/* KPI Row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         {/* Total Trades */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-8 border-t-2 border-t-[var(--cyan)]"
+          className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5 sm:p-8 border-t-2 border-t-[var(--cyan)]"
         >
           <span className="text-[10px] tracking-[.15em] uppercase font-mono text-[var(--text-3)]">
             Total Trades
           </span>
           <div className="flex items-baseline gap-3 mt-3">
-            <p className="text-5xl font-mono font-bold text-white tabular-nums">
+            <p className="text-3xl sm:text-5xl font-mono font-bold text-white tabular-nums">
               {totalTrades}
             </p>
             <span className="flex items-center gap-1 text-xs font-mono text-[var(--cyan)]">
@@ -142,13 +142,13 @@ export default function TradesPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-8 border-t-2 border-t-[var(--purple)]"
+          className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5 sm:p-8 border-t-2 border-t-[var(--purple)]"
         >
           <span className="text-[10px] tracking-[.15em] uppercase font-mono text-[var(--text-3)]">
             Total Volume
           </span>
           <div className="flex items-baseline gap-3 mt-3">
-            <p className="text-5xl font-mono font-bold text-white tabular-nums">
+            <p className="text-3xl sm:text-5xl font-mono font-bold text-white tabular-nums">
               {formatCompactVolume(totalVolume)}
             </p>
             <span className="flex items-center gap-1 text-xs font-mono text-[var(--cyan)]">
@@ -166,13 +166,13 @@ export default function TradesPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-8 border-t-2 border-t-[var(--green)]"
+          className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5 sm:p-8 border-t-2 border-t-[var(--green)]"
         >
           <span className="text-[10px] tracking-[.15em] uppercase font-mono text-[var(--text-3)]">
             Avg Trade Size
           </span>
           <div className="flex items-baseline gap-3 mt-3">
-            <p className="text-5xl font-mono font-bold text-white tabular-nums">
+            <p className="text-3xl sm:text-5xl font-mono font-bold text-white tabular-nums">
               {formatCompactVolume(avgSize)}
             </p>
             <span className="flex items-center gap-1 text-xs font-mono text-[var(--red)]">
@@ -187,7 +187,7 @@ export default function TradesPage() {
       </div>
 
       {/* Filter Bar */}
-      <div className="flex flex-wrap items-center gap-4">
+      <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-3 sm:gap-4">
         {/* Side filter */}
         <div className="flex items-center gap-2">
           <span className="text-[10px] font-mono uppercase tracking-[.15em] text-[var(--text-4)]">
@@ -236,7 +236,7 @@ export default function TradesPage() {
       </div>
 
       {/* Trade History Table */}
-      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden">
+      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden overflow-x-auto">
         {/* Table Header Bar */}
         <div className="px-6 py-4 flex items-center justify-between bg-[var(--bg-elevated)]">
           <SectionLabel>Trade History</SectionLabel>

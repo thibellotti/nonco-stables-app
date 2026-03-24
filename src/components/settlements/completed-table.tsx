@@ -35,7 +35,7 @@ export function CompletedTable({ settlements }: CompletedTableProps) {
       </div>
 
       {/* Table */}
-      <div className="bg-[var(--bg-card)] rounded-lg border border-[var(--border)] overflow-hidden">
+      <div className="bg-[var(--bg-card)] rounded-lg border border-[var(--border)] overflow-hidden overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-[var(--border)]">

@@ -24,14 +24,14 @@ export function BankKpiCards({
   withdrawalCount,
 }: BankKpiCardsProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
       {/* Deposits */}
-      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-8 border-t-2 border-t-[var(--cyan)] relative overflow-hidden group">
+      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5 sm:p-8 border-t-2 border-t-[var(--cyan)] relative overflow-hidden group">
         <span className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)]">
           Total Deposits (30d)
         </span>
         <div className="flex items-baseline gap-3 mt-3">
-          <p className="text-5xl font-bold font-mono text-[var(--cyan)] tabular-nums">
+          <p className="text-3xl sm:text-5xl font-bold font-mono text-[var(--cyan)] tabular-nums">
             +{formatCompact(totalDeposits)}
           </p>
           <span className="px-2 py-0.5 rounded-full bg-[rgba(5,224,248,0.1)] text-[var(--cyan)] text-[10px] font-bold font-mono">
@@ -49,12 +49,12 @@ export function BankKpiCards({
       </div>
 
       {/* Withdrawals */}
-      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-8 border-t-2 border-t-[var(--purple)] relative overflow-hidden group">
+      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5 sm:p-8 border-t-2 border-t-[var(--purple)] relative overflow-hidden group">
         <span className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)]">
           Total Withdrawals (30d)
         </span>
         <div className="flex items-baseline gap-3 mt-3">
-          <p className="text-5xl font-bold font-mono text-[var(--purple)] tabular-nums">
+          <p className="text-3xl sm:text-5xl font-bold font-mono text-[var(--purple)] tabular-nums">
             -{formatCompact(totalWithdrawals)}
           </p>
         </div>
@@ -69,12 +69,12 @@ export function BankKpiCards({
       </div>
 
       {/* Net Flow */}
-      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-8 border-t-2 border-t-[var(--green)] relative overflow-hidden group">
+      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5 sm:p-8 border-t-2 border-t-[var(--green)] relative overflow-hidden group">
         <span className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)]">
           Net Flow (30d)
         </span>
         <div className="flex items-baseline gap-3 mt-3">
-          <p className="text-5xl font-bold font-mono text-[var(--green)] tabular-nums">
+          <p className="text-3xl sm:text-5xl font-bold font-mono text-[var(--green)] tabular-nums">
             {netFlow >= 0 ? "+" : ""}{formatCompact(netFlow)}
           </p>
         </div>

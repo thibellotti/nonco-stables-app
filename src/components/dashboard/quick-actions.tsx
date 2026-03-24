@@ -39,7 +39,7 @@ const actions = [
 
 export function QuickActions() {
   return (
-    <div className="flex justify-center gap-8 md:gap-10">
+    <div className="flex justify-center gap-6 sm:gap-8 md:gap-10">
       {actions.map((action) => (
         <button
           key={action.label}

@@ -213,7 +213,7 @@ export default function WalletPage() {
       {/* Recent Settlements */}
       <div>
         <SectionLabel>Recent Settlements</SectionLabel>
-        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden mt-4">
+        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden overflow-x-auto mt-4">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-[var(--border)]">

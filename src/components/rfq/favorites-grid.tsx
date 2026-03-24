@@ -39,14 +39,14 @@ export function FavoritesGrid({ onQuote }: FavoritesGridProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
       {favorites.map((fav) => {
         const [base, quote] = fav.instrument.pair.split("/");
         const baseName = currencyNames[base] ?? base;
         return (
           <div
             key={fav.id}
-            className="bg-[var(--bg-card)] border border-[var(--border)] p-6 rounded-lg hover:border-[var(--border-outline)] hover:bg-[var(--bg-elevated)] h-44 flex flex-col justify-between group transition-all duration-200"
+            className="bg-[var(--bg-card)] border border-[var(--border)] p-6 rounded-lg hover:border-[var(--border-outline)] hover:bg-[var(--bg-elevated)] h-40 flex flex-col justify-between group transition-all duration-200"
           >
             {/* Top: pair code + name + star */}
             <div>
@@ -55,7 +55,7 @@ export function FavoritesGrid({ onQuote }: FavoritesGridProps) {
                   <p className="text-[10px] text-[var(--text-3)] font-mono uppercase tracking-wider">
                     {base}/{quote}
                   </p>
-                  <p className="text-lg font-bold tracking-tight text-white mt-1">
+                  <p className="text-base lg:text-lg font-bold tracking-tight text-white mt-1">
                     {baseName}
                   </p>
                 </div>
