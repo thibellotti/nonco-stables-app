@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { balances } from "@/lib/mock-data";
 import { formatMoney } from "@/lib/utils";
+import { currencyColors } from "@/lib/currency-colors";
 
 // ---------------------------------------------------------------------------
 // Currency metadata — full names and mock wallet addresses
@@ -20,33 +21,20 @@ const currencyMeta: Record<string, { name: string; address: string }> = {
 };
 
 // ---------------------------------------------------------------------------
-// Currency icon — colored monogram in tinted circle
+// Currency icon — colored monogram in tinted circle (uses shared colors)
 // ---------------------------------------------------------------------------
 
 function CurrencyIcon({ currency }: { currency: string }) {
-  const colors: Record<string, string> = {
-    USD: "var(--cyan)",
-    EUR: "var(--purple)",
-    MXN: "var(--green)",
-    USDT: "var(--cyan)",
-    USDC: "var(--amber)",
-  };
-  const bgs: Record<string, string> = {
-    USD: "rgba(5,224,248,0.1)",
-    EUR: "rgba(168,85,247,0.1)",
-    MXN: "rgba(34,197,94,0.1)",
-    USDT: "rgba(5,224,248,0.1)",
-    USDC: "rgba(245,158,11,0.1)",
-  };
+  const colors = currencyColors[currency];
 
   return (
     <div
       className="flex items-center justify-center w-10 h-10 rounded-full shrink-0"
-      style={{ backgroundColor: bgs[currency] ?? "rgba(255,255,255,0.04)" }}
+      style={{ backgroundColor: colors?.bg ?? "rgba(255,255,255,0.04)" }}
     >
       <span
         className="font-mono text-xs font-bold"
-        style={{ color: colors[currency] ?? "var(--text-3)" }}
+        style={{ color: colors?.text ?? "var(--text-3)" }}
       >
         {currency}
       </span>
@@ -55,17 +43,8 @@ function CurrencyIcon({ currency }: { currency: string }) {
 }
 
 // ---------------------------------------------------------------------------
-// Balance card
+// Balance card (uses shared currency colors for top border)
 // ---------------------------------------------------------------------------
-
-// Currency top-border colors
-const borderColors: Record<string, string> = {
-  USD: "var(--cyan)",
-  EUR: "#38bdf8",
-  MXN: "var(--green)",
-  USDT: "#34d399",
-  USDC: "#818cf8",
-};
 
 function BalanceCard({ balance }: { balance: (typeof balances)[number] }) {
   const meta = currencyMeta[balance.currency] ?? {
@@ -73,7 +52,7 @@ function BalanceCard({ balance }: { balance: (typeof balances)[number] }) {
     address: "0x0000...0000",
   };
 
-  const topColor = borderColors[balance.currency] ?? "var(--cyan)";
+  const topColor = currencyColors[balance.currency]?.border ?? "var(--cyan)";
 
   return (
     <Card className="relative flex flex-col gap-4 group overflow-hidden">

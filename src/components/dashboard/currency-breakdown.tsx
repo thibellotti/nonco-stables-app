@@ -1,15 +1,7 @@
 import { balances } from "@/lib/mock-data";
 import { formatCompact, cn } from "@/lib/utils";
 import { SectionLabel } from "@/components/ui/section-label";
-
-// Unique color per currency
-const currencyColors: Record<string, { bg: string; text: string; bar: string }> = {
-  USD: { bg: "rgba(34,197,94,0.08)", text: "#22c55e", bar: "#22c55e" },
-  EUR: { bg: "rgba(96,165,250,0.08)", text: "#60a5fa", bar: "#60a5fa" },
-  MXN: { bg: "rgba(251,146,60,0.08)", text: "#fb923c", bar: "#fb923c" },
-  USDT: { bg: "rgba(5,224,248,0.08)", text: "#05E0F8", bar: "#05E0F8" },
-  USDC: { bg: "rgba(168,85,247,0.08)", text: "#a855f7", bar: "#a855f7" },
-};
+import { currencyColors } from "@/lib/currency-colors";
 
 const totalAvailable = balances.reduce((sum, b) => sum + b.available, 0);
 
@@ -23,7 +15,7 @@ export function CurrencyBreakdown() {
           const colors = currencyColors[balance.currency] ?? {
             bg: "rgba(255,255,255,0.04)",
             text: "#808080",
-            bar: "#808080",
+            border: "#808080",
           };
           const pct = totalAvailable > 0 ? (balance.available / totalAvailable) * 100 : 0;
 
@@ -34,7 +26,7 @@ export function CurrencyBreakdown() {
                 "relative p-4 rounded-lg overflow-hidden",
                 "bg-[var(--bg-card)] border border-[var(--border)]",
                 "transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]",
-                "hover:border-[var(--border-subtle)] hover:shadow-[0_0_30px_rgba(5,224,248,0.03)]",
+                "hover:border-[rgba(255,255,255,0.12)] hover:shadow-[0_0_30px_rgba(5,224,248,0.03)]",
                 "group cursor-default"
               )}
             >
@@ -67,7 +59,7 @@ export function CurrencyBreakdown() {
                   className="h-full rounded-full transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
                   style={{
                     width: `${pct}%`,
-                    backgroundColor: colors.bar,
+                    backgroundColor: colors.border,
                     opacity: 0.6,
                   }}
                 />

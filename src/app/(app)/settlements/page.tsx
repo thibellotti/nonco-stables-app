@@ -185,7 +185,7 @@ export default function SettlementsPage() {
             </div>
 
             {/* Table header */}
-            <div className="grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr] gap-4 px-5 py-2.5 text-[var(--text-4)]">
+            <div className="grid grid-cols-[1.5fr_1fr_1fr] sm:grid-cols-[1.5fr_1fr_1fr_1fr_1fr] gap-4 px-5 py-2.5 text-[var(--text-4)]">
               <span className="font-mono text-[10px] font-medium uppercase tracking-[.08em]">
                 Description
               </span>
@@ -195,10 +195,10 @@ export default function SettlementsPage() {
               <span className="font-mono text-[10px] font-medium uppercase tracking-[.08em]">
                 Currency
               </span>
-              <span className="font-mono text-[10px] font-medium uppercase tracking-[.08em]">
+              <span className="font-mono text-[10px] font-medium uppercase tracking-[.08em] hidden sm:block">
                 Counterparty
               </span>
-              <span className="font-mono text-[10px] font-medium uppercase tracking-[.08em] text-right">
+              <span className="font-mono text-[10px] font-medium uppercase tracking-[.08em] text-right hidden sm:block">
                 Date
               </span>
             </div>
@@ -211,7 +211,7 @@ export default function SettlementsPage() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: i * 0.05, duration: 0.3 }}
-                  className={`grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr] gap-4 px-5 py-3 items-center hover:bg-[var(--bg-elevated)] transition-colors duration-150 ${i % 2 === 1 ? 'bg-[rgba(255,255,255,0.01)]' : ''}`}
+                  className={`grid grid-cols-[1.5fr_1fr_1fr] sm:grid-cols-[1.5fr_1fr_1fr_1fr_1fr] gap-4 px-5 py-3 items-center hover:bg-[var(--bg-elevated)] transition-colors duration-150 ${i % 2 === 1 ? 'bg-[rgba(255,255,255,0.01)]' : ''}`}
                 >
                   <span className="text-sm text-[var(--text-2)] truncate">
                     {t.description}
@@ -222,10 +222,10 @@ export default function SettlementsPage() {
                   <span>
                     <Badge variant="default">{t.currency}</Badge>
                   </span>
-                  <span className="text-sm text-[var(--text-3)] truncate">
+                  <span className="text-sm text-[var(--text-3)] truncate hidden sm:block">
                     {t.counterparty}
                   </span>
-                  <span className="font-mono text-xs text-[var(--text-3)] text-right">
+                  <span className="font-mono text-xs text-[var(--text-3)] text-right hidden sm:block">
                     {timeAgo(t.timestamp)}
                   </span>
                 </motion.div>

@@ -82,7 +82,7 @@ export default function TradesPage() {
       <SectionLabel>Trades</SectionLabel>
 
       {/* KPI Summary */}
-      <div className="grid grid-cols-3 gap-3 lg:gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 lg:gap-4">
         <Card>
           <span className="font-mono text-[10px] font-medium uppercase tracking-[.08em] text-[var(--text-4)]">
             Total Trades
@@ -145,13 +145,13 @@ export default function TradesPage() {
         </div>
 
         {/* Table header */}
-        <div className="grid grid-cols-[1.2fr_0.7fr_1fr_1fr_0.8fr_1fr] gap-4 px-5 py-2.5 text-[var(--text-4)]">
+        <div className="grid grid-cols-[1.2fr_0.7fr_1fr_1fr] sm:grid-cols-[1.2fr_0.7fr_1fr_1fr_0.8fr_1fr] gap-4 px-5 py-2.5 text-[var(--text-4)]">
           <span className="font-mono text-[10px] font-medium uppercase tracking-[.08em]">Pair</span>
           <span className="font-mono text-[10px] font-medium uppercase tracking-[.08em]">Side</span>
           <span className="font-mono text-[10px] font-medium uppercase tracking-[.08em] text-right">Quantity</span>
           <span className="font-mono text-[10px] font-medium uppercase tracking-[.08em] text-right">Price</span>
-          <span className="font-mono text-[10px] font-medium uppercase tracking-[.08em]">Settlement</span>
-          <span className="font-mono text-[10px] font-medium uppercase tracking-[.08em] text-right">Date</span>
+          <span className="font-mono text-[10px] font-medium uppercase tracking-[.08em] hidden sm:block">Settlement</span>
+          <span className="font-mono text-[10px] font-medium uppercase tracking-[.08em] text-right hidden sm:block">Date</span>
         </div>
 
         {/* Table rows */}
@@ -162,7 +162,7 @@ export default function TradesPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: i * 0.03, duration: 0.3 }}
-              className={`grid grid-cols-[1.2fr_0.7fr_1fr_1fr_0.8fr_1fr] gap-4 px-5 py-3 items-center hover:bg-[var(--bg-elevated)] transition-colors duration-150 ${i % 2 === 1 ? 'bg-[rgba(255,255,255,0.01)]' : ''}`}
+              className={`grid grid-cols-[1.2fr_0.7fr_1fr_1fr] sm:grid-cols-[1.2fr_0.7fr_1fr_1fr_0.8fr_1fr] gap-4 px-5 py-3 items-center hover:bg-[var(--bg-elevated)] transition-colors duration-150 ${i % 2 === 1 ? 'bg-[rgba(255,255,255,0.01)]' : ''}`}
             >
               <span className="font-mono text-sm font-medium text-[var(--text)]">
                 {trade.pair}
@@ -178,12 +178,12 @@ export default function TradesPage() {
               <span className="font-mono text-sm text-[var(--text-2)] text-right">
                 {trade.price.toFixed(4)}
               </span>
-              <span>
+              <span className="hidden sm:block">
                 <Badge variant={trade.settlement === "Spot" ? "default" : "amber"}>
                   {trade.settlement}
                 </Badge>
               </span>
-              <span className="font-mono text-xs text-[var(--text-3)] text-right">
+              <span className="font-mono text-xs text-[var(--text-3)] text-right hidden sm:block">
                 {timeAgo(trade.timestamp)}
               </span>
             </motion.div>

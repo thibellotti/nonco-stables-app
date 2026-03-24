@@ -28,6 +28,16 @@ const tabs = [
     ),
   },
   {
+    label: "Trades",
+    href: "/trades",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M2 6h12m0 0l-3-3m3 3l-3 3" />
+        <path d="M18 14H6m0 0l3-3m-3 3l3 3" />
+      </svg>
+    ),
+  },
+  {
     label: "Bank",
     href: "/bank",
     icon: (

@@ -1,18 +1,19 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 
 /**
  * Static login page — no auth logic.
- * NOTE: Currently shows inside the sidebar/shell layout.
- * To exclude from layout, move app pages into an (app)/ route group later.
+ * Lives outside the (app) route group so the sidebar/shell is not rendered.
  */
 export default function LoginPage() {
   return (
-    <div className="flex-1 flex items-center justify-center min-h-[80dvh]">
+    <div className="flex items-center justify-center min-h-dvh bg-[var(--bg)]">
       <div className="w-full max-w-sm px-6 flex flex-col items-center text-center">
         {/* Logo */}
         <div className="mb-8">
           <h1 className="font-mono text-2xl tracking-tight">
-            <span className="font-bold text-[var(--text-1)]">NONCO</span>{" "}
+            <span className="font-bold text-[var(--text)]">NONCO</span>{" "}
             <span className="font-light text-[var(--text-3)]">STABLES</span>
           </h1>
           <p className="text-[var(--text-4)] text-xs mt-2 tracking-wide uppercase">
@@ -20,7 +21,33 @@ export default function LoginPage() {
           </p>
         </div>
 
-        {/* Auth buttons */}
+        {/* Email / Password form */}
+        <form className="w-full space-y-3" onSubmit={(e) => e.preventDefault()}>
+          <input
+            type="email"
+            placeholder="Email address"
+            autoComplete="email"
+            className="w-full rounded-full bg-[var(--bg-card)] border border-[var(--border)] px-5 py-3 text-sm text-[var(--text)] placeholder:text-[var(--text-4)] outline-none focus:border-[var(--cyan)] transition-colors duration-200"
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            autoComplete="current-password"
+            className="w-full rounded-full bg-[var(--bg-card)] border border-[var(--border)] px-5 py-3 text-sm text-[var(--text)] placeholder:text-[var(--text-4)] outline-none focus:border-[var(--cyan)] transition-colors duration-200"
+          />
+          <Button variant="cyan" size="lg" className="w-full" type="submit">
+            Sign In
+          </Button>
+        </form>
+
+        {/* Divider */}
+        <div className="flex items-center gap-3 w-full my-5">
+          <div className="flex-1 h-px bg-[var(--border)]" />
+          <span className="text-[var(--text-4)] text-xs">or continue with</span>
+          <div className="flex-1 h-px bg-[var(--border)]" />
+        </div>
+
+        {/* OAuth buttons */}
         <div className="w-full space-y-3">
           <Button variant="white" size="lg" className="w-full">
             <svg width="18" height="18" viewBox="0 0 24 24" className="shrink-0">
