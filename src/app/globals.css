@@ -158,9 +158,9 @@ body {
   height: 200%;
   margin-left: -100%;
   margin-top: -100%;
-  background: conic-gradient(from 0deg, #05e0f8, #38bdf8, transparent 50%);
-  animation: spin-processing 3s linear infinite;
-  z-index: 0;
+  background: conic-gradient(from 0deg, #05e0f8 0%, #38bdf8 25%, transparent 50%);
+  animation: spin-processing 2s linear infinite;
+  z-index: 1;
 }
 .processing-border::after {
   content: '';
@@ -168,11 +168,11 @@ body {
   inset: 2px;
   background: var(--bg-card);
   border-radius: calc(0.5rem - 2px);
-  z-index: 1;
+  z-index: 2;
 }
 .processing-border > * {
   position: relative;
-  z-index: 2;
+  z-index: 3;
 }
 @keyframes spin-processing {
   from { transform: rotate(0deg); }
