@@ -91,8 +91,11 @@ export function Sidebar() {
         </span>
       </div>
 
+      {/* Subtle gradient divider below logo */}
+      <div className="mx-4 h-px" style={{ background: 'linear-gradient(90deg, transparent, var(--border), transparent)' }} />
+
       {/* Navigation */}
-      <nav className="flex-1 flex flex-col gap-0.5 px-3 pt-2 overflow-y-auto">
+      <nav className="flex-1 flex flex-col gap-0.5 px-3 pt-3 overflow-y-auto">
         {navItems.map((item) => {
           const isActive =
             pathname === item.href || pathname.startsWith(item.href + "/");
@@ -102,16 +105,13 @@ export function Sidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "relative flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-colors duration-150",
+                "relative flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-150",
                 isActive
                   ? "text-[var(--cyan)] bg-[var(--cyan-dim)]"
                   : "text-[var(--text-3)] hover:text-[var(--text-2)] hover:bg-[var(--bg-elevated)]"
               )}
+              style={isActive ? { boxShadow: 'inset 3px 0 0 var(--cyan)' } : undefined}
             >
-              {/* Active indicator bar */}
-              {isActive && (
-                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-5 bg-[var(--cyan)] rounded-r" />
-              )}
               {item.icon}
               {item.label}
             </Link>
@@ -119,8 +119,11 @@ export function Sidebar() {
         })}
       </nav>
 
+      {/* Bottom fade gradient into user section */}
+      <div className="h-8 shrink-0 pointer-events-none" style={{ background: 'linear-gradient(to top, var(--bg-card), transparent)' }} />
+
       {/* Divider */}
-      <div className="mx-3 border-t border-[var(--border)]" />
+      <div className="mx-4 h-px" style={{ background: 'linear-gradient(90deg, transparent, var(--border), transparent)' }} />
 
       {/* User section */}
       <div className="flex items-center gap-3 px-5 py-4 shrink-0">

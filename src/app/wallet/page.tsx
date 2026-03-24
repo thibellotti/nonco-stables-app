@@ -58,16 +58,39 @@ function CurrencyIcon({ currency }: { currency: string }) {
 // Balance card
 // ---------------------------------------------------------------------------
 
+// Currency top-border colors
+const borderColors: Record<string, string> = {
+  USD: "var(--cyan)",
+  EUR: "#38bdf8",
+  MXN: "var(--green)",
+  USDT: "#34d399",
+  USDC: "#818cf8",
+};
+
 function BalanceCard({ balance }: { balance: (typeof balances)[number] }) {
   const meta = currencyMeta[balance.currency] ?? {
     name: balance.currency,
     address: "0x0000...0000",
   };
 
+  const topColor = borderColors[balance.currency] ?? "var(--cyan)";
+
   return (
-    <Card className="flex flex-col gap-4">
+    <Card className="relative flex flex-col gap-4 group overflow-hidden">
+      {/* Colored top border */}
+      <div
+        className="absolute top-0 left-0 right-0 h-[2px]"
+        style={{ background: topColor }}
+      />
+
+      {/* Subtle gradient overlay on hover */}
+      <div
+        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+        style={{ background: `linear-gradient(180deg, ${topColor}06 0%, transparent 40%)` }}
+      />
+
       {/* Header: icon + name */}
-      <div className="flex items-center gap-3">
+      <div className="relative flex items-center gap-3">
         <CurrencyIcon currency={balance.currency} />
         <div>
           <p className="text-sm font-medium text-[var(--text)]">
@@ -78,7 +101,7 @@ function BalanceCard({ balance }: { balance: (typeof balances)[number] }) {
       </div>
 
       {/* Available amount */}
-      <div>
+      <div className="relative">
         <p className="font-mono text-[10px] font-medium uppercase tracking-[.08em] text-[var(--text-4)]">
           Available
         </p>
@@ -89,7 +112,7 @@ function BalanceCard({ balance }: { balance: (typeof balances)[number] }) {
       </div>
 
       {/* Pending + USD equivalent */}
-      <div className="flex items-center justify-between">
+      <div className="relative flex items-center justify-between">
         <div>
           <p className="font-mono text-[10px] font-medium uppercase tracking-[.08em] text-[var(--text-4)]">
             Pending
@@ -116,7 +139,7 @@ function BalanceCard({ balance }: { balance: (typeof balances)[number] }) {
       </div>
 
       {/* Actions + address */}
-      <div className="flex items-center justify-between pt-3 border-t border-[var(--border)]">
+      <div className="relative flex items-center justify-between pt-3 border-t border-[var(--border)]">
         <div className="flex gap-2">
           <Button variant="cyan" size="sm">
             Deposit

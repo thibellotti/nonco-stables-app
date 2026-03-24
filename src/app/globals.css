@@ -59,3 +59,30 @@ body {
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
+
+/* Animated border rotation for processing settlement cards */
+@property --border-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes spin-border {
+  to {
+    --border-angle: 360deg;
+  }
+}
+
+/* RFQ Price card pulsing glow */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 12px rgba(5, 224, 248, 0.06), 0 0 24px rgba(5, 224, 248, 0.03);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(5, 224, 248, 0.12), 0 0 40px rgba(5, 224, 248, 0.06);
+  }
+}
+
+.pulse-glow-active {
+  animation: pulse-glow 2s ease-in-out infinite;
+}

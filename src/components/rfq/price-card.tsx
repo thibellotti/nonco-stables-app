@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useCountdown } from "@/hooks/use-countdown";
@@ -86,16 +86,38 @@ const SETTLEMENTS: { key: Settlement; label: string }[] = [
 ];
 
 function SettlementTabs({ active, onChange }: { active: Settlement; onChange: (s: Settlement) => void }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [sliderStyle, setSliderStyle] = useState<React.CSSProperties>({});
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const activeIdx = SETTLEMENTS.findIndex((s) => s.key === active);
+    const buttons = containerRef.current.querySelectorAll<HTMLButtonElement>('[data-tab]');
+    const btn = buttons[activeIdx];
+    if (btn) {
+      setSliderStyle({
+        transform: `translateX(${btn.offsetLeft - 4}px)`,
+        width: `${btn.offsetWidth}px`,
+      });
+    }
+  }, [active]);
+
   return (
-    <div className="flex gap-1 p-1 bg-[var(--bg-elevated)] rounded-lg w-fit">
+    <div ref={containerRef} className="relative flex gap-0.5 p-1 bg-[var(--bg-elevated)] rounded-lg w-fit">
+      {/* Sliding indicator */}
+      <div
+        className="absolute top-1 h-[calc(100%-8px)] bg-[var(--cyan-dim)] rounded-md transition-all duration-250"
+        style={{ ...sliderStyle, transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
+      />
       {SETTLEMENTS.map(({ key, label }) => (
         <button
           key={key}
+          data-tab={key}
           onClick={() => onChange(key)}
           className={cn(
-            "px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 cursor-pointer",
+            "relative z-10 px-3 py-1.5 rounded-md text-xs font-medium transition-colors duration-200 cursor-pointer",
             active === key
-              ? "bg-[var(--cyan-dim)] text-[var(--cyan)]"
+              ? "text-[var(--cyan)]"
               : "text-[var(--text-4)] hover:text-[var(--text-3)]"
           )}
         >
@@ -245,7 +267,7 @@ export function PriceCard({ quote, isLoading, onRefresh, onTrade }: PriceCardPro
   const expired = isExpired || timeLeft <= 0;
 
   return (
-    <Card padding={false} className="relative overflow-hidden">
+    <Card padding={false} className={cn("relative overflow-hidden", !expired && !flash && "pulse-glow-active")}>
       {/* Trade flash overlay */}
       {flash && <TradeFlash side={flash} onDone={clearFlash} />}
 
@@ -283,27 +305,27 @@ export function PriceCard({ quote, isLoading, onRefresh, onTrade }: PriceCardPro
 
         {/* Buy / Sell cards */}
         <div className="grid grid-cols-2 gap-4">
-          {/* BUY */}
-          <div className="bg-[var(--bg-elevated)] rounded-lg p-4 flex flex-col items-center gap-3">
-            <span className="text-[10px] font-mono uppercase tracking-[.1em] text-[var(--text-4)]">
+          {/* BUY — prominent */}
+          <div className="bg-[var(--bg-elevated)] rounded-lg p-5 flex flex-col items-center gap-3 border border-[rgba(5,224,248,0.08)]">
+            <span className="text-[10px] font-mono uppercase tracking-[.1em] text-[var(--cyan)]">
               Buy
             </span>
-            <span className="font-mono text-2xl font-bold text-[var(--text)] tabular-nums">
+            <span className="font-mono text-2xl lg:text-3xl font-bold text-[var(--text)] tabular-nums">
               {ask.toFixed(4)}
             </span>
             <Button
               variant="cyan"
-              size="sm"
+              size="md"
               className="w-full"
               onClick={() => handleTrade("buy", ask)}
               disabled={expired}
             >
-              Buy
+              Buy {base}
             </Button>
           </div>
 
-          {/* SELL */}
-          <div className="bg-[var(--bg-elevated)] rounded-lg p-4 flex flex-col items-center gap-3">
+          {/* SELL — subdued */}
+          <div className="bg-[var(--bg-elevated)] rounded-lg p-5 flex flex-col items-center gap-3">
             <span className="text-[10px] font-mono uppercase tracking-[.1em] text-[var(--text-4)]">
               Sell
             </span>
@@ -317,7 +339,7 @@ export function PriceCard({ quote, isLoading, onRefresh, onTrade }: PriceCardPro
               onClick={() => handleTrade("sell", bid)}
               disabled={expired}
             >
-              Sell
+              Sell {base}
             </Button>
           </div>
         </div>

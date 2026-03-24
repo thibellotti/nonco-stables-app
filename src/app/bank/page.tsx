@@ -131,7 +131,7 @@ function TransactionRow({
         <span
           className={cn(
             "font-mono text-sm font-medium tabular-nums",
-            isPositive ? "text-[var(--cyan)]" : "text-[var(--text)]"
+            isPositive ? "text-[var(--cyan)]" : "text-[var(--purple)]"
           )}
         >
           {isPositive ? "+" : "-"}
@@ -173,7 +173,7 @@ export default function BankPage() {
       <SectionLabel>Bank</SectionLabel>
 
       {/* KPI cards */}
-      <div className="grid grid-cols-2 gap-3 lg:gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
         <Card>
           <span className="font-mono text-[10px] font-medium uppercase tracking-[.08em] text-[var(--text-4)]">
             Total Deposits (30d)
@@ -190,11 +190,26 @@ export default function BankPage() {
           <span className="font-mono text-[10px] font-medium uppercase tracking-[.08em] text-[var(--text-4)]">
             Total Withdrawals (30d)
           </span>
-          <p className="font-mono text-[22px] lg:text-[24px] font-bold tracking-tight text-[var(--text)] mt-1.5">
+          <p className="font-mono text-[22px] lg:text-[24px] font-bold tracking-tight text-[var(--purple)] mt-1.5">
             -{formatCompact(totalWithdrawals)}
           </p>
           <p className="text-[var(--text-4)] text-xs mt-1">
             {bankTransactions.filter((tx) => tx.type === "withdrawal").length} transactions
+          </p>
+        </Card>
+
+        <Card className="col-span-2 lg:col-span-1">
+          <span className="font-mono text-[10px] font-medium uppercase tracking-[.08em] text-[var(--text-4)]">
+            Net Flow (30d)
+          </span>
+          <p className={cn(
+            "font-mono text-[22px] lg:text-[24px] font-bold tracking-tight mt-1.5",
+            totalDeposits - totalWithdrawals >= 0 ? "text-[var(--green)]" : "text-[var(--amber)]"
+          )}>
+            {totalDeposits - totalWithdrawals >= 0 ? "+" : ""}{formatCompact(totalDeposits - totalWithdrawals)}
+          </p>
+          <p className="text-[var(--text-4)] text-xs mt-1">
+            This month
           </p>
         </Card>
       </div>

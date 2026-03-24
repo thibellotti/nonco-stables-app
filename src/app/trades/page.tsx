@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { SectionLabel } from "@/components/ui/section-label";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { recentTrades } from "@/lib/mock-data";
 import type { RecentTrade } from "@/lib/mock-data";
 import { formatMoney, timeAgo } from "@/lib/utils";
@@ -86,37 +87,61 @@ export default function TradesPage() {
           <span className="font-mono text-[10px] font-medium uppercase tracking-[.08em] text-[var(--text-4)]">
             Total Trades
           </span>
-          <p className="font-mono text-[22px] lg:text-[24px] font-bold tracking-tight text-[var(--text)] mt-1.5">
-            {totalTrades}
-          </p>
+          <div className="flex items-baseline gap-2 mt-1.5">
+            <p className="font-mono text-[22px] lg:text-[24px] font-bold tracking-tight text-[var(--text)]">
+              {totalTrades}
+            </p>
+            <span className="inline-flex items-center gap-0.5 text-[var(--green)] text-[11px] font-medium">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M5 2v6M5 2L2.5 4.5M5 2l2.5 2.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              +12%
+            </span>
+          </div>
           <p className="text-[var(--text-4)] text-xs mt-1">Last 7 days</p>
         </Card>
         <Card>
           <span className="font-mono text-[10px] font-medium uppercase tracking-[.08em] text-[var(--text-4)]">
             Total Volume
           </span>
-          <p className="font-mono text-[22px] lg:text-[24px] font-bold tracking-tight text-[var(--text)] mt-1.5">
-            {formatCompactVolume(totalVolume)}
-          </p>
+          <div className="flex items-baseline gap-2 mt-1.5">
+            <p className="font-mono text-[22px] lg:text-[24px] font-bold tracking-tight text-[var(--text)]">
+              {formatCompactVolume(totalVolume)}
+            </p>
+            <span className="inline-flex items-center gap-0.5 text-[var(--green)] text-[11px] font-medium">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M5 2v6M5 2L2.5 4.5M5 2l2.5 2.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              +8.4%
+            </span>
+          </div>
           <p className="text-[var(--text-4)] text-xs mt-1">Notional value</p>
         </Card>
         <Card>
           <span className="font-mono text-[10px] font-medium uppercase tracking-[.08em] text-[var(--text-4)]">
             Avg Size
           </span>
-          <p className="font-mono text-[22px] lg:text-[24px] font-bold tracking-tight text-[var(--text)] mt-1.5">
-            {formatCompactVolume(avgSize)}
-          </p>
+          <div className="flex items-baseline gap-2 mt-1.5">
+            <p className="font-mono text-[22px] lg:text-[24px] font-bold tracking-tight text-[var(--text)]">
+              {formatCompactVolume(avgSize)}
+            </p>
+            <span className="inline-flex items-center gap-0.5 text-[var(--amber)] text-[11px] font-medium">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M5 8V2M5 8L2.5 5.5M5 8l2.5-2.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              -3.1%
+            </span>
+          </div>
           <p className="text-[var(--text-4)] text-xs mt-1">Per trade</p>
         </Card>
       </div>
 
       {/* Trade History Table */}
       <Card padding={false}>
-        <div className="px-5 py-3 border-b border-[var(--border)]">
+        <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--border)]">
           <span className="font-mono text-[10px] font-medium uppercase tracking-[.08em] text-[var(--text-4)]">
             Trade History
           </span>
+          <Button variant="ghost" size="sm" className="gap-1.5">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M6 1v7M6 8L3.5 5.5M6 8l2.5-2.5M1 10h10" />
+            </svg>
+            Export CSV
+          </Button>
         </div>
 
         {/* Table header */}
@@ -137,7 +162,7 @@ export default function TradesPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: i * 0.03, duration: 0.3 }}
-              className="grid grid-cols-[1.2fr_0.7fr_1fr_1fr_0.8fr_1fr] gap-4 px-5 py-3 items-center hover:bg-[var(--bg-elevated)] transition-colors duration-150"
+              className={`grid grid-cols-[1.2fr_0.7fr_1fr_1fr_0.8fr_1fr] gap-4 px-5 py-3 items-center hover:bg-[var(--bg-elevated)] transition-colors duration-150 ${i % 2 === 1 ? 'bg-[rgba(255,255,255,0.01)]' : ''}`}
             >
               <span className="font-mono text-sm font-medium text-[var(--text)]">
                 {trade.pair}

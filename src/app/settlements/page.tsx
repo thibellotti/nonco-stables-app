@@ -103,60 +103,68 @@ export default function SettlementsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.06, duration: 0.3 }}
             >
-              <Card>
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <div className="flex items-center gap-3">
-                      <span className="font-mono text-base font-semibold text-[var(--text)]">
-                        {s.pair}
-                      </span>
-                      <Badge
-                        variant={s.status === "processing" ? "cyan" : "amber"}
-                      >
-                        {s.status === "processing"
-                          ? "Processing"
-                          : "Awaiting settlement"}
-                      </Badge>
+              {/* Animated border wrapper for processing items */}
+              <div className={`relative rounded-lg ${s.status === 'processing' ? 'p-px' : ''}`}
+                style={s.status === 'processing' ? {
+                  background: 'conic-gradient(from var(--border-angle, 0deg), var(--cyan), transparent 30%, transparent 70%, var(--cyan))',
+                  animation: 'spin-border 4s linear infinite',
+                } : undefined}
+              >
+                <Card className={s.status === 'processing' ? 'rounded-[7px]' : ''}>
+                  <div className="flex items-start justify-between mb-4">
+                    <div>
+                      <div className="flex items-center gap-3">
+                        <span className="font-mono text-base font-semibold text-[var(--text)]">
+                          {s.pair}
+                        </span>
+                        <Badge
+                          variant={s.status === "processing" ? "cyan" : "amber"}
+                        >
+                          {s.status === "processing"
+                            ? "Processing"
+                            : "Awaiting settlement"}
+                        </Badge>
+                      </div>
+                      <p className="text-[var(--text-3)] text-xs mt-1">
+                        {s.counterparty}
+                      </p>
                     </div>
-                    <p className="text-[var(--text-3)] text-xs mt-1">
-                      {s.counterparty}
-                    </p>
+                    <div className="text-right">
+                      <p className="font-mono text-base font-semibold text-[var(--text)]">
+                        {formatMoney(s.amount)}
+                      </p>
+                      <p className="font-mono text-[10px] font-medium uppercase tracking-[.08em] text-[var(--text-4)] mt-0.5">
+                        {s.pair.split("/")[0]}
+                      </p>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="font-mono text-base font-semibold text-[var(--text)]">
-                      {formatMoney(s.amount)}
-                    </p>
-                    <p className="font-mono text-[10px] font-medium uppercase tracking-[.08em] text-[var(--text-4)] mt-0.5">
-                      {s.pair.split("/")[0]}
-                    </p>
+
+                  {/* Settlement timeline */}
+                  <div className="flex items-center justify-between text-xs text-[var(--text-4)] mb-2">
+                    <span>
+                      {s.settlement} — Due{" "}
+                      <span className="text-[var(--text-2)]">{s.dueDate}</span>
+                    </span>
+                    <span className="font-mono">{s.progress}%</span>
                   </div>
-                </div>
 
-                {/* Settlement timeline */}
-                <div className="flex items-center justify-between text-xs text-[var(--text-4)] mb-2">
-                  <span>
-                    {s.settlement} — Due{" "}
-                    <span className="text-[var(--text-2)]">{s.dueDate}</span>
-                  </span>
-                  <span className="font-mono">{s.progress}%</span>
-                </div>
-
-                {/* Progress bar */}
-                <div className="h-1 rounded-full bg-[var(--bg-muted)] overflow-hidden">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${s.progress}%` }}
-                    transition={{ delay: 0.3 + i * 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                    className="h-full rounded-full"
-                    style={{
-                      background:
-                        s.status === "processing"
-                          ? "var(--cyan)"
-                          : "var(--amber)",
-                    }}
-                  />
-                </div>
-              </Card>
+                  {/* Progress bar — rounded with gradient fill */}
+                  <div className="h-1.5 rounded-full bg-[var(--bg-muted)] overflow-hidden">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${s.progress}%` }}
+                      transition={{ delay: 0.3 + i * 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                      className="h-full rounded-full"
+                      style={{
+                        background:
+                          s.status === "processing"
+                            ? "linear-gradient(90deg, var(--cyan-dark), var(--cyan))"
+                            : "linear-gradient(90deg, #d97706, var(--amber))",
+                      }}
+                    />
+                  </div>
+                </Card>
+              </div>
             </motion.div>
           ))}
         </motion.div>
@@ -203,7 +211,7 @@ export default function SettlementsPage() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: i * 0.05, duration: 0.3 }}
-                  className="grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr] gap-4 px-5 py-3 items-center hover:bg-[var(--bg-elevated)] transition-colors duration-150"
+                  className={`grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr] gap-4 px-5 py-3 items-center hover:bg-[var(--bg-elevated)] transition-colors duration-150 ${i % 2 === 1 ? 'bg-[rgba(255,255,255,0.01)]' : ''}`}
                 >
                   <span className="text-sm text-[var(--text-2)] truncate">
                     {t.description}
