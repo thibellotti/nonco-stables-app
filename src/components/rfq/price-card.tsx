@@ -4,8 +4,8 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useCountdown } from "@/hooks/use-countdown";
-import { type Quote } from "@/lib/mock-data";
-import { cn } from "@/lib/utils";
+import { type Quote, balances } from "@/lib/mock-data";
+import { cn, formatMoney } from "@/lib/utils";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -347,7 +347,7 @@ export function PriceCard({ quote, isLoading, onRefresh, onTrade }: PriceCardPro
         {/* Footer: balance + spread */}
         <div className="flex items-center justify-between pt-1 border-t border-[var(--border)]">
           <span className="text-[11px] font-mono text-[var(--text-4)]">
-            Balance: $1,100,000
+            Balance: ${formatMoney(balances.reduce((sum, b) => sum + b.available + b.pending, 0))}
           </span>
           <span className="text-[11px] font-mono text-[var(--text-4)]">
             Spread: {spread(bid, ask)}

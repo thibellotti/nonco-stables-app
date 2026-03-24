@@ -61,7 +61,7 @@ export function BalanceHero() {
           >
             <path
               d="M6 9.5V2.5M6 2.5L3 5.5M6 2.5l3 3"
-              stroke="#22c55e"
+              stroke="var(--green)"
               strokeWidth="1.5"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -89,8 +89,8 @@ export function BalanceHero() {
         >
           <defs>
             <linearGradient id="sparkline-fill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#05E0F8" stopOpacity="0.15" />
-              <stop offset="100%" stopColor="#05E0F8" stopOpacity="0" />
+              <stop offset="0%" stopColor="var(--cyan)" stopOpacity="0.15" />
+              <stop offset="100%" stopColor="var(--cyan)" stopOpacity="0" />
             </linearGradient>
           </defs>
           {/* Area fill */}
@@ -98,7 +98,7 @@ export function BalanceHero() {
           {/* Line */}
           <path
             d={pathD}
-            stroke="#05E0F8"
+            stroke="var(--cyan)"
             strokeWidth="1.5"
             strokeLinecap="round"
             strokeLinejoin="round"

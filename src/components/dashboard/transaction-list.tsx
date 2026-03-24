@@ -168,7 +168,7 @@ function TransactionRow({ tx }: { tx: (typeof transactions)[number] }) {
             <Badge variant="amber">Pending</Badge>
           )}
           {tx.status === "failed" && (
-            <Badge variant="purple">Failed</Badge>
+            <Badge variant="red">Failed</Badge>
           )}
           <span className="text-[10px] text-[var(--text-4)] font-mono tabular-nums">
             {timeAgo(tx.timestamp)}

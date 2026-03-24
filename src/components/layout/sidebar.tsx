@@ -9,7 +9,7 @@ const navItems = [
     label: "Dashboard",
     href: "/dashboard",
     icon: (
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <rect x="1" y="1" width="7" height="7" rx="1" />
         <rect x="10" y="1" width="7" height="7" rx="1" />
         <rect x="1" y="10" width="7" height="7" rx="1" />
@@ -21,7 +21,7 @@ const navItems = [
     label: "RFQ",
     href: "/rfq",
     icon: (
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M1 13l4-4 3 3 5-5 4 4" />
         <path d="M13 5h4v4" />
       </svg>
@@ -31,7 +31,7 @@ const navItems = [
     label: "Bank",
     href: "/bank",
     icon: (
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M2 7L9 2l7 5" />
         <path d="M4 7v7" />
         <path d="M8 7v7" />
@@ -46,7 +46,7 @@ const navItems = [
     label: "Trades",
     href: "/trades",
     icon: (
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M1 5h12m0 0l-3-3m3 3l-3 3" />
         <path d="M17 13H5m0 0l3-3m-3 3l3 3" />
       </svg>
@@ -56,7 +56,7 @@ const navItems = [
     label: "Settlements",
     href: "/settlements",
     icon: (
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <circle cx="9" cy="9" r="8" />
         <path d="M9 5v4l3 2" />
       </svg>
@@ -66,7 +66,7 @@ const navItems = [
     label: "Wallet",
     href: "/wallet",
     icon: (
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <rect x="1" y="4" width="16" height="12" rx="2" />
         <path d="M1 8h16" />
         <circle cx="13" cy="12" r="1" fill="currentColor" />
@@ -149,6 +149,7 @@ export function Sidebar() {
             strokeWidth="1.5"
             strokeLinecap="round"
             strokeLinejoin="round"
+            aria-hidden="true"
           >
             <circle cx="8" cy="8" r="2.5" />
             <path d="M6.8 1.5h2.4l.4 1.8.9.4 1.6-.9 1.7 1.7-.9 1.6.4.9 1.8.4v2.4l-1.8.4-.4.9.9 1.6-1.7 1.7-1.6-.9-.9.4-.4 1.8H6.8l-.4-1.8-.9-.4-1.6.9-1.7-1.7.9-1.6-.4-.9-1.8-.4V6.8l1.8-.4.4-.9-.9-1.6 1.7-1.7 1.6.9.9-.4z" />

@@ -8,7 +8,7 @@ interface SectionLabelProps {
 
 export function SectionLabel({ children, color, className }: SectionLabelProps) {
   return (
-    <div className={cn("flex items-center gap-2", className)}>
+    <div className={cn("flex items-center gap-2 mb-3", className)}>
       <div
         className="w-[2px] h-3 rounded-sm"
         style={{ background: color || "var(--cyan)" }}
