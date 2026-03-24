@@ -143,11 +143,6 @@ body {
 }
 
 /* ─── Processing border animation for settlements ─── */
-@property --conic-angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
-}
 .processing-border {
   position: relative;
   border-radius: 0.5rem;
@@ -157,9 +152,14 @@ body {
 .processing-border::before {
   content: '';
   position: absolute;
-  inset: -50%;
-  background: conic-gradient(from var(--conic-angle), #05e0f8, #38bdf8, transparent 60%);
-  animation: rotate-conic 2s linear infinite;
+  top: 50%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  margin-left: -100%;
+  margin-top: -100%;
+  background: conic-gradient(from 0deg, #05e0f8, #38bdf8, transparent 50%);
+  animation: spin-processing 3s linear infinite;
   z-index: 0;
 }
 .processing-border::after {
@@ -168,14 +168,15 @@ body {
   inset: 2px;
   background: var(--bg-card);
   border-radius: calc(0.5rem - 2px);
-  z-index: 0;
+  z-index: 1;
 }
 .processing-border > * {
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
-@keyframes rotate-conic {
-  to { --conic-angle: 360deg; }
+@keyframes spin-processing {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 /* ─── Mono tabular nums utility ─── */
