@@ -22,7 +22,7 @@ export function RecentTrades({ extraTrades = [] }: RecentTradesProps) {
       {all.map((trade) => (
         <div
           key={trade.id}
-          className="flex items-center justify-between py-3 gap-4"
+          className="flex items-center justify-between py-3 gap-4 px-2 -mx-2 rounded-lg cursor-pointer transition-colors duration-150 hover:bg-[var(--bg-elevated)]"
         >
           {/* Left: pair + side badge */}
           <div className="flex items-center gap-3 min-w-0">

@@ -93,7 +93,7 @@ function SettlementTabs({ active, onChange }: { active: Settlement; onChange: (s
           key={key}
           onClick={() => onChange(key)}
           className={cn(
-            "px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200",
+            "px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 cursor-pointer",
             active === key
               ? "bg-[var(--cyan-dim)] text-[var(--cyan)]"
               : "text-[var(--text-4)] hover:text-[var(--text-3)]"

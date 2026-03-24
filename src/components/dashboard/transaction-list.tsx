@@ -103,7 +103,7 @@ function TransactionRow({
   return (
     <div
       className={cn(
-        "flex items-center gap-3 py-3 lg:py-3.5",
+        "flex items-center gap-3 py-3 lg:py-3.5 px-2 -mx-2 rounded-lg cursor-pointer transition-colors duration-150 hover:bg-[var(--bg-elevated)]",
         !isLast && "border-b border-[var(--border-subtle)]"
       )}
     >

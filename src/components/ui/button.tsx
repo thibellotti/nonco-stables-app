@@ -9,7 +9,7 @@ export function Button({ variant = "cyan", size = "md", className, children, ...
   return (
     <button
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-full font-medium transition-all duration-200 active:scale-95",
+        "inline-flex items-center justify-center gap-2 rounded-full font-medium transition-all duration-200 active:scale-95 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50",
         // variants
         variant === "cyan" && "bg-[var(--cyan)] text-black hover:brightness-110",
         variant === "ghost" && "bg-transparent text-[var(--text-3)] border border-[var(--border-subtle)] hover:border-[var(--text-4)] hover:text-[var(--text-2)]",
