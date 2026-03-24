@@ -46,7 +46,7 @@ export function FavoritesGrid({ onQuote }: FavoritesGridProps) {
         return (
           <div
             key={fav.id}
-            className="bg-[var(--bg-card)] border border-[var(--border-outline)] p-6 rounded-lg hover:bg-[var(--bg-elevated)] h-44 flex flex-col justify-between group transition-colors duration-200"
+            className="bg-[var(--bg-card)] border border-[var(--border)] p-6 rounded-lg hover:border-[var(--border-outline)] hover:bg-[var(--bg-elevated)] h-44 flex flex-col justify-between group transition-all duration-200"
           >
             {/* Top: pair code + name + star */}
             <div>

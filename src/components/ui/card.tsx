@@ -10,7 +10,7 @@ export function Card({ children, className, padding = true }: CardProps) {
   return (
     <div
       className={cn(
-        "bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden transition-all duration-200 hover:border-[rgba(255,255,255,0.1)] hover:shadow-[0_0_20px_rgba(5,224,248,0.02)]",
+        "bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden transition-all duration-200 hover:border-[var(--border-outline)]",
         padding && "p-5",
         className
       )}
@@ -30,7 +30,7 @@ export function CardHeader({ children, className }: { children: React.ReactNode;
 
 export function CardTitle({ children }: { children: React.ReactNode }) {
   return (
-    <span className="font-mono text-[10px] font-medium uppercase tracking-[.08em] text-[var(--text-4)]">
+    <span className="font-mono text-[10px] font-medium uppercase tracking-[.15em] text-[var(--text-3)]">
       {children}
     </span>
   );

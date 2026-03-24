@@ -19,11 +19,11 @@ export function PageHeader() {
   const title = pageTitles[segment] || "Dashboard";
 
   return (
-    <header className="fixed top-0 right-0 left-0 lg:left-[220px] h-16 z-40 bg-[rgba(0,0,0,0.8)] backdrop-blur-xl border-b border-[rgba(255,255,255,0.1)]">
+    <header className="fixed top-0 right-0 left-0 lg:left-[220px] h-16 z-40 bg-[rgba(0,0,0,0.8)] backdrop-blur-xl border-b border-[var(--border)]">
       <div className="flex items-center justify-between h-full px-6 lg:px-8">
         {/* LEFT: Breadcrumb */}
         <div className="flex items-center gap-1.5">
-          <span className="text-sm text-[#525252] font-mono">Nonco /</span>
+          <span className="text-sm text-[var(--text-4)] font-mono">Nonco /</span>
           <span className="text-sm text-[var(--cyan)] font-bold">{title}</span>
         </div>
 
@@ -31,7 +31,7 @@ export function PageHeader() {
         <div className="flex items-center gap-4">
           {/* Notification bell */}
           <button
-            className="relative text-[#525252] hover:text-white transition-colors duration-150"
+            className="relative text-[var(--text-4)] hover:text-white transition-colors duration-150"
             aria-label="Notifications"
           >
             <svg
@@ -53,7 +53,7 @@ export function PageHeader() {
           </button>
 
           {/* User avatar */}
-          <div className="w-8 h-8 rounded-full bg-[var(--bg-elevated)] border border-[rgba(255,255,255,0.1)] flex items-center justify-center text-[10px] font-bold text-white">
+          <div className="w-8 h-8 rounded-full bg-[var(--bg-elevated)] border border-[var(--border)] flex items-center justify-center text-[10px] font-bold text-white">
             TB
           </div>
         </div>

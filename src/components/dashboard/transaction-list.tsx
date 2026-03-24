@@ -127,7 +127,7 @@ function TransactionRow({ tx }: { tx: (typeof transactions)[number] }) {
       className={cn(
         "flex items-center gap-3.5 p-4",
         "transition-colors duration-150 ease-[cubic-bezier(0.16,1,0.3,1)]",
-        "hover:bg-[rgba(255,255,255,0.02)] cursor-pointer"
+        "hover:bg-[rgba(255,255,255,0.03)] cursor-pointer"
       )}
     >
       {/* Left: icon + text */}
@@ -209,7 +209,7 @@ export function TransactionList({ filter }: TransactionListProps) {
           </div>
 
           {/* Grouped card */}
-          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg divide-y divide-[rgba(255,255,255,0.05)] overflow-hidden">
+          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg divide-y divide-[var(--border)] overflow-hidden">
             {group.items.map((tx) => (
               <TransactionRow key={tx.id} tx={tx} />
             ))}

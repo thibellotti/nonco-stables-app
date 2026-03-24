@@ -21,7 +21,7 @@
 :root {
   /* Surface hierarchy — MD3-inspired, from nonco.com HSL tokens */
   --bg: #131313;
-  --bg-card: #0e0e0e;
+  --bg-card: #141414;
   --bg-elevated: #1c1b1b;
   --bg-muted: #201f1f;
   --bg-highest: #2a2a2a;
@@ -145,7 +145,7 @@ body {
 /* ─── Processing border animation for settlements ─── */
 .processing-border {
   position: relative;
-  background: #141414;
+  background: var(--bg-card);
   border-radius: 0.5rem;
   z-index: 0;
   overflow: hidden;
@@ -163,7 +163,7 @@ body {
   position: absolute;
   z-index: -1;
   inset: 1px;
-  background: #141414;
+  background: var(--bg-card);
   border-radius: 0.5rem;
 }
 @keyframes rotate-conic {

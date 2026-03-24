@@ -142,7 +142,7 @@ function spread(bid: number, ask: number): string {
 
 function PriceSkeleton() {
   return (
-    <div className="bg-[var(--bg-card)] border border-[var(--border-outline)] rounded-lg p-8">
+    <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-8">
       <div className="animate-pulse space-y-5">
         <div className="flex items-center justify-between">
           <div className="h-5 w-28 bg-[var(--bg-highest)] rounded" />
@@ -150,8 +150,8 @@ function PriceSkeleton() {
         </div>
         <div className="h-8 w-40 bg-[var(--bg-highest)] rounded" />
         <div className="grid grid-cols-2 gap-4">
-          <div className="h-32 bg-[var(--bg-highest)] rounded-xl" />
-          <div className="h-32 bg-[var(--bg-highest)] rounded-xl" />
+          <div className="h-32 bg-[var(--bg-highest)] rounded-lg" />
+          <div className="h-32 bg-[var(--bg-highest)] rounded-lg" />
         </div>
         <div className="flex justify-between">
           <div className="h-3 w-32 bg-[var(--bg-highest)] rounded" />
@@ -221,7 +221,7 @@ export function PriceCard({ quote, isLoading, onRefresh, onTrade }: PriceCardPro
   // ---------- Empty state ----------
   if (!quote && !isLoading) {
     return (
-      <div className="bg-[var(--bg-card)] border border-[var(--border-outline)] rounded-lg p-8 flex items-center justify-center min-h-[200px]">
+      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-8 flex items-center justify-center min-h-[200px]">
         <p className="text-sm text-[var(--text-3)] text-center">
           Request a quote to see pricing
         </p>
@@ -250,7 +250,7 @@ export function PriceCard({ quote, isLoading, onRefresh, onTrade }: PriceCardPro
       className={cn(
         "relative overflow-hidden rounded-lg transition-all duration-300",
         expired
-          ? "bg-[var(--bg-card)] border border-[var(--border-outline)]"
+          ? "bg-[var(--bg-card)] border border-[var(--border)]"
           : "bg-[var(--bg-card)] border border-[rgba(5,224,248,0.3)] shadow-[0_0_40px_rgba(5,224,248,0.06)]"
       )}
     >
@@ -318,7 +318,7 @@ export function PriceCard({ quote, isLoading, onRefresh, onTrade }: PriceCardPro
         {/* Buy / Sell columns */}
         <div className="grid grid-cols-2 gap-4">
           {/* BUY */}
-          <div className="bg-[var(--bg-card)] rounded-xl border border-[var(--border-subtle)] p-6 flex flex-col items-center gap-4">
+          <div className="bg-[var(--bg-card)] rounded-lg border border-[var(--border-subtle)] p-6 flex flex-col items-center gap-4">
             <span className="text-[10px] font-mono uppercase tracking-[.1em] text-[var(--cyan)] font-bold">
               Buy
             </span>
@@ -335,7 +335,7 @@ export function PriceCard({ quote, isLoading, onRefresh, onTrade }: PriceCardPro
           </div>
 
           {/* SELL */}
-          <div className="bg-[var(--bg-card)] rounded-xl border border-[var(--border-subtle)] p-6 flex flex-col items-center gap-4">
+          <div className="bg-[var(--bg-card)] rounded-lg border border-[var(--border-subtle)] p-6 flex flex-col items-center gap-4">
             <span className="text-[10px] font-mono uppercase tracking-[.1em] text-[var(--purple)] font-bold">
               Sell
             </span>

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { PageTransition } from "@/components/ui/page-transition";
+import { SectionLabel } from "@/components/ui/section-label";
 import { transactions } from "@/lib/mock-data";
 import { formatMoney, timeAgo } from "@/lib/utils";
 
@@ -54,19 +55,14 @@ export default function SettlementsPage() {
     <PageTransition className="px-6 md:px-8 w-full space-y-8">
       {/* Header */}
       <div className="space-y-3">
-        <div className="flex items-center gap-3">
-          <div className="w-[2px] h-4 bg-[var(--cyan)] rounded-full" />
-          <span className="font-mono text-[10px] font-medium uppercase tracking-[.15em] text-[var(--text-3)]">
-            Institutional Settlements
-          </span>
-        </div>
+        <SectionLabel>Institutional Settlements</SectionLabel>
         <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-white">
           Post-Trade Clearing
         </h1>
       </div>
 
       {/* Tab Navigation — underline style */}
-      <div className="flex gap-8 border-b border-[rgba(255,255,255,0.05)]">
+      <div className="flex gap-8 border-b border-[var(--border)]">
         <button
           onClick={() => setActiveTab("pending")}
           className={`pb-4 font-mono text-sm transition-colors duration-200 cursor-pointer ${
@@ -112,7 +108,7 @@ export default function SettlementsPage() {
               {s.status === "processing" ? (
                 /* Processing card — animated conic-gradient border */
                 <div className="processing-border rounded-lg">
-                  <div className="bg-[var(--bg-card)] rounded-[7px] p-6 flex flex-col justify-between min-h-64">
+                  <div className="bg-[var(--bg-card)] rounded-lg p-6 flex flex-col justify-between min-h-64">
                     {/* Top: pair + status */}
                     <div className="space-y-3">
                       <div className="flex items-start justify-between">
@@ -168,7 +164,7 @@ export default function SettlementsPage() {
                 </div>
               ) : (
                 /* Awaiting cards */
-                <div className="bg-[var(--bg-card)] rounded-lg border border-transparent hover:border-[rgba(255,255,255,0.05)] transition-colors duration-200 p-6 flex flex-col justify-between min-h-64">
+                <div className="bg-[var(--bg-card)] rounded-lg border border-[var(--border)] hover:border-[var(--border-outline)] transition-colors duration-200 p-6 flex flex-col justify-between min-h-64">
                   {/* Top: pair + status */}
                   <div className="space-y-3">
                     <div className="flex items-start justify-between">
@@ -236,13 +232,8 @@ export default function SettlementsPage() {
         >
           {/* Settlement History Header */}
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-[2px] h-4 bg-[var(--cyan)] rounded-full" />
-              <span className="font-mono text-[10px] font-medium uppercase tracking-[.15em] text-[var(--text-3)]">
-                Settlement History
-              </span>
-            </div>
-            <button className="flex items-center gap-2 px-4 py-2 rounded-full border border-[rgba(255,255,255,0.1)] text-[var(--text-3)] hover:text-white hover:border-[rgba(255,255,255,0.2)] transition-colors duration-200 cursor-pointer">
+            <SectionLabel>Settlement History</SectionLabel>
+            <button className="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--border)] text-[var(--text-3)] hover:text-white hover:border-[var(--border-outline)] transition-colors duration-200 cursor-pointer">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M6 1v7M6 8L3.5 5.5M6 8l2.5-2.5M1 10h10" />
               </svg>
@@ -251,15 +242,15 @@ export default function SettlementsPage() {
           </div>
 
           {/* Table */}
-          <div className="bg-[var(--bg-card)] rounded-lg border border-[rgba(255,255,255,0.05)] overflow-hidden">
+          <div className="bg-[var(--bg-card)] rounded-lg border border-[var(--border)] overflow-hidden">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-[rgba(255,255,255,0.05)]">
-                  <th className="px-8 py-5 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)]">Description</th>
-                  <th className="px-8 py-5 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] text-right">Amount</th>
-                  <th className="px-8 py-5 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)]">Currency</th>
-                  <th className="px-8 py-5 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] hidden sm:table-cell">Counterparty</th>
-                  <th className="px-8 py-5 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] text-right hidden sm:table-cell">Date</th>
+                <tr className="border-b border-[var(--border)]">
+                  <th className="px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)]">Description</th>
+                  <th className="px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] text-right">Amount</th>
+                  <th className="px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)]">Currency</th>
+                  <th className="px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] hidden sm:table-cell">Counterparty</th>
+                  <th className="px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] text-right hidden sm:table-cell">Date</th>
                 </tr>
               </thead>
               <tbody>
@@ -273,15 +264,15 @@ export default function SettlementsPage() {
                       i % 2 === 1 ? "bg-[rgba(255,255,255,0.02)]" : ""
                     }`}
                   >
-                    <td className="px-8 py-6">
+                    <td className="px-6 py-4">
                       <span className="text-sm text-[var(--text-2)]">{t.description}</span>
                     </td>
-                    <td className="px-8 py-6 text-right">
+                    <td className="px-6 py-4 text-right">
                       <span className="font-mono text-sm font-bold text-white tabular-nums">
                         {formatMoney(t.amount)}
                       </span>
                     </td>
-                    <td className="px-8 py-6">
+                    <td className="px-6 py-4">
                       <span className={`inline-flex items-center px-2.5 py-1 rounded text-[10px] font-mono font-bold ${
                         t.currency === "USDT"
                           ? "bg-[rgba(5,224,248,0.1)] text-[var(--cyan)]"
@@ -292,10 +283,10 @@ export default function SettlementsPage() {
                         {t.currency}
                       </span>
                     </td>
-                    <td className="px-8 py-6 hidden sm:table-cell">
+                    <td className="px-6 py-4 hidden sm:table-cell">
                       <span className="font-mono text-sm text-[var(--text-3)]">{t.counterparty}</span>
                     </td>
-                    <td className="px-8 py-6 text-right hidden sm:table-cell">
+                    <td className="px-6 py-4 text-right hidden sm:table-cell">
                       <span className="font-mono text-sm text-[var(--text-3)] tabular-nums">
                         {timeAgo(t.timestamp)}
                       </span>

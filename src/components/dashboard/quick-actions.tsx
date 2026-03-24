@@ -48,17 +48,17 @@ export function QuickActions() {
           <div
             className={cn(
               "w-12 h-12 rounded-full flex items-center justify-center",
-              "bg-[#1f1f1f] border border-[rgba(255,255,255,0.05)]",
-              "text-[#737373]",
+              "bg-[var(--bg-elevated)] border border-[var(--border)]",
+              "text-[var(--text-4)]",
               "transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]",
-              "group-hover:bg-[#2a2a2a] group-hover:border-[rgba(5,224,248,0.5)] group-hover:shadow-[0_0_15px_rgba(5,224,248,0.2)] group-hover:text-[var(--cyan)]"
+              "group-hover:bg-[var(--bg-highest)] group-hover:border-[rgba(5,224,248,0.5)] group-hover:shadow-[0_0_15px_rgba(5,224,248,0.2)] group-hover:text-[var(--cyan)]"
             )}
           >
             {action.icon}
           </div>
           <span
             className={cn(
-              "text-[10px] font-mono uppercase tracking-widest text-[#737373]",
+              "text-[10px] font-mono uppercase tracking-widest text-[var(--text-4)]",
               "transition-colors duration-200",
               "group-hover:text-white"
             )}

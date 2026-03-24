@@ -4,6 +4,7 @@ import { useState } from "react";
 import { PageTransition } from "@/components/ui/page-transition";
 import { Badge } from "@/components/ui/badge";
 import { transactions, type TransactionType } from "@/lib/mock-data";
+import { SectionLabel } from "@/components/ui/section-label";
 import { cn, formatCompact, timeAgo } from "@/lib/utils";
 
 // ---------------------------------------------------------------------------
@@ -122,7 +123,7 @@ function TransactionRow({
   return (
     <tr className={`group cursor-pointer transition-colors duration-150 hover:bg-[rgba(255,255,255,0.03)] border-b border-[rgba(255,255,255,0.03)] ${index % 2 === 1 ? "bg-[rgba(255,255,255,0.02)]" : ""}`}>
       {/* Transaction: icon + name + ref */}
-      <td className="px-8 py-6">
+      <td className="px-6 py-4">
         <div className="flex items-center gap-3">
           <TxIcon type={tx.type} />
           <div className="min-w-0">
@@ -135,14 +136,14 @@ function TransactionRow({
       </td>
 
       {/* Counterparty */}
-      <td className="px-8 py-6 hidden md:table-cell">
+      <td className="px-6 py-4 hidden md:table-cell">
         <span className="text-xs text-[var(--text-3)] truncate">
           {tx.counterparty ?? "—"}
         </span>
       </td>
 
       {/* Asset */}
-      <td className="px-8 py-6 hidden sm:table-cell">
+      <td className="px-6 py-4 hidden sm:table-cell">
         <span
           className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold font-mono uppercase tracking-wider"
           style={{ backgroundColor: pillColor.bg, color: pillColor.text }}
@@ -152,7 +153,7 @@ function TransactionRow({
       </td>
 
       {/* Amount */}
-      <td className="px-8 py-6 text-right">
+      <td className="px-6 py-4 text-right">
         <span
           className={cn(
             "font-mono text-sm font-bold tabular-nums",
@@ -165,7 +166,7 @@ function TransactionRow({
       </td>
 
       {/* Time + Status */}
-      <td className="px-8 py-6 text-right">
+      <td className="px-6 py-4 text-right">
         <div className="flex flex-col items-end gap-1">
           <span className="text-[10px] text-[var(--text-4)] font-mono tabular-nums">
             {timeAgo(tx.timestamp)}
@@ -215,12 +216,7 @@ export default function BankPage() {
     <PageTransition className="px-6 md:px-8 w-full space-y-8">
       {/* Header */}
       <div className="space-y-3">
-        <div className="flex items-center gap-3">
-          <div className="w-[2px] h-4 bg-[var(--cyan)] rounded-full" />
-          <span className="font-mono text-[10px] font-medium uppercase tracking-[.15em] text-[var(--text-3)]">
-            {"Banking & Flows"}
-          </span>
-        </div>
+        <SectionLabel>Banking & Flows</SectionLabel>
         <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-white">
           Treasury Operations
         </h1>
@@ -229,7 +225,7 @@ export default function BankPage() {
       {/* KPI Row */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Deposits */}
-        <div className="bg-[var(--bg-card)] rounded-lg p-8 border-t-2 border-[var(--cyan)] relative overflow-hidden group shadow-lg">
+        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-8 border-t-2 border-t-[var(--cyan)] relative overflow-hidden group">
           <span className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)]">
             Total Deposits (30d)
           </span>
@@ -252,7 +248,7 @@ export default function BankPage() {
         </div>
 
         {/* Withdrawals */}
-        <div className="bg-[var(--bg-card)] rounded-lg p-8 border-t-2 border-[var(--purple)] relative overflow-hidden group shadow-lg">
+        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-8 border-t-2 border-t-[var(--purple)] relative overflow-hidden group">
           <span className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)]">
             Total Withdrawals (30d)
           </span>
@@ -272,7 +268,7 @@ export default function BankPage() {
         </div>
 
         {/* Net Flow */}
-        <div className="bg-[var(--bg-card)] rounded-lg p-8 border-t-2 border-[var(--green)] relative overflow-hidden group shadow-lg">
+        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-8 border-t-2 border-t-[var(--green)] relative overflow-hidden group">
           <span className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)]">
             Net Flow (30d)
           </span>
@@ -292,9 +288,9 @@ export default function BankPage() {
       </div>
 
       {/* Filter Section */}
-      <div className="bg-[var(--bg-card)] rounded-lg border border-[rgba(255,255,255,0.05)]">
+      <div className="bg-[var(--bg-card)] rounded-lg border border-[var(--border)]">
         {/* Filter bar */}
-        <div className="flex items-center justify-between px-8 py-5 border-b border-[rgba(255,255,255,0.05)]">
+        <div className="flex items-center justify-between px-6 py-3 border-b border-[var(--border)]">
           {/* Pill toggle */}
           <div className="flex bg-black rounded-full border border-[var(--border)] p-1">
             {tabs.map((tab) => (
@@ -337,20 +333,20 @@ export default function BankPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-[rgba(255,255,255,0.05)]">
-                  <th className="px-8 py-5 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
+                <tr className="border-b border-[var(--border)]">
+                  <th className="px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
                     Transaction
                   </th>
-                  <th className="px-8 py-5 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden md:table-cell">
+                  <th className="px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden md:table-cell">
                     Counterparty
                   </th>
-                  <th className="px-8 py-5 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden sm:table-cell">
+                  <th className="px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden sm:table-cell">
                     Asset
                   </th>
-                  <th className="px-8 py-5 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
+                  <th className="px-6 py-3 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
                     Amount
                   </th>
-                  <th className="px-8 py-5 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
+                  <th className="px-6 py-3 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
                     Time
                   </th>
                 </tr>
@@ -365,7 +361,7 @@ export default function BankPage() {
         )}
 
         {/* Footer: pagination */}
-        <div className="flex items-center justify-between px-8 py-4 border-t border-[rgba(255,255,255,0.05)]">
+        <div className="flex items-center justify-between px-6 py-3 border-t border-[var(--border)]">
           <span className="text-[11px] font-mono text-[var(--text-4)]">
             Showing {(page - 1) * PAGE_SIZE + 1}-{Math.min(page * PAGE_SIZE, filtered.length)} of {filtered.length} Transactions
           </span>

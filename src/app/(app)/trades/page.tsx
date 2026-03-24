@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { PageTransition } from "@/components/ui/page-transition";
+import { SectionLabel } from "@/components/ui/section-label";
 import { recentTrades } from "@/lib/mock-data";
 import type { RecentTrade } from "@/lib/mock-data";
 import { formatMoney, timeAgo } from "@/lib/utils";
@@ -74,17 +75,12 @@ export default function TradesPage() {
       {/* Hero Header */}
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div className="space-y-3">
-          <div className="flex items-center gap-3">
-            <div className="w-[2px] h-4 bg-[var(--cyan)] rounded-full" />
-            <span className="font-mono text-[10px] font-medium uppercase tracking-[.15em] text-[var(--text-3)]">
-              Execution History
-            </span>
-          </div>
+          <SectionLabel>Execution History</SectionLabel>
           <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-white">
             Trades
           </h1>
         </div>
-        <div className="flex items-center gap-3 bg-[var(--bg-card)] rounded-lg px-5 py-3 border border-[rgba(255,255,255,0.05)]">
+        <div className="flex items-center gap-3 bg-[var(--bg-card)] rounded-lg px-5 py-3 border border-[var(--border)]">
           <span className="relative flex h-2.5 w-2.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--green)] opacity-75" />
             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[var(--green)]" />
@@ -105,7 +101,7 @@ export default function TradesPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="bg-[var(--bg-card)] rounded-lg p-8 border-t-2 border-[var(--cyan)] shadow-lg"
+          className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-8 border-t-2 border-t-[var(--cyan)]"
         >
           <span className="text-[10px] tracking-[.15em] uppercase font-mono text-[var(--text-3)]">
             Total Trades
@@ -129,7 +125,7 @@ export default function TradesPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="bg-[var(--bg-card)] rounded-lg p-8 border-t-2 border-[var(--purple)] shadow-lg"
+          className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-8 border-t-2 border-t-[var(--purple)]"
         >
           <span className="text-[10px] tracking-[.15em] uppercase font-mono text-[var(--text-3)]">
             Total Volume
@@ -153,7 +149,7 @@ export default function TradesPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="bg-[var(--bg-card)] rounded-lg p-8 border-t-2 border-[var(--green)] shadow-lg"
+          className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-8 border-t-2 border-t-[var(--green)]"
         >
           <span className="text-[10px] tracking-[.15em] uppercase font-mono text-[var(--text-3)]">
             Avg Trade Size
@@ -174,16 +170,11 @@ export default function TradesPage() {
       </div>
 
       {/* Trade History Table */}
-      <div className="bg-[var(--bg-card)] rounded-lg overflow-hidden shadow-lg">
+      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden">
         {/* Table Header Bar */}
-        <div className="p-8 flex items-center justify-between bg-[var(--bg-elevated)]">
-          <div className="flex items-center gap-3">
-            <div className="w-[2px] h-4 bg-[var(--cyan)] rounded-full" />
-            <span className="font-mono text-[10px] font-medium uppercase tracking-[.15em] text-[var(--text-3)]">
-              Trade History
-            </span>
-          </div>
-          <button className="flex items-center gap-2 px-4 py-2 rounded-full border border-[rgba(255,255,255,0.1)] text-[var(--text-3)] hover:text-white hover:border-[rgba(255,255,255,0.2)] transition-colors duration-200 cursor-pointer">
+        <div className="px-6 py-4 flex items-center justify-between bg-[var(--bg-elevated)]">
+          <SectionLabel>Trade History</SectionLabel>
+          <button className="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--border)] text-[var(--text-3)] hover:text-white hover:border-[var(--border-outline)] transition-colors duration-200 cursor-pointer">
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M6 1v7M6 8L3.5 5.5M6 8l2.5-2.5M1 10h10" />
             </svg>
@@ -194,13 +185,13 @@ export default function TradesPage() {
         {/* Table */}
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-[rgba(255,255,255,0.05)]">
-              <th className="px-8 py-5 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)]">Pair</th>
-              <th className="px-8 py-5 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)]">Side</th>
-              <th className="px-8 py-5 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] text-right">Quantity</th>
-              <th className="px-8 py-5 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] text-right">Price</th>
-              <th className="px-8 py-5 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] hidden sm:table-cell">Settlement</th>
-              <th className="px-8 py-5 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] text-right hidden sm:table-cell">Date</th>
+            <tr className="border-b border-[var(--border)]">
+              <th className="px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)]">Pair</th>
+              <th className="px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)]">Side</th>
+              <th className="px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] text-right">Quantity</th>
+              <th className="px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] text-right">Price</th>
+              <th className="px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] hidden sm:table-cell">Settlement</th>
+              <th className="px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] text-right hidden sm:table-cell">Date</th>
             </tr>
           </thead>
           <tbody>
@@ -215,7 +206,7 @@ export default function TradesPage() {
                 }`}
               >
                 {/* Pair cell with monogram */}
-                <td className="px-8 py-6">
+                <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-[rgba(5,224,248,0.1)] border border-[rgba(5,224,248,0.2)] flex items-center justify-center">
                       <span className="font-mono text-[10px] font-bold text-[var(--cyan)]">
@@ -227,7 +218,7 @@ export default function TradesPage() {
                 </td>
 
                 {/* Side pill */}
-                <td className="px-8 py-6">
+                <td className="px-6 py-4">
                   {trade.side === "buy" ? (
                     <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold font-mono uppercase tracking-[.08em] bg-[rgba(5,224,248,0.1)] text-[var(--cyan)]">
                       Buy
@@ -240,28 +231,28 @@ export default function TradesPage() {
                 </td>
 
                 {/* Quantity */}
-                <td className="px-8 py-6 text-right">
+                <td className="px-6 py-4 text-right">
                   <span className="font-mono text-sm text-white tabular-nums">
                     {formatMoney(trade.quantity)}
                   </span>
                 </td>
 
                 {/* Price */}
-                <td className="px-8 py-6 text-right">
+                <td className="px-6 py-4 text-right">
                   <span className="font-mono text-sm text-white tabular-nums">
                     {trade.price.toFixed(4)}
                   </span>
                 </td>
 
                 {/* Settlement */}
-                <td className="px-8 py-6 hidden sm:table-cell">
+                <td className="px-6 py-4 hidden sm:table-cell">
                   <span className="inline-flex items-center px-2.5 py-1 rounded bg-[rgba(255,255,255,0.06)] text-[10px] font-mono font-medium text-[var(--text-3)]">
                     {trade.settlement}
                   </span>
                 </td>
 
                 {/* Date */}
-                <td className="px-8 py-6 text-right hidden sm:table-cell">
+                <td className="px-6 py-4 text-right hidden sm:table-cell">
                   <span className="font-mono text-sm text-[var(--text-3)] tabular-nums">
                     {timeAgo(trade.timestamp)}
                   </span>
@@ -272,8 +263,8 @@ export default function TradesPage() {
         </table>
 
         {/* Footer */}
-        <div className="flex items-center justify-center p-8 border-t border-[rgba(255,255,255,0.05)]">
-          <button className="flex items-center gap-2 px-6 py-3 rounded-full border border-[rgba(255,255,255,0.1)] text-[var(--text-3)] hover:text-white hover:border-[rgba(255,255,255,0.2)] transition-colors duration-200 cursor-pointer">
+        <div className="flex items-center justify-center px-6 py-4 border-t border-[var(--border)]">
+          <button className="flex items-center gap-2 px-6 py-3 rounded-full border border-[var(--border)] text-[var(--text-3)] hover:text-white hover:border-[var(--border-outline)] transition-colors duration-200 cursor-pointer">
             <span className="font-mono text-[10px] font-bold uppercase tracking-[.15em]">View All Transactions</span>
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M2.5 6h7M6.5 3L9.5 6l-3 3" />

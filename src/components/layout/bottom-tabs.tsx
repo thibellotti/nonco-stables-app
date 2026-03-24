@@ -65,7 +65,7 @@ export function BottomTabs() {
   const pathname = usePathname();
 
   return (
-    <nav aria-label="Mobile navigation" className="fixed bottom-0 inset-x-0 z-50 flex lg:hidden bg-black border-t border-[rgba(255,255,255,0.05)] shadow-[0_-4px_20px_rgba(5,224,248,0.05)]">
+    <nav aria-label="Mobile navigation" className="fixed bottom-0 inset-x-0 z-50 flex lg:hidden bg-black border-t border-[var(--border)]">
       <div className="flex w-full justify-around items-center h-16 pb-[env(safe-area-inset-bottom)]">
         {tabs.map((tab) => {
           const isActive =
@@ -79,7 +79,7 @@ export function BottomTabs() {
                 "flex flex-col items-center justify-center gap-0.5 flex-1 py-2 transition-all duration-200",
                 isActive
                   ? "text-[var(--cyan)]"
-                  : "text-[#525252]"
+                  : "text-[var(--text-4)]"
               )}
             >
               <span

@@ -74,7 +74,7 @@ function BalanceCard({ balance }: { balance: (typeof balances)[number] }) {
   const topColor = colors?.border ?? "var(--cyan)";
 
   return (
-    <div className="bg-[var(--bg-card)] border border-[var(--border-outline)] rounded-lg overflow-hidden group relative">
+    <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden group relative hover:border-[var(--border-outline)] transition-all duration-200">
       {/* Hover color overlay */}
       <div
         className="absolute inset-0 opacity-0 group-hover:opacity-[0.04] transition-opacity duration-300 pointer-events-none"
@@ -123,7 +123,7 @@ function BalanceCard({ balance }: { balance: (typeof balances)[number] }) {
         )}
 
         {/* Actions — CSS-only hover, no JS event handlers */}
-        <div className="flex gap-3 pt-2 border-t border-[var(--border-subtle)]">
+        <div className="flex gap-3 pt-2 border-t border-[var(--border)]">
           <button
             className="flex-1 py-2.5 text-xs font-bold uppercase tracking-widest bg-[rgba(255,255,255,0.05)] rounded text-[var(--text-3)] transition-all duration-200 cursor-pointer hover:bg-[var(--cyan-dim)] hover:text-[var(--cyan)]"
           >
@@ -154,7 +154,12 @@ export default function WalletPage() {
     <PageTransition className="px-6 md:px-8 w-full space-y-8">
       {/* Hero */}
       <div className="space-y-4">
-        <SectionLabel>Wallet</SectionLabel>
+        <div className="space-y-3">
+          <SectionLabel>Digital Assets</SectionLabel>
+          <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-white">
+            Wallet
+          </h1>
+        </div>
 
         <p className="text-[36px] font-mono font-bold text-white tabular-nums leading-none tracking-tight">
           ${formatMoney(totalValue)}
@@ -208,23 +213,23 @@ export default function WalletPage() {
       {/* Recent Settlements */}
       <div>
         <SectionLabel>Recent Settlements</SectionLabel>
-        <div className="bg-[var(--bg-card)] border border-[var(--border-outline)] rounded-lg overflow-hidden mt-4">
+        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden mt-4">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-[var(--border-subtle)]">
-                <th className="px-8 py-5 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
+              <tr className="border-b border-[var(--border)]">
+                <th className="px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
                   Currency
                 </th>
-                <th className="px-8 py-5 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden sm:table-cell">
+                <th className="px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden sm:table-cell">
                   Counterparty
                 </th>
-                <th className="px-8 py-5 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
+                <th className="px-6 py-3 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
                   Amount
                 </th>
-                <th className="px-8 py-5 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden md:table-cell">
+                <th className="px-6 py-3 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden md:table-cell">
                   Status
                 </th>
-                <th className="px-8 py-5 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
+                <th className="px-6 py-3 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
                   Time
                 </th>
               </tr>
@@ -233,27 +238,27 @@ export default function WalletPage() {
               {recentSettlements.map((s, i) => {
                 const colors = currencyColors[s.currency];
                 return (
-                  <tr key={s.id} className={`border-b border-[var(--border-subtle)] hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-150 ${i % 2 === 1 ? "bg-[rgba(255,255,255,0.02)]" : ""}`}>
-                    <td className="px-8 py-6">
+                  <tr key={s.id} className={`border-b border-[var(--border)] hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-150 ${i % 2 === 1 ? "bg-[rgba(255,255,255,0.02)]" : ""}`}>
+                    <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
                         <CurrencyIcon currency={s.currency} size={28} />
                         <span className="text-sm text-white font-medium">{s.currency}</span>
                       </div>
                     </td>
-                    <td className="px-8 py-6 hidden sm:table-cell">
+                    <td className="px-6 py-4 hidden sm:table-cell">
                       <span className="text-xs text-[var(--text-3)]">{s.counterparty}</span>
                     </td>
-                    <td className="px-8 py-6 text-right">
+                    <td className="px-6 py-4 text-right">
                       <span className="font-mono text-sm font-bold text-white tabular-nums">
                         ${formatMoney(s.amount)}
                       </span>
                     </td>
-                    <td className="px-8 py-6 text-right hidden md:table-cell">
+                    <td className="px-6 py-4 text-right hidden md:table-cell">
                       <span className={`text-[10px] font-mono font-bold uppercase tracking-wider ${s.status === "Settled" ? "text-[var(--green)]" : "text-[var(--amber)]"}`}>
                         {s.status}
                       </span>
                     </td>
-                    <td className="px-8 py-6 text-right">
+                    <td className="px-6 py-4 text-right">
                       <span className="text-[10px] text-[var(--text-4)] font-mono tabular-nums">
                         {timeAgo(s.timestamp)}
                       </span>

@@ -80,9 +80,9 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden lg:flex flex-col fixed left-0 top-0 w-[220px] h-dvh bg-[#141414] border-r border-[var(--border)] z-50">
+    <aside className="hidden lg:flex flex-col fixed left-0 top-0 w-[220px] h-dvh bg-[var(--bg-card)] border-r border-[var(--border)] z-50">
       {/* Logo — aligned with header height (h-16 = 64px) */}
-      <div className="h-16 flex items-center px-6 shrink-0 border-b border-[rgba(255,255,255,0.05)]">
+      <div className="h-16 flex items-center px-6 shrink-0 border-b border-[var(--border)]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/nonco-stables-logo.svg"
@@ -106,7 +106,7 @@ export function Sidebar() {
                 "flex items-center px-6 py-3 transition-all duration-200",
                 isActive
                   ? "text-[var(--cyan)] bg-[rgba(5,224,248,0.1)] font-bold border-l-4 border-[var(--cyan)]"
-                  : "text-[#737373] hover:text-white hover:bg-[var(--bg-elevated)]"
+                  : "text-[var(--text-4)] hover:text-white hover:bg-[var(--bg-elevated)]"
               )}
             >
               <span className="mr-3 shrink-0">{item.icon}</span>
@@ -129,7 +129,7 @@ export function Sidebar() {
           {/* User info */}
           <div className="flex flex-col min-w-0">
             <span className="text-[10px] font-mono text-white truncate">TREASURY_01</span>
-            <span className="text-[10px] font-mono text-[#737373] uppercase">Verified Inst.</span>
+            <span className="text-[10px] font-mono text-[var(--text-4)] uppercase">Verified Inst.</span>
           </div>
         </div>
       </div>

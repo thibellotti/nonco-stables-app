@@ -25,7 +25,7 @@ export function CurrencyBreakdown() {
               className={cn(
                 "bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5",
                 "transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]",
-                "cursor-default group hover:scale-[1.02]"
+                "cursor-default group hover:border-[var(--border-outline)] hover:scale-[1.02]"
               )}
             >
               {/* Top: colored dot + currency symbol */}
