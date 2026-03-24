@@ -148,7 +148,7 @@ export default function WalletPage() {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      className="p-6 lg:p-8 space-y-6 max-w-6xl"
+      className="p-6 lg:px-10 lg:py-8 space-y-6"
     >
       <div>
         <SectionLabel className="mb-4">Wallet</SectionLabel>
@@ -163,7 +163,7 @@ export default function WalletPage() {
       </div>
 
       {/* Balance cards grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
         {balances.map((balance) => (
           <BalanceCard key={balance.currency} balance={balance} />
         ))}

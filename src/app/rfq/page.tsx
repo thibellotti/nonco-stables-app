@@ -70,20 +70,23 @@ export default function RFQPage() {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      className="p-6 lg:p-8 space-y-6 max-w-6xl"
+      className="p-6 lg:px-10 lg:py-8 space-y-6"
     >
       <SectionLabel>Favorites</SectionLabel>
       <FavoritesGrid onQuote={handleQuote} />
 
       <SectionLabel>New Quote</SectionLabel>
-      <QuoteForm onQuote={handleQuote} />
-
-      <PriceCard
-        quote={quote}
-        isLoading={isLoading}
-        onRefresh={handleRefresh}
-        onTrade={handleTrade}
-      />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="space-y-4">
+          <QuoteForm onQuote={handleQuote} />
+        </div>
+        <PriceCard
+          quote={quote}
+          isLoading={isLoading}
+          onRefresh={handleRefresh}
+          onTrade={handleTrade}
+        />
+      </div>
 
       <SectionLabel>Recent Trades</SectionLabel>
       <RecentTrades extraTrades={sessionTrades} />
