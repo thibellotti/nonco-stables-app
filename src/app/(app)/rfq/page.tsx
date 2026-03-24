@@ -76,17 +76,14 @@ export default function RFQPage() {
       <FavoritesGrid onQuote={handleQuote} />
 
       <SectionLabel>New Quote</SectionLabel>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="space-y-4">
-          <QuoteForm onQuote={handleQuote} />
-        </div>
-        <PriceCard
-          quote={quote}
-          isLoading={isLoading}
-          onRefresh={handleRefresh}
-          onTrade={handleTrade}
-        />
-      </div>
+      <QuoteForm onQuote={handleQuote} />
+
+      <PriceCard
+        quote={quote}
+        isLoading={isLoading}
+        onRefresh={handleRefresh}
+        onTrade={handleTrade}
+      />
 
       <SectionLabel>Recent Trades</SectionLabel>
       <RecentTrades extraTrades={sessionTrades} />
