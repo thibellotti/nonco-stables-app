@@ -200,7 +200,7 @@ function FavoriteCard({
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg hover:border-[var(--border-outline)] transition-all duration-200 flex flex-col"
+      className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg hover:border-[var(--border-outline)] transition-all duration-200 flex flex-col relative overflow-hidden"
       style={{
         borderTopWidth: 2,
         borderTopColor: hovered ? colors.text : colors.border,
@@ -210,7 +210,7 @@ function FavoriteCard({
       }}
     >
       {/* Top: pair code + rate */}
-      <div className="px-3 pt-3">
+      <div className="px-3 pt-3 pb-10 relative z-10">
         <p className="text-[11px] font-mono text-[var(--text-3)] uppercase tracking-wider">
           {base}/{quote}
         </p>
@@ -222,8 +222,8 @@ function FavoriteCard({
         </p>
       </div>
 
-      {/* Sparkline */}
-      <div className="mt-2 h-8 px-3">
+      {/* Sparkline — pinned bottom-right */}
+      <div className="absolute bottom-8 right-0 w-1/2 h-12 pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
         <Sparkline
           data={sparkData}
           color={colors.border}
@@ -233,7 +233,7 @@ function FavoriteCard({
       </div>
 
       {/* Bottom: quantity + quote button */}
-      <div className="flex gap-2 px-3 pt-2 pb-3">
+      <div className="flex gap-2 px-3 pt-2 pb-3 relative z-10 mt-auto">
         <input
           type="text"
           inputMode="numeric"
