@@ -84,7 +84,7 @@ export function NotificationCenter() {
     <div className="relative" ref={containerRef}>
       {/* Bell button */}
       <button
-        className="relative text-[var(--text-4)] hover:text-white transition-colors duration-150"
+        className="relative text-[var(--text-4)] hover:text-[var(--text)] transition-colors duration-150"
         aria-label="Notifications"
         aria-expanded={isOpen}
         onClick={handleToggle}
@@ -128,7 +128,7 @@ export function NotificationCenter() {
               <span className="text-sm font-medium text-[var(--text)] font-sans">Notifications</span>
               {unreadCount > 0 && (
                 <button
-                  className="text-xs text-[var(--cyan)] hover:text-white transition-colors duration-150 font-sans"
+                  className="text-xs text-[var(--cyan)] hover:text-[var(--text)] transition-colors duration-150 font-sans"
                   onClick={handleMarkAllRead}
                 >
                   Mark all read
@@ -164,7 +164,7 @@ export function NotificationCenter() {
                     <p className="text-xs text-[var(--text-3)] font-sans mt-0.5 line-clamp-2">
                       {notification.body}
                     </p>
-                    <span className="text-[10px] font-mono text-[var(--text-4)] mt-1 block">
+                    <span className="text-[11px] font-mono text-[var(--text-4)] mt-1 block">
                       {notification.time}
                     </span>
                   </div>
@@ -174,7 +174,7 @@ export function NotificationCenter() {
 
             {/* Footer */}
             <div className="px-4 py-3 border-t border-[var(--border)] text-center">
-              <button className="text-xs text-[var(--cyan)] hover:text-white transition-colors duration-150 font-sans">
+              <button className="text-xs text-[var(--cyan)] hover:text-[var(--text)] transition-colors duration-150 font-sans">
                 View all notifications
               </button>
             </div>

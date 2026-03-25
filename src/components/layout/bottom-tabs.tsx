@@ -22,7 +22,7 @@ export function BottomTabs() {
               key={tab.href}
               href={tab.href}
               className={cn(
-                "flex flex-col items-center justify-center gap-0.5 flex-1 py-2 transition-all duration-200",
+                "flex flex-col items-center justify-center gap-0.5 flex-1 py-2 min-h-[44px] transition-all duration-200",
                 isActive
                   ? "text-[var(--cyan)]"
                   : "text-[var(--text-4)]"
@@ -36,7 +36,7 @@ export function BottomTabs() {
               >
                 {tab.icon}
               </span>
-              <span className="text-[10px] font-sans uppercase tracking-widest mt-1">{tab.label}</span>
+              <span className="text-[11px] font-sans uppercase tracking-widest mt-1">{tab.label}</span>
             </Link>
           );
         })}

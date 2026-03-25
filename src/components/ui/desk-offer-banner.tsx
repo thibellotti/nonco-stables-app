@@ -55,7 +55,7 @@ export function DeskOfferBanner() {
 
       {/* Content */}
       <div className="flex-1 min-w-0 relative">
-        <p className="text-sm font-medium">
+        <p className="text-sm font-medium text-[var(--text)]">
           Trading desk has{" "}
           <span className="text-[var(--cyan)] font-mono font-bold">USDT at 17.42</span> —
           limited inventory

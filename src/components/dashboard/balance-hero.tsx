@@ -181,8 +181,8 @@ export function BalanceHero() {
               onClick={() => setActivePeriod(p)}
               className={
                 activePeriod === p
-                  ? "font-mono text-[10px] uppercase tracking-[.1em] px-3 py-1 rounded-full bg-[var(--cyan-dim)] text-[var(--cyan)] border border-[rgba(5,224,248,0.2)] cursor-default"
-                  : "font-mono text-[10px] uppercase tracking-[.1em] px-3 py-1 rounded-full bg-[rgba(255,255,255,0.03)] text-[var(--text-4)] cursor-pointer hover:bg-[rgba(255,255,255,0.06)] transition-colors"
+                  ? "font-sans text-[11px] uppercase tracking-[.1em] px-3 py-1 rounded-full bg-[var(--cyan-dim)] text-[var(--cyan)] border border-[rgba(5,224,248,0.2)] cursor-default"
+                  : "font-sans text-[11px] uppercase tracking-[.1em] px-3 py-1 rounded-full bg-[rgba(255,255,255,0.03)] text-[var(--text-4)] cursor-pointer hover:bg-[rgba(255,255,255,0.06)] transition-colors"
               }
             >
               {p}
@@ -230,7 +230,7 @@ export function BalanceHero() {
               +{changePct}%
             </span>
           </div>
-          <span className="text-[var(--text-4)] text-xs font-mono">24h</span>
+          <span className="text-[var(--text-4)] text-[11px] font-mono">24h</span>
         </div>
       </div>
 
@@ -418,7 +418,7 @@ export function BalanceHero() {
                 transform: "translateY(-50%)",
               }}
             >
-              <div className="text-[10px] font-mono text-[var(--text-4)] mb-0.5">
+              <div className="text-[11px] font-sans text-[var(--text-4)] mb-0.5">
                 Mar {hoverIdx + 1}
               </div>
               <div
@@ -440,7 +440,7 @@ export function BalanceHero() {
       <div className="flex flex-wrap items-start gap-x-4 sm:gap-x-6 gap-y-4 mt-6">
         {/* Available */}
         <div>
-          <div className="font-mono text-[10px] text-[var(--text-4)] uppercase tracking-[.15em]">
+          <div className="font-sans text-[11px] text-[var(--text-4)] uppercase tracking-[.15em]">
             Available
           </div>
           <div
@@ -460,7 +460,7 @@ export function BalanceHero() {
 
         {/* Pending */}
         <div>
-          <div className="font-mono text-[10px] text-[var(--text-4)] uppercase tracking-[.15em]">
+          <div className="font-sans text-[11px] text-[var(--text-4)] uppercase tracking-[.15em]">
             Pending
           </div>
           <div
@@ -480,7 +480,7 @@ export function BalanceHero() {
 
         {/* Currencies */}
         <div>
-          <div className="font-mono text-[10px] text-[var(--text-4)] uppercase tracking-[.15em]">
+          <div className="font-sans text-[11px] text-[var(--text-4)] uppercase tracking-[.15em]">
             Currencies
           </div>
           <div

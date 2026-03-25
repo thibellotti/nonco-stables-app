@@ -13,7 +13,7 @@ export function SectionLabel({ children, color, className }: SectionLabelProps) 
         className="w-[2px] h-4 rounded-full"
         style={{ background: color || "var(--cyan)" }}
       />
-      <span className="font-mono text-[10px] font-medium uppercase tracking-[.15em] text-[var(--text-3)]">
+      <span className="font-sans text-[11px] font-medium uppercase tracking-[.15em] text-[var(--text-3)]">
         {children}
       </span>
     </div>

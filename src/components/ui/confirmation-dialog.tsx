@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn, formatMoney } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -108,6 +109,7 @@ export function ConfirmationDialog({
   onCancel,
 }: ConfirmationDialogProps) {
   const confirmRef = useRef<HTMLButtonElement>(null);
+  const dialogPanelRef = useRef<HTMLDivElement>(null);
 
   // Auto-focus confirm button when dialog opens
   useEffect(() => {
@@ -131,6 +133,37 @@ export function ConfirmationDialog({
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [open, onCancel]);
+
+  // Focus trap — keep Tab cycling within dialog
+  useEffect(() => {
+    if (!open) return;
+    const dialog = dialogPanelRef.current;
+    if (!dialog) return;
+
+    const focusableElements = dialog.querySelectorAll<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    const firstEl = focusableElements[0];
+    const lastEl = focusableElements[focusableElements.length - 1];
+
+    function handleTab(e: KeyboardEvent) {
+      if (e.key !== "Tab") return;
+      if (e.shiftKey) {
+        if (document.activeElement === firstEl) {
+          e.preventDefault();
+          lastEl?.focus();
+        }
+      } else {
+        if (document.activeElement === lastEl) {
+          e.preventDefault();
+          firstEl?.focus();
+        }
+      }
+    }
+
+    document.addEventListener("keydown", handleTab);
+    return () => document.removeEventListener("keydown", handleTab);
+  }, [open]);
 
   const isBuy = side === "buy";
   const estimatedValue = quantity * price;
@@ -160,6 +193,7 @@ export function ConfirmationDialog({
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            ref={dialogPanelRef}
             className="relative w-full max-w-[420px] bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-8"
           >
             {/* Icon */}
@@ -190,24 +224,27 @@ export function ConfirmationDialog({
 
             {/* Buttons */}
             <div className="grid grid-cols-2 gap-3">
-              <button
-                onClick={onCancel}
-                className="border border-[var(--border)] text-[var(--text-3)] rounded-full py-3 text-sm font-medium font-sans hover:border-[var(--border-outline)] hover:text-white transition-all duration-200 cursor-pointer"
-              >
+              <Button variant="ghost" onClick={onCancel} className="py-3">
                 Cancel
-              </button>
-              <button
-                ref={confirmRef}
-                onClick={onConfirm}
-                className={cn(
-                  "rounded-full py-3 text-sm font-bold font-sans uppercase tracking-wider transition-all duration-200 cursor-pointer active:scale-95",
-                  isBuy
-                    ? "bg-[var(--cyan)] text-black hover:brightness-110"
-                    : "border border-[var(--purple)] text-[var(--purple)] hover:bg-[var(--purple-dim)]"
-                )}
-              >
-                Confirm {isBuy ? "Buy" : "Sell"}
-              </button>
+              </Button>
+              {isBuy ? (
+                <Button
+                  ref={confirmRef}
+                  variant="cyan"
+                  onClick={onConfirm}
+                  className="py-3 uppercase tracking-wider"
+                >
+                  Confirm Buy
+                </Button>
+              ) : (
+                <button
+                  ref={confirmRef}
+                  onClick={onConfirm}
+                  className="rounded-full py-3 text-sm font-bold font-sans uppercase tracking-wider transition-all duration-200 cursor-pointer active:scale-95 border border-[var(--purple)] text-[var(--purple)] hover:bg-[var(--purple-dim)]"
+                >
+                  Confirm Sell
+                </button>
+              )}
             </div>
           </motion.div>
         </div>

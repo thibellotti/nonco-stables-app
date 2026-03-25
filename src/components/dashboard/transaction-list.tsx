@@ -236,7 +236,7 @@ function TransactionRow({ tx }: { tx: (typeof transactions)[number] }) {
         )}
       >
         {/* Top: type label */}
-        <span className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-4)]">
+        <span className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)]">
           {typeLabels[tx.type]}
         </span>
 
@@ -304,7 +304,7 @@ function TransactionRow({ tx }: { tx: (typeof transactions)[number] }) {
           </span>
 
           <div className="flex items-center gap-1.5">
-            <span className="text-[10px] text-[var(--text-4)] font-mono uppercase">
+            <span className="text-[11px] text-[var(--text-4)] font-mono uppercase">
               {tx.currency}
             </span>
             {tx.status === "pending" && (
@@ -313,7 +313,7 @@ function TransactionRow({ tx }: { tx: (typeof transactions)[number] }) {
             {tx.status === "failed" && (
               <Badge variant="red">Failed</Badge>
             )}
-            <span className="text-[10px] text-[var(--text-4)] font-mono tabular-nums">
+            <span className="text-[11px] text-[var(--text-4)] font-mono tabular-nums">
               {timeAgo(tx.timestamp)}
             </span>
           </div>
@@ -352,7 +352,7 @@ export function TransactionList({ filter }: TransactionListProps) {
       {groups.map((group) => (
         <div key={group.label}>
           {/* Date header */}
-          <div className="text-[10px] font-sans font-medium uppercase tracking-[.15em] text-[var(--text-3)] mb-4">
+          <div className="text-[11px] font-sans font-medium uppercase tracking-[.15em] text-[var(--text-3)] mb-4">
             {group.label}
           </div>
 

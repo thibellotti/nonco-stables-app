@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { PageTransition } from "@/components/ui/page-transition";
+import { Button } from "@/components/ui/button";
 import { recentTrades } from "@/lib/mock-data";
 import type { RecentTrade } from "@/lib/mock-data";
 import { formatMoney, timeAgo } from "@/lib/utils";
@@ -111,7 +112,7 @@ export default function TradesPage() {
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
         {/* Volume by Pair */}
         <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5">
-          <div className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] mb-4">
+          <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] mb-4">
             Volume by Pair
           </div>
           <div className="space-y-3">
@@ -130,10 +131,10 @@ export default function TradesPage() {
                       }}
                     />
                   </div>
-                  <span className="text-[10px] font-mono text-[var(--text-4)] w-10 text-right tabular-nums">
+                  <span className="text-[11px] font-mono text-[var(--text-4)] w-10 text-right tabular-nums">
                     {pct.toFixed(0)}%
                   </span>
-                  <span className="text-[10px] font-mono text-[var(--text-4)] w-12 text-right tabular-nums">
+                  <span className="text-[11px] font-mono text-[var(--text-4)] w-12 text-right tabular-nums">
                     {formatCompactVolume(volume)}
                   </span>
                 </div>
@@ -144,18 +145,18 @@ export default function TradesPage() {
 
         {/* Summary */}
         <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5 space-y-4">
-          <div className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)]">Summary</div>
+          <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)]">Summary</div>
 
           <div>
             <p className="text-3xl font-mono font-bold text-white tabular-nums">{totalTrades}</p>
-            <p className="text-xs text-[var(--text-4)] font-mono">total trades</p>
+            <p className="text-xs text-[var(--text-4)] font-sans">total trades</p>
           </div>
 
           <div>
             <p className="text-lg font-mono font-bold text-white tabular-nums">
               {formatCompactVolume(totalVolume)}
             </p>
-            <p className="text-xs text-[var(--text-4)] font-mono">total volume</p>
+            <p className="text-xs text-[var(--text-4)] font-sans">total volume</p>
           </div>
 
           <div className="flex items-center gap-2">
@@ -168,8 +169,8 @@ export default function TradesPage() {
                 }}
               />
             </div>
-            <span className="text-[10px] font-mono text-[var(--text-4)]">
-              {buyPct.toFixed(0)}% buy
+            <span className="text-[11px] text-[var(--text-4)]">
+              <span className="font-mono">{buyPct.toFixed(0)}%</span> <span className="font-sans">buy</span>
             </span>
           </div>
 
@@ -177,7 +178,7 @@ export default function TradesPage() {
             <p className="text-sm font-mono text-[var(--text-3)] tabular-nums">
               {formatCompactVolume(avgSize)}
             </p>
-            <p className="text-xs text-[var(--text-4)] font-mono">avg trade size</p>
+            <p className="text-xs text-[var(--text-4)] font-sans">avg trade size</p>
           </div>
         </div>
       </div>
@@ -221,10 +222,7 @@ export default function TradesPage() {
         </div>
 
         {/* Export CSV — pushed right */}
-        <button
-          type="button"
-          className="flex items-center gap-2 px-4 py-2 rounded-lg border border-[var(--border)] text-[var(--text-3)] hover:text-white hover:border-[var(--border-outline)] transition-colors cursor-pointer sm:ml-auto"
-        >
+        <Button variant="ghost" size="sm" className="sm:ml-auto">
           <svg
             width="12"
             height="12"
@@ -238,8 +236,8 @@ export default function TradesPage() {
           >
             <path d="M6 1v7M6 8L3.5 5.5M6 8l2.5-2.5M1 10h10" />
           </svg>
-          <span className="font-mono text-[10px] font-medium uppercase tracking-[.1em]">Export CSV</span>
-        </button>
+          <span className="font-sans text-[11px] font-medium uppercase tracking-[.1em]">Export CSV</span>
+        </Button>
       </div>
 
       {/* Trade Table */}
@@ -247,12 +245,12 @@ export default function TradesPage() {
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-[var(--border)]">
-              <th className="px-3 sm:px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)]">Pair</th>
-              <th className="px-3 sm:px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)]">Side</th>
-              <th className="px-3 sm:px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] text-right">Quantity</th>
-              <th className="px-3 sm:px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] text-right">Price</th>
-              <th className="px-3 sm:px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] hidden sm:table-cell">Settlement</th>
-              <th className="px-3 sm:px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] text-right hidden sm:table-cell">Date</th>
+              <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-3)]">Pair</th>
+              <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-3)]">Side</th>
+              <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-3)] text-right">Quantity</th>
+              <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-3)] text-right">Price</th>
+              <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-3)] hidden sm:table-cell">Settlement</th>
+              <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-3)] text-right hidden sm:table-cell">Date</th>
             </tr>
           </thead>
           <tbody>
@@ -265,7 +263,7 @@ export default function TradesPage() {
                 <td className="px-3 sm:px-6 py-3 sm:py-4">
                   <div className="flex items-center gap-2 sm:gap-3">
                     <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[rgba(5,224,248,0.1)] border border-[rgba(5,224,248,0.2)] flex items-center justify-center shrink-0">
-                      <span className="font-mono text-[10px] font-bold text-[var(--cyan)]">
+                      <span className="font-mono text-[11px] font-bold text-[var(--cyan)]">
                         {trade.pair.split("/")[0].slice(0, 2)}
                       </span>
                     </div>
@@ -276,11 +274,11 @@ export default function TradesPage() {
                 {/* Side pill */}
                 <td className="px-3 sm:px-6 py-3 sm:py-4">
                   {trade.side === "buy" ? (
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold font-mono uppercase tracking-[.08em] bg-[rgba(5,224,248,0.1)] text-[var(--cyan)]">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold font-sans uppercase tracking-[.08em] bg-[rgba(5,224,248,0.1)] text-[var(--cyan)]">
                       Buy
                     </span>
                   ) : (
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold font-mono uppercase tracking-[.08em] bg-[rgba(161,36,248,0.1)] text-[var(--purple)]">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold font-sans uppercase tracking-[.08em] bg-[rgba(161,36,248,0.1)] text-[var(--purple)]">
                       Sell
                     </span>
                   )}
@@ -302,7 +300,7 @@ export default function TradesPage() {
 
                 {/* Settlement */}
                 <td className="px-3 sm:px-6 py-3 sm:py-4 hidden sm:table-cell">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded bg-[rgba(255,255,255,0.06)] text-[10px] font-mono font-medium text-[var(--text-3)]">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded bg-[rgba(255,255,255,0.06)] text-[11px] font-mono font-medium text-[var(--text-3)]">
                     {trade.settlement}
                   </span>
                 </td>
@@ -320,8 +318,8 @@ export default function TradesPage() {
 
         {/* Footer */}
         <div className="px-4 sm:px-6 py-4 border-t border-[var(--border)]">
-          <span className="font-mono text-[10px] text-[var(--text-4)] tracking-[.08em]">
-            Showing {filteredTrades.length} of {allTrades.length} trades
+          <span className="text-[11px] text-[var(--text-4)] tracking-[.08em]">
+            <span className="font-sans">Showing</span> <span className="font-mono">{filteredTrades.length}</span> <span className="font-sans">of</span> <span className="font-mono">{allTrades.length}</span> <span className="font-sans">trades</span>
           </span>
         </div>
       </div>

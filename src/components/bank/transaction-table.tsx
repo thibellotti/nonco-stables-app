@@ -96,8 +96,8 @@ function TransactionRow({
         <div className="flex items-center gap-2 sm:gap-3">
           <TxIcon type={tx.type} />
           <div className="min-w-0">
-            <p className="text-xs sm:text-sm text-white font-medium truncate">{tx.description}</p>
-            <p className="text-[10px] text-[var(--text-4)] font-mono mt-0.5 truncate">
+            <p className="text-xs sm:text-sm text-[var(--text)] font-medium truncate">{tx.description}</p>
+            <p className="text-[11px] text-[var(--text-4)] font-mono mt-0.5 truncate">
               REF-{tx.id.toUpperCase()}
             </p>
           </div>
@@ -106,7 +106,7 @@ function TransactionRow({
 
       {/* Counterparty */}
       <td className="px-3 sm:px-6 py-3 sm:py-4 hidden md:table-cell">
-        <span className="text-xs text-[var(--text-3)] truncate">
+        <span className="text-xs text-[var(--text)] truncate">
           {tx.counterparty ?? "\u2014"}
         </span>
       </td>
@@ -114,7 +114,7 @@ function TransactionRow({
       {/* Asset */}
       <td className="px-3 sm:px-6 py-3 sm:py-4 hidden sm:table-cell">
         <span
-          className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold font-mono uppercase tracking-wider"
+          className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold font-mono uppercase tracking-wider"
           style={{ backgroundColor: pillColor.bg, color: pillColor.text }}
         >
           {tx.currency}
@@ -137,13 +137,13 @@ function TransactionRow({
       {/* Time + Status */}
       <td className="px-3 sm:px-6 py-3 sm:py-4 text-right">
         <div className="flex flex-col items-end gap-1">
-          <span className="text-[10px] text-[var(--text-4)] font-mono tabular-nums">
+          <span className="text-[11px] text-[var(--text-4)] font-mono tabular-nums">
             {timeAgo(tx.timestamp)}
           </span>
           {tx.status === "pending" && <Badge variant="amber">Pending</Badge>}
           {tx.status === "failed" && <Badge variant="red">Failed</Badge>}
           {tx.status === "completed" && (
-            <span className="font-mono text-[10px] font-medium tracking-[.04em] text-[var(--green)]">
+            <span className="font-mono text-[11px] font-medium tracking-[.04em] text-[var(--green)]">
               COMPLETED
             </span>
           )}
@@ -175,7 +175,7 @@ export function BankTransactionTable({ transactions }: BankTransactionTableProps
     <>
       {/* Transaction table */}
       {paginated.length === 0 ? (
-        <div className="py-16 text-center text-[var(--text-4)] text-sm font-mono">
+        <div className="py-16 text-center text-[var(--text-4)] text-sm font-sans">
           No transactions found
         </div>
       ) : (
@@ -183,19 +183,19 @@ export function BankTransactionTable({ transactions }: BankTransactionTableProps
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-[var(--border)]">
-                <th className="px-3 sm:px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
+                <th className="px-3 sm:px-6 py-3 text-left text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium">
                   Transaction
                 </th>
-                <th className="px-3 sm:px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden md:table-cell">
+                <th className="px-3 sm:px-6 py-3 text-left text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium hidden md:table-cell">
                   Counterparty
                 </th>
-                <th className="px-3 sm:px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden sm:table-cell">
+                <th className="px-3 sm:px-6 py-3 text-left text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium hidden sm:table-cell">
                   Asset
                 </th>
-                <th className="px-3 sm:px-6 py-3 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
+                <th className="px-3 sm:px-6 py-3 text-right text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium">
                   Amount
                 </th>
-                <th className="px-3 sm:px-6 py-3 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
+                <th className="px-3 sm:px-6 py-3 text-right text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium">
                   Time
                 </th>
               </tr>
@@ -211,14 +211,14 @@ export function BankTransactionTable({ transactions }: BankTransactionTableProps
 
       {/* Footer: pagination */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 px-3 sm:px-6 py-3 border-t border-[var(--border)]">
-        <span className="text-[11px] font-mono text-[var(--text-4)]">
-          Showing {(page - 1) * PAGE_SIZE + 1}-{Math.min(page * PAGE_SIZE, transactions.length)} of {transactions.length} Transactions
+        <span className="text-[11px] text-[var(--text-4)]">
+          <span className="font-sans">Showing</span> <span className="font-mono">{(page - 1) * PAGE_SIZE + 1}-{Math.min(page * PAGE_SIZE, transactions.length)}</span> <span className="font-sans">of</span> <span className="font-mono">{transactions.length}</span> <span className="font-sans">Transactions</span>
         </span>
         <div className="flex gap-1">
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page <= 1}
-            className="px-3 py-1.5 text-[10px] font-mono font-bold uppercase rounded border border-[var(--border)] text-[var(--text-4)] hover:text-white hover:border-[var(--text-4)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+            className="px-3 py-1.5 text-[11px] font-sans font-bold uppercase rounded border border-[var(--border)] text-[var(--text-4)] hover:text-white hover:border-[var(--text-4)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
           >
             Prev
           </button>
@@ -227,7 +227,7 @@ export function BankTransactionTable({ transactions }: BankTransactionTableProps
               key={p}
               onClick={() => setPage(p)}
               className={cn(
-                "w-8 h-8 text-[10px] font-mono font-bold rounded transition-colors cursor-pointer",
+                "w-8 h-8 text-[11px] font-mono font-bold rounded transition-colors cursor-pointer",
                 p === page
                   ? "bg-[var(--cyan)] text-black"
                   : "text-[var(--text-4)] hover:text-white border border-[var(--border)] hover:border-[var(--text-4)]"
@@ -239,7 +239,7 @@ export function BankTransactionTable({ transactions }: BankTransactionTableProps
           <button
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             disabled={page >= totalPages}
-            className="px-3 py-1.5 text-[10px] font-mono font-bold uppercase rounded border border-[var(--border)] text-[var(--text-4)] hover:text-white hover:border-[var(--text-4)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+            className="px-3 py-1.5 text-[11px] font-sans font-bold uppercase rounded border border-[var(--border)] text-[var(--text-4)] hover:text-white hover:border-[var(--text-4)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
           >
             Next
           </button>

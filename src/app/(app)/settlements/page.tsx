@@ -81,8 +81,10 @@ export default function SettlementsPage() {
   return (
     <PageTransition className="px-6 md:px-8 w-full space-y-8">
       {/* Tab toggle */}
-      <div className="flex items-center gap-1 bg-[var(--bg-elevated)] rounded-lg p-1 w-fit">
+      <div role="tablist" className="flex items-center gap-1 bg-[var(--bg-elevated)] rounded-lg p-1 w-fit">
         <button
+          role="tab"
+          aria-selected={activeTab === "pending"}
           onClick={() => setActiveTab("pending")}
           className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
             activeTab === "pending"
@@ -96,6 +98,8 @@ export default function SettlementsPage() {
           </span>
         </button>
         <button
+          role="tab"
+          aria-selected={activeTab === "completed"}
           onClick={() => setActiveTab("completed")}
           className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
             activeTab === "completed"
@@ -112,33 +116,33 @@ export default function SettlementsPage() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {/* Total pending */}
           <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-4">
-            <div className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-4)]">
+            <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)]">
               Total Pending
             </div>
             <p className="text-2xl font-mono font-bold text-white tabular-nums mt-1">
               ${formatMoney(totalPendingAmount)}
             </p>
-            <p className="text-[10px] text-[var(--text-4)] font-mono mt-1">
-              {pendingSettlements.length} active
+            <p className="text-[11px] text-[var(--text-4)] font-sans mt-1">
+              <span className="font-mono">{pendingSettlements.length}</span> active
             </p>
           </div>
 
           {/* Due this week */}
           <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-4">
-            <div className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-4)]">
+            <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)]">
               Due This Week
             </div>
             <p className="text-2xl font-mono font-bold text-[var(--amber)] tabular-nums mt-1">
               ${formatMoney(dueThisWeekAmount)}
             </p>
-            <p className="text-[10px] text-[var(--text-4)] font-mono mt-1">
-              {dueThisWeekCount} of {pendingSettlements.length}
+            <p className="text-[11px] text-[var(--text-4)] font-sans mt-1">
+              <span className="font-mono">{dueThisWeekCount}</span> of <span className="font-mono">{pendingSettlements.length}</span>
             </p>
           </div>
 
           {/* Counterparty exposure */}
           <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-4">
-            <div className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-4)] mb-3">
+            <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)] mb-3">
               Counterparty Exposure
             </div>
             <div className="space-y-2">
@@ -160,10 +164,11 @@ export default function SettlementsPage() {
       {/* Timeline strip — pending tab only */}
       {activeTab === "pending" && (
         <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5">
-          <div className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-4)] mb-4">
+          <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)] mb-4">
             Settlement Timeline
           </div>
-          <div className="relative">
+          <div className="relative overflow-x-auto">
+            <div className="min-w-[500px]">
             {/* Horizontal track line — gradient from cyan (near-term) to amber (far-term) */}
             <div
               className="h-px absolute left-0 right-0"
@@ -199,17 +204,18 @@ export default function SettlementsPage() {
                       }`}
                     />
                   </div>
-                  <span className="text-[10px] font-mono text-[var(--text-3)] mt-2">
+                  <span className="text-[11px] font-mono text-[var(--text-3)] mt-2">
                     {s.dueDate.replace(", 2026", "")}
                   </span>
                   <span className="text-xs font-bold text-white mt-0.5">
                     {s.pair}
                   </span>
-                  <span className="text-[10px] font-mono text-[var(--text-4)]">
+                  <span className="text-[11px] font-mono text-[var(--text-4)]">
                     {formatCompact(s.amount)}
                   </span>
                 </div>
               ))}
+            </div>
             </div>
           </div>
         </div>

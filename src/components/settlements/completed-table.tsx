@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { type Transaction } from "@/lib/mock-data";
 import { formatMoney, timeAgo } from "@/lib/utils";
 import { SectionLabel } from "@/components/ui/section-label";
+import { Button } from "@/components/ui/button";
 import { currencyColors } from "@/lib/currency-colors";
 
 // ---------------------------------------------------------------------------
@@ -27,12 +28,12 @@ export function CompletedTable({ settlements }: CompletedTableProps) {
       {/* Settlement History Header */}
       <div className="flex items-center justify-between">
         <SectionLabel>Settlement History</SectionLabel>
-        <button type="button" className="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--border)] text-[var(--text-3)] hover:text-white hover:border-[var(--border-outline)] transition-colors duration-200 cursor-pointer">
+        <Button variant="ghost" size="sm">
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M6 1v7M6 8L3.5 5.5M6 8l2.5-2.5M1 10h10" />
           </svg>
-          <span className="font-mono text-[10px] font-medium uppercase tracking-[.1em]">Export CSV</span>
-        </button>
+          <span className="font-sans text-[11px] font-medium uppercase tracking-[.1em]">Export CSV</span>
+        </Button>
       </div>
 
       {/* Table */}
@@ -40,11 +41,11 @@ export function CompletedTable({ settlements }: CompletedTableProps) {
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-[var(--border)]">
-              <th className="px-3 sm:px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)]">Description</th>
-              <th className="px-3 sm:px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] text-right">Amount</th>
-              <th className="px-3 sm:px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)]">Currency</th>
-              <th className="px-3 sm:px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] hidden sm:table-cell">Counterparty</th>
-              <th className="px-3 sm:px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] text-right hidden sm:table-cell">Date</th>
+              <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-3)]">Description</th>
+              <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-3)] text-right">Amount</th>
+              <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-3)]">Currency</th>
+              <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-3)] hidden sm:table-cell">Counterparty</th>
+              <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-3)] text-right hidden sm:table-cell">Date</th>
             </tr>
           </thead>
           <tbody>
@@ -59,7 +60,7 @@ export function CompletedTable({ settlements }: CompletedTableProps) {
                 }`}
               >
                 <td className="px-3 sm:px-6 py-3 sm:py-4">
-                  <span className="text-xs sm:text-sm text-[var(--text-2)]">{t.description}</span>
+                  <span className="text-xs sm:text-sm text-[var(--text)]">{t.description}</span>
                 </td>
                 <td className="px-3 sm:px-6 py-3 sm:py-4 text-right">
                   <span className="font-mono text-xs sm:text-sm font-bold text-white tabular-nums">
@@ -68,7 +69,7 @@ export function CompletedTable({ settlements }: CompletedTableProps) {
                 </td>
                 <td className="px-3 sm:px-6 py-3 sm:py-4">
                   <span
-                    className="inline-flex items-center px-2.5 py-1 rounded text-[10px] font-mono font-bold"
+                    className="inline-flex items-center px-2.5 py-1 rounded text-[11px] font-mono font-bold"
                     style={{
                       backgroundColor: currencyColors[t.currency]?.bg ?? "rgba(255,255,255,0.06)",
                       color: currencyColors[t.currency]?.text ?? "var(--text-2)",

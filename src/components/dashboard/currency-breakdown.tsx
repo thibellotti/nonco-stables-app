@@ -57,7 +57,7 @@ export function CurrencyBreakdown() {
       {/* Header with "View All" action */}
       <div className="flex items-center justify-between mb-4">
         <SectionLabel>Stable Assets</SectionLabel>
-        <button className="text-[10px] font-mono text-[var(--cyan)] uppercase tracking-wider hover:text-white transition-colors cursor-pointer">
+        <button className="text-[11px] font-sans text-[var(--cyan)] uppercase tracking-wider hover:text-white transition-colors cursor-pointer">
           View All
         </button>
       </div>
@@ -97,7 +97,7 @@ export function CurrencyBreakdown() {
                   </div>
                   {variations[balance.currency] && (
                     <span
-                      className="flex items-center gap-0.5 font-mono text-[10px] font-bold"
+                      className="flex items-center gap-0.5 font-mono text-[11px] font-bold"
                       style={{
                         color: variations[balance.currency].positive
                           ? "var(--green)"

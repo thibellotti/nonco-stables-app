@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+
 // Shared error boundary for all (app) routes
 
 export default function AppError({
@@ -41,16 +43,13 @@ export default function AppError({
       </p>
 
       {/* Try Again button */}
-      <button
-        onClick={reset}
-        className="bg-[var(--cyan)] text-black rounded-full px-6 py-3 font-bold text-sm tracking-tight cursor-pointer transition-all duration-200 hover:brightness-110 active:scale-[0.98]"
-      >
+      <Button variant="cyan" onClick={reset}>
         Try Again
-      </button>
+      </Button>
 
       {/* Digest for support */}
       {error.digest && (
-        <p className="font-mono text-[10px] text-[var(--text-4)] mt-6 tracking-wider">
+        <p className="font-mono text-[11px] text-[var(--text-4)] mt-6 tracking-wider">
           Error ID: {error.digest}
         </p>
       )}

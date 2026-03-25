@@ -12,7 +12,7 @@ export function RecentTrades({ extraTrades = [] }: RecentTradesProps) {
 
   if (all.length === 0) {
     return (
-      <p className="text-sm text-[var(--text-4)] py-4 font-mono">No recent trades</p>
+      <p className="text-sm text-[var(--text-4)] py-4 font-sans">No recent trades</p>
     );
   }
 
@@ -21,19 +21,19 @@ export function RecentTrades({ extraTrades = [] }: RecentTradesProps) {
       <table className="w-full">
         <thead>
           <tr className="border-b border-[var(--border)]">
-            <th className="px-3 sm:px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
+            <th className="px-3 sm:px-6 py-3 text-left text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium">
               Pair
             </th>
-            <th className="px-3 sm:px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
+            <th className="px-3 sm:px-6 py-3 text-left text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium">
               Side
             </th>
-            <th className="px-3 sm:px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden sm:table-cell">
+            <th className="px-3 sm:px-6 py-3 text-left text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium hidden sm:table-cell">
               Quantity @ Price
             </th>
-            <th className="px-3 sm:px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden md:table-cell">
+            <th className="px-3 sm:px-6 py-3 text-left text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium hidden md:table-cell">
               Settlement
             </th>
-            <th className="px-3 sm:px-6 py-3 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
+            <th className="px-3 sm:px-6 py-3 text-right text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium">
               Time
             </th>
           </tr>
@@ -54,7 +54,7 @@ export function RecentTrades({ extraTrades = [] }: RecentTradesProps) {
               {/* Side badge */}
               <td className="px-3 sm:px-6 py-3 sm:py-4">
                 <span
-                  className={`inline-flex items-center px-2 sm:px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                  className={`inline-flex items-center px-2 sm:px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider ${
                     trade.side === "buy"
                       ? "bg-[var(--cyan-dim)] text-[var(--cyan)]"
                       : "bg-[var(--purple-dim)] text-[var(--purple)]"
@@ -82,7 +82,7 @@ export function RecentTrades({ extraTrades = [] }: RecentTradesProps) {
 
               {/* Time */}
               <td className="px-3 sm:px-6 py-3 sm:py-4 text-right">
-                <span className="text-[10px] font-mono text-[var(--text-4)] tabular-nums whitespace-nowrap">
+                <span className="text-[11px] font-mono text-[var(--text-4)] tabular-nums whitespace-nowrap">
                   {timeAgo(trade.timestamp)}
                 </span>
               </td>

@@ -35,7 +35,7 @@ export function SettlementCard({
   const isProcessing = status === "processing";
 
   const statusBadge = isProcessing ? (
-    <span className="flex items-center gap-1.5 bg-[rgba(5,224,248,0.1)] text-[var(--cyan)] text-[10px] font-bold font-mono px-2 py-1 rounded-sm">
+    <span className="flex items-center gap-1.5 bg-[rgba(5,224,248,0.1)] text-[var(--cyan)] text-[11px] font-bold font-mono px-2 py-1 rounded-sm">
       <span className="relative flex h-1.5 w-1.5">
         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--cyan)] opacity-75" />
         <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[var(--cyan)]" />
@@ -43,7 +43,7 @@ export function SettlementCard({
       PROCESSING
     </span>
   ) : (
-    <span className="flex items-center gap-1.5 bg-[rgba(249,226,32,0.1)] text-[var(--amber)] text-[10px] font-bold font-mono px-2 py-1 rounded-sm">
+    <span className="flex items-center gap-1.5 bg-[rgba(249,226,32,0.1)] text-[var(--amber)] text-[11px] font-bold font-mono px-2 py-1 rounded-sm">
       <span className="relative flex h-1.5 w-1.5">
         <span className="inline-flex rounded-full h-1.5 w-1.5 bg-[var(--amber)]" />
       </span>
@@ -61,7 +61,7 @@ export function SettlementCard({
       <div className="space-y-3">
         <div className="flex items-start justify-between">
           <div>
-            <span className="font-mono text-[10px] uppercase tracking-[.15em] text-[var(--text-3)]">
+            <span className="font-sans text-[11px] uppercase tracking-[.15em] text-[var(--text-3)]">
               {settlement}
             </span>
             <p className="text-xl font-bold text-white mt-0.5">{pair}</p>
@@ -83,12 +83,12 @@ export function SettlementCard({
       {/* Bottom: counterparty, due, progress */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <span className="text-[10px] font-mono text-[var(--text-3)]">{counterparty}</span>
-          <span className="text-[10px] font-mono text-[var(--text-3)]">Due {dueDate}</span>
+          <span className="text-[11px] font-sans text-[var(--text-3)]">{counterparty}</span>
+          <span className="text-[11px] font-sans text-[var(--text-3)]">Due <span className="font-mono">{dueDate}</span></span>
         </div>
         <div className="flex items-center justify-between mb-1.5">
-          <span className="text-[10px] font-mono text-[var(--text-3)]">Progress</span>
-          <span className="text-[10px] font-mono font-bold text-white">{progress}%</span>
+          <span className="text-[11px] font-sans text-[var(--text-3)]">Progress</span>
+          <span className="text-[11px] font-mono font-bold text-white">{progress}%</span>
         </div>
         <div className="h-1.5 rounded-full bg-[rgba(255,255,255,0.06)] overflow-hidden">
           <motion.div

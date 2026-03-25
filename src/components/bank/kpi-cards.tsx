@@ -35,7 +35,7 @@ export function BankKpiCards({
       <div className="grid grid-cols-2 gap-8">
         {/* Inflows */}
         <div>
-          <div className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-4)] mb-2">
+          <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)] mb-2">
             Inflows
           </div>
           <p className="text-2xl font-mono font-bold text-[var(--cyan)] tabular-nums">
@@ -50,14 +50,14 @@ export function BankKpiCards({
               }}
             />
           </div>
-          <p className="text-[10px] text-[var(--text-4)] font-mono mt-2">
-            {depositCount} {depositCount === 1 ? "deposit" : "deposits"}
+          <p className="text-[11px] text-[var(--text-4)] font-sans mt-2">
+            <span className="font-mono">{depositCount}</span> {depositCount === 1 ? "deposit" : "deposits"}
           </p>
         </div>
 
         {/* Outflows */}
         <div>
-          <div className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-4)] mb-2">
+          <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)] mb-2">
             Outflows
           </div>
           <p className="text-2xl font-mono font-bold text-[var(--purple)] tabular-nums">
@@ -72,8 +72,8 @@ export function BankKpiCards({
               }}
             />
           </div>
-          <p className="text-[10px] text-[var(--text-4)] font-mono mt-2">
-            {withdrawalCount}{" "}
+          <p className="text-[11px] text-[var(--text-4)] font-sans mt-2">
+            <span className="font-mono">{withdrawalCount}</span>{" "}
             {withdrawalCount === 1 ? "withdrawal" : "withdrawals"}
           </p>
         </div>
@@ -81,7 +81,7 @@ export function BankKpiCards({
 
       {/* Net flow */}
       <div className="mt-5 pt-4 border-t border-[var(--border)] flex items-center justify-between">
-        <span className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-4)]">
+        <span className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)]">
           Net Flow
         </span>
         <span

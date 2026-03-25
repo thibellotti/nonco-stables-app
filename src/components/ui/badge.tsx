@@ -10,9 +10,9 @@ interface BadgeProps {
 
 const variants: Record<BadgeVariant, string> = {
   cyan: "bg-[var(--cyan-dim)] text-[var(--cyan)]",
-  green: "bg-[rgba(34,197,94,0.08)] text-[var(--green)]",
+  green: "bg-[rgba(199,255,16,0.08)] text-[var(--green)]",
   amber: "bg-[rgba(245,158,11,0.08)] text-[var(--amber)]",
-  purple: "bg-[rgba(168,85,247,0.08)] text-[var(--purple)]",
+  purple: "bg-[rgba(161,36,248,0.08)] text-[var(--purple)]",
   red: "bg-[var(--red-dim)] text-[var(--red)]",
   default: "bg-[rgba(255,255,255,0.04)] text-[var(--text-3)]",
 };
@@ -21,7 +21,7 @@ export function Badge({ children, variant = "default", className }: BadgeProps) 
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium",
+        "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-sans font-medium",
         variants[variant],
         className
       )}

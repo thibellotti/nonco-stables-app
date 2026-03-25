@@ -57,7 +57,7 @@ export default function WalletPage() {
         <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-6">
           <div className="flex items-start justify-between">
             <div>
-              <div className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-4)]">
+              <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)]">
                 Total Value
               </div>
               <p className="text-4xl font-mono font-bold text-white tabular-nums mt-2 tracking-tight">
@@ -101,7 +101,7 @@ export default function WalletPage() {
 
         {/* RIGHT: Allocation breakdown */}
         <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-6">
-          <div className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-4)] mb-4">
+          <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)] mb-4">
             Allocation
           </div>
           <div className="space-y-3">
@@ -128,7 +128,7 @@ export default function WalletPage() {
                       }}
                     />
                   </div>
-                  <span className="text-[10px] font-mono text-[var(--text-4)] w-10 text-right tabular-nums">
+                  <span className="text-[11px] font-mono text-[var(--text-4)] w-10 text-right tabular-nums">
                     {pct.toFixed(0)}%
                   </span>
                   <span className="text-xs font-mono text-white w-16 text-right tabular-nums">
@@ -143,7 +143,7 @@ export default function WalletPage() {
 
       {/* Holdings cards */}
       <div>
-        <div className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] mb-3">
+        <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] mb-3">
           Holdings
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
@@ -173,12 +173,12 @@ export default function WalletPage() {
                       <span className="text-sm font-bold text-white">
                         {b.currency}
                       </span>
-                      <span className="text-[10px] text-[var(--text-4)] ml-1.5">
+                      <span className="text-[11px] text-[var(--text-4)] ml-1.5">
                         {meta?.name}
                       </span>
                     </div>
                     {variations[b.currency] && (
-                      <span className={`text-[10px] font-mono font-bold ml-auto ${variations[b.currency].positive ? "text-[var(--green)]" : "text-[var(--red)]"}`}>
+                      <span className={`text-[11px] font-mono font-bold ml-auto ${variations[b.currency].positive ? "text-[var(--green)]" : "text-[var(--red)]"}`}>
                         {variations[b.currency].pct}
                       </span>
                     )}
@@ -193,7 +193,7 @@ export default function WalletPage() {
                   <Sparkline data={sparklineData[b.currency] ?? []} color={colors?.border ?? "var(--cyan)"} width={200} height={64} className="w-full h-full" />
                 </div>
                 {b.pending > 0 && (
-                  <p className="text-[10px] text-[var(--amber)] font-mono mt-1 tabular-nums">
+                  <p className="text-[11px] text-[var(--amber)] font-mono mt-1 tabular-nums">
                     +{b.symbol}
                     {formatMoney(b.pending)} pending
                   </p>

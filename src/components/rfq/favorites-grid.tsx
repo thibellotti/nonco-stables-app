@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { favorites, type Instrument } from "@/lib/mock-data";
 import { formatMoney } from "@/lib/utils";
 import { currencyColors } from "@/lib/currency-colors";
+import { Button } from "@/components/ui/button";
 
 // ---------------------------------------------------------------------------
 // Currency full names for display
@@ -127,7 +128,7 @@ export function FavoritesGrid({ onQuote, compact = false }: FavoritesGridProps) 
               <div className="flex items-center gap-3 p-4">
                 {/* Pair info */}
                 <div className="flex-1 min-w-0">
-                  <p className="text-[10px] text-[var(--text-3)] font-mono uppercase tracking-wider">
+                  <p className="text-[11px] text-[var(--text-3)] font-mono uppercase tracking-wider">
                     {base}/{quote}
                   </p>
                   <p className="text-sm font-bold tracking-tight text-white mt-0.5 truncate">
@@ -144,12 +145,14 @@ export function FavoritesGrid({ onQuote, compact = false }: FavoritesGridProps) 
                   onChange={(e) => handleQuantityChange(fav.id, e.target.value)}
                   className="w-24 bg-[var(--bg-highest)] rounded px-2 py-1.5 font-mono text-xs text-white placeholder:text-[var(--text-4)] focus:outline-none focus:ring-1 focus:ring-[var(--cyan)] focus:ring-opacity-30 transition-colors"
                 />
-                <button
+                <Button
+                  variant="cyan"
+                  size="sm"
                   onClick={() => onQuote(fav.instrument, quantities[fav.id])}
-                  className="shrink-0 bg-[var(--cyan)] text-black text-[10px] font-bold uppercase tracking-wider rounded-full px-4 py-1.5 hover:brightness-110 active:scale-95 transition-all duration-200 cursor-pointer"
+                  className="shrink-0"
                 >
                   Quote
-                </button>
+                </Button>
               </div>
             </div>
           );
@@ -182,7 +185,7 @@ export function FavoritesGrid({ onQuote, compact = false }: FavoritesGridProps) 
             <div className="p-6 pb-0">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-[10px] text-[var(--text-3)] font-mono uppercase tracking-wider">
+                  <p className="text-[11px] text-[var(--text-3)] font-mono uppercase tracking-wider">
                     {base}/{quote}
                   </p>
                   <p className="text-base lg:text-lg font-bold tracking-tight text-white mt-1">
@@ -219,12 +222,14 @@ export function FavoritesGrid({ onQuote, compact = false }: FavoritesGridProps) 
                 onChange={(e) => handleQuantityChange(fav.id, e.target.value)}
                 className="flex-1 min-w-0 bg-[var(--bg-highest)] rounded px-3 py-2 font-mono text-sm text-white placeholder:text-[var(--text-4)] focus:outline-none focus:ring-1 focus:ring-[var(--cyan)] focus:ring-opacity-30 transition-colors"
               />
-              <button
+              <Button
+                variant="cyan"
+                size="sm"
                 onClick={() => onQuote(fav.instrument, quantities[fav.id])}
-                className="shrink-0 bg-[var(--cyan)] text-black text-[10px] font-bold uppercase tracking-wider rounded-full px-5 py-2 hover:brightness-110 active:scale-95 transition-all duration-200 cursor-pointer"
+                className="shrink-0"
               >
                 Quote
-              </button>
+              </Button>
             </div>
           </div>
         );

@@ -78,10 +78,12 @@ const SETTLEMENTS: { key: Settlement; label: string }[] = [
 
 function SettlementTabs({ active, onChange }: { active: Settlement; onChange: (s: Settlement) => void }) {
   return (
-    <div className="flex gap-1 p-1 bg-[var(--bg-highest)] rounded-lg w-fit">
+    <div role="tablist" className="flex gap-1 p-1 bg-[var(--bg-highest)] rounded-lg w-fit">
       {SETTLEMENTS.map(({ key, label }) => (
         <button
           key={key}
+          role="tab"
+          aria-selected={active === key}
           onClick={() => onChange(key)}
           className={cn(
             "px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer",
@@ -154,8 +156,8 @@ function TradeFlash({ side, onDone }: { side: "buy" | "sell"; onDone: () => void
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <p className="text-sm font-semibold text-white">Trade Executed!</p>
-        <p className="text-xs text-[var(--text-3)]">
+        <p className="text-sm font-sans font-semibold text-white">Trade Executed!</p>
+        <p className="text-xs font-sans text-[var(--text-3)]">
           {side === "buy" ? "Buy" : "Sell"} order confirmed
         </p>
       </div>
@@ -269,13 +271,13 @@ export function PriceCardActive({
             {/* Overlapping currency circles */}
             <div className="flex -space-x-2">
               <div
-                className="w-8 h-8 rounded-full border-2 border-[var(--bg-card)] flex items-center justify-center text-[10px] font-mono font-bold"
+                className="w-8 h-8 rounded-full border-2 border-[var(--bg-card)] flex items-center justify-center text-[11px] font-mono font-bold"
                 style={{ backgroundColor: `${baseColor}20`, color: baseColor }}
               >
                 {base.slice(0, 2)}
               </div>
               <div
-                className="w-8 h-8 rounded-full border-2 border-[var(--bg-card)] flex items-center justify-center text-[10px] font-mono font-bold"
+                className="w-8 h-8 rounded-full border-2 border-[var(--bg-card)] flex items-center justify-center text-[11px] font-mono font-bold"
                 style={{ backgroundColor: `${quoteColor}20`, color: quoteColor }}
               >
                 {quoteCcy.slice(0, 2)}
@@ -285,7 +287,7 @@ export function PriceCardActive({
               <p className="text-3xl font-bold tracking-tighter text-white">
                 {base}/{quoteCcy}
               </p>
-              <p className="text-[10px] text-[var(--text-3)] font-mono uppercase mt-0.5">
+              <p className="text-[11px] text-[var(--text-3)] font-mono uppercase mt-0.5">
                 Order #NC-8849-RFQ
               </p>
             </div>
@@ -307,7 +309,7 @@ export function PriceCardActive({
         <div className="grid grid-cols-2 gap-4">
           {/* BUY */}
           <div className="bg-[var(--bg-card)] rounded-lg border border-[var(--border-subtle)] p-6 flex flex-col items-center gap-4">
-            <span className="text-[10px] font-mono uppercase tracking-[.1em] text-[var(--cyan)] font-bold">
+            <span className="text-[11px] font-sans uppercase tracking-[.1em] text-[var(--cyan)] font-bold">
               Buy
             </span>
             <span className="font-mono text-4xl sm:text-5xl font-bold text-white tabular-nums tracking-tight">
@@ -316,7 +318,7 @@ export function PriceCardActive({
             <button
               onClick={() => handleTrade("buy", ask)}
               disabled={expired}
-              className="w-full bg-[var(--cyan)] text-black rounded-full py-3 font-bold font-mono text-sm uppercase tracking-wider hover:brightness-110 active:scale-95 transition-all duration-200 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full bg-[var(--cyan)] text-black rounded-full py-3 font-bold font-sans text-sm uppercase tracking-wider hover:brightness-110 active:scale-95 transition-all duration-200 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
             >
               Buy {base}
             </button>
@@ -324,7 +326,7 @@ export function PriceCardActive({
 
           {/* SELL */}
           <div className="bg-[var(--bg-card)] rounded-lg border border-[var(--border-subtle)] p-6 flex flex-col items-center gap-4">
-            <span className="text-[10px] font-mono uppercase tracking-[.1em] text-[var(--purple)] font-bold">
+            <span className="text-[11px] font-sans uppercase tracking-[.1em] text-[var(--purple)] font-bold">
               Sell
             </span>
             <span className="font-mono text-4xl sm:text-5xl font-bold text-white tabular-nums tracking-tight">
@@ -333,7 +335,7 @@ export function PriceCardActive({
             <button
               onClick={() => handleTrade("sell", bid)}
               disabled={expired}
-              className="w-full border border-[var(--purple)] text-[var(--purple)] rounded-full py-3 font-bold font-mono text-sm uppercase tracking-wider hover:bg-[var(--purple-dim)] active:scale-95 transition-all duration-200 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full border border-[var(--purple)] text-[var(--purple)] rounded-full py-3 font-bold font-sans text-sm uppercase tracking-wider hover:bg-[var(--purple-dim)] active:scale-95 transition-all duration-200 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
             >
               Sell {base}
             </button>
@@ -342,11 +344,11 @@ export function PriceCardActive({
 
         {/* Footer: balance + spread */}
         <div className="flex items-center justify-between pt-4 border-t border-[var(--border-subtle)]">
-          <span className="text-[11px] font-mono text-[var(--text-4)]">
-            Balance: ${formatMoney(balances.reduce((sum, b) => sum + b.available + b.pending, 0))}
+          <span className="text-[11px] text-[var(--text-4)]">
+            <span className="font-sans">Balance:</span> <span className="font-mono">${formatMoney(balances.reduce((sum, b) => sum + b.available + b.pending, 0))}</span>
           </span>
-          <span className="text-[11px] font-mono text-[var(--text-4)]">
-            Spread: {spread(bid, ask)}
+          <span className="text-[11px] text-[var(--text-4)]">
+            <span className="font-sans">Spread:</span> <span className="font-mono">{spread(bid, ask)}</span>
           </span>
         </div>
       </div>

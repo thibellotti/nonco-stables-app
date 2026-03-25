@@ -34,13 +34,15 @@ export function BankFilterBar({
   return (
     <div className="flex items-center justify-between px-6 py-3 border-b border-[var(--border)]">
       {/* Pill toggle */}
-      <div className="flex gap-1 bg-[var(--bg-elevated)] rounded-lg p-1">
+      <div role="tablist" className="flex gap-1 bg-[var(--bg-elevated)] rounded-lg p-1">
         {tabs.map((tab) => (
           <button
             key={tab.key}
+            role="tab"
+            aria-selected={filter === tab.key}
             onClick={() => onFilterChange(tab.key)}
             className={cn(
-              "px-4 py-1.5 rounded-md text-xs uppercase tracking-wider transition-all cursor-pointer",
+              "px-4 py-1.5 min-h-[44px] rounded-md text-xs uppercase tracking-wider transition-all cursor-pointer",
               filter === tab.key
                 ? "bg-[var(--bg-card)] text-white font-bold"
                 : "text-[var(--text-4)] hover:text-[var(--text-3)]"
@@ -59,6 +61,7 @@ export function BankFilterBar({
         <input
           type="text"
           placeholder="Search transactions..."
+          aria-label="Search transactions"
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
           className="bg-black rounded-lg pl-10 pr-4 py-2 text-xs font-mono text-white placeholder:text-[var(--text-4)] border border-[var(--border)] focus:border-[var(--cyan)] focus:outline-none transition-colors w-64"

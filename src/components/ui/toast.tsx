@@ -72,7 +72,7 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
         variantStyles[toast.variant]
       )}
     >
-      <p className="text-sm font-medium text-[var(--text)]">{toast.message}</p>
+      <p className="text-sm font-sans font-medium text-[var(--text)]">{toast.message}</p>
     </motion.div>
   );
 }

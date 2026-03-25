@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -13,7 +14,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="relative flex min-h-dvh items-center justify-center bg-black">
+    <main className="relative flex min-h-dvh items-center justify-center bg-black">
       {/* Top decorative glow */}
       <div
         className="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px]"
@@ -44,7 +45,7 @@ export default function LoginPage() {
         <form className="space-y-6" onSubmit={handleLogin}>
           {/* Email */}
           <div>
-            <label htmlFor="email" className="block text-[10px] uppercase font-sans tracking-[.15em] text-[var(--text-4)] mb-1.5 ml-1">
+            <label htmlFor="email" className="block text-[11px] uppercase font-sans tracking-[.15em] text-[var(--text-4)] mb-1.5 ml-1">
               Email
             </label>
             <input
@@ -60,12 +61,12 @@ export default function LoginPage() {
           {/* Password */}
           <div>
             <div className="flex items-center justify-between mb-1.5 ml-1">
-              <label htmlFor="password" className="text-[10px] uppercase font-sans tracking-[.15em] text-[var(--text-4)]">
+              <label htmlFor="password" className="text-[11px] uppercase font-sans tracking-[.15em] text-[var(--text-4)]">
                 Password
               </label>
               <button
                 type="button"
-                className="text-[10px] font-sans tracking-[.1em] text-[var(--text-4)] hover:text-[var(--cyan)] transition-colors cursor-pointer py-1 px-2 -mr-2"
+                className="text-[11px] font-sans tracking-[.1em] text-[var(--text-4)] hover:text-[var(--cyan)] transition-colors cursor-pointer py-1 px-2 -mr-2"
               >
                 Forgot?
               </button>
@@ -102,18 +103,15 @@ export default function LoginPage() {
           </div>
 
           {/* Sign In */}
-          <button
-            type="submit"
-            className="w-full bg-[var(--cyan)] hover:shadow-[0_0_25px_rgba(5,224,248,0.3)] text-black font-bold py-3.5 rounded-full active:scale-[0.98] transition-all duration-200 cursor-pointer text-sm tracking-wide"
-          >
+          <Button type="submit" variant="cyan" size="lg" className="w-full hover:shadow-[0_0_25px_rgba(5,224,248,0.3)]">
             Sign In
-          </button>
+          </Button>
         </form>
 
         {/* Divider */}
         <div className="flex items-center gap-3 my-8">
           <div className="flex-1 h-px bg-[var(--border-outline)]" />
-          <span className="text-[11px] text-[var(--text-4)] font-mono whitespace-nowrap">
+          <span className="text-[11px] text-[var(--text-4)] font-sans whitespace-nowrap">
             or
           </span>
           <div className="flex-1 h-px bg-[var(--border-outline)]" />
@@ -122,10 +120,7 @@ export default function LoginPage() {
         {/* Social buttons */}
         <div className="space-y-3">
           {/* Google */}
-          <button
-            type="button"
-            className="w-full flex items-center justify-center gap-2.5 bg-white text-black rounded-full py-3 font-medium text-sm hover:bg-white/90 active:scale-[0.98] transition-all duration-200 cursor-pointer"
-          >
+          <Button type="button" variant="white" className="w-full py-3">
             <svg width="18" height="18" viewBox="0 0 24 24" className="shrink-0">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
               <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
@@ -133,20 +128,17 @@ export default function LoginPage() {
               <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
             </svg>
             Continue with Google
-          </button>
+          </Button>
 
           {/* Wallet */}
-          <button
-            type="button"
-            className="w-full flex items-center justify-center gap-2.5 border border-[var(--border-outline)] text-white rounded-full py-3 font-medium text-sm hover:bg-[var(--bg-card)] active:scale-[0.98] transition-all duration-200 cursor-pointer"
-          >
+          <Button type="button" variant="ghost" className="w-full py-3 text-white border-[var(--border-outline)]">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
               <rect x="2" y="6" width="20" height="14" rx="2" />
               <path d="M2 10h20" />
               <circle cx="16" cy="16" r="1.5" />
             </svg>
             Connect Wallet
-          </button>
+          </Button>
         </div>
 
         {/* Terms footer */}
@@ -158,6 +150,6 @@ export default function LoginPage() {
         </p>
       </div>
 
-    </div>
+    </main>
   );
 }

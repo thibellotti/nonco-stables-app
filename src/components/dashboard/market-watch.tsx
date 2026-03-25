@@ -53,7 +53,7 @@ export function MarketWatch() {
     <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg">
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-4">
-        <span className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)]">
+        <span className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)]">
           Market Watch
         </span>
 
@@ -62,7 +62,7 @@ export function MarketWatch() {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--green)] opacity-75" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--green)]" />
           </span>
-          <span className="font-mono text-[10px] text-[var(--green)] uppercase tracking-[.1em]">
+          <span className="font-sans text-[11px] text-[var(--green)] uppercase tracking-[.1em]">
             Live
           </span>
         </span>
@@ -81,7 +81,7 @@ export function MarketWatch() {
           >
             <div className="flex items-center gap-3 px-5 py-4">
               {/* Pair name */}
-              <span className="font-sans text-sm font-bold text-white whitespace-nowrap">
+              <span className="font-sans text-sm font-bold text-[var(--text)] whitespace-nowrap">
                 {p.pair}
               </span>
 
@@ -106,7 +106,7 @@ export function MarketWatch() {
                   {p.price.toFixed(4)}
                 </div>
                 <div
-                  className={`font-mono text-[10px] mt-0.5 ${
+                  className={`font-mono text-[11px] mt-0.5 ${
                     p.positive
                       ? "text-[var(--green)]"
                       : "text-[var(--red)]"
@@ -125,7 +125,7 @@ export function MarketWatch() {
       <div className="flex justify-center py-3 border-t border-[var(--border)]">
         <button
           type="button"
-          className="font-mono text-[10px] text-[var(--cyan)] uppercase tracking-[.1em] hover:opacity-80 transition-opacity cursor-pointer"
+          className="font-sans text-[11px] text-[var(--cyan)] uppercase tracking-[.1em] hover:opacity-80 transition-opacity cursor-pointer"
         >
           View all pairs
         </button>

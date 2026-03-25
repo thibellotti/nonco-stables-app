@@ -40,7 +40,7 @@ const actions = [
 export function QuickActions() {
   return (
     <div>
-      <h3 className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] mb-3">Quick Actions</h3>
+      <h3 className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] mb-3">Quick Actions</h3>
       <div className="grid grid-cols-2 gap-2">
         {actions.map((action) => (
           <button

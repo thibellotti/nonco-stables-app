@@ -38,8 +38,8 @@ export default function DashboardPage() {
                 <p className="text-sm text-[var(--text)]">
                   Volume up <span className="text-[var(--cyan)] font-mono font-bold">12.4%</span> since last session.
                 </p>
-                <p className="text-xs text-[var(--text-4)] mt-1 font-mono">
-                  Opportunity in USDC/EUR
+                <p className="text-xs text-[var(--text-4)] mt-1 font-sans">
+                  Opportunity in <span className="font-mono">USDC/EUR</span>
                 </p>
               </div>
             </div>
