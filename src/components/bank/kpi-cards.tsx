@@ -1,3 +1,5 @@
+"use client";
+
 import { formatCompact } from "@/lib/utils";
 
 // ---------------------------------------------------------------------------
@@ -13,7 +15,7 @@ interface BankKpiCardsProps {
 }
 
 // ---------------------------------------------------------------------------
-// Bank KPI Cards
+// Flow visualization — single card with inflows vs outflows + net flow
 // ---------------------------------------------------------------------------
 
 export function BankKpiCards({
@@ -23,68 +25,67 @@ export function BankKpiCards({
   depositCount,
   withdrawalCount,
 }: BankKpiCardsProps) {
+  const maxFlow = Math.max(totalDeposits, totalWithdrawals);
+  const depositPct = maxFlow > 0 ? (totalDeposits / maxFlow) * 100 : 0;
+  const withdrawalPct = maxFlow > 0 ? (totalWithdrawals / maxFlow) * 100 : 0;
+  const netPositive = netFlow >= 0;
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-      {/* Deposits */}
-      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5 sm:p-8 border-t-2 border-t-[var(--cyan)] relative overflow-hidden group">
-        <span className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)]">
-          Total Deposits (30d)
-        </span>
-        <div className="flex items-baseline gap-3 mt-3">
-          <p className="text-2xl sm:text-5xl font-bold font-mono text-[var(--cyan)] tabular-nums">
-            +{formatCompact(totalDeposits)}
+    <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-6">
+      <div className="grid grid-cols-2 gap-8">
+        {/* Inflows */}
+        <div>
+          <div className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-4)] mb-2">
+            Inflows
+          </div>
+          <p className="text-2xl font-mono font-bold text-[var(--cyan)] tabular-nums">
+            {formatCompact(totalDeposits)}
           </p>
-          <span className="px-2 py-0.5 rounded-full bg-[rgba(5,224,248,0.1)] text-[var(--cyan)] text-[10px] font-bold font-mono">
-            +12.4%
-          </span>
+          <div className="mt-3 h-2 rounded-full bg-[var(--bg-highest)] overflow-hidden">
+            <div
+              className="h-full rounded-full bg-[var(--cyan)]"
+              style={{ width: `${depositPct}%` }}
+            />
+          </div>
+          <p className="text-[10px] text-[var(--text-4)] font-mono mt-2">
+            {depositCount} {depositCount === 1 ? "deposit" : "deposits"}
+          </p>
         </div>
-        <p className="text-[var(--text-3)] text-xs mt-2 font-mono">
-          {depositCount} transactions
-        </p>
-        {/* Watermark icon */}
-        <svg className="absolute -right-4 -bottom-4 w-16 h-16 opacity-[0.06] group-hover:opacity-[0.1] transition-opacity duration-300" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          <path d="M23 6l-9.5 9.5-5-5L1 18" />
-          <path d="M17 6h6v6" />
-        </svg>
+
+        {/* Outflows */}
+        <div>
+          <div className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-4)] mb-2">
+            Outflows
+          </div>
+          <p className="text-2xl font-mono font-bold text-[var(--purple)] tabular-nums">
+            {formatCompact(totalWithdrawals)}
+          </p>
+          <div className="mt-3 h-2 rounded-full bg-[var(--bg-highest)] overflow-hidden">
+            <div
+              className="h-full rounded-full bg-[var(--purple)]"
+              style={{ width: `${withdrawalPct}%` }}
+            />
+          </div>
+          <p className="text-[10px] text-[var(--text-4)] font-mono mt-2">
+            {withdrawalCount}{" "}
+            {withdrawalCount === 1 ? "withdrawal" : "withdrawals"}
+          </p>
+        </div>
       </div>
 
-      {/* Withdrawals */}
-      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5 sm:p-8 border-t-2 border-t-[var(--purple)] relative overflow-hidden group">
-        <span className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)]">
-          Total Withdrawals (30d)
+      {/* Net flow */}
+      <div className="mt-5 pt-4 border-t border-[var(--border)] flex items-center justify-between">
+        <span className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-4)]">
+          Net Flow
         </span>
-        <div className="flex items-baseline gap-3 mt-3">
-          <p className="text-2xl sm:text-5xl font-bold font-mono text-[var(--purple)] tabular-nums">
-            -{formatCompact(totalWithdrawals)}
-          </p>
-        </div>
-        <p className="text-[var(--text-3)] text-xs mt-2 font-mono">
-          {withdrawalCount} transactions
-        </p>
-        {/* Watermark icon */}
-        <svg className="absolute -right-4 -bottom-4 w-16 h-16 opacity-[0.06] group-hover:opacity-[0.1] transition-opacity duration-300" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          <path d="M23 18l-9.5-9.5-5 5L1 6" />
-          <path d="M17 18h6v-6" />
-        </svg>
-      </div>
-
-      {/* Net Flow */}
-      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5 sm:p-8 border-t-2 border-t-[var(--green)] relative overflow-hidden group">
-        <span className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)]">
-          Net Flow (30d)
+        <span
+          className={`text-lg font-mono font-bold tabular-nums ${
+            netPositive ? "text-[var(--green)]" : "text-red-400"
+          }`}
+        >
+          {netPositive ? "+" : "-"}
+          {formatCompact(Math.abs(netFlow))}
         </span>
-        <div className="flex items-baseline gap-3 mt-3">
-          <p className="text-2xl sm:text-5xl font-bold font-mono text-[var(--green)] tabular-nums">
-            {netFlow >= 0 ? "+" : ""}{formatCompact(netFlow)}
-          </p>
-        </div>
-        <p className="text-[var(--text-3)] text-xs mt-2 font-mono">
-          This month
-        </p>
-        {/* Watermark icon */}
-        <svg className="absolute -right-4 -bottom-4 w-16 h-16 opacity-[0.06] group-hover:opacity-[0.1] transition-opacity duration-300" viewBox="0 0 24 24" fill="none" stroke="var(--green)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          <path d="M3 21h18M3 10h18M3 7l9-4 9 4M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3" />
-        </svg>
       </div>
     </div>
   );

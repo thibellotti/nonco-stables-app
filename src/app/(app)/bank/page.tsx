@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { PageTransition } from "@/components/ui/page-transition";
-import { SectionLabel } from "@/components/ui/section-label";
 import { transactions } from "@/lib/mock-data";
 import { BankKpiCards } from "@/components/bank/kpi-cards";
 import { BankFilterBar } from "@/components/bank/filter-bar";
@@ -48,33 +47,64 @@ export default function BankPage() {
   });
 
   const netFlow = totalDeposits - totalWithdrawals;
+  const pendingCount = bankTransactions.filter(
+    (tx) => tx.status === "pending"
+  ).length;
 
   return (
     <PageTransition className="px-6 md:px-8 w-full space-y-8">
       {/* Header */}
-      <div className="space-y-3">
-        <SectionLabel>Banking & Flows</SectionLabel>
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
-          Treasury Operations
-        </h1>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-white">
+            Treasury
+          </h1>
+          <p className="text-sm text-[var(--text-4)] mt-1">
+            Deposits, withdrawals & flows
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <button className="px-4 py-2 rounded-lg bg-[var(--cyan)] text-black text-xs font-bold uppercase tracking-wider cursor-pointer hover:brightness-110 transition-all">
+            New Transfer
+          </button>
+        </div>
       </div>
 
-      {/* KPI Row */}
+      {/* Flow visualization */}
       <BankKpiCards
         totalDeposits={totalDeposits}
         totalWithdrawals={totalWithdrawals}
         netFlow={netFlow}
-        depositCount={bankTransactions.filter((tx) => tx.type === "deposit").length}
-        withdrawalCount={bankTransactions.filter((tx) => tx.type === "withdrawal").length}
+        depositCount={
+          bankTransactions.filter((tx) => tx.type === "deposit").length
+        }
+        withdrawalCount={
+          bankTransactions.filter((tx) => tx.type === "withdrawal").length
+        }
       />
+
+      {/* Pending actions callout */}
+      {pendingCount > 0 && (
+        <div className="flex items-center gap-3 px-4 py-3 rounded-lg border border-[var(--amber)]/30 bg-[var(--amber)]/5">
+          <span className="text-[var(--amber)] text-sm font-medium">
+            {pendingCount} pending{" "}
+            {pendingCount === 1 ? "transaction" : "transactions"} awaiting
+            confirmation
+          </span>
+        </div>
+      )}
 
       {/* Filter + Table */}
       <div className="bg-[var(--bg-card)] rounded-lg border border-[var(--border)]">
         <BankFilterBar
           filter={filter}
-          onFilterChange={(f) => { setFilter(f); }}
+          onFilterChange={(f) => {
+            setFilter(f);
+          }}
           search={search}
-          onSearchChange={(s) => { setSearch(s); }}
+          onSearchChange={(s) => {
+            setSearch(s);
+          }}
         />
         <BankTransactionTable transactions={filtered} />
       </div>

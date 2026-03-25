@@ -1,149 +1,25 @@
 "use client";
 
 import { PageTransition } from "@/components/ui/page-transition";
-import { SectionLabel } from "@/components/ui/section-label";
 import { Button } from "@/components/ui/button";
 import { balances, usdRates } from "@/lib/mock-data";
-import { formatMoney, timeAgo } from "@/lib/utils";
+import { formatMoney, formatCompact } from "@/lib/utils";
 import { currencyColors } from "@/lib/currency-colors";
 
 // ---------------------------------------------------------------------------
-// Currency metadata — full names, mock wallet addresses, and short IDs
+// Currency metadata — full names and short IDs
 // ---------------------------------------------------------------------------
 
-const currencyMeta: Record<
-  string,
-  { name: string; address: string; id: string }
-> = {
-  USD: { name: "US Dollar", address: "0x7a3b...4f2e", id: "USD-NY-01" },
-  EUR: { name: "Euro", address: "0x9c1d...8e7a", id: "EUR-FR-01" },
-  MXN: { name: "Mexican Peso", address: "0x2f8e...b31c", id: "MXN-MX-01" },
-  USDT: { name: "Tether USD", address: "0x4d6a...c92f", id: "USDT-ETH-01" },
-  USDC: { name: "USD Coin", address: "0x1b5f...d74e", id: "USDC-ETH-01" },
+const currencyMeta: Record<string, { name: string; id: string }> = {
+  USD: { name: "US Dollar", id: "USD-NY-01" },
+  EUR: { name: "Euro", id: "EUR-FR-01" },
+  MXN: { name: "Mexican Peso", id: "MXN-MX-01" },
+  USDT: { name: "Tether USD", id: "USDT-ETH-01" },
+  USDC: { name: "USD Coin", id: "USDC-ETH-01" },
 };
 
 // ---------------------------------------------------------------------------
-// Mock recent settlements
-// ---------------------------------------------------------------------------
-
-const recentSettlements = [
-  { id: "stl-001", currency: "USD", amount: 250000, counterparty: "Citibank N.A.", status: "Settled", timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000) },
-  { id: "stl-002", currency: "MXN", amount: 875000, counterparty: "Banorte S.A.", status: "Pending", timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000) },
-  { id: "stl-003", currency: "USDT", amount: 108350, counterparty: "Deutsche Bank AG", status: "Settled", timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000) },
-  { id: "stl-004", currency: "USDC", amount: 150000, counterparty: "Circle Internet Financial", status: "Settled", timestamp: new Date(Date.now() - 48 * 60 * 60 * 1000) },
-];
-
-// ---------------------------------------------------------------------------
-// Currency icon — colored monogram in tinted circle
-// ---------------------------------------------------------------------------
-
-function CurrencyIcon({ currency, size = 48 }: { currency: string; size?: number }) {
-  const colors = currencyColors[currency];
-
-  return (
-    <div
-      className="flex items-center justify-center rounded-full shrink-0"
-      style={{
-        width: size,
-        height: size,
-        backgroundColor: colors?.bg ?? "rgba(255,255,255,0.04)",
-      }}
-    >
-      <span
-        className="font-mono text-xs font-bold"
-        style={{ color: colors?.text ?? "var(--text-3)" }}
-      >
-        {currency}
-      </span>
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Balance card
-// ---------------------------------------------------------------------------
-
-function BalanceCard({ balance }: { balance: (typeof balances)[number] }) {
-  const meta = currencyMeta[balance.currency] ?? {
-    name: balance.currency,
-    address: "0x0000...0000",
-    id: balance.currency,
-  };
-
-  const colors = currencyColors[balance.currency];
-  const topColor = colors?.border ?? "var(--cyan)";
-
-  return (
-    <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden group relative hover:border-[var(--border-outline)] transition-all duration-200">
-      {/* Hover color overlay */}
-      <div
-        className="absolute inset-0 opacity-0 group-hover:opacity-[0.04] transition-opacity duration-300 pointer-events-none"
-        style={{ backgroundColor: topColor }}
-      />
-
-      {/* 2px colored top border */}
-      <div
-        className="h-[2px] w-full"
-        style={{ background: topColor }}
-      />
-
-      {/* Content */}
-      <div className="p-5 sm:p-8 flex flex-col gap-5">
-        {/* Header: icon + name + wallet address */}
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-3">
-            <CurrencyIcon currency={balance.currency} size={48} />
-            <div>
-              <p className="text-lg font-bold text-white tracking-tight">
-                {meta.name}
-              </p>
-              <p className="text-xs text-[var(--text-3)] mt-0.5">{balance.currency}</p>
-            </div>
-          </div>
-          <span className="text-[10px] text-[var(--text-3)] font-mono">
-            {meta.address}
-          </span>
-        </div>
-
-        {/* Amount */}
-        <div>
-          <p className="text-3xl font-mono font-bold text-white tabular-nums tracking-tight">
-            {balance.symbol}{formatMoney(balance.available)}
-          </p>
-          <p className="text-sm text-[var(--text-4)] font-mono mt-1 tabular-nums">
-            ~${formatMoney((balance.available + balance.pending) * (usdRates[balance.currency] ?? 1))} USD
-          </p>
-        </div>
-
-        {/* Pending */}
-        {balance.pending > 0 && (
-          <p className="text-xs text-[var(--amber)] font-mono tabular-nums">
-            {balance.symbol}{formatMoney(balance.pending)} pending
-          </p>
-        )}
-
-        {/* Actions — CSS-only hover, no JS event handlers */}
-        <div className="flex gap-3 pt-2 border-t border-[var(--border)]">
-          <button
-            type="button"
-            className="flex-1 py-2.5 text-xs font-bold uppercase tracking-widest bg-[rgba(255,255,255,0.05)] rounded text-[var(--text-3)] transition-all duration-200 cursor-pointer hover:bg-[var(--cyan-dim)] hover:text-[var(--cyan)]"
-          >
-            Receive
-          </button>
-          <button
-            type="button"
-            className="flex-1 py-2.5 text-xs font-bold uppercase tracking-widest bg-[rgba(255,255,255,0.05)] rounded text-[var(--text-3)] transition-all duration-200 cursor-pointer hover:bg-[rgba(255,255,255,0.08)] hover:text-white"
-          >
-            Send
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Wallet page
+// Wallet page — portfolio overview
 // ---------------------------------------------------------------------------
 
 export default function WalletPage() {
@@ -154,24 +30,12 @@ export default function WalletPage() {
 
   return (
     <PageTransition className="px-6 md:px-8 w-full space-y-8">
-      {/* Hero */}
-      <div className="space-y-4">
-        <div className="space-y-3">
-          <SectionLabel>Digital Assets</SectionLabel>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
-            Wallet
-          </h1>
-        </div>
-
-        <p className="text-[28px] sm:text-[36px] font-mono font-bold text-white tabular-nums leading-none tracking-tight">
-          ${formatMoney(totalValue)}
-        </p>
-
-        <p className="text-sm text-[var(--text-3)]">
-          Managing assets across <span className="text-white font-bold">{balances.length} currencies</span>
-        </p>
-
-        <div className="flex gap-3 pt-1">
+      {/* Header with inline actions */}
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold tracking-tight text-white">
+          Wallet
+        </h1>
+        <div className="flex gap-2">
           <Button variant="cyan" size="sm">
             Deposit
           </Button>
@@ -181,96 +45,131 @@ export default function WalletPage() {
         </div>
       </div>
 
-      {/* Currency Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        {balances.map((balance) => (
-          <BalanceCard key={balance.currency} balance={balance} />
-        ))}
+      {/* Total Value + Allocation — side by side */}
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6">
+        {/* LEFT: Total value */}
+        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-6">
+          <div className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-4)]">
+            Total Value
+          </div>
+          <p className="text-4xl font-mono font-bold text-white tabular-nums mt-2 tracking-tight">
+            ${formatMoney(totalValue)}
+          </p>
+          <p className="text-sm text-[var(--text-4)] mt-2">
+            {balances.length} currencies managed
+          </p>
 
-        {/* Request New Currency */}
-        <button
-          type="button"
-          aria-label="Request new currency"
-          className="border-2 border-dashed border-[var(--border-outline)] rounded-lg flex flex-col items-center justify-center p-8 hover:border-[var(--cyan)] hover:bg-[var(--cyan-wash)] cursor-pointer group transition-all duration-300"
-        >
-          <svg
-            className="w-10 h-10 text-[var(--border-outline)] group-hover:text-[var(--cyan)] transition-colors duration-300"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={1.5}
-            aria-hidden="true"
-          >
-            <circle cx="12" cy="12" r="10" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v8M8 12h8" />
-          </svg>
-          <p className="mt-3 text-sm font-medium text-[var(--border-outline)] group-hover:text-[var(--cyan)] transition-colors duration-300">
-            Request New Currency
-          </p>
-          <p className="mt-1 text-[10px] text-[var(--border-outline)] font-mono">
-            Add a new asset to your wallet
-          </p>
-        </button>
+          {/* Horizontal composition bar */}
+          <div className="flex h-2 rounded-full overflow-hidden mt-4 gap-0.5">
+            {balances.map((b) => {
+              const usdValue =
+                (b.available + b.pending) * (usdRates[b.currency] ?? 1);
+              const pct = (usdValue / totalValue) * 100;
+              const colors = currencyColors[b.currency];
+              return (
+                <div
+                  key={b.currency}
+                  className="h-full rounded-full"
+                  style={{
+                    width: `${pct}%`,
+                    backgroundColor: colors?.border ?? "var(--cyan)",
+                  }}
+                />
+              );
+            })}
+          </div>
+        </div>
+
+        {/* RIGHT: Allocation breakdown */}
+        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-6">
+          <div className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-4)] mb-4">
+            Allocation
+          </div>
+          <div className="space-y-3">
+            {balances.map((b) => {
+              const usdValue =
+                (b.available + b.pending) * (usdRates[b.currency] ?? 1);
+              const pct = (usdValue / totalValue) * 100;
+              const colors = currencyColors[b.currency];
+              return (
+                <div key={b.currency} className="flex items-center gap-3">
+                  <div
+                    className="w-2 h-2 rounded-full shrink-0"
+                    style={{ backgroundColor: colors?.border }}
+                  />
+                  <span className="text-xs font-medium text-[var(--text-3)] w-12">
+                    {b.currency}
+                  </span>
+                  <div className="flex-1 h-1.5 bg-[var(--bg-highest)] rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full"
+                      style={{
+                        width: `${pct}%`,
+                        backgroundColor: colors?.border,
+                      }}
+                    />
+                  </div>
+                  <span className="text-[10px] font-mono text-[var(--text-4)] w-10 text-right tabular-nums">
+                    {pct.toFixed(0)}%
+                  </span>
+                  <span className="text-xs font-mono text-white w-16 text-right tabular-nums">
+                    {formatCompact(usdValue)}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
 
-      {/* Recent Settlements */}
+      {/* Holdings cards */}
       <div>
-        <SectionLabel>Recent Settlements</SectionLabel>
-        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden overflow-x-auto mt-4">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="border-b border-[var(--border)]">
-                <th className="px-3 sm:px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
-                  Currency
-                </th>
-                <th className="px-3 sm:px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden sm:table-cell">
-                  Counterparty
-                </th>
-                <th className="px-3 sm:px-6 py-3 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
-                  Amount
-                </th>
-                <th className="px-3 sm:px-6 py-3 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden md:table-cell">
-                  Status
-                </th>
-                <th className="px-3 sm:px-6 py-3 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
-                  Time
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {recentSettlements.map((s, i) => {
-                const colors = currencyColors[s.currency];
-                return (
-                  <tr key={s.id} className={`border-b border-[var(--border)] hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-150 ${i % 2 === 1 ? "bg-[rgba(255,255,255,0.02)]" : ""}`}>
-                    <td className="px-3 sm:px-6 py-3 sm:py-4">
-                      <div className="flex items-center gap-2">
-                        <CurrencyIcon currency={s.currency} size={28} />
-                        <span className="text-xs sm:text-sm text-white font-medium">{s.currency}</span>
-                      </div>
-                    </td>
-                    <td className="px-3 sm:px-6 py-3 sm:py-4 hidden sm:table-cell">
-                      <span className="text-xs text-[var(--text-3)]">{s.counterparty}</span>
-                    </td>
-                    <td className="px-3 sm:px-6 py-3 sm:py-4 text-right">
-                      <span className="font-mono text-xs sm:text-sm font-bold text-white tabular-nums">
-                        ${formatMoney(s.amount)}
-                      </span>
-                    </td>
-                    <td className="px-3 sm:px-6 py-3 sm:py-4 text-right hidden md:table-cell">
-                      <span className={`text-[10px] font-mono font-bold uppercase tracking-wider ${s.status === "Settled" ? "text-[var(--green)]" : "text-[var(--amber)]"}`}>
-                        {s.status}
-                      </span>
-                    </td>
-                    <td className="px-3 sm:px-6 py-3 sm:py-4 text-right">
-                      <span className="text-[10px] text-[var(--text-4)] font-mono tabular-nums">
-                        {timeAgo(s.timestamp)}
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+        <div className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] mb-3">
+          Holdings
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+          {balances.map((b) => {
+            const colors = currencyColors[b.currency];
+            const meta = currencyMeta[b.currency];
+            return (
+              <div
+                key={b.currency}
+                className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-4 hover:border-[var(--border-outline)] transition-colors cursor-pointer"
+              >
+                <div className="flex items-center gap-2 mb-3">
+                  <div
+                    className="w-6 h-6 rounded-full flex items-center justify-center shrink-0"
+                    style={{ backgroundColor: colors?.bg }}
+                  >
+                    <span
+                      className="text-[8px] font-mono font-bold"
+                      style={{ color: colors?.text }}
+                    >
+                      {b.currency.slice(0, 2)}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-sm font-bold text-white">
+                      {b.currency}
+                    </span>
+                    <span className="text-[10px] text-[var(--text-4)] ml-1.5">
+                      {meta?.name}
+                    </span>
+                  </div>
+                </div>
+                <p className="text-lg font-mono font-bold text-white tabular-nums">
+                  {b.symbol}
+                  {formatMoney(b.available)}
+                </p>
+                {b.pending > 0 && (
+                  <p className="text-[10px] text-[var(--amber)] font-mono mt-1 tabular-nums">
+                    +{b.symbol}
+                    {formatMoney(b.pending)} pending
+                  </p>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </PageTransition>

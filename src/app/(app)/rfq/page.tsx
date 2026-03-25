@@ -75,26 +75,39 @@ export default function RFQPage() {
     [quote, toast]
   );
 
+  const hasActiveQuote = quote !== null || isLoading;
+
   return (
     <PageTransition className="px-6 md:px-8 w-full space-y-8">
-      <SectionLabel>Favorites</SectionLabel>
-      <p className="text-sm text-[var(--text-4)] -mt-4 mb-2">Your frequently traded pairs</p>
-      <FavoritesGrid onQuote={handleQuote} />
+      {hasActiveQuote ? (
+        <>
+          {/* Active quote — split layout: price card dominates left, form + favorites right */}
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6">
+            <PriceCard
+              quote={quote}
+              isLoading={isLoading}
+              onRefresh={handleRefresh}
+              onTrade={handleTrade}
+            />
+            <div className="space-y-4">
+              <QuoteForm onQuote={handleQuote} />
+              <FavoritesGrid onQuote={handleQuote} compact />
+            </div>
+          </div>
 
-      <SectionLabel>New Quote</SectionLabel>
-      <p className="text-sm text-[var(--text-4)] -mt-4 mb-2">Request pricing on any instrument</p>
-      <QuoteForm onQuote={handleQuote} />
-
-      <PriceCard
-        quote={quote}
-        isLoading={isLoading}
-        onRefresh={handleRefresh}
-        onTrade={handleTrade}
-      />
-
-      <SectionLabel>Recent Trades</SectionLabel>
-      <p className="text-sm text-[var(--text-4)] -mt-4 mb-2">Session and historical executions</p>
-      <RecentTrades extraTrades={sessionTrades} />
+          <SectionLabel>Recent Trades</SectionLabel>
+          <RecentTrades extraTrades={sessionTrades} />
+        </>
+      ) : (
+        <>
+          {/* Default state — form prominent, favorites + trades below */}
+          <QuoteForm onQuote={handleQuote} />
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6">
+            <FavoritesGrid onQuote={handleQuote} />
+            <RecentTrades extraTrades={sessionTrades} />
+          </div>
+        </>
+      )}
     </PageTransition>
   );
 }

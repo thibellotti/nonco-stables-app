@@ -94,9 +94,10 @@ function MiniSparkline({ color, seed }: { color: string; seed: number }) {
 
 interface FavoritesGridProps {
   onQuote: (instrument: Instrument, quantity: number) => void;
+  compact?: boolean;
 }
 
-export function FavoritesGrid({ onQuote }: FavoritesGridProps) {
+export function FavoritesGrid({ onQuote, compact = false }: FavoritesGridProps) {
   const [quantities, setQuantities] = useState<Record<string, number>>(() =>
     Object.fromEntries(favorites.map((f) => [f.id, f.defaultQuantity]))
   );
@@ -108,6 +109,58 @@ export function FavoritesGrid({ onQuote }: FavoritesGridProps) {
     }
   }
 
+  // -------------------------------------------------------------------------
+  // Compact mode — single column, minimal cards for sidebar placement
+  // -------------------------------------------------------------------------
+  if (compact) {
+    return (
+      <div className="grid grid-cols-1 gap-3">
+        {favorites.map((fav) => {
+          const [base, quote] = fav.instrument.pair.split("/");
+          const baseName = currencyNames[base] ?? base;
+
+          return (
+            <div
+              key={fav.id}
+              className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg hover:border-[var(--border-outline)] hover:bg-[var(--bg-elevated)] transition-all duration-200"
+            >
+              <div className="flex items-center gap-3 p-4">
+                {/* Pair info */}
+                <div className="flex-1 min-w-0">
+                  <p className="text-[10px] text-[var(--text-3)] font-mono uppercase tracking-wider">
+                    {base}/{quote}
+                  </p>
+                  <p className="text-sm font-bold tracking-tight text-white mt-0.5 truncate">
+                    {baseName}
+                  </p>
+                </div>
+
+                {/* Quantity + quote */}
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  aria-label={`Quantity for ${fav.instrument.pair}`}
+                  value={formatMoney(quantities[fav.id]).replace(/\.00$/, "")}
+                  onChange={(e) => handleQuantityChange(fav.id, e.target.value)}
+                  className="w-24 bg-[var(--bg-highest)] rounded px-2 py-1.5 font-mono text-xs text-white placeholder:text-[var(--text-4)] focus:outline-none focus:ring-1 focus:ring-[var(--cyan)] focus:ring-opacity-30 transition-colors"
+                />
+                <button
+                  onClick={() => onQuote(fav.instrument, quantities[fav.id])}
+                  className="shrink-0 bg-[var(--cyan)] text-black text-[10px] font-bold uppercase tracking-wider rounded-full px-4 py-1.5 hover:brightness-110 active:scale-95 transition-all duration-200 cursor-pointer"
+                >
+                  Quote
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
+  // -------------------------------------------------------------------------
+  // Default mode — full 2x2 / 4-col grid with sparklines and rates
+  // -------------------------------------------------------------------------
   return (
     <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
       {favorites.map((fav, index) => {

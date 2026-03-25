@@ -1,9 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { PageTransition } from "@/components/ui/page-transition";
-import { SectionLabel } from "@/components/ui/section-label";
 import { recentTrades } from "@/lib/mock-data";
 import type { RecentTrade } from "@/lib/mock-data";
 import { formatMoney, timeAgo } from "@/lib/utils";
@@ -66,10 +64,30 @@ const extraTrades: RecentTrade[] = [
 
 const allTrades = [...recentTrades, ...extraTrades];
 
-// KPI calculations
+// ---------------------------------------------------------------------------
+// Derived analytics
+// ---------------------------------------------------------------------------
+
 const totalTrades = allTrades.length;
 const totalVolume = allTrades.reduce((sum, t) => sum + t.quantity * t.price, 0);
 const avgSize = totalVolume / totalTrades;
+const buyCount = allTrades.filter((t) => t.side === "buy").length;
+const buyPct = (buyCount / totalTrades) * 100;
+
+const volumeByPair = allTrades.reduce(
+  (acc, t) => {
+    const vol = t.quantity * t.price;
+    acc[t.pair] = (acc[t.pair] || 0) + vol;
+    return acc;
+  },
+  {} as Record<string, number>,
+);
+
+const sortedPairs = Object.entries(volumeByPair)
+  .sort(([, a], [, b]) => b - a)
+  .slice(0, 5);
+
+const maxVolume = sortedPairs[0]?.[1] || 1;
 
 function formatCompactVolume(value: number) {
   if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(2)}M`;
@@ -89,166 +107,137 @@ export default function TradesPage() {
 
   return (
     <PageTransition className="px-6 md:px-8 w-full space-y-8">
-      {/* Hero Header */}
-      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-        <div className="space-y-3">
-          <SectionLabel>Execution History</SectionLabel>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
-            Trades
-          </h1>
-        </div>
-        <div className="flex items-center gap-3 bg-[var(--bg-card)] rounded-lg px-5 py-3 border border-[var(--border)]">
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--green)] opacity-75" />
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[var(--green)]" />
-          </span>
-          <span className="font-mono text-xs font-bold tracking-[.1em] text-[var(--green)]">
-            LIVE
-          </span>
-          <span className="font-mono text-[10px] text-[var(--text-3)]">
-            Market Status
-          </span>
-        </div>
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold tracking-tight text-white">Trades</h1>
+        <button
+          type="button"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg border border-[var(--border)] text-[var(--text-3)] hover:text-white hover:border-[var(--border-outline)] transition-colors cursor-pointer"
+        >
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 12 12"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M6 1v7M6 8L3.5 5.5M6 8l2.5-2.5M1 10h10" />
+          </svg>
+          <span className="font-mono text-[10px] font-medium uppercase tracking-[.1em]">Export CSV</span>
+        </button>
       </div>
 
-      {/* KPI Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        {/* Total Trades */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5 sm:p-8 border-t-2 border-t-[var(--cyan)]"
-        >
-          <span className="text-[10px] tracking-[.15em] uppercase font-mono text-[var(--text-3)]">
-            Total Trades
-          </span>
-          <div className="flex items-baseline gap-3 mt-3">
-            <p className="text-3xl sm:text-5xl font-mono font-bold text-white tabular-nums">
-              {totalTrades}
-            </p>
-            <span className="flex items-center gap-1 text-xs font-mono text-[var(--cyan)]">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                <path d="M6 9V3M6 3L3 6M6 3l3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              +12%
-            </span>
+      {/* Analytics: Volume by Pair + Summary */}
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6">
+        {/* Volume by Pair */}
+        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5">
+          <div className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] mb-4">
+            Volume by Pair
           </div>
-          <p className="text-[var(--text-3)] text-xs mt-2 font-mono">Last 7 days execution count</p>
-        </motion.div>
+          <div className="space-y-3">
+            {sortedPairs.map(([pair, volume]) => {
+              const pct = (volume / totalVolume) * 100;
+              const barPct = (volume / maxVolume) * 100;
+              return (
+                <div key={pair} className="flex items-center gap-3">
+                  <span className="text-xs font-mono font-bold text-white w-20 shrink-0">{pair}</span>
+                  <div className="flex-1 h-2 bg-[var(--bg-highest)] rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-[var(--cyan)]"
+                      style={{ width: `${barPct}%` }}
+                    />
+                  </div>
+                  <span className="text-[10px] font-mono text-[var(--text-4)] w-10 text-right tabular-nums">
+                    {pct.toFixed(0)}%
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
 
-        {/* Total Volume */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5 sm:p-8 border-t-2 border-t-[var(--purple)]"
-        >
-          <span className="text-[10px] tracking-[.15em] uppercase font-mono text-[var(--text-3)]">
-            Total Volume
-          </span>
-          <div className="flex items-baseline gap-3 mt-3">
-            <p className="text-3xl sm:text-5xl font-mono font-bold text-white tabular-nums">
+        {/* Summary */}
+        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5 space-y-4">
+          <div className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)]">Summary</div>
+
+          <div>
+            <p className="text-3xl font-mono font-bold text-white tabular-nums">{totalTrades}</p>
+            <p className="text-xs text-[var(--text-4)] font-mono">total trades</p>
+          </div>
+
+          <div>
+            <p className="text-lg font-mono font-bold text-white tabular-nums">
               {formatCompactVolume(totalVolume)}
             </p>
-            <span className="flex items-center gap-1 text-xs font-mono text-[var(--cyan)]">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                <path d="M6 9V3M6 3L3 6M6 3l3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              +8.4%
+            <p className="text-xs text-[var(--text-4)] font-mono">total volume</p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <div className="flex-1 h-1.5 bg-[var(--bg-highest)] rounded-full overflow-hidden">
+              <div
+                className="h-full rounded-full bg-[var(--cyan)]"
+                style={{ width: `${buyPct}%` }}
+              />
+            </div>
+            <span className="text-[10px] font-mono text-[var(--text-4)]">
+              {buyPct.toFixed(0)}% buy
             </span>
           </div>
-          <p className="text-[var(--text-3)] text-xs mt-2 font-mono">Notional value across all pairs</p>
-        </motion.div>
 
-        {/* Average Size */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5 sm:p-8 border-t-2 border-t-[var(--green)]"
-        >
-          <span className="text-[10px] tracking-[.15em] uppercase font-mono text-[var(--text-3)]">
-            Avg Trade Size
-          </span>
-          <div className="flex items-baseline gap-3 mt-3">
-            <p className="text-3xl sm:text-5xl font-mono font-bold text-white tabular-nums">
+          <div>
+            <p className="text-sm font-mono text-[var(--text-3)] tabular-nums">
               {formatCompactVolume(avgSize)}
             </p>
-            <span className="flex items-center gap-1 text-xs font-mono text-[var(--red)]">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                <path d="M6 3v6M6 9L3 6M6 9l3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              -3.1%
-            </span>
+            <p className="text-xs text-[var(--text-4)] font-mono">avg trade size</p>
           </div>
-          <p className="text-[var(--text-3)] text-xs mt-2 font-mono">Per-trade notional average</p>
-        </motion.div>
+        </div>
       </div>
 
       {/* Filter Bar */}
       <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-3 sm:gap-4">
         {/* Side filter */}
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] font-mono uppercase tracking-[.15em] text-[var(--text-4)]">
-            Side
-          </span>
-          <div className="flex gap-1">
-            {(["all", "buy", "sell"] as const).map((value) => (
-              <button
-                key={value}
-                type="button"
-                onClick={() => setSideFilter(value)}
-                className={`font-mono text-[10px] uppercase tracking-[.08em] px-3 py-1 rounded-full transition-colors cursor-pointer ${
-                  sideFilter === value
-                    ? "bg-[var(--cyan-dim)] text-[var(--cyan)] border border-[rgba(5,224,248,0.2)]"
-                    : "text-[var(--text-4)] hover:text-[var(--text-3)]"
-                }`}
-              >
-                {value === "all" ? "All" : value === "buy" ? "Buy" : "Sell"}
-              </button>
-            ))}
-          </div>
+        <div className="flex gap-1">
+          {(["all", "buy", "sell"] as const).map((value) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => setSideFilter(value)}
+              className={`font-mono text-[10px] uppercase tracking-[.08em] px-3 py-1 rounded-full transition-colors cursor-pointer ${
+                sideFilter === value
+                  ? "bg-[var(--cyan-dim)] text-[var(--cyan)] border border-[rgba(5,224,248,0.2)]"
+                  : "text-[var(--text-4)] hover:text-[var(--text-3)]"
+              }`}
+            >
+              {value === "all" ? "All" : value === "buy" ? "Buy" : "Sell"}
+            </button>
+          ))}
         </div>
 
         {/* Settlement filter */}
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] font-mono uppercase tracking-[.15em] text-[var(--text-4)]">
-            Settlement
-          </span>
-          <div className="flex gap-1">
-            {(["all", "Spot", "T+1", "T+2"] as const).map((value) => (
-              <button
-                key={value}
-                type="button"
-                onClick={() => setSettlementFilter(value)}
-                className={`font-mono text-[10px] uppercase tracking-[.08em] px-3 py-1 rounded-full transition-colors cursor-pointer ${
-                  settlementFilter === value
-                    ? "bg-[var(--cyan-dim)] text-[var(--cyan)] border border-[rgba(5,224,248,0.2)]"
-                    : "text-[var(--text-4)] hover:text-[var(--text-3)]"
-                }`}
-              >
-                {value === "all" ? "All" : value}
-              </button>
-            ))}
-          </div>
+        <div className="flex gap-1">
+          {(["all", "Spot", "T+1", "T+2"] as const).map((value) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => setSettlementFilter(value)}
+              className={`font-mono text-[10px] uppercase tracking-[.08em] px-3 py-1 rounded-full transition-colors cursor-pointer ${
+                settlementFilter === value
+                  ? "bg-[var(--cyan-dim)] text-[var(--cyan)] border border-[rgba(5,224,248,0.2)]"
+                  : "text-[var(--text-4)] hover:text-[var(--text-3)]"
+              }`}
+            >
+              {value === "all" ? "All" : value}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Trade History Table */}
+      {/* Trade Table */}
       <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden overflow-x-auto">
-        {/* Table Header Bar */}
-        <div className="px-4 sm:px-6 py-4 flex items-center justify-between bg-[var(--bg-elevated)]">
-          <SectionLabel>Trade History</SectionLabel>
-          <button type="button" className="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--border)] text-[var(--text-3)] hover:text-white hover:border-[var(--border-outline)] transition-colors duration-200 cursor-pointer">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M6 1v7M6 8L3.5 5.5M6 8l2.5-2.5M1 10h10" />
-            </svg>
-            <span className="font-mono text-[10px] font-medium uppercase tracking-[.1em]">Export CSV</span>
-          </button>
-        </div>
-
-        {/* Table */}
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-[var(--border)]">
@@ -261,15 +250,10 @@ export default function TradesPage() {
             </tr>
           </thead>
           <tbody>
-            {filteredTrades.map((trade, i) => (
-              <motion.tr
+            {filteredTrades.map((trade) => (
+              <tr
                 key={trade.id}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: i * 0.03, duration: 0.3 }}
-                className={`border-b border-[rgba(255,255,255,0.03)] hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-150 ${
-                  i % 2 === 1 ? "bg-[rgba(255,255,255,0.02)]" : ""
-                }`}
+                className="border-b border-[rgba(255,255,255,0.03)] hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-150"
               >
                 {/* Pair cell with monogram */}
                 <td className="px-3 sm:px-6 py-3 sm:py-4">
@@ -323,22 +307,16 @@ export default function TradesPage() {
                     {timeAgo(trade.timestamp)}
                   </span>
                 </td>
-              </motion.tr>
+              </tr>
             ))}
           </tbody>
         </table>
 
         {/* Footer */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 px-4 sm:px-6 py-4 border-t border-[var(--border)]">
+        <div className="px-4 sm:px-6 py-4 border-t border-[var(--border)]">
           <span className="font-mono text-[10px] text-[var(--text-4)] tracking-[.08em]">
             Showing {filteredTrades.length} of {allTrades.length} trades
           </span>
-          <button type="button" className="flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-full border border-[var(--border)] text-[var(--text-3)] hover:text-white hover:border-[var(--border-outline)] transition-colors duration-200 cursor-pointer">
-            <span className="font-mono text-[10px] font-bold uppercase tracking-[.15em]">View All Transactions</span>
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M2.5 6h7M6.5 3L9.5 6l-3 3" />
-            </svg>
-          </button>
         </div>
       </div>
     </PageTransition>
