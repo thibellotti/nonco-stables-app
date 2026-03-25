@@ -223,7 +223,7 @@ function FavoriteCard({
       </div>
 
       {/* Sparkline — pinned bottom-right, above the input row */}
-      <div className="absolute bottom-14 right-0 w-1/2 h-10 pointer-events-none opacity-50">
+      <div className="absolute bottom-14 right-0 w-1/2 h-10 pointer-events-none opacity-70">
         <Sparkline
           data={sparkData}
           color={colors.border}

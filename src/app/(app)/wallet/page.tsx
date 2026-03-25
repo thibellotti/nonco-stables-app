@@ -21,6 +21,12 @@ const currencyMeta: Record<string, { name: string; symbol: string }> = {
 };
 
 // ---------------------------------------------------------------------------
+// Monochromatic cyan sparkline colors — descending opacity per row
+// ---------------------------------------------------------------------------
+
+const cyanOpacities = ["#05E0F8", "#05E0F8B3", "#05E0F880", "#05E0F859", "#05E0F840"];
+
+// ---------------------------------------------------------------------------
 // Sparkline + variation data (matches dashboard currency-breakdown)
 // ---------------------------------------------------------------------------
 
@@ -82,19 +88,18 @@ export default function WalletPage() {
 
           {/* Horizontal composition bar */}
           <div className="flex h-3 rounded-full overflow-hidden mt-4 gap-1">
-            {balances.map((b) => {
+            {balances.map((b, idx) => {
               const usdValue =
                 (b.available + b.pending) * (usdRates[b.currency] ?? 1);
               const pct = (usdValue / totalValue) * 100;
-              const colors = currencyColors[b.currency];
-              const color = colors?.border ?? "var(--cyan)";
+              const color = cyanOpacities[idx] ?? "#05E0F8";
               return (
                 <div
                   key={b.currency}
                   className="h-full rounded-full"
                   style={{
                     width: `${pct}%`,
-                    background: `linear-gradient(90deg, ${color}80, ${color})`,
+                    background: color,
                   }}
                 />
               );
@@ -237,7 +242,7 @@ export default function WalletPage() {
                     <div className="w-16 h-6">
                       <Sparkline
                         data={sparklineData[b.currency] ?? []}
-                        color={colors?.border ?? "var(--cyan)"}
+                        color={cyanOpacities[i] ?? "#05E0F8"}
                         strokeWidth={1.5}
                         showArea={false}
                       />

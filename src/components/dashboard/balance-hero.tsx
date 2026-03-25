@@ -286,19 +286,18 @@ export function BalanceHero() {
         {/* Y-axis tick labels */}
         {(() => {
           const lastVal = chartPoints[chartPoints.length - 1];
-          const firstVal = chartPoints[0];
-          const midVal = (firstVal + lastVal) / 2;
+          const midVal = (maxY + minY) / 2;
           const fmt = (v: number) => {
             const dollars = totalBalance * (v / lastVal);
             if (dollars >= 1_000_000) return `$${(dollars / 1_000_000).toFixed(1)}M`;
             return `$${(dollars / 1_000).toFixed(0)}K`;
           };
-          // Positions: top (max), middle, bottom (min) — using chart grid positions 25%, 50%, 75%
+          // Positions: top (max), middle, bottom (min) — evenly spaced
           return (
             <div className="absolute left-0 top-0 bottom-0 w-11 flex flex-col justify-between py-2 pointer-events-none" aria-hidden="true">
-              <span className="text-[10px] font-mono text-[var(--text-4)] tabular-nums leading-none">{fmt(lastVal)}</span>
+              <span className="text-[10px] font-mono text-[var(--text-4)] tabular-nums leading-none">{fmt(maxY)}</span>
               <span className="text-[10px] font-mono text-[var(--text-4)] tabular-nums leading-none">{fmt(midVal)}</span>
-              <span className="text-[10px] font-mono text-[var(--text-4)] tabular-nums leading-none">{fmt(firstVal)}</span>
+              <span className="text-[10px] font-mono text-[var(--text-4)] tabular-nums leading-none">{fmt(minY)}</span>
             </div>
           );
         })()}
