@@ -262,16 +262,11 @@ export function BalanceHero() {
           aria-hidden="true"
         >
           <defs>
-            {/* Vertical area gradient — top: visible, bottom: transparent */}
+            {/* Vertical area gradient — multi-stop for depth */}
             <linearGradient id="hero-area-fill" x1="0" y1="0" x2="0" y2="1">
-              <stop
-                offset="0%"
-                stopColor="rgba(5,224,248,0.12)"
-              />
-              <stop
-                offset="100%"
-                stopColor="rgba(5,224,248,0)"
-              />
+              <stop offset="0%" stopColor="rgba(5,224,248,0.15)" />
+              <stop offset="40%" stopColor="rgba(5,224,248,0.06)" />
+              <stop offset="100%" stopColor="rgba(5,224,248,0)" />
             </linearGradient>
 
             {/* Horizontal line gradient — left: faded, right: full */}
@@ -293,9 +288,14 @@ export function BalanceHero() {
                 stopOpacity="1"
               />
             </linearGradient>
+
+            {/* Glow filter for line bloom + endpoint */}
+            <filter id="line-glow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="4" result="blur" />
+            </filter>
           </defs>
 
-          {/* Subtle grid lines — barely visible */}
+          {/* Subtle grid lines — dashed for texture */}
           {[0.25, 0.5, 0.75].map((pct) => (
             <line
               key={pct}
@@ -303,38 +303,81 @@ export function BalanceHero() {
               y1={CHART_H * pct}
               x2={CHART_W}
               y2={CHART_H * pct}
-              stroke="rgba(255,255,255,0.02)"
+              stroke="rgba(255,255,255,0.04)"
               strokeWidth="1"
+              strokeDasharray="4 6"
             />
           ))}
 
           {/* Area fill */}
           <path d={areaPath} fill="url(#hero-area-fill)" />
 
-          {/* Smooth line */}
+          {/* Line glow — blurred wider stroke behind main line */}
+          <path
+            d={linePath}
+            stroke="var(--cyan)"
+            strokeWidth="8"
+            strokeLinecap="round"
+            filter="url(#line-glow)"
+            opacity="0.15"
+          />
+
+          {/* Main line — slightly thicker */}
           <path
             d={linePath}
             stroke="url(#hero-line-gradient)"
-            strokeWidth="2"
+            strokeWidth="2.5"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
 
-          {/* Current dot — outer glow ring */}
-          <circle
-            cx={lastPt.x}
-            cy={lastPt.y}
-            r="12"
-            fill="var(--cyan)"
-            opacity={hoverIdx !== null ? "0.05" : "0.15"}
+          {/* Baseline — grounds the chart */}
+          <line
+            x1="0"
+            y1={CHART_H - 1}
+            x2={CHART_W}
+            y2={CHART_H - 1}
+            stroke="rgba(255,255,255,0.06)"
+            strokeWidth="1"
           />
-          {/* Current dot — solid center */}
+
+          {/* Endpoint — outermost glow (blurred) */}
           <circle
             cx={lastPt.x}
             cy={lastPt.y}
-            r="4"
+            r="16"
             fill="var(--cyan)"
-            opacity={hoverIdx !== null ? "0.3" : "1"}
+            opacity={hoverIdx !== null ? "0.02" : "0.06"}
+            filter="url(#line-glow)"
+          />
+          {/* Endpoint — animated pulse ring */}
+          <circle
+            cx={lastPt.x}
+            cy={lastPt.y}
+            r="8"
+            fill="none"
+            stroke="var(--cyan)"
+            strokeWidth="1"
+            opacity={hoverIdx !== null ? "0.05" : "0.3"}
+          >
+            <animate attributeName="r" values="8;12;8" dur="2s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values={hoverIdx !== null ? "0.05;0.02;0.05" : "0.3;0.1;0.3"} dur="2s" repeatCount="indefinite" />
+          </circle>
+          {/* Endpoint — solid center */}
+          <circle
+            cx={lastPt.x}
+            cy={lastPt.y}
+            r="3.5"
+            fill="var(--cyan)"
+            opacity={hoverIdx !== null ? "0.2" : "1"}
+          />
+          {/* Endpoint — white highlight for "lit" feel */}
+          <circle
+            cx={lastPt.x}
+            cy={lastPt.y}
+            r="1.5"
+            fill="white"
+            opacity={hoverIdx !== null ? "0.1" : "0.6"}
           />
         </svg>
 
@@ -352,20 +395,20 @@ export function BalanceHero() {
               }}
             />
 
-            {/* Hover dot — positioned via percentage */}
+            {/* Hover dot — positioned via percentage, with glow */}
             <div
               className="absolute w-2 h-2 rounded-full pointer-events-none"
               style={{
                 left: hoverX - 4,
                 top: `${(chartY(hoverIdx) / CHART_H) * 100}%`,
                 background: "var(--cyan)",
-                boxShadow: "0 0 8px rgba(5,224,248,0.5)",
+                boxShadow: "0 0 12px rgba(5,224,248,0.6)",
               }}
             />
 
-            {/* Tooltip card */}
+            {/* Tooltip card — polished with cyan accent border */}
             <div
-              className="absolute pointer-events-none z-10 bg-[var(--bg-card)] border border-[var(--border)] rounded px-2.5 py-1.5 shadow-lg"
+              className="absolute pointer-events-none z-10 bg-[var(--bg-card)] border border-[var(--border)] border-t-2 border-t-[rgba(5,224,248,0.5)] rounded px-2.5 py-1.5 shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
               style={{
                 left:
                   hoverX > 160

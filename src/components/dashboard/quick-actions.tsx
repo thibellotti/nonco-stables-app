@@ -7,7 +7,7 @@ const actions = [
     label: "Send",
     icon: (
       <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <path d="M7 17L17 7M17 7H9.5M17 7v7.5" />
+        <path d="M7 17L17 7M17 7H10M17 7v7" />
       </svg>
     ),
   },
@@ -15,7 +15,7 @@ const actions = [
     label: "Receive",
     icon: (
       <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <path d="M17 7L7 17M7 17h7.5M7 17V9.5" />
+        <path d="M17 7L7 17M7 17h7M7 17v-7" />
       </svg>
     ),
   },

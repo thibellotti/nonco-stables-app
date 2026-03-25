@@ -60,19 +60,20 @@ export default function WalletPage() {
           </p>
 
           {/* Horizontal composition bar */}
-          <div className="flex h-2 rounded-full overflow-hidden mt-4 gap-0.5">
+          <div className="flex h-3 rounded-full overflow-hidden mt-4 gap-1">
             {balances.map((b) => {
               const usdValue =
                 (b.available + b.pending) * (usdRates[b.currency] ?? 1);
               const pct = (usdValue / totalValue) * 100;
               const colors = currencyColors[b.currency];
+              const color = colors?.border ?? "var(--cyan)";
               return (
                 <div
                   key={b.currency}
                   className="h-full rounded-full"
                   style={{
                     width: `${pct}%`,
-                    backgroundColor: colors?.border ?? "var(--cyan)",
+                    background: `linear-gradient(90deg, ${color}80, ${color})`,
                   }}
                 />
               );
@@ -100,12 +101,12 @@ export default function WalletPage() {
                   <span className="text-xs font-medium text-[var(--text-3)] w-12">
                     {b.currency}
                   </span>
-                  <div className="flex-1 h-1.5 bg-[var(--bg-highest)] rounded-full overflow-hidden">
+                  <div className="flex-1 h-2 bg-[rgba(255,255,255,0.03)] rounded-full overflow-hidden">
                     <div
                       className="h-full rounded-full"
                       style={{
                         width: `${pct}%`,
-                        backgroundColor: colors?.border,
+                        background: `linear-gradient(90deg, ${colors?.border}40, ${colors?.border})`,
                       }}
                     />
                   </div>

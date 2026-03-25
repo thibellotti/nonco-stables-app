@@ -169,22 +169,35 @@ export default function SettlementsPage() {
             Settlement Timeline
           </div>
           <div className="relative">
-            {/* Horizontal track line */}
-            <div className="h-px bg-[var(--border-outline)] absolute top-3 left-0 right-0" />
+            {/* Horizontal track line — gradient from cyan (near-term) to amber (far-term) */}
+            <div
+              className="h-px absolute left-0 right-0"
+              style={{
+                top: "14px",
+                background: "linear-gradient(90deg, var(--cyan), var(--amber))",
+                opacity: 0.4,
+              }}
+            />
 
             {/* Timeline points */}
             <div className="flex justify-between relative">
               {timelineSorted.map((s) => (
                 <div key={s.id} className="flex flex-col items-center">
                   <div
-                    className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                    className={`w-7 h-7 rounded-full border-2 flex items-center justify-center ${
                       s.status === "processing"
                         ? "border-[var(--cyan)] bg-[rgba(5,224,248,0.1)]"
                         : "border-[var(--amber)] bg-[rgba(249,226,32,0.06)]"
                     }`}
+                    style={{
+                      boxShadow:
+                        s.status === "processing"
+                          ? "0 0 8px rgba(5,224,248,0.4)"
+                          : "0 0 8px rgba(249,226,32,0.3)",
+                    }}
                   >
                     <div
-                      className={`w-2 h-2 rounded-full ${
+                      className={`w-2.5 h-2.5 rounded-full ${
                         s.status === "processing"
                           ? "bg-[var(--cyan)]"
                           : "bg-[var(--amber)]"

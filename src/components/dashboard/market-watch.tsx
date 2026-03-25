@@ -4,6 +4,8 @@
 // MarketWatch — live pair prices with mini sparklines for the dashboard sidebar
 // ---------------------------------------------------------------------------
 
+import { Sparkline } from "@/components/ui/sparkline";
+
 const pairs = [
   {
     pair: "MXN/USDT",
@@ -41,48 +43,6 @@ const pairs = [
     sparkline: [9, 8.5, 8.8, 7.5, 7, 7.2, 6.5, 6],
   },
 ];
-
-// ---------------------------------------------------------------------------
-// Sparkline — tiny SVG polyline from 8 data points
-// ---------------------------------------------------------------------------
-
-function Sparkline({ data }: { data: number[] }) {
-  const w = 60;
-  const h = 16;
-  const pad = 2;
-  const min = Math.min(...data);
-  const max = Math.max(...data);
-  const range = max - min || 1;
-
-  const points = data
-    .map((v, i) => {
-      const x = (i / (data.length - 1)) * w;
-      const y = h - pad - ((v - min) / range) * (h - pad * 2);
-      return `${x.toFixed(1)},${y.toFixed(1)}`;
-    })
-    .join(" ");
-
-  return (
-    <svg
-      width={w}
-      height={h}
-      viewBox={`0 0 ${w} ${h}`}
-      fill="none"
-      aria-hidden="true"
-      className="shrink-0"
-    >
-      <polyline
-        points={points}
-        stroke="var(--cyan)"
-        strokeOpacity="0.4"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
-    </svg>
-  );
-}
 
 // ---------------------------------------------------------------------------
 // MarketWatch
@@ -127,7 +87,14 @@ export function MarketWatch() {
 
               {/* Sparkline — fills middle space */}
               <div className="flex-1 flex justify-center">
-                <Sparkline data={p.sparkline} />
+                <Sparkline
+                  data={p.sparkline}
+                  color={p.positive ? "var(--cyan)" : "var(--red, #ef4444)"}
+                  width={60}
+                  height={16}
+                  showArea={false}
+                  strokeWidth={1.5}
+                />
               </div>
 
               {/* Price + change */}

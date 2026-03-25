@@ -1,6 +1,7 @@
 import { balances } from "@/lib/mock-data";
 import { formatCompact, cn } from "@/lib/utils";
 import { SectionLabel } from "@/components/ui/section-label";
+import { Sparkline } from "@/components/ui/sparkline";
 import { currencyColors } from "@/lib/currency-colors";
 
 // Hardcoded sparkline data (12 points each, normalized 0–1)
@@ -29,60 +30,6 @@ const currencyNames: Record<string, string> = {
   USDT: "Tether",
   USDC: "USD Coin",
 };
-
-// Mini sparkline SVG — purely decorative
-function Sparkline({
-  data,
-  color,
-}: {
-  data: number[];
-  color: string;
-}) {
-  const width = 100;
-  const height = 32;
-  const padding = 2;
-
-  const stepX = (width - padding * 2) / (data.length - 1);
-  const points = data
-    .map((v, i) => {
-      const x = padding + i * stepX;
-      // Invert Y: 0 at top, height at bottom; leave padding for stroke
-      const y = height - padding - v * (height - padding * 2);
-      return `${x.toFixed(1)},${y.toFixed(1)}`;
-    })
-    .join(" ");
-
-  // Closed polygon for the area fill
-  const areaPoints = `${padding.toFixed(1)},${(height - padding).toFixed(1)} ${points} ${(padding + (data.length - 1) * stepX).toFixed(1)},${(height - padding).toFixed(1)}`;
-
-  return (
-    <svg
-      viewBox={`0 0 ${width} ${height}`}
-      width="100%"
-      height={height}
-      preserveAspectRatio="none"
-      className="block"
-      aria-hidden="true"
-    >
-      {/* Area fill */}
-      <polygon
-        points={areaPoints}
-        fill={color}
-        fillOpacity={0.08}
-      />
-      {/* Line */}
-      <polyline
-        points={points}
-        fill="none"
-        stroke={color}
-        strokeOpacity={0.6}
-        strokeWidth={1.5}
-        strokeLinejoin="round"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
 
 // Tiny arrow icon (6x6)
 function ArrowIcon({ positive }: { positive: boolean }) {
@@ -176,6 +123,9 @@ export function CurrencyBreakdown() {
                 <Sparkline
                   data={sparklineData[balance.currency] ?? sparklineData.USD}
                   color={colors.border}
+                  width={120}
+                  height={32}
+                  className="w-full"
                 />
               </div>
             </div>

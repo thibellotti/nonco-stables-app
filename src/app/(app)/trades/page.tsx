@@ -145,14 +145,20 @@ export default function TradesPage() {
               return (
                 <div key={pair} className="flex items-center gap-3">
                   <span className="text-xs font-mono font-bold text-white w-20 shrink-0">{pair}</span>
-                  <div className="flex-1 h-2 bg-[var(--bg-highest)] rounded-full overflow-hidden">
+                  <div className="flex-1 h-2.5 bg-[rgba(255,255,255,0.03)] rounded-full overflow-hidden">
                     <div
-                      className="h-full rounded-full bg-[var(--cyan)]"
-                      style={{ width: `${barPct}%` }}
+                      className="h-full rounded-full"
+                      style={{
+                        width: `${barPct}%`,
+                        background: "linear-gradient(90deg, rgba(5,224,248,0.25), rgba(5,224,248,0.8))",
+                      }}
                     />
                   </div>
                   <span className="text-[10px] font-mono text-[var(--text-4)] w-10 text-right tabular-nums">
                     {pct.toFixed(0)}%
+                  </span>
+                  <span className="text-[10px] font-mono text-[var(--text-4)] w-12 text-right tabular-nums">
+                    {formatCompactVolume(volume)}
                   </span>
                 </div>
               );
@@ -177,10 +183,13 @@ export default function TradesPage() {
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="flex-1 h-1.5 bg-[var(--bg-highest)] rounded-full overflow-hidden">
+            <div className="flex-1 h-2 bg-[rgba(255,255,255,0.03)] rounded-full overflow-hidden">
               <div
-                className="h-full rounded-full bg-[var(--cyan)]"
-                style={{ width: `${buyPct}%` }}
+                className="h-full rounded-full"
+                style={{
+                  width: `${buyPct}%`,
+                  background: "linear-gradient(90deg, rgba(5,224,248,0.25), rgba(5,224,248,0.8))",
+                }}
               />
             </div>
             <span className="text-[10px] font-mono text-[var(--text-4)]">
