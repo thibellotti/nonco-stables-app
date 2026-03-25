@@ -70,13 +70,12 @@ export function Sparkline({
 
   return (
     <svg
-      width={width}
-      height={height}
       viewBox={`0 0 ${width} ${height}`}
       preserveAspectRatio="none"
       fill="none"
       aria-hidden="true"
       className={className}
+      style={{ width: "100%", height: "100%", display: "block" }}
     >
       <defs>
         {showArea && (
