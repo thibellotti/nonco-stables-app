@@ -90,7 +90,10 @@ export default function RFQPage() {
               onTrade={handleTrade}
             />
             <div className="space-y-4">
-              <QuoteForm onQuote={handleQuote} />
+              <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5">
+                <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)] mb-3">New Quote</div>
+                <QuoteForm onQuote={handleQuote} />
+              </div>
               <FavoritesGrid onQuote={handleQuote} compact />
             </div>
           </div>
@@ -100,12 +103,16 @@ export default function RFQPage() {
         </>
       ) : (
         <>
-          {/* Default state — form prominent, favorites + trades below */}
-          <QuoteForm onQuote={handleQuote} />
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6">
-            <FavoritesGrid onQuote={handleQuote} />
-            <RecentTrades extraTrades={sessionTrades} />
+          {/* Default state — stacked: form, favorites, trades */}
+          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5">
+            <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)] mb-3">New Quote</div>
+            <QuoteForm onQuote={handleQuote} />
           </div>
+
+          <FavoritesGrid onQuote={handleQuote} />
+
+          <SectionLabel>Recent Trades</SectionLabel>
+          <RecentTrades extraTrades={sessionTrades} />
         </>
       )}
     </PageTransition>

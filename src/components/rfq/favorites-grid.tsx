@@ -141,16 +141,11 @@ export function FavoritesGrid({ onQuote, compact = false }: FavoritesGridProps) 
             }}
           >
             {/* Top: pair code + star */}
-            <div className="px-4 pt-4 pb-0">
+            <div className="px-4 pt-4">
               <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-xs font-mono text-[var(--text-3)]">
-                    {base}/{quote}
-                  </p>
-                  <p className="text-base font-bold text-[var(--text)] mt-0.5">
-                    {baseName}
-                  </p>
-                </div>
+                <p className="text-[11px] font-mono text-[var(--text-3)] uppercase tracking-wider">
+                  {base}/{quote}
+                </p>
                 {/* Star icon */}
                 <svg
                   className="w-3.5 h-3.5 text-[var(--cyan)] opacity-40 shrink-0 mt-0.5"
@@ -161,22 +156,25 @@ export function FavoritesGrid({ onQuote, compact = false }: FavoritesGridProps) 
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                 </svg>
               </div>
+              <p className="text-sm font-bold text-[var(--text)] mt-0.5">
+                {baseName}
+              </p>
+              <p className="text-lg font-mono font-bold text-white tracking-tight mt-1">
+                {rate !== undefined ? rate.toFixed(4) : "\u2014"}
+              </p>
+            </div>
 
-              {/* Rate + sparkline row */}
-              <div className="flex items-center justify-between mt-3">
-                <p className="text-lg font-mono text-white tracking-tight">
-                  {rate !== undefined ? rate.toFixed(4) : "\u2014"}
-                </p>
-                <Sparkline
-                  data={sparkData}
-                  width={64}
-                  height={24}
-                  color={colors.border}
-                  showArea={false}
-                  strokeWidth={1.5}
-                  className="shrink-0"
-                />
-              </div>
+            {/* Sparkline — full-width at bottom of info area */}
+            <div className="mt-3 h-8 px-4">
+              <Sparkline
+                data={sparkData}
+                width={200}
+                height={32}
+                color={colors.border}
+                showArea={false}
+                strokeWidth={1.5}
+                className="w-full h-full"
+              />
             </div>
 
             {/* Bottom: quantity + quote button */}

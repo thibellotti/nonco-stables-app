@@ -329,9 +329,10 @@ function TransactionRow({ tx }: { tx: (typeof transactions)[number] }) {
 
 interface TransactionListProps {
   filter: string;
+  limit?: number;
 }
 
-export function TransactionList({ filter }: TransactionListProps) {
+export function TransactionList({ filter, limit }: TransactionListProps) {
   const filtered =
     filter === "all"
       ? transactions
@@ -345,7 +346,10 @@ export function TransactionList({ filter }: TransactionListProps) {
     );
   }
 
-  const groups = groupByDate(filtered);
+  const cap = limit ?? 6;
+  const limited = filtered.slice(0, cap);
+  const hasMore = filtered.length > cap;
+  const groups = groupByDate(limited);
 
   return (
     <div className="mt-3 space-y-6">
@@ -371,6 +375,14 @@ export function TransactionList({ filter }: TransactionListProps) {
           </div>
         </div>
       ))}
+
+      {hasMore && (
+        <div className="flex justify-center pt-4">
+          <button className="text-xs font-sans text-[var(--cyan)] hover:text-white transition-colors cursor-pointer px-6 py-2 rounded-lg border border-[var(--border)] hover:border-[var(--border-outline)]">
+            View all {filtered.length} transactions
+          </button>
+        </div>
+      )}
     </div>
   );
 }

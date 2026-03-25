@@ -55,21 +55,24 @@ export default function BankPage() {
   return (
     <PageTransition className="px-6 md:px-8 w-full space-y-8">
       {/* Flow visualization + action */}
-      <div className="flex items-center justify-end">
-        <Button variant="cyan" size="sm">New Transfer</Button>
-      </div>
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)]">Treasury Flow</span>
+          <Button variant="cyan" size="sm">New Transfer</Button>
+        </div>
 
-      <BankKpiCards
-        totalDeposits={totalDeposits}
-        totalWithdrawals={totalWithdrawals}
-        netFlow={netFlow}
-        depositCount={
-          bankTransactions.filter((tx) => tx.type === "deposit").length
-        }
-        withdrawalCount={
-          bankTransactions.filter((tx) => tx.type === "withdrawal").length
-        }
-      />
+        <BankKpiCards
+          totalDeposits={totalDeposits}
+          totalWithdrawals={totalWithdrawals}
+          netFlow={netFlow}
+          depositCount={
+            bankTransactions.filter((tx) => tx.type === "deposit").length
+          }
+          withdrawalCount={
+            bankTransactions.filter((tx) => tx.type === "withdrawal").length
+          }
+        />
+      </div>
 
       {/* Pending actions callout */}
       {pendingCount > 0 && (

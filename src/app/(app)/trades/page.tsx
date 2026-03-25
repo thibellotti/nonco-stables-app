@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { recentTrades } from "@/lib/mock-data";
 import type { RecentTrade } from "@/lib/mock-data";
 import { formatMoney, timeAgo } from "@/lib/utils";
+import { currencyColors } from "@/lib/currency-colors";
 
 // ---------------------------------------------------------------------------
 // Filter types
@@ -119,6 +120,8 @@ export default function TradesPage() {
             {sortedPairs.map(([pair, volume]) => {
               const pct = (volume / totalVolume) * 100;
               const barPct = (volume / maxVolume) * 100;
+              const baseCurrency = pair.split("/")[0];
+              const barColor = currencyColors[baseCurrency]?.border ?? "#05E0F8";
               return (
                 <div key={pair} className="flex items-center gap-3">
                   <span className="text-xs font-mono font-bold text-white w-20 shrink-0">{pair}</span>
@@ -127,7 +130,7 @@ export default function TradesPage() {
                       className="h-full rounded-full"
                       style={{
                         width: `${barPct}%`,
-                        background: "linear-gradient(90deg, rgba(5,224,248,0.25), rgba(5,224,248,0.8))",
+                        background: `linear-gradient(90deg, ${barColor}40, ${barColor}cc)`,
                       }}
                     />
                   </div>
@@ -144,7 +147,7 @@ export default function TradesPage() {
         </div>
 
         {/* Summary */}
-        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5 space-y-4">
+        <div className="bg-[var(--bg-card)] border border-[var(--border)] border-t-2 border-t-[var(--cyan)] rounded-lg p-5 space-y-4">
           <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)]">Summary</div>
 
           <div>
@@ -261,14 +264,23 @@ export default function TradesPage() {
               >
                 {/* Pair cell with monogram */}
                 <td className="px-3 sm:px-6 py-3 sm:py-4">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[rgba(5,224,248,0.1)] border border-[rgba(5,224,248,0.2)] flex items-center justify-center shrink-0">
-                      <span className="font-mono text-[11px] font-bold text-[var(--cyan)]">
-                        {trade.pair.split("/")[0].slice(0, 2)}
-                      </span>
-                    </div>
-                    <span className="font-mono text-xs sm:text-sm font-bold text-white">{trade.pair}</span>
-                  </div>
+                  {(() => {
+                    const baseCurrency = trade.pair.split("/")[0];
+                    const baseColor = currencyColors[baseCurrency]?.border ?? "var(--cyan)";
+                    return (
+                      <div className="flex items-center gap-2 sm:gap-3">
+                        <div
+                          className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0"
+                          style={{ backgroundColor: `${baseColor}15`, borderColor: `${baseColor}30`, borderWidth: 1 }}
+                        >
+                          <span className="font-mono text-[11px] font-bold" style={{ color: baseColor }}>
+                            {baseCurrency.slice(0, 2)}
+                          </span>
+                        </div>
+                        <span className="font-mono text-xs sm:text-sm font-bold text-white">{trade.pair}</span>
+                      </div>
+                    );
+                  })()}
                 </td>
 
                 {/* Side pill */}

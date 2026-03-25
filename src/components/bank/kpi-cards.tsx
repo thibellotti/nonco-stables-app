@@ -29,6 +29,9 @@ export function BankKpiCards({
   const depositPct = maxFlow > 0 ? (totalDeposits / maxFlow) * 100 : 0;
   const withdrawalPct = maxFlow > 0 ? (totalWithdrawals / maxFlow) * 100 : 0;
   const netPositive = netFlow >= 0;
+  const totalFlow = totalDeposits + totalWithdrawals;
+  const depositSharePct = totalFlow > 0 ? (totalDeposits / totalFlow) * 100 : 0;
+  const withdrawalSharePct = totalFlow > 0 ? (totalWithdrawals / totalFlow) * 100 : 0;
 
   return (
     <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-6">
@@ -51,7 +54,7 @@ export function BankKpiCards({
             />
           </div>
           <p className="text-[11px] text-[var(--text-4)] font-sans mt-2">
-            <span className="font-mono">{depositCount}</span> {depositCount === 1 ? "deposit" : "deposits"}
+            <span className="font-mono">{depositCount}</span> {depositCount === 1 ? "deposit" : "deposits"} <span className="font-mono">({depositSharePct.toFixed(0)}%)</span>
           </p>
         </div>
 
@@ -74,7 +77,7 @@ export function BankKpiCards({
           </div>
           <p className="text-[11px] text-[var(--text-4)] font-sans mt-2">
             <span className="font-mono">{withdrawalCount}</span>{" "}
-            {withdrawalCount === 1 ? "withdrawal" : "withdrawals"}
+            {withdrawalCount === 1 ? "withdrawal" : "withdrawals"} <span className="font-mono">({withdrawalSharePct.toFixed(0)}%)</span>
           </p>
         </div>
       </div>
@@ -85,7 +88,7 @@ export function BankKpiCards({
           Net Flow
         </span>
         <span
-          className={`text-lg font-mono font-bold tabular-nums ${
+          className={`text-xl font-mono font-bold tabular-nums ${
             netPositive ? "text-[var(--green)]" : "text-[var(--red)]"
           }`}
         >

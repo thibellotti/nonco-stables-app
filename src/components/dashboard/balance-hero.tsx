@@ -437,14 +437,14 @@ export function BalanceHero() {
       </div>
 
       {/* Stats row — below chart */}
-      <div className="flex flex-wrap items-start gap-x-4 sm:gap-x-6 gap-y-4 mt-6">
+      <div className="flex flex-wrap items-start gap-x-8 gap-y-4 mt-6">
         {/* Available */}
         <div>
-          <div className="font-sans text-[11px] text-[var(--text-4)] uppercase tracking-[.15em]">
+          <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)]">
             Available
           </div>
           <div
-            className="font-mono text-base sm:text-xl font-semibold text-white mt-1"
+            className="font-mono text-lg font-bold text-white mt-1 tabular-nums"
             style={{ fontVariantNumeric: "tabular-nums slashed-zero" }}
           >
             <AnimatedNumber
@@ -456,15 +456,13 @@ export function BalanceHero() {
           </div>
         </div>
 
-        <div className="w-px h-10 bg-[var(--border)]" />
-
         {/* Pending */}
         <div>
-          <div className="font-sans text-[11px] text-[var(--text-4)] uppercase tracking-[.15em]">
+          <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)]">
             Pending
           </div>
           <div
-            className="font-mono text-base sm:text-xl font-semibold text-[var(--amber)] mt-1"
+            className="font-mono text-lg font-bold text-[var(--amber)] mt-1 tabular-nums"
             style={{ fontVariantNumeric: "tabular-nums slashed-zero" }}
           >
             <AnimatedNumber
@@ -476,15 +474,13 @@ export function BalanceHero() {
           </div>
         </div>
 
-        <div className="w-px h-10 bg-[var(--border)]" />
-
         {/* Currencies */}
         <div>
-          <div className="font-sans text-[11px] text-[var(--text-4)] uppercase tracking-[.15em]">
+          <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)]">
             Currencies
           </div>
           <div
-            className="font-mono text-base sm:text-xl font-semibold text-white mt-1"
+            className="font-mono text-lg font-bold text-white mt-1 tabular-nums"
             style={{ fontVariantNumeric: "tabular-nums slashed-zero" }}
           >
             <AnimatedNumber

@@ -54,7 +54,7 @@ export default function WalletPage() {
       {/* Total Value + Allocation — side by side */}
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6">
         {/* LEFT: Total value */}
-        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-6">
+        <div className="bg-[var(--bg-card)] border border-[var(--border)] border-t-2 border-t-[var(--cyan)] rounded-lg p-6">
           <div className="flex items-start justify-between">
             <div>
               <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)]">
@@ -100,7 +100,7 @@ export default function WalletPage() {
         </div>
 
         {/* RIGHT: Allocation breakdown */}
-        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-6">
+        <div className="bg-[var(--bg-card)] border border-[var(--border)] border-t-2 border-t-[var(--border-outline)] rounded-lg p-6">
           <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)] mb-4">
             Allocation
           </div>
@@ -113,7 +113,7 @@ export default function WalletPage() {
               return (
                 <div key={b.currency} className="flex items-center gap-3">
                   <div
-                    className="w-2 h-2 rounded-full shrink-0"
+                    className="w-3 h-3 rounded-full shrink-0"
                     style={{ backgroundColor: colors?.border }}
                   />
                   <span className="text-xs font-medium text-[var(--text-3)] w-12">
@@ -190,8 +190,8 @@ export default function WalletPage() {
                 </div>
 
                 {/* Sparkline — normal flow, bleeds to card edges */}
-                <div className="mt-3 h-10">
-                  <Sparkline data={sparklineData[b.currency] ?? []} color={colors?.border ?? "var(--cyan)"} width={200} height={40} className="w-full h-full" />
+                <div className="mt-3 h-12">
+                  <Sparkline data={sparklineData[b.currency] ?? []} color={colors?.border ?? "var(--cyan)"} width={200} height={48} strokeWidth={2} className="w-full h-full" />
                 </div>
               </div>
             );

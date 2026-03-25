@@ -90,7 +90,7 @@ export function SettlementCard({
           <span className="text-[11px] font-sans text-[var(--text-3)]">Progress</span>
           <span className="text-[11px] font-mono font-bold text-white">{progress}%</span>
         </div>
-        <div className="h-1.5 rounded-full bg-[rgba(255,255,255,0.06)] overflow-hidden">
+        <div className="h-2 rounded-full bg-[rgba(255,255,255,0.06)] overflow-hidden">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
@@ -114,7 +114,7 @@ export function SettlementCard({
   }
 
   return (
-    <div className="bg-[var(--bg-card)] rounded-lg border border-[var(--border)] hover:border-[var(--border-outline)] transition-colors duration-200">
+    <div className="bg-[var(--bg-card)] rounded-lg border border-[var(--border)] border-t-2 border-t-[var(--amber)] hover:border-[var(--border-outline)] transition-colors duration-200">
       {cardInner}
     </div>
   );

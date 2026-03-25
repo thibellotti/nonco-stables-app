@@ -115,7 +115,7 @@ export default function SettlementsPage() {
       {activeTab === "pending" && (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {/* Total pending */}
-          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-4">
+          <div className="bg-[var(--bg-card)] border border-[var(--border)] border-l-2 border-l-[var(--cyan)] rounded-lg p-4">
             <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)]">
               Total Pending
             </div>
@@ -128,7 +128,7 @@ export default function SettlementsPage() {
           </div>
 
           {/* Due this week */}
-          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-4">
+          <div className="bg-[var(--bg-card)] border border-[var(--border)] border-l-2 border-l-[var(--amber)] rounded-lg p-4">
             <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)]">
               Due This Week
             </div>
@@ -141,7 +141,7 @@ export default function SettlementsPage() {
           </div>
 
           {/* Counterparty exposure */}
-          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-4">
+          <div className="bg-[var(--bg-card)] border border-[var(--border)] border-l-2 border-l-[var(--purple)] rounded-lg p-4">
             <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)] mb-3">
               Counterparty Exposure
             </div>
@@ -171,11 +171,11 @@ export default function SettlementsPage() {
             <div className="min-w-[500px]">
             {/* Horizontal track line — gradient from cyan (near-term) to amber (far-term) */}
             <div
-              className="h-px absolute left-0 right-0"
+              className="h-0.5 absolute left-0 right-0"
               style={{
                 top: "14px",
                 background: "linear-gradient(90deg, var(--cyan), var(--amber))",
-                opacity: 0.4,
+                opacity: 0.5,
               }}
             />
 
@@ -207,10 +207,10 @@ export default function SettlementsPage() {
                   <span className="text-[11px] font-mono text-[var(--text-3)] mt-2">
                     {s.dueDate.replace(", 2026", "")}
                   </span>
-                  <span className="text-xs font-bold text-white mt-0.5">
+                  <span className="text-sm font-bold text-white mt-0.5">
                     {s.pair}
                   </span>
-                  <span className="text-[11px] font-mono text-[var(--text-4)]">
+                  <span className="text-xs font-mono text-[var(--text-4)]">
                     {formatCompact(s.amount)}
                   </span>
                 </div>
