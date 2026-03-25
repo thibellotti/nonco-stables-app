@@ -5,10 +5,12 @@ import { formatMoney, timeAgo } from "@/lib/utils";
 
 interface RecentTradesProps {
   extraTrades?: RecentTrade[];
+  limit?: number;
 }
 
-export function RecentTrades({ extraTrades = [] }: RecentTradesProps) {
-  const all = [...extraTrades, ...recentTrades];
+export function RecentTrades({ extraTrades = [], limit }: RecentTradesProps) {
+  const merged = [...extraTrades, ...recentTrades];
+  const all = limit ? merged.slice(0, limit) : merged;
 
   if (all.length === 0) {
     return (

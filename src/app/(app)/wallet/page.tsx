@@ -3,22 +3,21 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { PageTransition } from "@/components/ui/page-transition";
-import { Button } from "@/components/ui/button";
 import { Sparkline } from "@/components/ui/sparkline";
 import { balances, usdRates } from "@/lib/mock-data";
 import { formatMoney, formatCompact } from "@/lib/utils";
 import { currencyColors } from "@/lib/currency-colors";
 
 // ---------------------------------------------------------------------------
-// Currency metadata — full names and short IDs
+// Currency metadata — full names, symbols for monogram circles
 // ---------------------------------------------------------------------------
 
-const currencyMeta: Record<string, { name: string; id: string }> = {
-  USD: { name: "US Dollar", id: "USD-NY-01" },
-  EUR: { name: "Euro", id: "EUR-FR-01" },
-  MXN: { name: "Mexican Peso", id: "MXN-MX-01" },
-  USDT: { name: "Tether USD", id: "USDT-ETH-01" },
-  USDC: { name: "USD Coin", id: "USDC-ETH-01" },
+const currencyMeta: Record<string, { name: string; symbol: string }> = {
+  USD: { name: "US Dollar", symbol: "$" },
+  EUR: { name: "Euro", symbol: "\u20AC" },
+  MXN: { name: "Mexican Peso", symbol: "MX" },
+  USDT: { name: "Tether USD", symbol: "\u20AE" },
+  USDC: { name: "USD Coin", symbol: "C" },
 };
 
 // ---------------------------------------------------------------------------
@@ -44,6 +43,8 @@ const variations: Record<string, { pct: string; positive: boolean }> = {
 // ---------------------------------------------------------------------------
 // Wallet page — portfolio overview
 // ---------------------------------------------------------------------------
+
+import { Button } from "@/components/ui/button";
 
 export default function WalletPage() {
   const totalValue = balances.reduce(
@@ -143,48 +144,74 @@ export default function WalletPage() {
         </div>
       </div>
 
-      {/* Holdings cards */}
-      <div>
-        <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] mb-3">
-          Holdings
+      {/* Holdings table */}
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden"
+      >
+        <div className="px-6 py-4 border-b border-[var(--border)]">
+          <span className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)]">
+            Holdings
+          </span>
         </div>
-        <motion.div
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3"
-          initial="hidden"
-          animate="visible"
-          variants={{
-            hidden: {},
-            visible: { transition: { staggerChildren: 0.05 } },
-          }}
-        >
-          {balances.map((b) => {
-            const colors = currencyColors[b.currency];
-            const meta = currencyMeta[b.currency];
-            const swapStable = b.currency === "EUR" || b.currency === "GBP" ? "USDC" : "USDT";
-            return (
-              <motion.div
-                key={b.currency}
-                variants={{
-                  hidden: { opacity: 0, y: 8 },
-                  visible: { opacity: 1, y: 0 },
-                }}
-                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg hover:border-[var(--border-outline)] transition-all duration-200 cursor-pointer relative overflow-hidden group"
-                style={{ borderTopWidth: 2, borderTopColor: colors?.border }}
-              >
-                <div className="p-4 pb-14 relative z-10">
-                  {/* Header: colored icon + code + variation */}
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2.5">
+
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="border-b border-[var(--border)]">
+              <th className="px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)]">
+                Currency
+              </th>
+              <th className="px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)] text-right">
+                Balance
+              </th>
+              <th className="px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)] hidden md:table-cell w-20">
+                <span className="sr-only">Trend</span>
+              </th>
+              <th className="px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)] text-right hidden sm:table-cell">
+                USD Value
+              </th>
+              <th className="px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)] text-right hidden lg:table-cell">
+                24h Change
+              </th>
+              <th className="px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)] text-right hidden lg:table-cell">
+                Pending
+              </th>
+              <th className="px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)] text-right">
+                <span className="sr-only">Action</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {balances.map((b, i) => {
+              const colors = currencyColors[b.currency];
+              const meta = currencyMeta[b.currency];
+              const variation = variations[b.currency];
+              const usdValue = b.available * (usdRates[b.currency] ?? 1);
+              const swapStable =
+                b.currency === "EUR" || b.currency === "GBP" ? "USDC" : "USDT";
+
+              return (
+                <motion.tr
+                  key={b.currency}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: i * 0.05, duration: 0.4 }}
+                  className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-150"
+                >
+                  {/* Currency — colored dot + code + full name */}
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
                       <div
-                        className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-[11px] font-mono font-bold transition-transform group-hover:scale-110"
+                        className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-[12px] font-bold"
                         style={{
                           backgroundColor: `${colors?.border}15`,
                           color: colors?.border,
                           border: `1px solid ${colors?.border}30`,
                         }}
                       >
-                        {b.currency.slice(0, 2)}
+                        {meta?.symbol ?? b.currency.charAt(0)}
                       </div>
                       <div>
                         <span className="text-sm font-bold text-[var(--text)] block leading-none">
@@ -195,48 +222,107 @@ export default function WalletPage() {
                         </span>
                       </div>
                     </div>
-                    {variations[b.currency] && (
-                      <span className={`text-[11px] font-mono font-bold ${variations[b.currency].positive ? "text-[var(--green)]" : "text-[var(--red)]"}`}>
-                        {variations[b.currency].pct}
+                  </td>
+
+                  {/* Balance in native currency */}
+                  <td className="px-6 py-4 text-right">
+                    <span className="font-mono text-sm font-bold text-white tabular-nums">
+                      {b.symbol}
+                      {formatMoney(b.available)}
+                    </span>
+                  </td>
+
+                  {/* Sparkline */}
+                  <td className="px-6 py-4 hidden md:table-cell">
+                    <div className="w-16 h-6">
+                      <Sparkline
+                        data={sparklineData[b.currency] ?? []}
+                        color={colors?.border ?? "var(--cyan)"}
+                        strokeWidth={1.5}
+                        showArea={false}
+                      />
+                    </div>
+                  </td>
+
+                  {/* USD Value */}
+                  <td className="px-6 py-4 text-right hidden sm:table-cell">
+                    <span className="font-mono text-sm text-[var(--text-3)] tabular-nums">
+                      ${formatMoney(usdValue)}
+                    </span>
+                  </td>
+
+                  {/* 24h Change */}
+                  <td className="px-6 py-4 text-right hidden lg:table-cell">
+                    {variation && (
+                      <span
+                        className={`font-mono text-sm font-bold tabular-nums inline-flex items-center gap-1 ${
+                          variation.positive
+                            ? "text-[var(--green)]"
+                            : "text-[var(--red)]"
+                        }`}
+                      >
+                        <svg
+                          width="10"
+                          height="10"
+                          viewBox="0 0 10 10"
+                          fill="none"
+                          aria-hidden="true"
+                          className={
+                            variation.positive ? "" : "rotate-180"
+                          }
+                        >
+                          <path
+                            d="M5 2L8 6H2L5 2Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                        {variation.pct}
                       </span>
                     )}
-                  </div>
-
-                  {/* Amount */}
-                  <p className="text-lg font-mono font-bold text-[var(--text)] tabular-nums">
-                    {b.symbol}{formatMoney(b.available)}
-                  </p>
-                  {b.currency !== "USD" && b.currency !== "USDT" && b.currency !== "USDC" && (
-                    <p className="text-xs font-mono text-[var(--text-4)] mt-0.5 tabular-nums">
-                      ~${formatCompact((b.available) * (usdRates[b.currency] ?? 1))} USD
-                    </p>
-                  )}
+                  </td>
 
                   {/* Pending */}
-                  {b.pending > 0 && (
-                    <p className="text-[11px] text-[var(--amber)] font-mono mt-1.5 tabular-nums">
-                      +{b.symbol}{formatMoney(b.pending)} pending
-                    </p>
-                  )}
+                  <td className="px-6 py-4 text-right hidden lg:table-cell">
+                    {b.pending > 0 ? (
+                      <span className="font-mono text-[11px] text-[var(--amber)] tabular-nums">
+                        +{b.symbol}
+                        {formatMoney(b.pending)}
+                      </span>
+                    ) : (
+                      <span className="text-[11px] text-[var(--text-4)]">
+                        &mdash;
+                      </span>
+                    )}
+                  </td>
 
-                  {/* Swap link — visible on hover */}
-                  <Link
-                    href={`/rfq?pair=${b.currency}/${swapStable}`}
-                    className="text-[11px] uppercase tracking-wider text-[var(--cyan)] hover:text-white transition-colors opacity-0 group-hover:opacity-100 mt-2 inline-block"
-                  >
-                    Swap
-                  </Link>
-                </div>
+                  {/* Swap action */}
+                  <td className="px-6 py-4 text-right">
+                    <Link
+                      href={`/rfq?pair=${b.currency}/${swapStable}`}
+                      className="text-[11px] uppercase tracking-wider font-bold text-[var(--cyan)] hover:text-white transition-colors"
+                    >
+                      Swap
+                    </Link>
+                  </td>
+                </motion.tr>
+              );
+            })}
+          </tbody>
+        </table>
 
-                {/* Sparkline — pinned bottom-right */}
-                <div className="absolute bottom-0 right-0 w-1/2 h-12 pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
-                  <Sparkline data={sparklineData[b.currency] ?? []} color={colors?.border ?? "var(--cyan)"} strokeWidth={2} />
-                </div>
-              </motion.div>
-            );
-          })}
-        </motion.div>
-      </div>
+        {/* Footer */}
+        <div className="px-6 py-3 border-t border-[var(--border)] flex items-center justify-between">
+          <span className="text-[11px] text-[var(--text-4)] font-sans">
+            <span className="font-mono">{balances.length}</span> currencies
+          </span>
+          <span className="text-[11px] text-[var(--text-4)] font-sans">
+            Total{" "}
+            <span className="font-mono font-bold text-white">
+              ${formatMoney(totalValue)}
+            </span>
+          </span>
+        </div>
+      </motion.div>
     </PageTransition>
   );
 }

@@ -17,7 +17,7 @@ export type Settlement = "spot" | "t1" | "t2" | "t10";
 // Circular Timer SVG
 // ---------------------------------------------------------------------------
 
-const TIMER_SIZE = 36;
+const TIMER_SIZE = 52;
 const TIMER_STROKE = 3;
 const TIMER_RADIUS = (TIMER_SIZE - TIMER_STROKE) / 2;
 const TIMER_CIRCUMFERENCE = 2 * Math.PI * TIMER_RADIUS;
@@ -27,40 +27,42 @@ function CountdownRing({ progress, isUrgent, formatted }: { progress: number; is
   const color = isUrgent ? "var(--amber)" : "var(--cyan)";
 
   return (
-    <div className="flex items-center gap-2">
-      <svg
-        width={TIMER_SIZE}
-        height={TIMER_SIZE}
-        viewBox={`0 0 ${TIMER_SIZE} ${TIMER_SIZE}`}
-        className="-rotate-90"
-      >
-        <circle
-          cx={TIMER_SIZE / 2}
-          cy={TIMER_SIZE / 2}
-          r={TIMER_RADIUS}
-          fill="none"
-          stroke="var(--border)"
-          strokeWidth={TIMER_STROKE}
-        />
-        <circle
-          cx={TIMER_SIZE / 2}
-          cy={TIMER_SIZE / 2}
-          r={TIMER_RADIUS}
-          fill="none"
-          stroke={color}
-          strokeWidth={TIMER_STROKE}
-          strokeLinecap="round"
-          strokeDasharray={TIMER_CIRCUMFERENCE}
-          strokeDashoffset={offset}
-          style={{ transition: "stroke-dashoffset 1s linear, stroke 0.3s ease" }}
-        />
-      </svg>
-      <span
-        className="font-mono text-sm font-medium tabular-nums"
-        style={{ color }}
-      >
-        {formatted}
-      </span>
+    <div className="flex flex-col items-center gap-1">
+      <div className="relative">
+        <svg
+          width={TIMER_SIZE}
+          height={TIMER_SIZE}
+          viewBox={`0 0 ${TIMER_SIZE} ${TIMER_SIZE}`}
+          className="-rotate-90"
+        >
+          <circle
+            cx={TIMER_SIZE / 2}
+            cy={TIMER_SIZE / 2}
+            r={TIMER_RADIUS}
+            fill="none"
+            stroke="var(--border)"
+            strokeWidth={TIMER_STROKE}
+          />
+          <circle
+            cx={TIMER_SIZE / 2}
+            cy={TIMER_SIZE / 2}
+            r={TIMER_RADIUS}
+            fill="none"
+            stroke={color}
+            strokeWidth={TIMER_STROKE}
+            strokeLinecap="round"
+            strokeDasharray={TIMER_CIRCUMFERENCE}
+            strokeDashoffset={offset}
+            style={{ transition: "stroke-dashoffset 1s linear, stroke 0.3s ease" }}
+          />
+        </svg>
+        <span
+          className="absolute inset-0 flex items-center justify-center font-mono text-xs font-bold tabular-nums"
+          style={{ color }}
+        >
+          {formatted}
+        </span>
+      </div>
     </div>
   );
 }
@@ -241,7 +243,7 @@ export function PriceCardActive({
         "relative overflow-hidden rounded-lg transition-all duration-300",
         expired
           ? "bg-[var(--bg-card)] border border-[var(--border)]"
-          : "bg-[var(--bg-card)] border border-[rgba(5,224,248,0.3)] shadow-[0_0_40px_rgba(5,224,248,0.06)]"
+          : "bg-[var(--bg-card)] border border-[rgba(5,224,248,0.3)] pulse-glow-active"
       )}
     >
       {/* Glow effect */}
@@ -320,34 +322,34 @@ export function PriceCardActive({
         {/* Buy / Sell columns */}
         <div className="grid grid-cols-2 gap-4">
           {/* BUY */}
-          <div className="bg-[var(--bg-card)] rounded-lg border border-[var(--border-subtle)] p-6 flex flex-col items-center gap-4">
+          <div className="bg-[var(--bg-card)] rounded-lg border border-[var(--border-subtle)] p-6 flex flex-col items-center gap-5">
             <span className="text-[11px] font-sans uppercase tracking-[.1em] text-[var(--cyan)] font-bold">
               Buy
             </span>
-            <span className="font-mono text-4xl sm:text-5xl font-bold text-white tabular-nums tracking-tight">
+            <span className="font-mono text-5xl sm:text-6xl font-bold text-white tabular-nums tracking-tighter">
               {ask.toFixed(4)}
             </span>
             <button
               onClick={() => handleTrade("buy", ask)}
               disabled={expired}
-              className="w-full bg-[var(--cyan)] text-black rounded-full py-3 font-bold font-sans text-sm uppercase tracking-wider hover:brightness-110 active:scale-95 transition-all duration-200 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full bg-[var(--cyan)] text-black rounded-full py-4 font-bold font-sans text-sm uppercase tracking-wider hover:brightness-110 active:scale-[0.98] transition-all duration-200 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
             >
               Buy {base}
             </button>
           </div>
 
           {/* SELL */}
-          <div className="bg-[var(--bg-card)] rounded-lg border border-[var(--border-subtle)] p-6 flex flex-col items-center gap-4">
+          <div className="bg-[var(--bg-card)] rounded-lg border border-[var(--border-subtle)] p-6 flex flex-col items-center gap-5">
             <span className="text-[11px] font-sans uppercase tracking-[.1em] text-[var(--purple)] font-bold">
               Sell
             </span>
-            <span className="font-mono text-4xl sm:text-5xl font-bold text-white tabular-nums tracking-tight">
+            <span className="font-mono text-5xl sm:text-6xl font-bold text-white tabular-nums tracking-tighter">
               {bid.toFixed(4)}
             </span>
             <button
               onClick={() => handleTrade("sell", bid)}
               disabled={expired}
-              className="w-full border border-[var(--purple)] text-[var(--purple)] rounded-full py-3 font-bold font-sans text-sm uppercase tracking-wider hover:bg-[var(--purple-dim)] active:scale-95 transition-all duration-200 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full border border-[var(--purple)] text-[var(--purple)] rounded-full py-4 font-bold font-sans text-sm uppercase tracking-wider hover:bg-[var(--purple-dim)] active:scale-[0.98] transition-all duration-200 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
             >
               Sell {base}
             </button>

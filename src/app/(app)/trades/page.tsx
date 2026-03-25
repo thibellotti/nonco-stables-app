@@ -189,11 +189,11 @@ export default function TradesPage() {
             Volume by Pair
           </div>
           <div className="space-y-3">
-            {sortedPairs.map(([pair, volume]) => {
+            {sortedPairs.map(([pair, volume], index) => {
               const pct = (volume / totalVolume) * 100;
               const barPct = (volume / maxVolume) * 100;
-              const baseCurrency = pair.split("/")[0];
-              const barColor = currencyColors[baseCurrency]?.border ?? "#05E0F8";
+              // Cyan at decreasing opacity: 100%, 80%, 60%, 40%, 20%
+              const opacityHex = ["ff", "cc", "99", "66", "33"][index] ?? "33";
               return (
                 <div key={pair} className="flex items-center gap-3">
                   <span className="text-xs font-mono font-bold text-white w-20 shrink-0">{pair}</span>
@@ -202,7 +202,7 @@ export default function TradesPage() {
                       className="h-full rounded-full"
                       style={{
                         width: `${barPct}%`,
-                        background: `linear-gradient(90deg, ${barColor}40, ${barColor}cc)`,
+                        background: `linear-gradient(90deg, #05E0F840, #05E0F8${opacityHex})`,
                       }}
                     />
                   </div>
@@ -223,15 +223,15 @@ export default function TradesPage() {
           <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)]">Summary</div>
 
           <div>
-            <p className="text-3xl font-mono font-bold text-white tabular-nums">{totalTrades}</p>
-            <p className="text-xs text-[var(--text-4)] font-sans">total trades</p>
-          </div>
-
-          <div>
-            <p className="text-lg font-mono font-bold text-white tabular-nums">
+            <p className="text-3xl font-mono font-bold text-white tabular-nums">
               {formatCompactVolume(totalVolume)}
             </p>
             <p className="text-xs text-[var(--text-4)] font-sans">total volume</p>
+          </div>
+
+          <div>
+            <p className="text-lg font-mono font-medium text-[var(--text-3)] tabular-nums">{totalTrades}</p>
+            <p className="text-xs text-[var(--text-4)] font-sans">total trades</p>
           </div>
 
           <div className="flex items-center gap-2">
@@ -388,11 +388,11 @@ export default function TradesPage() {
                       {/* Side pill */}
                       <td className="px-3 sm:px-6 py-3 sm:py-4">
                         {trade.side === "buy" ? (
-                          <span className="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold font-sans uppercase tracking-[.08em] bg-[rgba(5,224,248,0.1)] text-[var(--cyan)]">
+                          <span className="inline-flex items-center px-4 py-1.5 rounded-full text-[11px] font-bold font-sans uppercase tracking-[.08em] bg-[rgba(5,224,248,0.1)] text-[var(--cyan)]">
                             Buy
                           </span>
                         ) : (
-                          <span className="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold font-sans uppercase tracking-[.08em] bg-[rgba(161,36,248,0.1)] text-[var(--purple)]">
+                          <span className="inline-flex items-center px-4 py-1.5 rounded-full text-[11px] font-bold font-sans uppercase tracking-[.08em] bg-[rgba(161,36,248,0.1)] text-[var(--purple)]">
                             Sell
                           </span>
                         )}
@@ -433,7 +433,7 @@ export default function TradesPage() {
                   <tr key={`group-${group.label}`}>
                     <td
                       colSpan={6}
-                      className="text-[11px] uppercase tracking-[.15em] text-[var(--text-3)] bg-[var(--bg-elevated)] px-6 py-2 font-sans font-medium"
+                      className="text-[10px] uppercase tracking-[.15em] text-[var(--text-4)] bg-[rgba(255,255,255,0.02)] px-6 py-1.5 font-sans font-medium"
                     >
                       {group.label}
                     </td>

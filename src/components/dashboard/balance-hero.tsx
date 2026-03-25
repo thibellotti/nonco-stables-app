@@ -195,7 +195,12 @@ export function BalanceHero() {
     <section className="relative">
       {/* Header row — label + period selector */}
       <div className="flex items-center justify-between mb-6">
-        <SectionLabel>Portfolio</SectionLabel>
+        <div>
+          <SectionLabel>Portfolio</SectionLabel>
+          <p className="text-[11px] font-sans text-[var(--text-4)] mt-1.5 ml-[14px]">
+            Portfolio value — last 30 days
+          </p>
+        </div>
 
         {/* Period selector */}
         <div className="flex flex-wrap gap-1">
@@ -262,7 +267,7 @@ export function BalanceHero() {
 
       {/* Full-width area chart — interactive */}
       <div
-        className="relative h-[180px] lg:h-[220px] mt-4 cursor-crosshair"
+        className="relative h-[180px] lg:h-[220px] mt-4 cursor-crosshair pl-12"
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onTouchMove={(e) => {
@@ -278,13 +283,33 @@ export function BalanceHero() {
         }}
         onTouchEnd={() => { setHoverIdx(null); }}
       >
+        {/* Y-axis tick labels */}
+        {(() => {
+          const lastVal = chartPoints[chartPoints.length - 1];
+          const firstVal = chartPoints[0];
+          const midVal = (firstVal + lastVal) / 2;
+          const fmt = (v: number) => {
+            const dollars = totalBalance * (v / lastVal);
+            if (dollars >= 1_000_000) return `$${(dollars / 1_000_000).toFixed(1)}M`;
+            return `$${(dollars / 1_000).toFixed(0)}K`;
+          };
+          // Positions: top (max), middle, bottom (min) — using chart grid positions 25%, 50%, 75%
+          return (
+            <div className="absolute left-0 top-0 bottom-0 w-11 flex flex-col justify-between py-2 pointer-events-none" aria-hidden="true">
+              <span className="text-[10px] font-mono text-[var(--text-4)] tabular-nums leading-none">{fmt(lastVal)}</span>
+              <span className="text-[10px] font-mono text-[var(--text-4)] tabular-nums leading-none">{fmt(midVal)}</span>
+              <span className="text-[10px] font-mono text-[var(--text-4)] tabular-nums leading-none">{fmt(firstVal)}</span>
+            </div>
+          );
+        })()}
+
         <svg
           width="100%"
           height="100%"
           viewBox={`0 0 ${CHART_W} ${CHART_H}`}
           preserveAspectRatio="none"
           fill="none"
-          className="absolute inset-0"
+          className="absolute top-0 bottom-0 right-0 left-12"
           aria-hidden="true"
         >
           <defs>

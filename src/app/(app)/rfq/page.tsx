@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import Link from "next/link";
 import { PageTransition } from "@/components/ui/page-transition";
 import { SectionLabel } from "@/components/ui/section-label";
 import { FavoritesGrid } from "@/components/rfq/favorites-grid";
@@ -81,25 +82,30 @@ export default function RFQPage() {
     <PageTransition className="px-6 md:px-8 w-full space-y-8">
       {hasActiveQuote ? (
         <>
-          {/* Active quote — split layout: price card dominates left, form + favorites right */}
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6">
+          {/* Active quote — price card is the hero, centered and dominant */}
+          <div className="max-w-2xl mx-auto w-full space-y-6">
             <PriceCard
               quote={quote}
               isLoading={isLoading}
               onRefresh={handleRefresh}
               onTrade={handleTrade}
             />
-            <div className="space-y-4">
-              <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5">
-                <div className="text-[11px] uppercase tracking-[.15em] text-[var(--text-4)] mb-3">New Quote</div>
-                <QuoteForm onQuote={handleQuote} />
-              </div>
-              <FavoritesGrid onQuote={handleQuote} compact />
+            <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5">
+              <div className="text-[11px] uppercase tracking-[.15em] text-[var(--text-4)] mb-3 font-sans">New Quote</div>
+              <QuoteForm onQuote={handleQuote} />
             </div>
           </div>
 
           <SectionLabel>Recent Trades</SectionLabel>
-          <RecentTrades extraTrades={sessionTrades} />
+          <RecentTrades extraTrades={sessionTrades} limit={5} />
+          <div className="flex justify-center -mt-4">
+            <Link
+              href="/trades"
+              className="text-xs font-sans font-medium text-[var(--text-4)] hover:text-[var(--cyan)] transition-colors duration-200"
+            >
+              View all trades &rarr;
+            </Link>
+          </div>
         </>
       ) : (
         <>
@@ -111,16 +117,9 @@ export default function RFQPage() {
             <div className="absolute -right-32 -top-32 w-80 h-80 rounded-full bg-[var(--cyan-wash)] blur-[100px] pointer-events-none" />
 
             <div className="relative">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-lg bg-[rgba(5,224,248,0.08)] flex items-center justify-center">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                    <path d="M10 3L17 10L10 17L3 10L10 3Z" stroke="var(--cyan)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </div>
-                <div>
-                  <h2 className="text-lg font-bold text-[var(--text)]">Request for Quote</h2>
-                  <p className="text-xs text-[var(--text-4)]">Select an instrument and amount to get real-time pricing</p>
-                </div>
+              <div className="mb-4">
+                <h2 className="text-lg font-bold text-[var(--text)]">Request for Quote</h2>
+                <p className="text-xs text-[var(--text-4)] mt-1">Select an instrument and amount to get real-time pricing</p>
               </div>
               <QuoteForm onQuote={handleQuote} />
             </div>
@@ -130,7 +129,15 @@ export default function RFQPage() {
           <FavoritesGrid onQuote={handleQuote} />
 
           <SectionLabel>Recent Trades</SectionLabel>
-          <RecentTrades extraTrades={sessionTrades} />
+          <RecentTrades extraTrades={sessionTrades} limit={5} />
+          <div className="flex justify-center -mt-4">
+            <Link
+              href="/trades"
+              className="text-xs font-sans font-medium text-[var(--text-4)] hover:text-[var(--cyan)] transition-colors duration-200"
+            >
+              View all trades &rarr;
+            </Link>
+          </div>
         </>
       )}
     </PageTransition>

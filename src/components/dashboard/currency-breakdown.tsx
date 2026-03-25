@@ -1,10 +1,9 @@
+import { cn, formatCompact, formatMoney } from "@/lib/utils";
 import { balances } from "@/lib/mock-data";
-import { formatCompact } from "@/lib/utils";
 import { SectionLabel } from "@/components/ui/section-label";
 import { Sparkline } from "@/components/ui/sparkline";
-import { currencyColors } from "@/lib/currency-colors";
 
-// Hardcoded sparkline data (12 points each, normalized 0–1)
+// Hardcoded sparkline data (12 points each, normalized 0-1)
 const sparklineData: Record<string, number[]> = {
   USD:  [0.30, 0.32, 0.35, 0.38, 0.42, 0.48, 0.52, 0.58, 0.62, 0.70, 0.78, 0.85],
   EUR:  [0.65, 0.58, 0.50, 0.42, 0.38, 0.35, 0.38, 0.44, 0.52, 0.58, 0.62, 0.60],
@@ -22,82 +21,134 @@ const variations: Record<string, { pct: string; positive: boolean }> = {
   USDC: { pct: "-0.05%", positive: false },
 };
 
-// Full currency names for display
-const currencyNames: Record<string, string> = {
-  USD: "US Dollar",
-  EUR: "Euro",
-  MXN: "Mexican Peso",
-  USDT: "Tether",
-  USDC: "USD Coin",
+// USD values for display (approximate)
+const usdValues: Record<string, number> = {
+  USD: 425_000,
+  EUR: 196_560,
+  MXN: 200_100,
+  USDT: 310_000,
+  USDC: 280_000,
+};
+
+// Cyan opacity tiers for monochrome palette
+const cyanTiers: Record<string, { dot: string; sparkline: string }> = {
+  USD:  { dot: "rgba(5,224,248,1)",    sparkline: "rgba(5,224,248,0.9)"  },
+  EUR:  { dot: "rgba(5,224,248,0.7)",  sparkline: "rgba(5,224,248,0.65)" },
+  MXN:  { dot: "rgba(5,224,248,0.5)",  sparkline: "rgba(5,224,248,0.45)" },
+  USDT: { dot: "rgba(5,224,248,0.35)", sparkline: "rgba(5,224,248,0.3)"  },
+  USDC: { dot: "rgba(5,224,248,0.25)", sparkline: "rgba(5,224,248,0.2)"  },
 };
 
 export function CurrencyBreakdown() {
   return (
-    <section>
-      {/* Header with "View All" action */}
-      <div className="flex items-center justify-between mb-4">
+    <section className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden">
+      {/* Header */}
+      <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border)]">
         <SectionLabel>Stable Assets</SectionLabel>
-        <button className="text-[11px] font-sans text-[var(--cyan)] uppercase tracking-wider hover:text-white transition-colors cursor-pointer">
+        <button className="text-[11px] font-sans font-medium text-[var(--cyan)] uppercase tracking-wider hover:text-white transition-colors cursor-pointer">
           View All
         </button>
       </div>
 
-      {/* Currency cards — full-width horizontal row */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-        {balances.map((balance) => {
-          const colors = currencyColors[balance.currency] ?? {
-            bg: "rgba(255,255,255,0.04)",
-            text: "#808080",
-            border: "#808080",
-          };
+      {/* Table header */}
+      <div className="hidden sm:grid grid-cols-[1fr_140px_140px_100px_80px] gap-4 px-6 py-3 text-[11px] font-sans uppercase tracking-[.12em] text-[var(--text-4)] border-b border-[var(--border)]">
+        <span>Currency</span>
+        <span className="text-right">Balance</span>
+        <span className="text-right">USD Value</span>
+        <span className="text-right">24h</span>
+        <span className="text-right">Trend</span>
+      </div>
+
+      {/* Table rows */}
+      <div>
+        {balances.map((balance, idx) => {
+          const tier = cyanTiers[balance.currency] ?? cyanTiers.USD;
           const variation = variations[balance.currency];
+          const usdVal = usdValues[balance.currency] ?? balance.available;
 
           return (
             <div
               key={balance.currency}
-              className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg cursor-default hover:border-[var(--border-outline)] transition-colors relative overflow-hidden"
-              style={{ borderTopWidth: 2, borderTopColor: colors.border }}
+              className={cn(
+                "grid grid-cols-[1fr_auto] sm:grid-cols-[1fr_140px_140px_100px_80px] gap-4 items-center px-6 py-4 cursor-default",
+                "hover:bg-[rgba(5,224,248,0.02)] transition-colors",
+                idx < balances.length - 1 && "border-b border-[var(--border)]"
+              )}
             >
-              <div className="p-4 pb-10 relative z-10">
-                {/* Header: dot + code + variation */}
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <div
-                      className="w-2.5 h-2.5 rounded-full shrink-0"
-                      style={{ backgroundColor: colors.border }}
-                    />
-                    <span className="text-sm font-bold font-sans text-[var(--text)]">
-                      {balance.currency}
-                    </span>
-                  </div>
-                  {variation && (
-                    <span
-                      className="font-mono text-xs font-bold"
-                      style={{
-                        color: variation.positive ? "var(--green)" : "var(--red)",
-                      }}
-                    >
-                      {variation.pct}
-                    </span>
-                  )}
+              {/* Currency name + dot */}
+              <div className="flex items-center gap-3">
+                <div
+                  className="w-2 h-2 rounded-full shrink-0"
+                  style={{ backgroundColor: tier.dot }}
+                />
+                <div>
+                  <span className="text-sm font-semibold font-sans text-[var(--text)]">
+                    {balance.currency}
+                  </span>
                 </div>
-
-                {/* Amount — big and bold */}
-                <p className="text-2xl font-mono font-bold text-white tabular-nums tracking-tight leading-none">
-                  {formatCompact(balance.available, balance.symbol)}
-                </p>
-                <p className="text-xs font-sans text-[var(--text-4)] mt-1">
-                  {currencyNames[balance.currency]}
-                </p>
               </div>
 
-              {/* Sparkline — pinned bottom-right */}
-              <div className="absolute bottom-0 right-0 w-1/2 h-10 pointer-events-none">
+              {/* Balance */}
+              <span className="font-mono text-sm text-[var(--text)] text-right tabular-nums hidden sm:block">
+                {formatCompact(balance.available, balance.symbol)}
+              </span>
+
+              {/* USD Value */}
+              <span className="font-mono text-sm text-[var(--text-3)] text-right tabular-nums hidden sm:block">
+                ${formatMoney(usdVal)}
+              </span>
+
+              {/* 24h Change */}
+              {variation && (
+                <div className="flex items-center justify-end gap-1 hidden sm:flex">
+                  <svg
+                    width="10"
+                    height="10"
+                    viewBox="0 0 10 10"
+                    fill="none"
+                    aria-hidden="true"
+                    className={variation.positive ? "" : "rotate-180"}
+                  >
+                    <path
+                      d="M5 8V2M5 2L2.5 4.5M5 2l2.5 2.5"
+                      stroke={variation.positive ? "var(--green)" : "var(--red)"}
+                      strokeWidth="1.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <span
+                    className="font-mono text-xs tabular-nums"
+                    style={{
+                      color: variation.positive ? "var(--green)" : "var(--red)",
+                    }}
+                  >
+                    {variation.pct}
+                  </span>
+                </div>
+              )}
+
+              {/* Sparkline — compact */}
+              <div className="h-6 w-16 ml-auto hidden sm:block">
                 <Sparkline
                   data={sparklineData[balance.currency] ?? sparklineData.USD}
-                  color={colors.border}
+                  color={tier.sparkline}
+                  showArea={false}
+                  strokeWidth={1.2}
                 />
               </div>
+
+              {/* Mobile: variation badge */}
+              {variation && (
+                <span
+                  className="font-mono text-xs tabular-nums sm:hidden text-right"
+                  style={{
+                    color: variation.positive ? "var(--green)" : "var(--red)",
+                  }}
+                >
+                  {variation.pct}
+                </span>
+              )}
             </div>
           );
         })}
@@ -105,3 +156,4 @@ export function CurrencyBreakdown() {
     </section>
   );
 }
+
