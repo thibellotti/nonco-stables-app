@@ -96,21 +96,25 @@ export default function RFQPage() {
             </div>
           </div>
 
-          <SectionLabel>Recent Trades</SectionLabel>
-          <RecentTrades extraTrades={sessionTrades} limit={5} />
-          <div className="flex justify-center -mt-4">
-            <Link
-              href="/trades"
-              className="text-xs font-sans font-medium text-[var(--text-4)] hover:text-[var(--cyan)] transition-colors duration-200"
-            >
-              View all trades &rarr;
-            </Link>
+          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden">
+            <div className="px-6 py-4 border-b border-[var(--border)]">
+              <SectionLabel>Recent Trades</SectionLabel>
+            </div>
+            <RecentTrades extraTrades={sessionTrades} limit={5} />
+            <div className="px-6 py-3 border-t border-[var(--border)] flex justify-center">
+              <Link
+                href="/trades"
+                className="text-xs font-sans font-medium text-[var(--text-4)] hover:text-[var(--cyan)] transition-colors duration-200"
+              >
+                View all trades &rarr;
+              </Link>
+            </div>
           </div>
         </>
       ) : (
         <>
           {/* Hero prompt — invites the user to get a quote */}
-          <div className="relative overflow-hidden bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-8">
+          <div className="relative overflow-hidden bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-6">
             {/* Decorative background grid */}
             <div className="absolute inset-0 data-grid-bg opacity-50 pointer-events-none" />
             {/* Decorative glow */}
@@ -128,15 +132,19 @@ export default function RFQPage() {
           <SectionLabel>Favorites</SectionLabel>
           <FavoritesGrid onQuote={handleQuote} />
 
-          <SectionLabel>Recent Trades</SectionLabel>
-          <RecentTrades extraTrades={sessionTrades} limit={5} />
-          <div className="flex justify-center -mt-4">
-            <Link
-              href="/trades"
-              className="text-xs font-sans font-medium text-[var(--text-4)] hover:text-[var(--cyan)] transition-colors duration-200"
-            >
-              View all trades &rarr;
-            </Link>
+          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden">
+            <div className="px-6 py-4 border-b border-[var(--border)]">
+              <SectionLabel>Recent Trades</SectionLabel>
+            </div>
+            <RecentTrades extraTrades={sessionTrades} limit={5} />
+            <div className="px-6 py-3 border-t border-[var(--border)] flex justify-center">
+              <Link
+                href="/trades"
+                className="text-xs font-sans font-medium text-[var(--text-4)] hover:text-[var(--cyan)] transition-colors duration-200"
+              >
+                View all trades &rarr;
+              </Link>
+            </div>
           </div>
         </>
       )}

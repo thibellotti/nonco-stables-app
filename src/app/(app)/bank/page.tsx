@@ -59,8 +59,8 @@ export default function BankPage() {
   return (
     <PageTransition className="px-6 md:px-8 w-full space-y-8">
       {/* Treasury Flow — consolidated single card */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
+      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5">
+        <div className="flex items-center justify-between mb-5">
           <span className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)]">
             Treasury Flow
           </span>
@@ -69,7 +69,7 @@ export default function BankPage() {
           </Button>
         </div>
 
-        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-6">
+        <div>
           {/* 3 stat groups */}
           <div className="flex flex-col sm:flex-row sm:items-end gap-6 sm:gap-12">
             {/* Inflows */}
