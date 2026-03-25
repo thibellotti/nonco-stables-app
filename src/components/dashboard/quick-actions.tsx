@@ -39,22 +39,21 @@ const actions = [
 
 export function QuickActions() {
   return (
-    <div className="grid grid-cols-2 gap-2">
+    <div className="flex justify-between gap-2">
       {actions.map((action) => (
         <button
           key={action.label}
           className={cn(
-            "flex items-center gap-3 px-5 py-4 rounded-lg",
-            "bg-[var(--bg-elevated)] border border-[var(--border)]",
-            "hover:border-[var(--cyan)] hover:bg-[var(--bg-highest)]",
-            "active:scale-[0.98]",
+            "flex flex-col items-center gap-2 py-3 flex-1 rounded-lg",
+            "hover:bg-[var(--bg-elevated)]",
+            "active:scale-[0.97]",
             "transition-all duration-200 cursor-pointer group"
           )}
         >
-          <div className="w-9 h-9 rounded-lg bg-[rgba(5,224,248,0.08)] flex items-center justify-center text-[var(--cyan)] group-hover:bg-[rgba(5,224,248,0.15)] transition-colors">
+          <div className="w-10 h-10 rounded-full bg-[var(--bg-elevated)] border border-[var(--border)] flex items-center justify-center text-[var(--text-3)] group-hover:border-[var(--cyan)] group-hover:text-[var(--cyan)] transition-all">
             {action.icon}
           </div>
-          <span className="text-sm font-medium font-sans text-[var(--text)] group-hover:text-white transition-colors">
+          <span className="text-[11px] font-sans text-[var(--text-4)] group-hover:text-[var(--text)] transition-colors">
             {action.label}
           </span>
         </button>
