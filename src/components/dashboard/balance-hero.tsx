@@ -47,7 +47,7 @@ function AnimatedNumber({
     }
     raf = requestAnimationFrame(tick);
 
-    return () => { cancelAnimationFrame(raf); hasAnimated.current = false; };
+    return () => { cancelAnimationFrame(raf); };
   }, [value]);
 
   const formatted = formatter ? formatter(display) : formatMoney(display);

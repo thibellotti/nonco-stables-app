@@ -1,26 +1,28 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-
-// Module-level: survives remounts but resets on full page reload
-let bannerStartTime: number | null = null;
 
 export function DeskOfferBanner() {
   const TOTAL_SECONDS = 272;
 
-  if (bannerStartTime === null) {
-    bannerStartTime = Date.now();
-  }
-
-  const elapsed = Math.floor((Date.now() - bannerStartTime) / 1000);
+  const startTimeRef = useRef<number | null>(null);
   const [dismissed, setDismissed] = useState(false);
-  const [countdown, setCountdown] = useState(Math.max(0, TOTAL_SECONDS - elapsed));
+  const [countdown, setCountdown] = useState(TOTAL_SECONDS);
 
   useEffect(() => {
     if (dismissed) return;
+    if (startTimeRef.current === null) {
+      startTimeRef.current = Date.now();
+    }
+    const start = startTimeRef.current;
+    // Sync countdown immediately based on elapsed time
+    const elapsed = Math.floor((Date.now() - start) / 1000);
+    setCountdown(Math.max(0, TOTAL_SECONDS - elapsed));
+
     const interval = setInterval(() => {
-      setCountdown((prev) => (prev > 0 ? prev - 1 : 0));
+      const elapsed = Math.floor((Date.now() - start) / 1000);
+      setCountdown(Math.max(0, TOTAL_SECONDS - elapsed));
     }, 1000);
     return () => clearInterval(interval);
   }, [dismissed]);

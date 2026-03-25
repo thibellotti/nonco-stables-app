@@ -36,7 +36,7 @@ export default function LoginPage() {
           />
           <div className="w-12 h-[2px] bg-[var(--cyan)] mt-5" />
           <p className="text-lg font-light text-[var(--text-3)] mt-5">
-            Institutional stablecoin payments
+            Institutional payments & settlement
           </p>
         </div>
 
@@ -114,7 +114,7 @@ export default function LoginPage() {
         <div className="flex items-center gap-3 my-8">
           <div className="flex-1 h-px bg-[var(--border-outline)]" />
           <span className="text-[11px] text-[var(--text-4)] font-mono whitespace-nowrap">
-            Alternative Authentication
+            or
           </span>
           <div className="flex-1 h-px bg-[var(--border-outline)]" />
         </div>
@@ -158,15 +158,6 @@ export default function LoginPage() {
         </p>
       </div>
 
-      {/* Bottom fixed badge */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 opacity-20">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-        </svg>
-        <span className="text-[11px] font-mono text-white tracking-wider">
-          Sovereign Encryption Active
-        </span>
-      </div>
     </div>
   );
 }
