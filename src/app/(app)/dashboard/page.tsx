@@ -14,7 +14,7 @@ export default function DashboardPage() {
   const [filter, setFilter] = useState<string>("all");
 
   return (
-    <PageTransition className="px-6 md:px-8 w-full space-y-6">
+    <PageTransition className="px-6 md:px-8 w-full space-y-8">
       {/* Desk offer banner — full width */}
       <DeskOfferBanner />
 

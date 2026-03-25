@@ -25,7 +25,7 @@ export function PageHeader() {
         {/* LEFT: Breadcrumb */}
         <div className="flex items-center gap-1.5">
           <span className="text-sm text-[var(--text-4)] font-sans">Nonco /</span>
-          <span className="text-sm text-[var(--cyan)] font-bold">{title}</span>
+          <span className="text-sm text-white font-medium">{title}</span>
         </div>
 
         {/* RIGHT: Notifications + Avatar */}

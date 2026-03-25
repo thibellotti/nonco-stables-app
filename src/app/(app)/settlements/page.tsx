@@ -79,37 +79,32 @@ export default function SettlementsPage() {
   const [activeTab, setActiveTab] = useState<Tab>("pending");
 
   return (
-    <PageTransition className="px-6 md:px-8 w-full space-y-6">
-      {/* Header with inline tabs */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight text-white">
-          Settlements
-        </h1>
-        <div className="flex gap-1 bg-[var(--bg-elevated)] rounded-lg p-1">
-          <button
-            onClick={() => setActiveTab("pending")}
-            className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-              activeTab === "pending"
-                ? "bg-[var(--bg-card)] text-white"
-                : "text-[var(--text-4)] hover:text-[var(--text-3)]"
-            }`}
-          >
-            Pending{" "}
-            <span className="ml-1 text-[var(--amber)]">
-              {pendingSettlements.length}
-            </span>
-          </button>
-          <button
-            onClick={() => setActiveTab("completed")}
-            className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-              activeTab === "completed"
-                ? "bg-[var(--bg-card)] text-white"
-                : "text-[var(--text-4)] hover:text-[var(--text-3)]"
-            }`}
-          >
-            Completed
-          </button>
-        </div>
+    <PageTransition className="px-6 md:px-8 w-full space-y-8">
+      {/* Tab toggle */}
+      <div className="flex items-center gap-1 bg-[var(--bg-elevated)] rounded-lg p-1 w-fit">
+        <button
+          onClick={() => setActiveTab("pending")}
+          className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+            activeTab === "pending"
+              ? "bg-[var(--bg-card)] text-white"
+              : "text-[var(--text-4)] hover:text-[var(--text-3)]"
+          }`}
+        >
+          Pending{" "}
+          <span className="ml-1 text-[var(--amber)]">
+            {pendingSettlements.length}
+          </span>
+        </button>
+        <button
+          onClick={() => setActiveTab("completed")}
+          className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+            activeTab === "completed"
+              ? "bg-[var(--bg-card)] text-white"
+              : "text-[var(--text-4)] hover:text-[var(--text-3)]"
+          }`}
+        >
+          Completed
+        </button>
       </div>
 
       {/* Overview stats — pending tab only */}

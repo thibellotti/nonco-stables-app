@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { SectionLabel } from "@/components/ui/section-label";
-import { balances } from "@/lib/mock-data";
+import { balances, usdRates } from "@/lib/mock-data";
 import { formatMoney } from "@/lib/utils";
 
 // ---------------------------------------------------------------------------
@@ -66,11 +66,11 @@ function AnimatedNumber({
 // ---------------------------------------------------------------------------
 
 const totalBalance = balances.reduce(
-  (sum, b) => sum + b.available + b.pending,
+  (sum, b) => sum + (b.available + b.pending) * (usdRates[b.currency] ?? 1),
   0,
 );
-const totalAvailable = balances.reduce((sum, b) => sum + b.available, 0);
-const totalPending = balances.reduce((sum, b) => sum + b.pending, 0);
+const totalAvailable = balances.reduce((sum, b) => sum + b.available * (usdRates[b.currency] ?? 1), 0);
+const totalPending = balances.reduce((sum, b) => sum + b.pending * (usdRates[b.currency] ?? 1), 0);
 
 const change24h = 12_340;
 const changePct = ((change24h / (totalBalance - change24h)) * 100).toFixed(2);
@@ -194,7 +194,7 @@ export function BalanceHero() {
       {/* Balance row — number + change badge */}
       <div className="flex items-baseline justify-between flex-wrap gap-4 mb-2">
         <p
-          className="font-mono text-[28px] sm:text-[46px] lg:text-[56px] font-bold tracking-tighter leading-none text-white"
+          className="font-mono text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tighter leading-none text-white"
           style={{ fontVariantNumeric: "tabular-nums slashed-zero" }}
         >
           <AnimatedNumber

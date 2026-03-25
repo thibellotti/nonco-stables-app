@@ -68,7 +68,7 @@ body {
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg-card); }
 ::-webkit-scrollbar-thumb { background: var(--bg-bright); border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
+::-webkit-scrollbar-thumb:hover { background: var(--border-outline); }
 * { scrollbar-width: thin; scrollbar-color: var(--bg-bright) var(--bg-card); }
 
 /* ─── Banner shimmer ─── */

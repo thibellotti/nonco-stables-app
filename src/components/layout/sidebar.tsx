@@ -35,11 +35,11 @@ export function Sidebar() {
                 "flex items-center px-6 py-3 transition-all duration-200",
                 isActive
                   ? "text-[var(--cyan)] bg-[rgba(5,224,248,0.1)] font-bold border-l-4 border-[var(--cyan)]"
-                  : "text-[var(--text-4)] hover:text-white hover:bg-[var(--bg-elevated)]"
+                  : "text-[var(--text-4)] hover:text-white hover:bg-[var(--bg-elevated)] border-l-4 border-transparent"
               )}
             >
               <span className="mr-3 shrink-0">{item.icon}</span>
-              <span className="text-[10px] tracking-[0.15em] uppercase font-sans">{item.label}</span>
+              <span className="text-[11px] tracking-[0.15em] uppercase font-sans">{item.label}</span>
             </Link>
           );
         })}

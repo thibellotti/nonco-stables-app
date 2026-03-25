@@ -44,7 +44,7 @@ export default function LoginPage() {
         <form className="space-y-6" onSubmit={handleLogin}>
           {/* Email */}
           <div>
-            <label htmlFor="email" className="block text-[10px] uppercase font-mono tracking-[.15em] text-[var(--text-4)] mb-1.5 ml-1">
+            <label htmlFor="email" className="block text-[10px] uppercase font-sans tracking-[.15em] text-[var(--text-4)] mb-1.5 ml-1">
               Email
             </label>
             <input
@@ -60,12 +60,12 @@ export default function LoginPage() {
           {/* Password */}
           <div>
             <div className="flex items-center justify-between mb-1.5 ml-1">
-              <label htmlFor="password" className="text-[10px] uppercase font-mono tracking-[.15em] text-[var(--text-4)]">
+              <label htmlFor="password" className="text-[10px] uppercase font-sans tracking-[.15em] text-[var(--text-4)]">
                 Password
               </label>
               <button
                 type="button"
-                className="text-[10px] font-mono tracking-[.1em] text-[var(--text-4)] hover:text-[var(--cyan)] transition-colors cursor-pointer py-1 px-2 -mr-2"
+                className="text-[10px] font-sans tracking-[.1em] text-[var(--text-4)] hover:text-[var(--cyan)] transition-colors cursor-pointer py-1 px-2 -mr-2"
               >
                 Forgot?
               </button>
@@ -104,7 +104,7 @@ export default function LoginPage() {
           {/* Sign In */}
           <button
             type="submit"
-            className="w-full bg-[var(--cyan)] hover:shadow-[0_0_25px_rgba(5,224,248,0.3)] text-black font-bold py-4 rounded-full active:scale-[0.98] transition-all duration-200 cursor-pointer text-sm tracking-wide"
+            className="w-full bg-[var(--cyan)] hover:shadow-[0_0_25px_rgba(5,224,248,0.3)] text-black font-bold py-3.5 rounded-full active:scale-[0.98] transition-all duration-200 cursor-pointer text-sm tracking-wide"
           >
             Sign In
           </button>

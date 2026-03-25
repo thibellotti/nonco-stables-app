@@ -53,7 +53,7 @@ export function MarketWatch() {
     <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg">
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-4">
-        <span className="font-sans text-sm font-bold text-white">
+        <span className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)]">
           Market Watch
         </span>
 

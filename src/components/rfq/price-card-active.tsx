@@ -147,7 +147,7 @@ function TradeFlash({ side, onDone }: { side: "buy" | "sell"; onDone: () => void
   }, [onDone]);
 
   return (
-    <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-[var(--bg-card)]/95 backdrop-blur-sm">
+    <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-[rgba(20,20,20,0.95)] backdrop-blur-sm">
       <div className="text-center space-y-2">
         <div className="w-12 h-12 mx-auto rounded-full bg-[var(--green-dim)] flex items-center justify-center">
           <svg className="w-6 h-6 text-[var(--green)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>

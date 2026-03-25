@@ -5,8 +5,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { navItems } from "@/lib/nav-items";
 
-// Bottom tabs exclude Settlements (6 items → 5 for mobile)
-const tabs = navItems.filter((item) => item.label !== "Settlements");
+const tabs = navItems;
 
 export function BottomTabs() {
   const pathname = usePathname();

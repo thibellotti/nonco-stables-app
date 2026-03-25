@@ -86,7 +86,7 @@ export function BankKpiCards({
         </span>
         <span
           className={`text-lg font-mono font-bold tabular-nums ${
-            netPositive ? "text-[var(--green)]" : "text-red-400"
+            netPositive ? "text-[var(--green)]" : "text-[var(--red)]"
           }`}
         >
           {netPositive ? "+" : "-"}

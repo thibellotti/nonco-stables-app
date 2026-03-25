@@ -176,13 +176,6 @@ export function FavoritesGrid({ onQuote, compact = false }: FavoritesGridProps) 
             style={{
               borderLeftWidth: 2,
               borderLeftColor: colors.border,
-              boxShadow: undefined,
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.boxShadow = `0 0 20px ${colors.bg}`;
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.boxShadow = "none";
             }}
           >
             {/* Top: pair code + name + sparkline + rate */}

@@ -107,32 +107,8 @@ export default function TradesPage() {
 
   return (
     <PageTransition className="px-6 md:px-8 w-full space-y-8">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight text-white">Trades</h1>
-        <button
-          type="button"
-          className="flex items-center gap-2 px-4 py-2 rounded-lg border border-[var(--border)] text-[var(--text-3)] hover:text-white hover:border-[var(--border-outline)] transition-colors cursor-pointer"
-        >
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 12 12"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M6 1v7M6 8L3.5 5.5M6 8l2.5-2.5M1 10h10" />
-          </svg>
-          <span className="font-mono text-[10px] font-medium uppercase tracking-[.1em]">Export CSV</span>
-        </button>
-      </div>
-
       {/* Analytics: Volume by Pair + Summary */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
         {/* Volume by Pair */}
         <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5">
           <div className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] mb-4">
@@ -209,15 +185,15 @@ export default function TradesPage() {
       {/* Filter Bar */}
       <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-3 sm:gap-4">
         {/* Side filter */}
-        <div className="flex gap-1">
+        <div className="flex gap-1 bg-[var(--bg-elevated)] rounded-lg p-1">
           {(["all", "buy", "sell"] as const).map((value) => (
             <button
               key={value}
               type="button"
               onClick={() => setSideFilter(value)}
-              className={`font-mono text-[10px] uppercase tracking-[.08em] px-3 py-1 rounded-full transition-colors cursor-pointer ${
+              className={`px-4 py-1.5 rounded-md text-xs uppercase tracking-wider transition-all cursor-pointer ${
                 sideFilter === value
-                  ? "bg-[var(--cyan-dim)] text-[var(--cyan)] border border-[rgba(5,224,248,0.2)]"
+                  ? "bg-[var(--bg-card)] text-white font-bold"
                   : "text-[var(--text-4)] hover:text-[var(--text-3)]"
               }`}
             >
@@ -227,15 +203,15 @@ export default function TradesPage() {
         </div>
 
         {/* Settlement filter */}
-        <div className="flex gap-1">
+        <div className="flex gap-1 bg-[var(--bg-elevated)] rounded-lg p-1">
           {(["all", "Spot", "T+1", "T+2"] as const).map((value) => (
             <button
               key={value}
               type="button"
               onClick={() => setSettlementFilter(value)}
-              className={`font-mono text-[10px] uppercase tracking-[.08em] px-3 py-1 rounded-full transition-colors cursor-pointer ${
+              className={`px-4 py-1.5 rounded-md text-xs uppercase tracking-wider transition-all cursor-pointer ${
                 settlementFilter === value
-                  ? "bg-[var(--cyan-dim)] text-[var(--cyan)] border border-[rgba(5,224,248,0.2)]"
+                  ? "bg-[var(--bg-card)] text-white font-bold"
                   : "text-[var(--text-4)] hover:text-[var(--text-3)]"
               }`}
             >
@@ -243,6 +219,27 @@ export default function TradesPage() {
             </button>
           ))}
         </div>
+
+        {/* Export CSV — pushed right */}
+        <button
+          type="button"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg border border-[var(--border)] text-[var(--text-3)] hover:text-white hover:border-[var(--border-outline)] transition-colors cursor-pointer sm:ml-auto"
+        >
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 12 12"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M6 1v7M6 8L3.5 5.5M6 8l2.5-2.5M1 10h10" />
+          </svg>
+          <span className="font-mono text-[10px] font-medium uppercase tracking-[.1em]">Export CSV</span>
+        </button>
       </div>
 
       {/* Trade Table */}

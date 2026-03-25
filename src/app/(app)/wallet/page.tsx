@@ -2,6 +2,7 @@
 
 import { PageTransition } from "@/components/ui/page-transition";
 import { Button } from "@/components/ui/button";
+import { Sparkline } from "@/components/ui/sparkline";
 import { balances, usdRates } from "@/lib/mock-data";
 import { formatMoney, formatCompact } from "@/lib/utils";
 import { currencyColors } from "@/lib/currency-colors";
@@ -19,6 +20,26 @@ const currencyMeta: Record<string, { name: string; id: string }> = {
 };
 
 // ---------------------------------------------------------------------------
+// Sparkline + variation data (matches dashboard currency-breakdown)
+// ---------------------------------------------------------------------------
+
+const sparklineData: Record<string, number[]> = {
+  USD: [40, 41, 40.5, 42, 43, 42.5, 44, 45, 44.5, 46, 47, 48],
+  EUR: [38, 37, 36.5, 37, 38, 37.5, 36, 37, 38, 37.5, 38, 37],
+  MXN: [30, 32, 31, 34, 33, 35, 34, 36, 35, 37, 38, 39],
+  USDT: [50, 50.1, 49.9, 50, 50.1, 50, 50.05, 50.1, 49.95, 50, 50.05, 50.1],
+  USDC: [45, 45.2, 45.1, 45.3, 45.4, 45.3, 45.5, 45.6, 45.5, 45.7, 45.8, 45.9],
+};
+
+const variations: Record<string, { pct: string; positive: boolean }> = {
+  USD: { pct: "+0.81%", positive: true },
+  EUR: { pct: "-0.32%", positive: false },
+  MXN: { pct: "+2.14%", positive: true },
+  USDT: { pct: "+0.01%", positive: true },
+  USDC: { pct: "-0.05%", positive: false },
+};
+
+// ---------------------------------------------------------------------------
 // Wallet page — portfolio overview
 // ---------------------------------------------------------------------------
 
@@ -30,34 +51,31 @@ export default function WalletPage() {
 
   return (
     <PageTransition className="px-6 md:px-8 w-full space-y-8">
-      {/* Header with inline actions */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight text-white">
-          Wallet
-        </h1>
-        <div className="flex gap-2">
-          <Button variant="cyan" size="sm">
-            Deposit
-          </Button>
-          <Button variant="ghost" size="sm">
-            Withdraw
-          </Button>
-        </div>
-      </div>
-
       {/* Total Value + Allocation — side by side */}
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6">
         {/* LEFT: Total value */}
         <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-6">
-          <div className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-4)]">
-            Total Value
+          <div className="flex items-start justify-between">
+            <div>
+              <div className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-4)]">
+                Total Value
+              </div>
+              <p className="text-4xl font-mono font-bold text-white tabular-nums mt-2 tracking-tight">
+                ${formatMoney(totalValue)}
+              </p>
+              <p className="text-sm text-[var(--text-4)] mt-2">
+                {balances.length} currencies managed
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="cyan" size="sm">
+                Deposit
+              </Button>
+              <Button variant="ghost" size="sm">
+                Withdraw
+              </Button>
+            </div>
           </div>
-          <p className="text-4xl font-mono font-bold text-white tabular-nums mt-2 tracking-tight">
-            ${formatMoney(totalValue)}
-          </p>
-          <p className="text-sm text-[var(--text-4)] mt-2">
-            {balances.length} currencies managed
-          </p>
 
           {/* Horizontal composition bar */}
           <div className="flex h-3 rounded-full overflow-hidden mt-4 gap-1">
@@ -157,11 +175,19 @@ export default function WalletPage() {
                       {meta?.name}
                     </span>
                   </div>
+                  {variations[b.currency] && (
+                    <span className={`text-[10px] font-mono font-bold ml-auto ${variations[b.currency].positive ? "text-[var(--green)]" : "text-[var(--red)]"}`}>
+                      {variations[b.currency].pct}
+                    </span>
+                  )}
                 </div>
                 <p className="text-lg font-mono font-bold text-white tabular-nums">
                   {b.symbol}
                   {formatMoney(b.available)}
                 </p>
+                <div className="mt-2 h-6">
+                  <Sparkline data={sparklineData[b.currency] ?? []} color={colors?.border ?? "var(--cyan)"} width={120} height={24} className="w-full" />
+                </div>
                 {b.pending > 0 && (
                   <p className="text-[10px] text-[var(--amber)] font-mono mt-1 tabular-nums">
                     +{b.symbol}

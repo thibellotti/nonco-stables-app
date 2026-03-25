@@ -6,6 +6,7 @@ import { transactions } from "@/lib/mock-data";
 import { BankKpiCards } from "@/components/bank/kpi-cards";
 import { BankFilterBar } from "@/components/bank/filter-bar";
 import { BankTransactionTable } from "@/components/bank/transaction-table";
+import { Button } from "@/components/ui/button";
 
 // ---------------------------------------------------------------------------
 // Filter only deposit + withdrawal transactions
@@ -53,24 +54,11 @@ export default function BankPage() {
 
   return (
     <PageTransition className="px-6 md:px-8 w-full space-y-8">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">
-            Treasury
-          </h1>
-          <p className="text-sm text-[var(--text-4)] mt-1">
-            Deposits, withdrawals & flows
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button className="px-4 py-2 rounded-lg bg-[var(--cyan)] text-black text-xs font-bold uppercase tracking-wider cursor-pointer hover:brightness-110 transition-all">
-            New Transfer
-          </button>
-        </div>
+      {/* Flow visualization + action */}
+      <div className="flex items-center justify-end">
+        <Button variant="cyan" size="sm">New Transfer</Button>
       </div>
 
-      {/* Flow visualization */}
       <BankKpiCards
         totalDeposits={totalDeposits}
         totalWithdrawals={totalWithdrawals}
@@ -85,7 +73,7 @@ export default function BankPage() {
 
       {/* Pending actions callout */}
       {pendingCount > 0 && (
-        <div className="flex items-center gap-3 px-4 py-3 rounded-lg border border-[var(--amber)]/30 bg-[var(--amber)]/5">
+        <div className="flex items-center gap-3 px-4 py-3 rounded-lg border border-[rgba(249,226,32,0.3)] bg-[rgba(249,226,32,0.05)]">
           <span className="text-[var(--amber)] text-sm font-medium">
             {pendingCount} pending{" "}
             {pendingCount === 1 ? "transaction" : "transactions"} awaiting

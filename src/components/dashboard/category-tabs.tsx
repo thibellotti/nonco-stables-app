@@ -17,15 +17,15 @@ interface CategoryTabsProps {
 
 export function CategoryTabs({ active, onChange }: CategoryTabsProps) {
   return (
-    <div className="flex gap-1 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-none">
+    <div className="flex gap-1 bg-[var(--bg-elevated)] rounded-lg p-1 w-fit overflow-x-auto scrollbar-none">
       {tabs.map((tab) => (
         <button
           key={tab.key}
           onClick={() => onChange(tab.key)}
           className={cn(
-            "shrink-0 rounded-full px-4 py-1.5 font-sans text-xs font-medium transition-colors duration-150 cursor-pointer",
+            "shrink-0 px-4 py-1.5 rounded-md text-xs uppercase tracking-wider transition-all cursor-pointer",
             active === tab.key
-              ? "bg-[var(--cyan-dim)] text-[var(--cyan)] border border-[rgba(5,224,248,0.2)]"
+              ? "bg-[var(--bg-card)] text-white font-bold"
               : "text-[var(--text-4)] hover:text-[var(--text-3)]"
           )}
         >

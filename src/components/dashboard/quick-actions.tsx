@@ -49,7 +49,7 @@ export function QuickActions() {
               "flex items-center gap-3 px-4 py-3.5 rounded-lg",
               "bg-[var(--bg-card)] border border-[var(--border)]",
               "text-[var(--text-3)]",
-              "hover:border-[var(--cyan)] hover:text-[var(--cyan)]",
+              "hover:border-[var(--border-outline)] hover:text-[var(--cyan)]",
               "active:scale-[0.98]",
               "transition-all duration-200 cursor-pointer"
             )}

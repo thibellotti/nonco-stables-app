@@ -34,16 +34,16 @@ export function BankFilterBar({
   return (
     <div className="flex items-center justify-between px-6 py-3 border-b border-[var(--border)]">
       {/* Pill toggle */}
-      <div className="flex bg-black rounded-full border border-[var(--border)] p-1">
+      <div className="flex gap-1 bg-[var(--bg-elevated)] rounded-lg p-1">
         {tabs.map((tab) => (
           <button
             key={tab.key}
             onClick={() => onFilterChange(tab.key)}
             className={cn(
-              "shrink-0 rounded-full px-6 py-2 text-[10px] font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer",
+              "px-4 py-1.5 rounded-md text-xs uppercase tracking-wider transition-all cursor-pointer",
               filter === tab.key
-                ? "bg-[var(--cyan)] text-black"
-                : "text-[var(--text-4)] hover:text-white"
+                ? "bg-[var(--bg-card)] text-white font-bold"
+                : "text-[var(--text-4)] hover:text-[var(--text-3)]"
             )}
           >
             {tab.label}
