@@ -55,14 +55,14 @@ export function Sparkline({
 
   if (data.length < 2) return null;
 
-  const pad = 2;
+  const padTop = 2;
   const min = Math.min(...data);
   const max = Math.max(...data);
   const range = max - min || 1;
 
   const points = data.map((v, i) => ({
     x: (i / (data.length - 1)) * width,
-    y: height - pad - ((v - min) / range) * (height - pad * 2),
+    y: height - ((v - min) / range) * (height - padTop),
   }));
 
   const linePath = smoothPath(points);
@@ -73,6 +73,7 @@ export function Sparkline({
       width={width}
       height={height}
       viewBox={`0 0 ${width} ${height}`}
+      preserveAspectRatio="none"
       fill="none"
       aria-hidden="true"
       className={className}
