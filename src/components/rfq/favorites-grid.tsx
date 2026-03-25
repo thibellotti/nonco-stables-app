@@ -222,8 +222,8 @@ function FavoriteCard({
         </p>
       </div>
 
-      {/* Sparkline — pinned bottom-right */}
-      <div className="absolute bottom-8 right-0 w-1/2 h-12 pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
+      {/* Sparkline — pinned bottom-right, above the input row */}
+      <div className="absolute bottom-14 right-0 w-1/2 h-10 pointer-events-none opacity-50">
         <Sparkline
           data={sparkData}
           color={colors.border}
