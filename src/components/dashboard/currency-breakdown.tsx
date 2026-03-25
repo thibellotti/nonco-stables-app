@@ -91,13 +91,13 @@ export function CurrencyBreakdown() {
                 </p>
               </div>
 
-              {/* Sparkline — flush bottom-right corner */}
-              <div className="absolute bottom-0 right-0 w-full h-12 pointer-events-none">
+              {/* Sparkline — pinned to bottom-right corner */}
+              <div className="absolute bottom-0 right-0 pointer-events-none" style={{ width: 120, height: 40 }}>
                 <Sparkline
                   data={sparklineData[balance.currency] ?? sparklineData.USD}
                   color={colors.border}
-                  width={200}
-                  height={48}
+                  width={120}
+                  height={40}
                 />
               </div>
             </div>
