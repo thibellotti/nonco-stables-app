@@ -272,7 +272,7 @@ function TransactionRow({ tx }: { tx: (typeof transactions)[number] }) {
       {/* ── Desktop row — visible only on sm+ ── */}
       <div
         className={cn(
-          "hidden sm:flex items-center gap-3.5 p-4",
+          "hidden sm:flex items-center gap-3.5 px-5 py-3.5",
           "transition-colors duration-150 ease-[cubic-bezier(0.16,1,0.3,1)]",
           "hover:bg-[rgba(255,255,255,0.03)] cursor-pointer"
         )}
@@ -291,8 +291,8 @@ function TransactionRow({ tx }: { tx: (typeof transactions)[number] }) {
           )}
         </div>
 
-        {/* Right: amount + currency + time + status */}
-        <div className="flex flex-col items-end shrink-0 gap-0.5">
+        {/* Right: amount + status */}
+        <div className="flex items-center gap-3 shrink-0">
           <span
             className={cn(
               "font-mono text-sm font-semibold tabular-nums",
@@ -303,20 +303,20 @@ function TransactionRow({ tx }: { tx: (typeof transactions)[number] }) {
             {formatCompact(tx.amount)}
           </span>
 
-          <div className="flex items-center gap-1.5">
-            <span className="text-[11px] text-[var(--text-4)] font-mono uppercase">
-              {tx.currency}
-            </span>
-            {tx.status === "pending" && (
-              <Badge variant="amber">Pending</Badge>
-            )}
-            {tx.status === "failed" && (
-              <Badge variant="red">Failed</Badge>
-            )}
-            <span className="text-[11px] text-[var(--text-4)] font-mono tabular-nums">
-              {timeAgo(tx.timestamp)}
-            </span>
-          </div>
+          <span className="text-[11px] text-[var(--text-4)] font-mono uppercase w-10">
+            {tx.currency}
+          </span>
+
+          {tx.status === "pending" && (
+            <Badge variant="amber">Pending</Badge>
+          )}
+          {tx.status === "failed" && (
+            <Badge variant="red">Failed</Badge>
+          )}
+
+          <span className="text-[11px] text-[var(--text-4)] font-mono tabular-nums w-14 text-right">
+            {timeAgo(tx.timestamp)}
+          </span>
         </div>
       </div>
     </>
@@ -352,23 +352,16 @@ export function TransactionList({ filter, limit }: TransactionListProps) {
   const groups = groupByDate(limited);
 
   return (
-    <div className="mt-3 space-y-6">
-      {groups.map((group) => (
+    <div>
+      {groups.map((group, groupIdx) => (
         <div key={group.label}>
           {/* Date header */}
-          <div className="text-[11px] font-sans font-medium uppercase tracking-[.15em] text-[var(--text-3)] mb-4">
+          <div className="px-5 py-3 text-[11px] font-sans font-medium uppercase tracking-[.15em] text-[var(--text-4)] border-b border-[var(--border)] bg-[rgba(255,255,255,0.02)]">
             {group.label}
           </div>
 
-          {/* Mobile: individual cards with spacing */}
-          <div className="sm:hidden space-y-3">
-            {group.items.map((tx) => (
-              <TransactionRow key={tx.id} tx={tx} />
-            ))}
-          </div>
-
-          {/* Desktop: grouped card with dividers */}
-          <div className="hidden sm:block bg-[var(--bg-card)] border border-[var(--border)] rounded-lg divide-y divide-[var(--border)] overflow-hidden">
+          {/* Rows */}
+          <div className="divide-y divide-[rgba(255,255,255,0.04)]">
             {group.items.map((tx) => (
               <TransactionRow key={tx.id} tx={tx} />
             ))}
@@ -376,9 +369,10 @@ export function TransactionList({ filter, limit }: TransactionListProps) {
         </div>
       ))}
 
+      {/* Footer */}
       {hasMore && (
-        <div className="flex justify-center pt-4">
-          <button className="text-xs font-sans text-[var(--cyan)] hover:text-white transition-colors cursor-pointer px-6 py-2 rounded-lg border border-[var(--border)] hover:border-[var(--border-outline)]">
+        <div className="flex justify-center py-4 border-t border-[var(--border)]">
+          <button className="text-xs font-sans text-[var(--cyan)] hover:text-white transition-colors cursor-pointer">
             View all {filtered.length} transactions
           </button>
         </div>

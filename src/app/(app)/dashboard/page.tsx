@@ -31,10 +31,12 @@ export default function DashboardPage() {
       <CurrencyBreakdown />
 
       {/* Row 3: Recent Activity + Market Watch */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6">
-        {/* LEFT: Transactions */}
-        <div>
-          <CategoryTabs active={filter} onChange={setFilter} />
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6 items-start">
+        {/* LEFT: Transactions — single card */}
+        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden">
+          <div className="px-5 py-4">
+            <CategoryTabs active={filter} onChange={setFilter} />
+          </div>
           <TransactionList filter={filter} />
         </div>
 
