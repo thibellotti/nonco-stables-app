@@ -166,13 +166,7 @@ export function BalanceHero() {
   };
 
   return (
-    <section
-      className="relative"
-      style={{
-        background:
-          "radial-gradient(ellipse at 50% 0%, rgba(5,224,248,0.03) 0%, transparent 60%)",
-      }}
-    >
+    <section className="relative">
       {/* Header row — label + period selector */}
       <div className="flex items-center justify-between mb-6">
         <SectionLabel>Portfolio</SectionLabel>

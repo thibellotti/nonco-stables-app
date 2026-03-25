@@ -30,18 +30,16 @@ export default function DashboardPage() {
           {/* Insight card */}
           <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-4">
             <div className="flex items-start gap-3">
-              <div className="w-8 h-8 rounded-full bg-[rgba(5,224,248,0.1)] flex items-center justify-center shrink-0 mt-0.5">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <circle cx="8" cy="8" r="6" stroke="var(--cyan)" strokeWidth="1.5" />
-                  <path d="M8 5.5v3M8 10.5h.01" stroke="var(--cyan)" strokeWidth="1.5" strokeLinecap="round" />
-                </svg>
-              </div>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" className="shrink-0 mt-0.5">
+                <circle cx="8" cy="8" r="6" stroke="var(--cyan)" strokeWidth="1.5" />
+                <path d="M8 5.5v3M8 10.5h.01" stroke="var(--cyan)" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
               <div>
                 <p className="text-sm text-[var(--text)]">
-                  Daily trading volume increased by <span className="text-[var(--cyan)] font-bold">12.4%</span> since last session.
+                  Volume up <span className="text-[var(--cyan)] font-mono font-bold">12.4%</span> since last session.
                 </p>
-                <p className="text-xs text-[var(--text-4)] mt-1">
-                  Opportunity alert in USDC/EUR.
+                <p className="text-xs text-[var(--text-4)] mt-1 font-mono">
+                  Opportunity in USDC/EUR
                 </p>
               </div>
             </div>
