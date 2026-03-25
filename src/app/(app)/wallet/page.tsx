@@ -177,9 +177,14 @@ export default function WalletPage() {
                   </div>
 
                   {/* Amount */}
-                  <p className="text-xl font-mono font-bold text-white tabular-nums">
+                  <p className="text-lg font-mono font-bold text-white tabular-nums">
                     {b.symbol}{formatMoney(b.available)}
                   </p>
+                  {b.currency !== "USD" && b.currency !== "USDT" && b.currency !== "USDC" && (
+                    <p className="text-xs font-mono text-[var(--text-4)] mt-0.5 tabular-nums">
+                      ~${formatCompact((b.available) * (usdRates[b.currency] ?? 1))} USD
+                    </p>
+                  )}
 
                   {/* Pending */}
                   {b.pending > 0 && (
@@ -190,7 +195,7 @@ export default function WalletPage() {
                 </div>
 
                 {/* Sparkline — normal flow, bleeds to card edges */}
-                <div className="mt-3 h-12">
+                <div className="mt-2 h-12">
                   <Sparkline data={sparklineData[b.currency] ?? []} color={colors?.border ?? "var(--cyan)"} width={200} height={48} strokeWidth={2} className="w-full h-full" />
                 </div>
               </div>

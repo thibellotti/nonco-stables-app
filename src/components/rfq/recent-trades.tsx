@@ -18,7 +18,7 @@ export function RecentTrades({ extraTrades = [] }: RecentTradesProps) {
 
   return (
     <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden overflow-x-auto">
-      <table className="w-full">
+      <table className="w-full min-w-[600px]">
         <thead>
           <tr className="border-b border-[var(--border)]">
             <th className="px-3 sm:px-6 py-3 text-left text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium">
@@ -27,10 +27,10 @@ export function RecentTrades({ extraTrades = [] }: RecentTradesProps) {
             <th className="px-3 sm:px-6 py-3 text-left text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium">
               Side
             </th>
-            <th className="px-3 sm:px-6 py-3 text-left text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium hidden sm:table-cell">
+            <th className="px-3 sm:px-6 py-3 text-right text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium hidden sm:table-cell">
               Quantity @ Price
             </th>
-            <th className="px-3 sm:px-6 py-3 text-left text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium hidden md:table-cell">
+            <th className="px-3 sm:px-6 py-3 text-center text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium hidden md:table-cell">
               Settlement
             </th>
             <th className="px-3 sm:px-6 py-3 text-right text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium">
@@ -46,7 +46,7 @@ export function RecentTrades({ extraTrades = [] }: RecentTradesProps) {
             >
               {/* Pair */}
               <td className="px-3 sm:px-6 py-3 sm:py-4">
-                <span className="text-xs sm:text-sm font-bold text-white tracking-tight">
+                <span className="text-xs sm:text-sm font-medium text-[var(--text)] tracking-tight">
                   {trade.pair}
                 </span>
               </td>
@@ -65,7 +65,7 @@ export function RecentTrades({ extraTrades = [] }: RecentTradesProps) {
               </td>
 
               {/* Quantity @ Price */}
-              <td className="px-3 sm:px-6 py-3 sm:py-4 hidden sm:table-cell">
+              <td className="px-3 sm:px-6 py-3 sm:py-4 text-right hidden sm:table-cell">
                 <span className="font-mono text-xs text-[var(--text-3)] tabular-nums">
                   {formatMoney(trade.quantity)}
                   <span className="text-[var(--text-4)] mx-1">@</span>
@@ -74,7 +74,7 @@ export function RecentTrades({ extraTrades = [] }: RecentTradesProps) {
               </td>
 
               {/* Settlement */}
-              <td className="px-3 sm:px-6 py-3 sm:py-4 hidden md:table-cell">
+              <td className="px-3 sm:px-6 py-3 sm:py-4 text-center hidden md:table-cell">
                 <span className="text-xs font-mono text-[var(--text-4)]">
                   {trade.settlement}
                 </span>

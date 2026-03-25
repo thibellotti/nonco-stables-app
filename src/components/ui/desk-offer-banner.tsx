@@ -33,7 +33,11 @@ export function DeskOfferBanner() {
   const secs = countdown % 60;
 
   return (
-    <div className="relative flex items-center gap-3 px-4 py-3.5 rounded-lg bg-[var(--bg-card)] border border-[var(--border)] overflow-hidden">
+    <div className={`relative flex items-center gap-3 px-4 py-3.5 rounded-lg bg-[var(--bg-card)] border overflow-hidden ${
+      countdown < 60
+        ? "border-[rgba(5,224,248,0.4)] shadow-[0_0_15px_rgba(5,224,248,0.08)]"
+        : "border-[var(--border)]"
+    }`}>
       {/* Animated gradient background */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -87,7 +91,7 @@ export function DeskOfferBanner() {
       </div>
 
       {/* Actions */}
-      <Button variant="cyan" size="sm" className="relative shrink-0">
+      <Button variant="cyan" size="sm" className={`relative shrink-0 ${countdown < 60 ? "animate-pulse" : ""}`}>
         View
       </Button>
 

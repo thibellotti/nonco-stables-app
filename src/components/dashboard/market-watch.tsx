@@ -49,6 +49,22 @@ const pairs = [
 // ---------------------------------------------------------------------------
 
 export function MarketWatch() {
+  // Find best (highest positive) and worst (lowest negative) performers
+  const bestIdx = pairs.reduce(
+    (best, p, i) =>
+      p.positive && parseFloat(p.change) > parseFloat(pairs[best].change)
+        ? i
+        : best,
+    0
+  );
+  const worstIdx = pairs.reduce(
+    (worst, p, i) =>
+      !p.positive && parseFloat(p.change) < parseFloat(pairs[worst].change)
+        ? i
+        : worst,
+    0
+  );
+
   return (
     <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg">
       {/* Header */}
@@ -73,11 +89,19 @@ export function MarketWatch() {
         {pairs.map((p, idx) => (
           <li
             key={p.pair}
-            className={
+            className={[
               idx < pairs.length - 1
                 ? "border-b border-[var(--border)]"
-                : undefined
-            }
+                : "",
+              "border-l-2",
+              idx === bestIdx
+                ? "border-l-[var(--green)] bg-[rgba(199,255,16,0.03)]"
+                : idx === worstIdx
+                  ? "border-l-[var(--red)] bg-[rgba(239,68,68,0.03)]"
+                  : "border-l-transparent",
+            ]
+              .filter(Boolean)
+              .join(" ")}
           >
             <div className="flex items-center gap-3 px-5 py-4">
               {/* Pair name */}

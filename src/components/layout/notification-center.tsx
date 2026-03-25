@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, type ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 type NotificationType = "offer" | "settlement" | "trade" | "deposit";
@@ -22,11 +22,35 @@ const initialNotifications: Notification[] = [
   { id: "n5", type: "offer", title: "Desk Offer: EUR at 1.0830", body: "500K EUR available — competitive rate", time: "5h ago", unread: false },
 ];
 
-const dotColorMap: Record<NotificationType, string> = {
+const typeColors: Record<NotificationType, string> = {
   offer: "var(--cyan)",
   trade: "var(--green)",
   settlement: "var(--amber)",
   deposit: "var(--purple)",
+};
+
+const typeIcons: Record<string, ReactNode> = {
+  offer: (
+    <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M8 2L2 8l6 6 6-6-6-6z" />
+    </svg>
+  ),
+  settlement: (
+    <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="8" cy="8" r="6" />
+      <path d="M8 5v3l2 1.5" />
+    </svg>
+  ),
+  trade: (
+    <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M3 6h8l-2-2M13 10H5l2 2" />
+    </svg>
+  ),
+  deposit: (
+    <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M8 3v10M8 13l-3-3M8 13l3-3" />
+    </svg>
+  ),
 };
 
 const dropdownVariants = {
@@ -145,16 +169,24 @@ export function NotificationCenter() {
                     notification.unread ? "bg-[rgba(255,255,255,0.03)]" : ""
                   } ${index < notifications.length - 1 ? "border-b border-[var(--border)]" : ""}`}
                 >
-                  {/* Colored dot */}
-                  <div className="pt-1.5 shrink-0">
-                    <span
-                      className="block w-2 h-2 rounded-full"
-                      style={{
-                        backgroundColor: dotColorMap[notification.type],
-                        opacity: notification.unread ? 1 : 0.4,
-                      }}
-                    />
-                  </div>
+                  {/* Type icon */}
+                  {(() => {
+                    const typeColor = typeColors[notification.type] ?? "var(--text-3)";
+                    return (
+                      <div
+                        className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5"
+                        style={{
+                          backgroundColor: `color-mix(in srgb, ${typeColor} 15%, transparent)`,
+                          color: typeColor,
+                          opacity: notification.unread ? 1 : 0.5,
+                        }}
+                      >
+                        {typeIcons[notification.type] ?? (
+                          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: typeColor }} />
+                        )}
+                      </div>
+                    );
+                  })()}
 
                   {/* Content */}
                   <div className="min-w-0 flex-1">
