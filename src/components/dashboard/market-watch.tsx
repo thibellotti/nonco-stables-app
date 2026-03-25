@@ -90,9 +90,9 @@ export function MarketWatch() {
                 <Sparkline
                   data={p.sparkline}
                   color={p.positive ? "var(--cyan)" : "var(--red, #ef4444)"}
-                  width={60}
-                  height={16}
-                  showArea={false}
+                  width={100}
+                  height={28}
+                  showArea
                   strokeWidth={1.5}
                 />
               </div>

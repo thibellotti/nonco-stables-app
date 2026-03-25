@@ -75,57 +75,55 @@ export function CurrencyBreakdown() {
             <div
               key={balance.currency}
               className={cn(
-                "bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-3 sm:p-4",
+                "bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden relative",
                 "transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]",
-                "cursor-default group hover:border-[var(--border-outline)] hover:scale-[1.02]"
+                "cursor-default group hover:border-[var(--border-outline)]"
               )}
             >
-              {/* Top: colored circle + currency code + variation badge */}
-              <div className="flex items-center gap-2 mb-2">
-                <div
-                  className="w-4 h-4 rounded-full shrink-0 flex items-center justify-center text-[7px] font-bold text-black"
-                  style={{ backgroundColor: colors.border }}
-                >
-                  {balance.currency.slice(0, 2)}
-                </div>
-                <div className="flex flex-col min-w-0">
-                  <span className="font-sans text-xs font-medium text-[var(--text)] leading-none">
-                    {balance.currency}
-                  </span>
-                  <span className="font-sans text-[10px] text-[var(--text-4)] leading-tight">
-                    {currencyNames[balance.currency] ?? balance.currency}
-                  </span>
+              {/* Content — above sparkline */}
+              <div className="p-3 sm:p-4 pb-14 relative z-10">
+                {/* Top: currency code + variation */}
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <div
+                      className="w-4 h-4 rounded-full shrink-0 flex items-center justify-center text-[7px] font-bold text-black"
+                      style={{ backgroundColor: colors.border }}
+                    >
+                      {balance.currency.slice(0, 2)}
+                    </div>
+                    <span className="font-sans text-xs font-medium text-[var(--text)]">
+                      {balance.currency}
+                    </span>
+                  </div>
+                  {variations[balance.currency] && (
+                    <span
+                      className="flex items-center gap-0.5 font-mono text-[10px] font-bold"
+                      style={{
+                        color: variations[balance.currency].positive
+                          ? "var(--green)"
+                          : "var(--red)",
+                      }}
+                    >
+                      <ArrowIcon positive={variations[balance.currency].positive} />
+                      {variations[balance.currency].pct}
+                    </span>
+                  )}
                 </div>
 
-                {/* Variation badge — right-aligned */}
-                {variations[balance.currency] && (
-                  <span
-                    className="ml-auto flex items-center gap-0.5 font-mono text-[10px] font-bold"
-                    style={{
-                      color: variations[balance.currency].positive
-                        ? "var(--green)"
-                        : "var(--red)",
-                    }}
-                  >
-                    <ArrowIcon positive={variations[balance.currency].positive} />
-                    {variations[balance.currency].pct}
-                  </span>
-                )}
+                {/* Amount */}
+                <p className="font-mono text-xl font-bold tracking-tight text-white leading-none tabular-nums">
+                  {formatCompact(balance.available, balance.symbol)}
+                </p>
               </div>
 
-              {/* Amount */}
-              <p className="font-mono text-lg font-bold tracking-tight text-white leading-none tabular-nums">
-                {formatCompact(balance.available, balance.symbol)}
-              </p>
-
-              {/* Sparkline */}
-              <div className="mt-3 h-8">
+              {/* Sparkline anchored to bottom — taller, full-width */}
+              <div className="absolute bottom-0 left-0 right-0 h-12">
                 <Sparkline
                   data={sparklineData[balance.currency] ?? sparklineData.USD}
                   color={colors.border}
-                  width={120}
-                  height={32}
-                  className="w-full"
+                  width={200}
+                  height={48}
+                  className="w-full h-full"
                 />
               </div>
             </div>

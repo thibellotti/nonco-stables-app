@@ -80,13 +80,14 @@ export function Sparkline({
       <defs>
         {showArea && (
           <linearGradient id={`${id}-area`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={color} stopOpacity="0.12" />
+            <stop offset="0%" stopColor={color} stopOpacity="0.25" />
+            <stop offset="60%" stopColor={color} stopOpacity="0.08" />
             <stop offset="100%" stopColor={color} stopOpacity="0" />
           </linearGradient>
         )}
         <linearGradient id={`${id}-line`} x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor={color} stopOpacity="0.25" />
-          <stop offset="100%" stopColor={color} stopOpacity="0.8" />
+          <stop offset="0%" stopColor={color} stopOpacity="0.4" />
+          <stop offset="100%" stopColor={color} stopOpacity="1" />
         </linearGradient>
       </defs>
 
