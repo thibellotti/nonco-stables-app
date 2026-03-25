@@ -153,10 +153,10 @@ export default function WalletPage() {
             return (
               <div
                 key={b.currency}
-                className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg hover:border-[var(--border-outline)] transition-colors cursor-pointer"
+                className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg hover:border-[var(--border-outline)] transition-colors cursor-pointer relative overflow-hidden"
                 style={{ borderTopWidth: 2, borderTopColor: colors?.border }}
               >
-                <div className="p-4 pb-0">
+                <div className="p-4 pb-12 relative z-10">
                   {/* Header: circle + code + name + variation */}
                   <div className="flex items-center gap-2 mb-3">
                     <div
@@ -194,8 +194,8 @@ export default function WalletPage() {
                   )}
                 </div>
 
-                {/* Sparkline — normal flow, bleeds to card edges */}
-                <div className="mt-2 h-12">
+                {/* Sparkline — anchored bottom-right */}
+                <div className="absolute bottom-0 right-0 w-2/3 h-12 pointer-events-none">
                   <Sparkline data={sparklineData[b.currency] ?? []} color={colors?.border ?? "var(--cyan)"} width={200} height={48} strokeWidth={2} className="w-full h-full" />
                 </div>
               </div>

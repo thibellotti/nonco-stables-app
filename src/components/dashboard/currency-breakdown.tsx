@@ -55,10 +55,10 @@ export function CurrencyBreakdown() {
           return (
             <div
               key={balance.currency}
-              className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg cursor-default hover:border-[var(--border-outline)] transition-colors"
+              className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg cursor-default hover:border-[var(--border-outline)] transition-colors relative overflow-hidden"
               style={{ borderTopWidth: 2, borderTopColor: colors.border }}
             >
-              <div className="p-4 pb-0">
+              <div className="p-4 pb-10 relative z-10">
                 {/* Header: dot + code + variation */}
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
@@ -91,8 +91,8 @@ export function CurrencyBreakdown() {
                 </p>
               </div>
 
-              {/* Sparkline — fills bottom, no padding */}
-              <div className="mt-3 h-10">
+              {/* Sparkline — anchored bottom-right */}
+              <div className="absolute bottom-0 right-0 w-2/3 h-10 pointer-events-none">
                 <Sparkline
                   data={sparklineData[balance.currency] ?? sparklineData.USD}
                   color={colors.border}
