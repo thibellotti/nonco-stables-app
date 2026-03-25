@@ -113,16 +113,16 @@ export default function WalletPage() {
             Allocation
           </div>
           <div className="space-y-3">
-            {balances.map((b) => {
+            {balances.map((b, i) => {
               const usdValue =
                 (b.available + b.pending) * (usdRates[b.currency] ?? 1);
               const pct = (usdValue / totalValue) * 100;
-              const colors = currencyColors[b.currency];
+              const cyanColor = cyanOpacities[i] ?? "#05E0F8";
               return (
                 <div key={b.currency} className="flex items-center gap-3">
                   <div
                     className="w-3 h-3 rounded-full shrink-0"
-                    style={{ backgroundColor: colors?.border }}
+                    style={{ backgroundColor: cyanColor }}
                   />
                   <span className="text-xs font-medium text-[var(--text-3)] w-12">
                     {b.currency}
@@ -132,7 +132,7 @@ export default function WalletPage() {
                       className="h-full rounded-full"
                       style={{
                         width: `${pct}%`,
-                        background: `linear-gradient(90deg, ${colors?.border}40, ${colors?.border})`,
+                        background: `linear-gradient(90deg, ${cyanColor}66, ${cyanColor})`,
                       }}
                     />
                   </div>
@@ -328,6 +328,50 @@ export default function WalletPage() {
           </span>
         </div>
       </motion.div>
+
+      {/* Recent Wallet Activity */}
+      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden">
+        <div className="px-6 py-4 border-b border-[var(--border)] flex items-center justify-between">
+          <span className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)]">
+            Recent Activity
+          </span>
+          <Link
+            href="/bank"
+            className="text-[11px] font-sans text-[var(--cyan)] hover:text-white transition-colors"
+          >
+            View all
+          </Link>
+        </div>
+        <div className="divide-y divide-[rgba(255,255,255,0.04)]">
+          {[
+            { desc: "Deposit — Citibank wire", amount: "+$250,000", currency: "USD", time: "3h ago", positive: true },
+            { desc: "Convert — EUR to USDC", amount: "-€54,000", currency: "EUR", time: "1d ago", positive: false },
+            { desc: "Deposit — Tether Treasury", amount: "+$500,000", currency: "USDT", time: "1d ago", positive: true },
+            { desc: "Withdrawal — Banorte S.A.", amount: "-MX$875,000", currency: "MXN", time: "2d ago", positive: false },
+          ].map((tx, i) => (
+            <div key={i} className="flex items-center gap-3 px-6 py-3.5 hover:bg-[rgba(255,255,255,0.02)] transition-colors">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${tx.positive ? "bg-[rgba(5,224,248,0.08)]" : "bg-[rgba(255,255,255,0.04)]"}`}>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  {tx.positive ? (
+                    <path d="M10 4L4 10M4 10h4M4 10V6" stroke="var(--cyan)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  ) : (
+                    <path d="M4 10L10 4M10 4H6M10 4v4" stroke="var(--text-4)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  )}
+                </svg>
+              </div>
+              <div className="flex-1 min-w-0">
+                <span className="text-sm font-sans text-[var(--text)] truncate block">{tx.desc}</span>
+              </div>
+              <span className={`font-mono text-sm font-semibold tabular-nums ${tx.positive ? "text-[var(--cyan)]" : "text-[var(--text-3)]"}`}>
+                {tx.amount}
+              </span>
+              <span className="text-[11px] font-mono text-[var(--text-4)] tabular-nums w-12 text-right">
+                {tx.time}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
     </PageTransition>
   );
 }
