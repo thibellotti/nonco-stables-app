@@ -15,6 +15,18 @@ import { currencyColors } from "@/lib/currency-colors";
 type SideFilter = "all" | "buy" | "sell";
 type SettlementFilter = "all" | "Spot" | "T+1" | "T+2";
 
+function SortArrow({ dir }: { dir: "asc" | "desc" }) {
+  return (
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor" className="opacity-60" aria-hidden="true">
+      {dir === "asc" ? (
+        <path d="M5 2L8.5 7H1.5L5 2Z" />
+      ) : (
+        <path d="M5 8L1.5 3H8.5L5 8Z" />
+      )}
+    </svg>
+  );
+}
+
 // Extend with additional trades for a fuller display
 const extraTrades: RecentTrade[] = [
   {
@@ -97,15 +109,40 @@ function formatCompactVolume(value: number) {
   return `$${value.toFixed(0)}`;
 }
 
+type SortKey = "pair" | "quantity" | "price" | "timestamp";
+type SortDir = "asc" | "desc";
+
 export default function TradesPage() {
   const [sideFilter, setSideFilter] = useState<SideFilter>("all");
   const [settlementFilter, setSettlementFilter] = useState<SettlementFilter>("all");
+  const [sortKey, setSortKey] = useState<SortKey>("timestamp");
+  const [sortDir, setSortDir] = useState<SortDir>("desc");
 
-  const filteredTrades = allTrades.filter((trade) => {
-    if (sideFilter !== "all" && trade.side !== sideFilter) return false;
-    if (settlementFilter !== "all" && trade.settlement !== settlementFilter) return false;
-    return true;
-  });
+  function toggleSort(key: SortKey) {
+    if (sortKey === key) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortKey(key);
+      setSortDir("desc");
+    }
+  }
+
+  const filteredTrades = allTrades
+    .filter((trade) => {
+      if (sideFilter !== "all" && trade.side !== sideFilter) return false;
+      if (settlementFilter !== "all" && trade.settlement !== settlementFilter) return false;
+      return true;
+    })
+    .sort((a, b) => {
+      const dir = sortDir === "asc" ? 1 : -1;
+      switch (sortKey) {
+        case "pair": return dir * a.pair.localeCompare(b.pair);
+        case "quantity": return dir * (a.quantity - b.quantity);
+        case "price": return dir * (a.price - b.price);
+        case "timestamp": return dir * (a.timestamp.getTime() - b.timestamp.getTime());
+        default: return 0;
+      }
+    });
 
   return (
     <PageTransition className="px-6 md:px-8 w-full space-y-8">
@@ -245,15 +282,35 @@ export default function TradesPage() {
 
       {/* Trade Table */}
       <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden overflow-x-auto">
+        {filteredTrades.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
+            <div className="w-12 h-12 rounded-full bg-[var(--bg-elevated)] flex items-center justify-center mb-4">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M4 7.5h12M16 7.5l-3-3M4 12.5h12M4 12.5l3 3" stroke="var(--text-4)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+            <p className="text-sm font-medium text-[var(--text-3)] mb-1">No trades match filters</p>
+            <p className="text-xs text-[var(--text-4)]">Try adjusting the side or settlement filters</p>
+          </div>
+        ) : (
+        <>
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-[var(--border)]">
-              <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-3)]">Pair</th>
-              <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-3)]">Side</th>
-              <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-3)] text-right">Quantity</th>
-              <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-3)] text-right">Price</th>
-              <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-3)] hidden sm:table-cell">Settlement</th>
-              <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-3)] text-right hidden sm:table-cell">Date</th>
+              <th onClick={() => toggleSort("pair")} className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-medium text-[var(--text-3)] cursor-pointer hover:text-[var(--text)] transition-colors select-none">
+                <span className="inline-flex items-center gap-1">Pair {sortKey === "pair" && <SortArrow dir={sortDir} />}</span>
+              </th>
+              <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-medium text-[var(--text-3)]">Side</th>
+              <th onClick={() => toggleSort("quantity")} className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-medium text-[var(--text-3)] text-right cursor-pointer hover:text-[var(--text)] transition-colors select-none">
+                <span className="inline-flex items-center gap-1 justify-end">Quantity {sortKey === "quantity" && <SortArrow dir={sortDir} />}</span>
+              </th>
+              <th onClick={() => toggleSort("price")} className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-medium text-[var(--text-3)] text-right cursor-pointer hover:text-[var(--text)] transition-colors select-none">
+                <span className="inline-flex items-center gap-1 justify-end">Price {sortKey === "price" && <SortArrow dir={sortDir} />}</span>
+              </th>
+              <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-medium text-[var(--text-3)] hidden sm:table-cell">Settlement</th>
+              <th onClick={() => toggleSort("timestamp")} className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-medium text-[var(--text-3)] text-right hidden sm:table-cell cursor-pointer hover:text-[var(--text)] transition-colors select-none">
+                <span className="inline-flex items-center gap-1 justify-end">Date {sortKey === "timestamp" && <SortArrow dir={sortDir} />}</span>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -331,9 +388,11 @@ export default function TradesPage() {
         {/* Footer */}
         <div className="px-4 sm:px-6 py-4 border-t border-[var(--border)]">
           <span className="text-[11px] text-[var(--text-4)] tracking-[.08em]">
-            <span className="font-sans">Showing</span> <span className="font-mono">{filteredTrades.length}</span> <span className="font-sans">of</span> <span className="font-mono">{allTrades.length}</span> <span className="font-sans">trades</span>
+            Showing <span className="font-mono">{filteredTrades.length}</span> of <span className="font-mono">{allTrades.length}</span> trades
           </span>
         </div>
+        </>
+        )}
       </div>
     </PageTransition>
   );

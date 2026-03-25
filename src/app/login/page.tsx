@@ -2,7 +2,21 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+
+function fadeUpTransition(i: number) {
+  return {
+    opacity: 1,
+    y: 0,
+    transition: { delay: 0.15 + i * 0.08, duration: 0.5, ease: "easeOut" as const },
+  };
+}
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 16 },
+  visible: fadeUpTransition,
+};
 
 export default function LoginPage() {
   const router = useRouter();
@@ -14,9 +28,12 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="relative flex min-h-dvh items-center justify-center bg-black">
+    <main className="relative flex min-h-dvh items-center justify-center bg-black overflow-hidden">
       {/* Top decorative glow */}
-      <div
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.2, ease: "easeOut" }}
         className="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px]"
         style={{
           background: "rgba(5,224,248,0.05)",
@@ -24,11 +41,18 @@ export default function LoginPage() {
         }}
       />
 
+      {/* Subtle grid background */}
+      <div className="pointer-events-none fixed inset-0 data-grid-bg opacity-30" />
+
       {/* Centered form container */}
-      <div className="w-full max-w-[400px] px-6">
+      <div className="w-full max-w-[400px] px-6 relative">
         {/* Header */}
-        <div className="flex flex-col items-center mb-12">
-          {/* Official Nonco Stables wordmark */}
+        <motion.div
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col items-center mb-12"
+        >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/nonco-stables-logo.svg"
@@ -39,13 +63,13 @@ export default function LoginPage() {
           <p className="text-lg font-light text-[var(--text-3)] mt-5">
             Institutional payments & settlement
           </p>
-        </div>
+        </motion.div>
 
         {/* Form */}
         <form className="space-y-6" onSubmit={handleLogin}>
           {/* Email */}
-          <div>
-            <label htmlFor="email" className="block text-[11px] uppercase font-sans tracking-[.15em] text-[var(--text-4)] mb-1.5 ml-1">
+          <motion.div custom={0} variants={fadeUp} initial="hidden" animate="visible">
+            <label htmlFor="email" className="block text-[11px] uppercase tracking-[.15em] text-[var(--text-4)] mb-1.5 ml-1">
               Email
             </label>
             <input
@@ -54,19 +78,19 @@ export default function LoginPage() {
               required
               placeholder="name@institution.com"
               autoComplete="email"
-              className="w-full bg-[var(--bg-card)] border-0 ring-1 ring-[var(--border-outline)] focus:ring-2 focus:ring-[var(--cyan)] rounded-lg px-4 py-3.5 font-mono text-sm text-white placeholder:text-[var(--text-4)] outline-none transition-shadow duration-200"
+              className="w-full bg-[var(--bg-card)] border-0 ring-1 ring-[var(--border-outline)] focus:ring-2 focus:ring-[var(--cyan)] rounded-lg px-4 py-3.5 font-mono text-sm text-[var(--text)] placeholder:text-[var(--text-4)] outline-none transition-shadow duration-200"
             />
-          </div>
+          </motion.div>
 
           {/* Password */}
-          <div>
+          <motion.div custom={1} variants={fadeUp} initial="hidden" animate="visible">
             <div className="flex items-center justify-between mb-1.5 ml-1">
-              <label htmlFor="password" className="text-[11px] uppercase font-sans tracking-[.15em] text-[var(--text-4)]">
+              <label htmlFor="password" className="text-[11px] uppercase tracking-[.15em] text-[var(--text-4)]">
                 Password
               </label>
               <button
                 type="button"
-                className="text-[11px] font-sans tracking-[.1em] text-[var(--text-4)] hover:text-[var(--cyan)] transition-colors cursor-pointer py-1 px-2 -mr-2"
+                className="text-[11px] tracking-[.1em] text-[var(--text-4)] hover:text-[var(--cyan)] transition-colors cursor-pointer py-1 px-2 -mr-2"
               >
                 Forgot?
               </button>
@@ -78,12 +102,12 @@ export default function LoginPage() {
                 required
                 placeholder="Enter password"
                 autoComplete="current-password"
-                className="w-full bg-[var(--bg-card)] border-0 ring-1 ring-[var(--border-outline)] focus:ring-2 focus:ring-[var(--cyan)] rounded-lg px-4 py-3.5 pr-12 font-mono text-sm text-white placeholder:text-[var(--text-4)] outline-none transition-shadow duration-200"
+                className="w-full bg-[var(--bg-card)] border-0 ring-1 ring-[var(--border-outline)] focus:ring-2 focus:ring-[var(--cyan)] rounded-lg px-4 py-3.5 pr-12 font-mono text-sm text-[var(--text)] placeholder:text-[var(--text-4)] outline-none transition-shadow duration-200"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-4)] hover:text-white transition-colors cursor-pointer p-1"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-4)] hover:text-[var(--text)] transition-colors cursor-pointer p-1"
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? (
@@ -100,25 +124,25 @@ export default function LoginPage() {
                 )}
               </button>
             </div>
-          </div>
+          </motion.div>
 
           {/* Sign In */}
-          <Button type="submit" variant="cyan" size="lg" className="w-full hover:shadow-[0_0_25px_rgba(5,224,248,0.3)]">
-            Sign In
-          </Button>
+          <motion.div custom={2} variants={fadeUp} initial="hidden" animate="visible">
+            <Button type="submit" variant="cyan" size="lg" className="w-full hover:shadow-[0_0_25px_rgba(5,224,248,0.3)]">
+              Sign In
+            </Button>
+          </motion.div>
         </form>
 
         {/* Divider */}
-        <div className="flex items-center gap-3 my-8">
+        <motion.div custom={3} variants={fadeUp} initial="hidden" animate="visible" className="flex items-center gap-3 my-8">
           <div className="flex-1 h-px bg-[var(--border-outline)]" />
-          <span className="text-[11px] text-[var(--text-4)] font-sans whitespace-nowrap">
-            or
-          </span>
+          <span className="text-[11px] text-[var(--text-4)] whitespace-nowrap">or</span>
           <div className="flex-1 h-px bg-[var(--border-outline)]" />
-        </div>
+        </motion.div>
 
         {/* Social buttons */}
-        <div className="space-y-3">
+        <motion.div custom={4} variants={fadeUp} initial="hidden" animate="visible" className="space-y-3">
           {/* Google */}
           <Button type="button" variant="white" className="w-full py-3">
             <svg width="18" height="18" viewBox="0 0 24 24" className="shrink-0">
@@ -131,7 +155,7 @@ export default function LoginPage() {
           </Button>
 
           {/* Wallet */}
-          <Button type="button" variant="ghost" className="w-full py-3 text-white border-[var(--border-outline)]">
+          <Button type="button" variant="ghost" className="w-full py-3 text-[var(--text)] border-[var(--border-outline)]">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
               <rect x="2" y="6" width="20" height="14" rx="2" />
               <path d="M2 10h20" />
@@ -139,17 +163,16 @@ export default function LoginPage() {
             </svg>
             Connect Wallet
           </Button>
-        </div>
+        </motion.div>
 
         {/* Terms footer */}
-        <p className="text-[11px] text-[var(--text-4)] text-center mt-8 leading-relaxed">
+        <motion.p custom={5} variants={fadeUp} initial="hidden" animate="visible" className="text-[11px] text-[var(--text-4)] text-center mt-8 leading-relaxed">
           By continuing, you agree to our{" "}
           <a href="#" className="text-[var(--text-3)] hover:text-[var(--cyan)] transition-colors underline underline-offset-4 decoration-[var(--border)]">Terms of Service</a>
           {" "}and{" "}
           <a href="#" className="text-[var(--text-3)] hover:text-[var(--cyan)] transition-colors underline underline-offset-4 decoration-[var(--border)]">Privacy Policy</a>.
-        </p>
+        </motion.p>
       </div>
-
     </main>
   );
 }

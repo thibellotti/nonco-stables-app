@@ -91,7 +91,7 @@ export default function RFQPage() {
             />
             <div className="space-y-4">
               <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5">
-                <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)] mb-3">New Quote</div>
+                <div className="text-[11px] uppercase tracking-[.15em] text-[var(--text-4)] mb-3">New Quote</div>
                 <QuoteForm onQuote={handleQuote} />
               </div>
               <FavoritesGrid onQuote={handleQuote} compact />
@@ -103,12 +103,30 @@ export default function RFQPage() {
         </>
       ) : (
         <>
-          {/* Default state — stacked: form, favorites, trades */}
-          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5">
-            <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)] mb-3">New Quote</div>
-            <QuoteForm onQuote={handleQuote} />
+          {/* Hero prompt — invites the user to get a quote */}
+          <div className="relative overflow-hidden bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-8">
+            {/* Decorative background grid */}
+            <div className="absolute inset-0 data-grid-bg opacity-50 pointer-events-none" />
+            {/* Decorative glow */}
+            <div className="absolute -right-32 -top-32 w-80 h-80 rounded-full bg-[var(--cyan-wash)] blur-[100px] pointer-events-none" />
+
+            <div className="relative">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-lg bg-[rgba(5,224,248,0.08)] flex items-center justify-center">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                    <path d="M10 3L17 10L10 17L3 10L10 3Z" stroke="var(--cyan)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-[var(--text)]">Request for Quote</h2>
+                  <p className="text-xs text-[var(--text-4)]">Select an instrument and amount to get real-time pricing</p>
+                </div>
+              </div>
+              <QuoteForm onQuote={handleQuote} />
+            </div>
           </div>
 
+          <SectionLabel>Favorites</SectionLabel>
           <FavoritesGrid onQuote={handleQuote} />
 
           <SectionLabel>Recent Trades</SectionLabel>

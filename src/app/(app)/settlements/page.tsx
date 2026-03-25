@@ -115,43 +115,67 @@ export default function SettlementsPage() {
       {activeTab === "pending" && (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {/* Total pending */}
-          <div className="bg-[var(--bg-card)] border border-[var(--border)] border-l-2 border-l-[var(--cyan)] rounded-lg p-4">
-            <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)]">
-              Total Pending
+          <div className="bg-[var(--bg-card)] border border-[var(--border)] border-l-2 border-l-[var(--cyan)] rounded-lg p-5">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-7 h-7 rounded-lg bg-[rgba(5,224,248,0.08)] flex items-center justify-center">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <circle cx="7" cy="7" r="5" stroke="var(--cyan)" strokeWidth="1.5" />
+                  <path d="M7 4.5v3l2 1" stroke="var(--cyan)" strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
+              </div>
+              <div className="text-[11px] uppercase tracking-[.15em] text-[var(--text-4)]">
+                Total Pending
+              </div>
             </div>
-            <p className="text-2xl font-mono font-bold text-white tabular-nums mt-1">
+            <p className="text-2xl font-mono font-bold text-[var(--text)] tabular-nums mt-1">
               ${formatMoney(totalPendingAmount)}
             </p>
-            <p className="text-[11px] text-[var(--text-4)] font-sans mt-1">
+            <p className="text-[11px] text-[var(--text-4)] mt-1">
               <span className="font-mono">{pendingSettlements.length}</span> active
             </p>
           </div>
 
           {/* Due this week */}
-          <div className="bg-[var(--bg-card)] border border-[var(--border)] border-l-2 border-l-[var(--amber)] rounded-lg p-4">
-            <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)]">
-              Due This Week
+          <div className="bg-[var(--bg-card)] border border-[var(--border)] border-l-2 border-l-[var(--amber)] rounded-lg p-5">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-7 h-7 rounded-lg bg-[var(--amber-dim)] flex items-center justify-center">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <path d="M7 2v5l3 2" stroke="var(--amber)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M2 7a5 5 0 1010 0 5 5 0 00-10 0" stroke="var(--amber)" strokeWidth="1.5" />
+                </svg>
+              </div>
+              <div className="text-[11px] uppercase tracking-[.15em] text-[var(--text-4)]">
+                Due This Week
+              </div>
             </div>
             <p className="text-2xl font-mono font-bold text-[var(--amber)] tabular-nums mt-1">
               ${formatMoney(dueThisWeekAmount)}
             </p>
-            <p className="text-[11px] text-[var(--text-4)] font-sans mt-1">
+            <p className="text-[11px] text-[var(--text-4)] mt-1">
               <span className="font-mono">{dueThisWeekCount}</span> of <span className="font-mono">{pendingSettlements.length}</span>
             </p>
           </div>
 
           {/* Counterparty exposure */}
-          <div className="bg-[var(--bg-card)] border border-[var(--border)] border-l-2 border-l-[var(--purple)] rounded-lg p-4">
-            <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)] mb-3">
-              Counterparty Exposure
+          <div className="bg-[var(--bg-card)] border border-[var(--border)] border-l-2 border-l-[var(--purple)] rounded-lg p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-7 h-7 rounded-lg bg-[var(--purple-dim)] flex items-center justify-center">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <circle cx="5" cy="5" r="3" stroke="var(--purple)" strokeWidth="1.5" />
+                  <circle cx="9" cy="9" r="3" stroke="var(--purple)" strokeWidth="1.5" />
+                </svg>
+              </div>
+              <div className="text-[11px] uppercase tracking-[.15em] text-[var(--text-4)]">
+                Exposure
+              </div>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               {pendingSettlements.map((s) => (
                 <div key={s.id} className="flex items-center justify-between">
                   <span className="text-xs text-[var(--text-3)] truncate">
                     {s.counterparty.split(" ")[0]}
                   </span>
-                  <span className="text-xs font-mono text-white tabular-nums">
+                  <span className="text-xs font-mono text-[var(--text)] tabular-nums">
                     {formatCompact(s.amount)}
                   </span>
                 </div>
@@ -163,58 +187,68 @@ export default function SettlementsPage() {
 
       {/* Timeline strip — pending tab only */}
       {activeTab === "pending" && (
-        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5">
-          <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)] mb-4">
+        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-6">
+          <div className="text-[11px] uppercase tracking-[.15em] text-[var(--text-4)] mb-6">
             Settlement Timeline
           </div>
           <div className="relative overflow-x-auto">
-            <div className="min-w-[500px]">
-            {/* Horizontal track line — gradient from cyan (near-term) to amber (far-term) */}
+            <div className="min-w-[500px] py-2">
+            {/* Horizontal track line */}
             <div
-              className="h-0.5 absolute left-0 right-0"
+              className="h-px absolute left-0 right-0"
               style={{
-                top: "14px",
+                top: "20px",
                 background: "linear-gradient(90deg, var(--cyan), var(--amber))",
-                opacity: 0.5,
+                opacity: 0.4,
               }}
             />
 
             {/* Timeline points */}
             <div className="flex justify-between relative">
-              {timelineSorted.map((s) => (
-                <div key={s.id} className="flex flex-col items-center">
-                  <div
-                    className={`w-7 h-7 rounded-full border-2 flex items-center justify-center ${
-                      s.status === "processing"
-                        ? "border-[var(--cyan)] bg-[rgba(5,224,248,0.1)]"
-                        : "border-[var(--amber)] bg-[rgba(249,226,32,0.06)]"
-                    }`}
-                    style={{
-                      boxShadow:
-                        s.status === "processing"
-                          ? "0 0 8px rgba(5,224,248,0.4)"
-                          : "0 0 8px rgba(249,226,32,0.3)",
-                    }}
-                  >
-                    <div
-                      className={`w-2.5 h-2.5 rounded-full ${
-                        s.status === "processing"
-                          ? "bg-[var(--cyan)]"
-                          : "bg-[var(--amber)]"
-                      }`}
-                    />
+              {timelineSorted.map((s) => {
+                const isProcessing = s.status === "processing";
+                const color = isProcessing ? "var(--cyan)" : "var(--amber)";
+                const bgAlpha = isProcessing ? "rgba(5,224,248,0.12)" : "rgba(249,226,32,0.08)";
+                const glowAlpha = isProcessing ? "rgba(5,224,248,0.5)" : "rgba(249,226,32,0.4)";
+
+                return (
+                  <div key={s.id} className="flex flex-col items-center group">
+                    {/* Bigger node with double ring */}
+                    <div className="relative">
+                      <div
+                        className="w-10 h-10 rounded-full border-2 flex items-center justify-center transition-transform group-hover:scale-110"
+                        style={{
+                          borderColor: color,
+                          backgroundColor: bgAlpha,
+                          boxShadow: `0 0 12px ${glowAlpha}`,
+                        }}
+                      >
+                        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: color }} />
+                      </div>
+                      {isProcessing && (
+                        <div className="absolute inset-0 rounded-full border border-[var(--cyan)] opacity-30 animate-ping" />
+                      )}
+                    </div>
+
+                    {/* Labels */}
+                    <span className="text-[11px] font-mono text-[var(--text-3)] mt-3">
+                      {s.dueDate.replace(", 2026", "")}
+                    </span>
+                    <span className="text-sm font-bold text-[var(--text)] mt-0.5">
+                      {s.pair}
+                    </span>
+                    <span className="text-xs font-mono text-[var(--text-4)] mt-0.5">
+                      {formatCompact(s.amount)}
+                    </span>
+                    <span
+                      className="text-[10px] font-mono uppercase tracking-wider mt-1"
+                      style={{ color }}
+                    >
+                      {s.status}
+                    </span>
                   </div>
-                  <span className="text-[11px] font-mono text-[var(--text-3)] mt-2">
-                    {s.dueDate.replace(", 2026", "")}
-                  </span>
-                  <span className="text-sm font-bold text-white mt-0.5">
-                    {s.pair}
-                  </span>
-                  <span className="text-xs font-mono text-[var(--text-4)]">
-                    {formatCompact(s.amount)}
-                  </span>
-                </div>
-              ))}
+                );
+              })}
             </div>
             </div>
           </div>

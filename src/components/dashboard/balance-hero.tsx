@@ -436,57 +436,52 @@ export function BalanceHero() {
         )}
       </div>
 
-      {/* Stats row — below chart */}
-      <div className="flex flex-wrap items-start gap-x-8 gap-y-4 mt-6">
+      {/* Stats row — below chart as mini-cards */}
+      <div className="grid grid-cols-3 gap-3 mt-6">
         {/* Available */}
-        <div>
-          <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)]">
-            Available
+        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-4 flex items-center gap-3">
+          <div className="w-9 h-9 rounded-lg bg-[rgba(5,224,248,0.08)] flex items-center justify-center shrink-0">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+              <path d="M9 2v14M3 9h12" stroke="var(--cyan)" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
           </div>
-          <div
-            className="font-mono text-lg font-bold text-white mt-1 tabular-nums"
-            style={{ fontVariantNumeric: "tabular-nums slashed-zero" }}
-          >
-            <AnimatedNumber
-              value={totalAvailable}
-              prefix="$"
-              suffix="M"
-              formatter={(n) => (n / 1_000_000).toFixed(2)}
-            />
+          <div>
+            <div className="text-[11px] uppercase tracking-[.15em] text-[var(--text-4)]">Available</div>
+            <div className="font-mono text-lg font-bold text-[var(--text)] mt-0.5 tabular-nums">
+              <AnimatedNumber value={totalAvailable} prefix="$" suffix="M" formatter={(n) => (n / 1_000_000).toFixed(2)} />
+            </div>
           </div>
         </div>
 
         {/* Pending */}
-        <div>
-          <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)]">
-            Pending
+        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-4 flex items-center gap-3">
+          <div className="w-9 h-9 rounded-lg bg-[var(--amber-dim)] flex items-center justify-center shrink-0">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+              <circle cx="9" cy="9" r="6.5" stroke="var(--amber)" strokeWidth="1.5" />
+              <path d="M9 6v3.5l2.5 1.5" stroke="var(--amber)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </div>
-          <div
-            className="font-mono text-lg font-bold text-[var(--amber)] mt-1 tabular-nums"
-            style={{ fontVariantNumeric: "tabular-nums slashed-zero" }}
-          >
-            <AnimatedNumber
-              value={totalPending}
-              prefix="$"
-              suffix="M"
-              formatter={(n) => (n / 1_000_000).toFixed(2)}
-            />
+          <div>
+            <div className="text-[11px] uppercase tracking-[.15em] text-[var(--text-4)]">Pending</div>
+            <div className="font-mono text-lg font-bold text-[var(--amber)] mt-0.5 tabular-nums">
+              <AnimatedNumber value={totalPending} prefix="$" suffix="M" formatter={(n) => (n / 1_000_000).toFixed(2)} />
+            </div>
           </div>
         </div>
 
         {/* Currencies */}
-        <div>
-          <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)]">
-            Currencies
+        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-4 flex items-center gap-3">
+          <div className="w-9 h-9 rounded-lg bg-[var(--green-dim)] flex items-center justify-center shrink-0">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+              <circle cx="7" cy="7" r="4.5" stroke="var(--green)" strokeWidth="1.5" />
+              <circle cx="11" cy="11" r="4.5" stroke="var(--green)" strokeWidth="1.5" />
+            </svg>
           </div>
-          <div
-            className="font-mono text-lg font-bold text-white mt-1 tabular-nums"
-            style={{ fontVariantNumeric: "tabular-nums slashed-zero" }}
-          >
-            <AnimatedNumber
-              value={balances.length}
-              formatter={(n) => Math.round(n).toString()}
-            />
+          <div>
+            <div className="text-[11px] uppercase tracking-[.15em] text-[var(--text-4)]">Currencies</div>
+            <div className="font-mono text-lg font-bold text-[var(--text)] mt-0.5 tabular-nums">
+              <AnimatedNumber value={balances.length} formatter={(n) => Math.round(n).toString()} />
+            </div>
           </div>
         </div>
       </div>
