@@ -164,16 +164,13 @@ export function FavoritesGrid({ onQuote, compact = false }: FavoritesGridProps) 
               </p>
             </div>
 
-            {/* Sparkline — full-width at bottom of info area */}
+            {/* Sparkline */}
             <div className="mt-3 h-8 px-4">
               <Sparkline
                 data={sparkData}
-                width={200}
-                height={32}
                 color={colors.border}
                 showArea={false}
                 strokeWidth={1.5}
-                className="w-full h-full"
               />
             </div>
 

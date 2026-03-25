@@ -110,12 +110,10 @@ export function MarketWatch() {
               </span>
 
               {/* Sparkline — fills middle space */}
-              <div className="flex-1 flex justify-center">
+              <div className="flex-1 h-7">
                 <Sparkline
                   data={p.sparkline}
                   color={p.positive ? "var(--cyan)" : "var(--red, #ef4444)"}
-                  width={100}
-                  height={28}
                   showArea
                   strokeWidth={1.5}
                 />

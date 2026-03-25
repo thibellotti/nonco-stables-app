@@ -2,14 +2,8 @@
 
 import { useId } from "react";
 
-// ---------------------------------------------------------------------------
-// Sparkline — premium reusable mini-chart with Catmull-Rom smooth curves
-// ---------------------------------------------------------------------------
-
 interface SparklineProps {
   data: number[];
-  width?: number;
-  height?: number;
   color?: string;
   showArea?: boolean;
   strokeWidth?: number;
@@ -17,8 +11,7 @@ interface SparklineProps {
 }
 
 /**
- * Convert an array of points into a smooth SVG path using Catmull-Rom spline
- * interpolation. This eliminates the jagged look of a raw polyline at small sizes.
+ * Catmull-Rom spline interpolation for smooth SVG paths.
  */
 function smoothPath(pts: { x: number; y: number }[]): string {
   if (pts.length < 2) return "";
@@ -42,10 +35,12 @@ function smoothPath(pts: { x: number; y: number }[]): string {
   return d;
 }
 
+// Fixed internal viewBox — the container CSS controls the actual size
+const VB_W = 100;
+const VB_H = 40;
+
 export function Sparkline({
   data,
-  width = 80,
-  height = 24,
   color = "var(--cyan)",
   showArea = true,
   strokeWidth = 1.5,
@@ -61,17 +56,17 @@ export function Sparkline({
   const range = max - min || 1;
 
   const points = data.map((v, i) => ({
-    x: (i / (data.length - 1)) * width,
-    y: height - ((v - min) / range) * (height - padTop),
+    x: (i / (data.length - 1)) * VB_W,
+    y: VB_H - ((v - min) / range) * (VB_H - padTop),
   }));
 
   const linePath = smoothPath(points);
-  const areaPath = `${linePath} L${width},${height} L0,${height} Z`;
+  const areaPath = `${linePath} L${VB_W},${VB_H} L0,${VB_H} Z`;
 
   return (
     <svg
-      viewBox={`0 0 ${width} ${height}`}
-      preserveAspectRatio="none"
+      viewBox={`0 0 ${VB_W} ${VB_H}`}
+      preserveAspectRatio="xMaxYMax meet"
       fill="none"
       aria-hidden="true"
       className={className}
