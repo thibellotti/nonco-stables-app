@@ -20,6 +20,21 @@ const iconBgColors: Record<TransactionType, string> = {
   settlement: "var(--amber-dim)",
 };
 
+const iconBgColorsMobile: Record<TransactionType, string> = {
+  deposit: "rgba(5,224,248,0.12)",
+  withdrawal: "rgba(161,36,248,0.1)",
+  trade: "rgba(199,255,16,0.1)",
+  settlement: "rgba(249,226,32,0.1)",
+};
+
+const typeLabels: Record<TransactionType, string> = {
+  deposit: "INCOMING DEPOSIT",
+  withdrawal: "OUTGOING TRANSFER",
+  trade: "TRADE EXECUTION",
+  settlement: "SETTLEMENT",
+};
+
+// Compact icon for desktop rows (20x20 in 40x40 circle)
 function TxIcon({ type }: { type: TransactionType }) {
   const color = iconColors[type];
 
@@ -81,6 +96,92 @@ function TxIcon({ type }: { type: TransactionType }) {
   );
 }
 
+// Large icon for mobile cards (24x24 in 40x40 rounded-xl)
+function TxIconLarge({ type }: { type: TransactionType }) {
+  const color = iconColors[type];
+
+  const paths: Record<TransactionType, React.ReactNode> = {
+    deposit: (
+      <path
+        d="M17 7L7 17M7 17h7M7 17V10"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    ),
+    withdrawal: (
+      <path
+        d="M7 17L17 7M17 7H10M17 7v7"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    ),
+    trade: (
+      <path
+        d="M4 9h16M20 9l-4-4M4 15h16M4 15l4 4"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    ),
+    settlement: (
+      <path
+        d="M12 3L21 12L12 21L3 12L12 3Z"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+    ),
+  };
+
+  return (
+    <div
+      className="flex items-center justify-center w-10 h-10 rounded-xl shrink-0"
+      style={{ backgroundColor: iconBgColorsMobile[type] }}
+    >
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        {paths[type]}
+      </svg>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Status dot for mobile cards
+// ---------------------------------------------------------------------------
+
+function StatusDot({ status }: { status: string }) {
+  if (status === "completed") {
+    return (
+      <div className="flex items-center gap-1.5">
+        <span className="w-1.5 h-1.5 rounded-full bg-[var(--cyan)]" />
+        <span className="text-[11px] font-sans text-[var(--text-3)]">
+          Completed
+        </span>
+      </div>
+    );
+  }
+  if (status === "pending") {
+    return <Badge variant="amber">Pending</Badge>;
+  }
+  if (status === "failed") {
+    return <Badge variant="red">Failed</Badge>;
+  }
+  return null;
+}
+
 // ---------------------------------------------------------------------------
 // Date grouping helpers
 // ---------------------------------------------------------------------------
@@ -116,62 +217,109 @@ function groupByDate(
 }
 
 // ---------------------------------------------------------------------------
-// Transaction row
+// Transaction row — dual layout (mobile card + desktop row)
 // ---------------------------------------------------------------------------
 
 function TransactionRow({ tx }: { tx: (typeof transactions)[number] }) {
   const isPositive = tx.type === "deposit" || tx.type === "settlement";
 
   return (
-    <div
-      className={cn(
-        "flex items-center gap-3.5 p-4",
-        "transition-colors duration-150 ease-[cubic-bezier(0.16,1,0.3,1)]",
-        "hover:bg-[rgba(255,255,255,0.03)] cursor-pointer"
-      )}
-    >
-      {/* Left: icon + text */}
-      <TxIcon type={tx.type} />
-
-      <div className="flex-1 min-w-0">
-        <p className="text-sm text-[var(--text)] truncate font-medium font-sans">
-          {tx.description}
-        </p>
-        {tx.counterparty && (
-          <p className="text-xs text-[var(--text-4)] mt-0.5 truncate font-sans">
-            {tx.counterparty}
-          </p>
+    <>
+      {/* ── Mobile card — visible only below sm ── */}
+      <div
+        className={cn(
+          "flex sm:hidden flex-col gap-3 p-5",
+          "bg-[var(--bg-elevated)] rounded-xl",
+          "border border-[var(--border)]",
+          "transition-colors duration-150 ease-[cubic-bezier(0.16,1,0.3,1)]",
+          "active:bg-[rgba(255,255,255,0.03)] cursor-pointer"
         )}
-      </div>
-
-      {/* Right: amount + currency + time + status */}
-      <div className="flex flex-col items-end shrink-0 gap-0.5">
-        <span
-          className={cn(
-            "font-mono text-sm font-semibold tabular-nums",
-            isPositive ? "text-[var(--cyan)]" : "text-[var(--text)]"
-          )}
-        >
-          {isPositive ? "+" : "-"}
-          {formatCompact(tx.amount)}
+      >
+        {/* Top: type label */}
+        <span className="text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-4)]">
+          {typeLabels[tx.type]}
         </span>
 
-        <div className="flex items-center gap-1.5">
-          <span className="text-[10px] text-[var(--text-4)] font-mono uppercase">
-            {tx.currency}
+        {/* Middle: large amount + large icon */}
+        <div className="flex items-center justify-between">
+          <span
+            className={cn(
+              "font-mono text-2xl font-bold tabular-nums",
+              isPositive ? "text-[var(--cyan)]" : "text-[var(--text)]"
+            )}
+          >
+            {isPositive ? "+" : "-"}
+            {formatCompact(tx.amount)}
           </span>
-          {tx.status === "pending" && (
-            <Badge variant="amber">Pending</Badge>
-          )}
-          {tx.status === "failed" && (
-            <Badge variant="red">Failed</Badge>
-          )}
-          <span className="text-[10px] text-[var(--text-4)] font-mono tabular-nums">
-            {timeAgo(tx.timestamp)}
-          </span>
+          <TxIconLarge type={tx.type} />
+        </div>
+
+        {/* Bottom: description + time + status */}
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-sm text-[var(--text-3)] font-sans truncate min-w-0 flex-1">
+            {tx.description}
+            {tx.counterparty ? ` — ${tx.counterparty}` : ""}
+          </p>
+          <div className="flex items-center gap-2.5 shrink-0">
+            <span className="text-[11px] text-[var(--text-4)] font-mono tabular-nums">
+              {timeAgo(tx.timestamp)}
+            </span>
+            <StatusDot status={tx.status} />
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* ── Desktop row — visible only on sm+ ── */}
+      <div
+        className={cn(
+          "hidden sm:flex items-center gap-3.5 p-4",
+          "transition-colors duration-150 ease-[cubic-bezier(0.16,1,0.3,1)]",
+          "hover:bg-[rgba(255,255,255,0.03)] cursor-pointer"
+        )}
+      >
+        {/* Left: icon + text */}
+        <TxIcon type={tx.type} />
+
+        <div className="flex-1 min-w-0">
+          <p className="text-sm text-[var(--text)] truncate font-medium font-sans">
+            {tx.description}
+          </p>
+          {tx.counterparty && (
+            <p className="text-xs text-[var(--text-4)] mt-0.5 truncate font-sans">
+              {tx.counterparty}
+            </p>
+          )}
+        </div>
+
+        {/* Right: amount + currency + time + status */}
+        <div className="flex flex-col items-end shrink-0 gap-0.5">
+          <span
+            className={cn(
+              "font-mono text-sm font-semibold tabular-nums",
+              isPositive ? "text-[var(--cyan)]" : "text-[var(--text)]"
+            )}
+          >
+            {isPositive ? "+" : "-"}
+            {formatCompact(tx.amount)}
+          </span>
+
+          <div className="flex items-center gap-1.5">
+            <span className="text-[10px] text-[var(--text-4)] font-mono uppercase">
+              {tx.currency}
+            </span>
+            {tx.status === "pending" && (
+              <Badge variant="amber">Pending</Badge>
+            )}
+            {tx.status === "failed" && (
+              <Badge variant="red">Failed</Badge>
+            )}
+            <span className="text-[10px] text-[var(--text-4)] font-mono tabular-nums">
+              {timeAgo(tx.timestamp)}
+            </span>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
 
@@ -208,8 +356,15 @@ export function TransactionList({ filter }: TransactionListProps) {
             {group.label}
           </div>
 
-          {/* Grouped card */}
-          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg divide-y divide-[var(--border)] overflow-hidden">
+          {/* Mobile: individual cards with spacing */}
+          <div className="sm:hidden space-y-3">
+            {group.items.map((tx) => (
+              <TransactionRow key={tx.id} tx={tx} />
+            ))}
+          </div>
+
+          {/* Desktop: grouped card with dividers */}
+          <div className="hidden sm:block bg-[var(--bg-card)] border border-[var(--border)] rounded-lg divide-y divide-[var(--border)] overflow-hidden">
             {group.items.map((tx) => (
               <TransactionRow key={tx.id} tx={tx} />
             ))}
