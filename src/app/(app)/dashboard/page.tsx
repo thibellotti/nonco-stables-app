@@ -19,7 +19,7 @@ export default function DashboardPage() {
       <DeskOfferBanner />
 
       {/* Row 1: Portfolio Hero + Quick Actions sidebar */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6">
         {/* LEFT: Portfolio balance + chart */}
         <BalanceHero />
 
@@ -51,7 +51,7 @@ export default function DashboardPage() {
       <CurrencyBreakdown />
 
       {/* Row 3: Recent Activity + Market Watch */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6">
         {/* LEFT: Transactions */}
         <div>
           <CategoryTabs active={filter} onChange={setFilter} />
