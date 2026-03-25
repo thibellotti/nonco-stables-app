@@ -400,7 +400,7 @@ export function BalanceHero() {
       </div>
 
       {/* Stats row — below chart */}
-      <div className="flex flex-wrap items-start gap-x-8 gap-y-4 mt-6">
+      <div className="flex flex-wrap items-start gap-x-4 sm:gap-x-8 gap-y-4 mt-6">
         {/* Available */}
         <div>
           <div className="font-mono text-[10px] text-[var(--text-4)] uppercase tracking-[.15em]">

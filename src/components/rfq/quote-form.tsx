@@ -22,7 +22,7 @@ export function QuoteForm({ onQuote }: QuoteFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
+    <form onSubmit={handleSubmit} className="data-grid-bg rounded-xl p-6 flex flex-col sm:flex-row gap-3">
       {/* Instrument selector */}
       <div className="flex-1 relative">
         <select

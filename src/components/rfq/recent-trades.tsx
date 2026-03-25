@@ -21,19 +21,19 @@ export function RecentTrades({ extraTrades = [] }: RecentTradesProps) {
       <table className="w-full">
         <thead>
           <tr className="border-b border-[var(--border)]">
-            <th className="px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
+            <th className="px-3 sm:px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
               Pair
             </th>
-            <th className="px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
+            <th className="px-3 sm:px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
               Side
             </th>
-            <th className="px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden sm:table-cell">
+            <th className="px-3 sm:px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden sm:table-cell">
               Quantity @ Price
             </th>
-            <th className="px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden md:table-cell">
+            <th className="px-3 sm:px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden md:table-cell">
               Settlement
             </th>
-            <th className="px-6 py-3 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
+            <th className="px-3 sm:px-6 py-3 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
               Time
             </th>
           </tr>
@@ -45,16 +45,16 @@ export function RecentTrades({ extraTrades = [] }: RecentTradesProps) {
               className="hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-150 cursor-pointer"
             >
               {/* Pair */}
-              <td className="px-6 py-4">
-                <span className="text-sm font-bold text-white tracking-tight">
+              <td className="px-3 sm:px-6 py-3 sm:py-4">
+                <span className="text-xs sm:text-sm font-bold text-white tracking-tight">
                   {trade.pair}
                 </span>
               </td>
 
               {/* Side badge */}
-              <td className="px-6 py-4">
+              <td className="px-3 sm:px-6 py-3 sm:py-4">
                 <span
-                  className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                  className={`inline-flex items-center px-2 sm:px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
                     trade.side === "buy"
                       ? "bg-[var(--cyan-dim)] text-[var(--cyan)]"
                       : "bg-[var(--purple-dim)] text-[var(--purple)]"
@@ -65,7 +65,7 @@ export function RecentTrades({ extraTrades = [] }: RecentTradesProps) {
               </td>
 
               {/* Quantity @ Price */}
-              <td className="px-6 py-4 hidden sm:table-cell">
+              <td className="px-3 sm:px-6 py-3 sm:py-4 hidden sm:table-cell">
                 <span className="font-mono text-xs text-[var(--text-3)] tabular-nums">
                   {formatMoney(trade.quantity)}
                   <span className="text-[var(--text-4)] mx-1">@</span>
@@ -74,14 +74,14 @@ export function RecentTrades({ extraTrades = [] }: RecentTradesProps) {
               </td>
 
               {/* Settlement */}
-              <td className="px-6 py-4 hidden md:table-cell">
+              <td className="px-3 sm:px-6 py-3 sm:py-4 hidden md:table-cell">
                 <span className="text-xs font-mono text-[var(--text-4)]">
                   {trade.settlement}
                 </span>
               </td>
 
               {/* Time */}
-              <td className="px-6 py-4 text-right">
+              <td className="px-3 sm:px-6 py-3 sm:py-4 text-right">
                 <span className="text-[10px] font-mono text-[var(--text-4)] tabular-nums whitespace-nowrap">
                   {timeAgo(trade.timestamp)}
                 </span>

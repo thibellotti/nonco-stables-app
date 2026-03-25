@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { type Quote, balances } from "@/lib/mock-data";
 import { cn, formatMoney } from "@/lib/utils";
 import { currencyColors } from "@/lib/currency-colors";
+import { ConfirmationDialog } from "@/components/ui/confirmation-dialog";
 
 // ---------------------------------------------------------------------------
 // Types (re-exported for use in price-card.tsx)
@@ -128,6 +129,13 @@ function spread(bid: number, ask: number): string {
   return ((ask - bid) / mid * 100).toFixed(2) + "%";
 }
 
+const SETTLEMENT_LABELS: Record<Settlement, string> = {
+  spot: "Spot",
+  t1: "T+1",
+  t2: "T+2",
+  t10: "T+10",
+};
+
 // ---------------------------------------------------------------------------
 // Trade Executed Flash
 // ---------------------------------------------------------------------------
@@ -199,14 +207,31 @@ export function PriceCardActive({
   const baseColor = currencyColors[base]?.border ?? "var(--cyan)";
   const quoteColor = currencyColors[quoteCcy]?.border ?? "#6366f1";
 
+  // Pending trade state for confirmation dialog
+  const [pendingTrade, setPendingTrade] = useState<{
+    side: "buy" | "sell";
+    price: number;
+    settlement: Settlement;
+  } | null>(null);
+
   const handleTrade = useCallback(
     (side: "buy" | "sell", price: number) => {
       if (expired || !quote) return;
-      onFlash(side);
-      onTrade?.(side, price, settlement);
+      setPendingTrade({ side, price, settlement });
     },
-    [expired, quote, settlement, onTrade, onFlash]
+    [expired, quote, settlement]
   );
+
+  const handleConfirm = useCallback(() => {
+    if (!pendingTrade || expired) return;
+    onFlash(pendingTrade.side);
+    onTrade?.(pendingTrade.side, pendingTrade.price, pendingTrade.settlement);
+    setPendingTrade(null);
+  }, [pendingTrade, expired, onFlash, onTrade]);
+
+  const handleCancel = useCallback(() => {
+    setPendingTrade(null);
+  }, []);
 
   return (
     <div
@@ -325,6 +350,17 @@ export function PriceCardActive({
           </span>
         </div>
       </div>
+
+      {/* Trade confirmation dialog */}
+      <ConfirmationDialog
+        open={pendingTrade !== null}
+        side={pendingTrade?.side ?? "buy"}
+        pair={quote.instrument.pair}
+        price={pendingTrade?.price ?? 0}
+        settlement={SETTLEMENT_LABELS[pendingTrade?.settlement ?? "spot"]}
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+      />
     </div>
   );
 }

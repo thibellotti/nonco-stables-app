@@ -56,7 +56,7 @@ export function SettlementCard({
     : "linear-gradient(90deg, #d97706, var(--amber))";
 
   const cardInner = (
-    <div className="p-6 flex flex-col justify-between min-h-64">
+    <div className="p-4 sm:p-6 flex flex-col justify-between min-h-48 md:min-h-64">
       {/* Top: pair + status */}
       <div className="space-y-3">
         <div className="flex items-start justify-between">
@@ -71,7 +71,7 @@ export function SettlementCard({
 
         {/* Amount */}
         <div className="flex items-baseline gap-1.5">
-          <span className="text-3xl font-bold font-mono text-white tabular-nums">
+          <span className="text-2xl sm:text-3xl font-bold font-mono text-white tabular-nums">
             {formatMoney(amount)}
           </span>
           <span className="text-sm font-mono font-bold text-[var(--cyan)]">

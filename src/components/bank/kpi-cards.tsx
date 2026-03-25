@@ -31,7 +31,7 @@ export function BankKpiCards({
           Total Deposits (30d)
         </span>
         <div className="flex items-baseline gap-3 mt-3">
-          <p className="text-3xl sm:text-5xl font-bold font-mono text-[var(--cyan)] tabular-nums">
+          <p className="text-2xl sm:text-5xl font-bold font-mono text-[var(--cyan)] tabular-nums">
             +{formatCompact(totalDeposits)}
           </p>
           <span className="px-2 py-0.5 rounded-full bg-[rgba(5,224,248,0.1)] text-[var(--cyan)] text-[10px] font-bold font-mono">
@@ -54,7 +54,7 @@ export function BankKpiCards({
           Total Withdrawals (30d)
         </span>
         <div className="flex items-baseline gap-3 mt-3">
-          <p className="text-3xl sm:text-5xl font-bold font-mono text-[var(--purple)] tabular-nums">
+          <p className="text-2xl sm:text-5xl font-bold font-mono text-[var(--purple)] tabular-nums">
             -{formatCompact(totalWithdrawals)}
           </p>
         </div>
@@ -74,7 +74,7 @@ export function BankKpiCards({
           Net Flow (30d)
         </span>
         <div className="flex items-baseline gap-3 mt-3">
-          <p className="text-3xl sm:text-5xl font-bold font-mono text-[var(--green)] tabular-nums">
+          <p className="text-2xl sm:text-5xl font-bold font-mono text-[var(--green)] tabular-nums">
             {netFlow >= 0 ? "+" : ""}{formatCompact(netFlow)}
           </p>
         </div>

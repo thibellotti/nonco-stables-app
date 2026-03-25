@@ -78,9 +78,11 @@ export default function RFQPage() {
   return (
     <PageTransition className="px-6 md:px-8 w-full space-y-8">
       <SectionLabel>Favorites</SectionLabel>
+      <p className="text-sm text-[var(--text-4)] -mt-4 mb-2">Your frequently traded pairs</p>
       <FavoritesGrid onQuote={handleQuote} />
 
       <SectionLabel>New Quote</SectionLabel>
+      <p className="text-sm text-[var(--text-4)] -mt-4 mb-2">Request pricing on any instrument</p>
       <QuoteForm onQuote={handleQuote} />
 
       <PriceCard
@@ -91,6 +93,7 @@ export default function RFQPage() {
       />
 
       <SectionLabel>Recent Trades</SectionLabel>
+      <p className="text-sm text-[var(--text-4)] -mt-4 mb-2">Session and historical executions</p>
       <RecentTrades extraTrades={sessionTrades} />
     </PageTransition>
   );

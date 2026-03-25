@@ -88,7 +88,7 @@ function BalanceCard({ balance }: { balance: (typeof balances)[number] }) {
       />
 
       {/* Content */}
-      <div className="p-8 flex flex-col gap-5">
+      <div className="p-5 sm:p-8 flex flex-col gap-5">
         {/* Header: icon + name + wallet address */}
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
@@ -158,12 +158,12 @@ export default function WalletPage() {
       <div className="space-y-4">
         <div className="space-y-3">
           <SectionLabel>Digital Assets</SectionLabel>
-          <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-white">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
             Wallet
           </h1>
         </div>
 
-        <p className="text-[36px] font-mono font-bold text-white tabular-nums leading-none tracking-tight">
+        <p className="text-[28px] sm:text-[36px] font-mono font-bold text-white tabular-nums leading-none tracking-tight">
           ${formatMoney(totalValue)}
         </p>
 
@@ -220,19 +220,19 @@ export default function WalletPage() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-[var(--border)]">
-                <th className="px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
+                <th className="px-3 sm:px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
                   Currency
                 </th>
-                <th className="px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden sm:table-cell">
+                <th className="px-3 sm:px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden sm:table-cell">
                   Counterparty
                 </th>
-                <th className="px-6 py-3 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
+                <th className="px-3 sm:px-6 py-3 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
                   Amount
                 </th>
-                <th className="px-6 py-3 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden md:table-cell">
+                <th className="px-3 sm:px-6 py-3 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden md:table-cell">
                   Status
                 </th>
-                <th className="px-6 py-3 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
+                <th className="px-3 sm:px-6 py-3 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
                   Time
                 </th>
               </tr>
@@ -242,26 +242,26 @@ export default function WalletPage() {
                 const colors = currencyColors[s.currency];
                 return (
                   <tr key={s.id} className={`border-b border-[var(--border)] hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-150 ${i % 2 === 1 ? "bg-[rgba(255,255,255,0.02)]" : ""}`}>
-                    <td className="px-6 py-4">
+                    <td className="px-3 sm:px-6 py-3 sm:py-4">
                       <div className="flex items-center gap-2">
                         <CurrencyIcon currency={s.currency} size={28} />
-                        <span className="text-sm text-white font-medium">{s.currency}</span>
+                        <span className="text-xs sm:text-sm text-white font-medium">{s.currency}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 hidden sm:table-cell">
+                    <td className="px-3 sm:px-6 py-3 sm:py-4 hidden sm:table-cell">
                       <span className="text-xs text-[var(--text-3)]">{s.counterparty}</span>
                     </td>
-                    <td className="px-6 py-4 text-right">
-                      <span className="font-mono text-sm font-bold text-white tabular-nums">
+                    <td className="px-3 sm:px-6 py-3 sm:py-4 text-right">
+                      <span className="font-mono text-xs sm:text-sm font-bold text-white tabular-nums">
                         ${formatMoney(s.amount)}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right hidden md:table-cell">
+                    <td className="px-3 sm:px-6 py-3 sm:py-4 text-right hidden md:table-cell">
                       <span className={`text-[10px] font-mono font-bold uppercase tracking-wider ${s.status === "Settled" ? "text-[var(--green)]" : "text-[var(--amber)]"}`}>
                         {s.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-3 sm:px-6 py-3 sm:py-4 text-right">
                       <span className="text-[10px] text-[var(--text-4)] font-mono tabular-nums">
                         {timeAgo(s.timestamp)}
                       </span>

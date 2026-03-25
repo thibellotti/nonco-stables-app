@@ -39,7 +39,7 @@ const actions = [
 
 export function QuickActions() {
   return (
-    <div className="flex justify-center gap-6 sm:gap-8 md:gap-10">
+    <div className="flex justify-center gap-4 sm:gap-8 md:gap-10">
       {actions.map((action) => (
         <button
           key={action.label}
@@ -47,7 +47,7 @@ export function QuickActions() {
         >
           <div
             className={cn(
-              "w-12 h-12 rounded-full flex items-center justify-center",
+              "w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center",
               "bg-[var(--bg-elevated)] border border-[var(--border)]",
               "text-[var(--text-4)]",
               "transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]",

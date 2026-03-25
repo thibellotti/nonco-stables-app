@@ -93,7 +93,7 @@ export default function TradesPage() {
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div className="space-y-3">
           <SectionLabel>Execution History</SectionLabel>
-          <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-white">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
             Trades
           </h1>
         </div>
@@ -238,7 +238,7 @@ export default function TradesPage() {
       {/* Trade History Table */}
       <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden overflow-x-auto">
         {/* Table Header Bar */}
-        <div className="px-6 py-4 flex items-center justify-between bg-[var(--bg-elevated)]">
+        <div className="px-4 sm:px-6 py-4 flex items-center justify-between bg-[var(--bg-elevated)]">
           <SectionLabel>Trade History</SectionLabel>
           <button type="button" className="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--border)] text-[var(--text-3)] hover:text-white hover:border-[var(--border-outline)] transition-colors duration-200 cursor-pointer">
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -252,12 +252,12 @@ export default function TradesPage() {
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-[var(--border)]">
-              <th className="px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)]">Pair</th>
-              <th className="px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)]">Side</th>
-              <th className="px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] text-right">Quantity</th>
-              <th className="px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] text-right">Price</th>
-              <th className="px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] hidden sm:table-cell">Settlement</th>
-              <th className="px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] text-right hidden sm:table-cell">Date</th>
+              <th className="px-3 sm:px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)]">Pair</th>
+              <th className="px-3 sm:px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)]">Side</th>
+              <th className="px-3 sm:px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] text-right">Quantity</th>
+              <th className="px-3 sm:px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] text-right">Price</th>
+              <th className="px-3 sm:px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] hidden sm:table-cell">Settlement</th>
+              <th className="px-3 sm:px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] text-right hidden sm:table-cell">Date</th>
             </tr>
           </thead>
           <tbody>
@@ -272,19 +272,19 @@ export default function TradesPage() {
                 }`}
               >
                 {/* Pair cell with monogram */}
-                <td className="px-6 py-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-[rgba(5,224,248,0.1)] border border-[rgba(5,224,248,0.2)] flex items-center justify-center">
+                <td className="px-3 sm:px-6 py-3 sm:py-4">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[rgba(5,224,248,0.1)] border border-[rgba(5,224,248,0.2)] flex items-center justify-center shrink-0">
                       <span className="font-mono text-[10px] font-bold text-[var(--cyan)]">
                         {trade.pair.split("/")[0].slice(0, 2)}
                       </span>
                     </div>
-                    <span className="font-mono text-sm font-bold text-white">{trade.pair}</span>
+                    <span className="font-mono text-xs sm:text-sm font-bold text-white">{trade.pair}</span>
                   </div>
                 </td>
 
                 {/* Side pill */}
-                <td className="px-6 py-4">
+                <td className="px-3 sm:px-6 py-3 sm:py-4">
                   {trade.side === "buy" ? (
                     <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold font-mono uppercase tracking-[.08em] bg-[rgba(5,224,248,0.1)] text-[var(--cyan)]">
                       Buy
@@ -297,29 +297,29 @@ export default function TradesPage() {
                 </td>
 
                 {/* Quantity */}
-                <td className="px-6 py-4 text-right">
-                  <span className="font-mono text-sm text-white tabular-nums">
+                <td className="px-3 sm:px-6 py-3 sm:py-4 text-right">
+                  <span className="font-mono text-xs sm:text-sm text-white tabular-nums">
                     {formatMoney(trade.quantity)}
                   </span>
                 </td>
 
                 {/* Price */}
-                <td className="px-6 py-4 text-right">
-                  <span className="font-mono text-sm text-white tabular-nums">
+                <td className="px-3 sm:px-6 py-3 sm:py-4 text-right">
+                  <span className="font-mono text-xs sm:text-sm text-white tabular-nums">
                     {trade.price.toFixed(4)}
                   </span>
                 </td>
 
                 {/* Settlement */}
-                <td className="px-6 py-4 hidden sm:table-cell">
+                <td className="px-3 sm:px-6 py-3 sm:py-4 hidden sm:table-cell">
                   <span className="inline-flex items-center px-2.5 py-1 rounded bg-[rgba(255,255,255,0.06)] text-[10px] font-mono font-medium text-[var(--text-3)]">
                     {trade.settlement}
                   </span>
                 </td>
 
                 {/* Date */}
-                <td className="px-6 py-4 text-right hidden sm:table-cell">
-                  <span className="font-mono text-sm text-[var(--text-3)] tabular-nums">
+                <td className="px-3 sm:px-6 py-3 sm:py-4 text-right hidden sm:table-cell">
+                  <span className="font-mono text-xs sm:text-sm text-[var(--text-3)] tabular-nums">
                     {timeAgo(trade.timestamp)}
                   </span>
                 </td>
@@ -329,11 +329,11 @@ export default function TradesPage() {
         </table>
 
         {/* Footer */}
-        <div className="flex items-center justify-between px-6 py-4 border-t border-[var(--border)]">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 px-4 sm:px-6 py-4 border-t border-[var(--border)]">
           <span className="font-mono text-[10px] text-[var(--text-4)] tracking-[.08em]">
             Showing {filteredTrades.length} of {allTrades.length} trades
           </span>
-          <button type="button" className="flex items-center gap-2 px-6 py-3 rounded-full border border-[var(--border)] text-[var(--text-3)] hover:text-white hover:border-[var(--border-outline)] transition-colors duration-200 cursor-pointer">
+          <button type="button" className="flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-full border border-[var(--border)] text-[var(--text-3)] hover:text-white hover:border-[var(--border-outline)] transition-colors duration-200 cursor-pointer">
             <span className="font-mono text-[10px] font-bold uppercase tracking-[.15em]">View All Transactions</span>
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M2.5 6h7M6.5 3L9.5 6l-3 3" />

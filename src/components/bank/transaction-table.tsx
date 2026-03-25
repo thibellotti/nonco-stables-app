@@ -92,11 +92,11 @@ function TransactionRow({
   return (
     <tr className={`group cursor-pointer transition-colors duration-150 hover:bg-[rgba(255,255,255,0.03)] border-b border-[rgba(255,255,255,0.03)] ${index % 2 === 1 ? "bg-[rgba(255,255,255,0.02)]" : ""}`}>
       {/* Transaction: icon + name + ref */}
-      <td className="px-6 py-4">
-        <div className="flex items-center gap-3">
+      <td className="px-3 sm:px-6 py-3 sm:py-4">
+        <div className="flex items-center gap-2 sm:gap-3">
           <TxIcon type={tx.type} />
           <div className="min-w-0">
-            <p className="text-sm text-white font-medium truncate">{tx.description}</p>
+            <p className="text-xs sm:text-sm text-white font-medium truncate">{tx.description}</p>
             <p className="text-[10px] text-[var(--text-4)] font-mono mt-0.5 truncate">
               REF-{tx.id.toUpperCase()}
             </p>
@@ -105,14 +105,14 @@ function TransactionRow({
       </td>
 
       {/* Counterparty */}
-      <td className="px-6 py-4 hidden md:table-cell">
+      <td className="px-3 sm:px-6 py-3 sm:py-4 hidden md:table-cell">
         <span className="text-xs text-[var(--text-3)] truncate">
           {tx.counterparty ?? "\u2014"}
         </span>
       </td>
 
       {/* Asset */}
-      <td className="px-6 py-4 hidden sm:table-cell">
+      <td className="px-3 sm:px-6 py-3 sm:py-4 hidden sm:table-cell">
         <span
           className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold font-mono uppercase tracking-wider"
           style={{ backgroundColor: pillColor.bg, color: pillColor.text }}
@@ -122,10 +122,10 @@ function TransactionRow({
       </td>
 
       {/* Amount */}
-      <td className="px-6 py-4 text-right">
+      <td className="px-3 sm:px-6 py-3 sm:py-4 text-right">
         <span
           className={cn(
-            "font-mono text-sm font-bold tabular-nums",
+            "font-mono text-xs sm:text-sm font-bold tabular-nums",
             isPositive ? "text-[var(--cyan)]" : "text-white"
           )}
         >
@@ -135,7 +135,7 @@ function TransactionRow({
       </td>
 
       {/* Time + Status */}
-      <td className="px-6 py-4 text-right">
+      <td className="px-3 sm:px-6 py-3 sm:py-4 text-right">
         <div className="flex flex-col items-end gap-1">
           <span className="text-[10px] text-[var(--text-4)] font-mono tabular-nums">
             {timeAgo(tx.timestamp)}
@@ -183,19 +183,19 @@ export function BankTransactionTable({ transactions }: BankTransactionTableProps
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-[var(--border)]">
-                <th className="px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
+                <th className="px-3 sm:px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
                   Transaction
                 </th>
-                <th className="px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden md:table-cell">
+                <th className="px-3 sm:px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden md:table-cell">
                   Counterparty
                 </th>
-                <th className="px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden sm:table-cell">
+                <th className="px-3 sm:px-6 py-3 text-left text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium hidden sm:table-cell">
                   Asset
                 </th>
-                <th className="px-6 py-3 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
+                <th className="px-3 sm:px-6 py-3 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
                   Amount
                 </th>
-                <th className="px-6 py-3 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
+                <th className="px-3 sm:px-6 py-3 text-right text-[10px] uppercase tracking-[.15em] font-mono text-[var(--text-3)] font-medium">
                   Time
                 </th>
               </tr>
@@ -210,7 +210,7 @@ export function BankTransactionTable({ transactions }: BankTransactionTableProps
       )}
 
       {/* Footer: pagination */}
-      <div className="flex items-center justify-between px-6 py-3 border-t border-[var(--border)]">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 px-3 sm:px-6 py-3 border-t border-[var(--border)]">
         <span className="text-[11px] font-mono text-[var(--text-4)]">
           Showing {(page - 1) * PAGE_SIZE + 1}-{Math.min(page * PAGE_SIZE, transactions.length)} of {transactions.length} Transactions
         </span>

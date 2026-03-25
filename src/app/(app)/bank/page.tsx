@@ -54,7 +54,7 @@ export default function BankPage() {
       {/* Header */}
       <div className="space-y-3">
         <SectionLabel>Banking & Flows</SectionLabel>
-        <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-white">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
           Treasury Operations
         </h1>
       </div>

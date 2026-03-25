@@ -40,11 +40,11 @@ export function CompletedTable({ settlements }: CompletedTableProps) {
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-[var(--border)]">
-              <th className="px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)]">Description</th>
-              <th className="px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] text-right">Amount</th>
-              <th className="px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)]">Currency</th>
-              <th className="px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] hidden sm:table-cell">Counterparty</th>
-              <th className="px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] text-right hidden sm:table-cell">Date</th>
+              <th className="px-3 sm:px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)]">Description</th>
+              <th className="px-3 sm:px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] text-right">Amount</th>
+              <th className="px-3 sm:px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)]">Currency</th>
+              <th className="px-3 sm:px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] hidden sm:table-cell">Counterparty</th>
+              <th className="px-3 sm:px-6 py-3 text-[10px] tracking-[.15em] uppercase font-mono font-medium text-[var(--text-3)] text-right hidden sm:table-cell">Date</th>
             </tr>
           </thead>
           <tbody>
@@ -58,15 +58,15 @@ export function CompletedTable({ settlements }: CompletedTableProps) {
                   i % 2 === 1 ? "bg-[rgba(255,255,255,0.02)]" : ""
                 }`}
               >
-                <td className="px-6 py-4">
-                  <span className="text-sm text-[var(--text-2)]">{t.description}</span>
+                <td className="px-3 sm:px-6 py-3 sm:py-4">
+                  <span className="text-xs sm:text-sm text-[var(--text-2)]">{t.description}</span>
                 </td>
-                <td className="px-6 py-4 text-right">
-                  <span className="font-mono text-sm font-bold text-white tabular-nums">
+                <td className="px-3 sm:px-6 py-3 sm:py-4 text-right">
+                  <span className="font-mono text-xs sm:text-sm font-bold text-white tabular-nums">
                     {formatMoney(t.amount)}
                   </span>
                 </td>
-                <td className="px-6 py-4">
+                <td className="px-3 sm:px-6 py-3 sm:py-4">
                   <span
                     className="inline-flex items-center px-2.5 py-1 rounded text-[10px] font-mono font-bold"
                     style={{
@@ -77,11 +77,11 @@ export function CompletedTable({ settlements }: CompletedTableProps) {
                     {t.currency}
                   </span>
                 </td>
-                <td className="px-6 py-4 hidden sm:table-cell">
-                  <span className="font-mono text-sm text-[var(--text-3)]">{t.counterparty}</span>
+                <td className="px-3 sm:px-6 py-3 sm:py-4 hidden sm:table-cell">
+                  <span className="font-mono text-xs sm:text-sm text-[var(--text-3)]">{t.counterparty}</span>
                 </td>
-                <td className="px-6 py-4 text-right hidden sm:table-cell">
-                  <span className="font-mono text-sm text-[var(--text-3)] tabular-nums">
+                <td className="px-3 sm:px-6 py-3 sm:py-4 text-right hidden sm:table-cell">
+                  <span className="font-mono text-xs sm:text-sm text-[var(--text-3)] tabular-nums">
                     {timeAgo(t.timestamp)}
                   </span>
                 </td>

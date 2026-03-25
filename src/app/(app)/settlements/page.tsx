@@ -64,7 +64,7 @@ export default function SettlementsPage() {
       {/* Header */}
       <div className="space-y-3">
         <SectionLabel>Institutional Settlements</SectionLabel>
-        <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-white">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
           Post-Trade Clearing
         </h1>
       </div>
