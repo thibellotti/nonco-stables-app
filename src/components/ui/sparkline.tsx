@@ -66,7 +66,7 @@ export function Sparkline({
   return (
     <svg
       viewBox={`0 0 ${VB_W} ${VB_H}`}
-      preserveAspectRatio="xMaxYMax meet"
+      preserveAspectRatio="none"
       fill="none"
       aria-hidden="true"
       className={className}

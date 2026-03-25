@@ -205,7 +205,7 @@ export default function WalletPage() {
                 </div>
 
                 {/* Sparkline — pinned bottom-right */}
-                <div className="absolute bottom-0 right-0 w-[120px] h-[48px] pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
+                <div className="absolute bottom-0 right-0 w-1/2 h-12 pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
                   <Sparkline data={sparklineData[b.currency] ?? []} color={colors?.border ?? "var(--cyan)"} strokeWidth={2} />
                 </div>
               </div>
