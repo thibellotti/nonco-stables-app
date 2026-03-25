@@ -61,10 +61,10 @@ const actions = [
 
 export function QuickActions() {
   return (
-    <div>
+    <div className="h-full flex flex-col">
       <SectionLabel className="mb-3">Quick Actions</SectionLabel>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 grid-rows-2 gap-3 flex-1">
         {actions.map((a) => (
           <Link
             key={a.label}
