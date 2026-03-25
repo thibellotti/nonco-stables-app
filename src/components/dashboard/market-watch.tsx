@@ -4,6 +4,7 @@
 // MarketWatch — live pair prices with mini sparklines for the dashboard sidebar
 // ---------------------------------------------------------------------------
 
+import Link from "next/link";
 import { Sparkline } from "@/components/ui/sparkline";
 
 const pairs = [
@@ -103,7 +104,10 @@ export function MarketWatch() {
               .filter(Boolean)
               .join(" ")}
           >
-            <div className="flex items-center gap-3 px-5 py-4">
+            <Link
+              href={`/rfq?pair=${encodeURIComponent(p.pair)}`}
+              className="group flex items-center gap-3 px-5 py-4 cursor-pointer transition-colors duration-150 hover:bg-[rgba(255,255,255,0.03)]"
+            >
               {/* Pair name */}
               <span className="font-sans text-sm font-bold text-[var(--text)] whitespace-nowrap">
                 {p.pair}
@@ -138,7 +142,12 @@ export function MarketWatch() {
                   {p.change}
                 </div>
               </div>
-            </div>
+
+              {/* "Get Quote" slide-in on hover */}
+              <span className="shrink-0 w-0 overflow-hidden opacity-0 group-hover:w-[88px] group-hover:opacity-100 transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] text-[11px] font-sans text-[var(--cyan)] uppercase tracking-[.08em] whitespace-nowrap text-right">
+                Get Quote &rarr;
+              </span>
+            </Link>
           </li>
         ))}
       </ul>

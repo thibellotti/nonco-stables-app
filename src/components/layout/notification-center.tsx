@@ -1,9 +1,13 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback, type ReactNode } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
-type NotificationType = "offer" | "settlement" | "trade" | "deposit";
+// ---------------------------------------------------------------------------
+// Types & mock data
+// ---------------------------------------------------------------------------
+
+type NotificationType = "settlement" | "deposit" | "price" | "withdrawal";
 
 interface Notification {
   id: string;
@@ -15,43 +19,51 @@ interface Notification {
 }
 
 const initialNotifications: Notification[] = [
-  { id: "n1", type: "offer", title: "Desk Offer: USDT at 17.42", body: "2M USDT available — limited inventory", time: "2m ago", unread: true },
-  { id: "n2", type: "settlement", title: "Settlement completed", body: "EUR/USDT T+1 — $108,350 settled with Deutsche Bank", time: "14m ago", unread: true },
-  { id: "n3", type: "trade", title: "Trade executed", body: "Buy MXN/USDT Spot — 100,000 @ 17.4520", time: "1h ago", unread: false },
-  { id: "n4", type: "deposit", title: "Deposit received", body: "Wire deposit — $250,000 USD from Citibank N.A.", time: "3h ago", unread: false },
-  { id: "n5", type: "offer", title: "Desk Offer: EUR at 1.0830", body: "500K EUR available — competitive rate", time: "5h ago", unread: false },
+  {
+    id: "n1",
+    type: "settlement",
+    title: "Settlement due tomorrow",
+    body: "EUR/USDT T+1, $108K",
+    time: "12m ago",
+    unread: true,
+  },
+  {
+    id: "n2",
+    type: "deposit",
+    title: "Deposit confirmed",
+    body: "$250K USD from Citibank",
+    time: "34m ago",
+    unread: true,
+  },
+  {
+    id: "n3",
+    type: "price",
+    title: "Price alert",
+    body: "MXN/USDT crossed 17.45",
+    time: "1h ago",
+    unread: true,
+  },
+  {
+    id: "n4",
+    type: "withdrawal",
+    title: "Withdrawal pending",
+    body: "875K MXN to Banorte",
+    time: "3h ago",
+    unread: false,
+  },
 ];
 
-const typeColors: Record<NotificationType, string> = {
-  offer: "var(--cyan)",
-  trade: "var(--green)",
+// Color mapping for notification dot indicators
+const dotColors: Record<NotificationType, string> = {
   settlement: "var(--amber)",
-  deposit: "var(--purple)",
+  deposit: "var(--cyan)",
+  price: "var(--green)",
+  withdrawal: "var(--purple)",
 };
 
-const typeIcons: Record<string, ReactNode> = {
-  offer: (
-    <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M8 2L2 8l6 6 6-6-6-6z" />
-    </svg>
-  ),
-  settlement: (
-    <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <circle cx="8" cy="8" r="6" />
-      <path d="M8 5v3l2 1.5" />
-    </svg>
-  ),
-  trade: (
-    <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M3 6h8l-2-2M13 10H5l2 2" />
-    </svg>
-  ),
-  deposit: (
-    <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M8 3v10M8 13l-3-3M8 13l3-3" />
-    </svg>
-  ),
-};
+// ---------------------------------------------------------------------------
+// Animation variants
+// ---------------------------------------------------------------------------
 
 const dropdownVariants = {
   hidden: { opacity: 0, y: -8, scale: 0.95 },
@@ -60,6 +72,10 @@ const dropdownVariants = {
 };
 
 const easeOutExpo = [0.16, 1, 0.3, 1] as const;
+
+// ---------------------------------------------------------------------------
+// NotificationCenter
+// ---------------------------------------------------------------------------
 
 export function NotificationCenter() {
   const [isOpen, setIsOpen] = useState(false);
@@ -128,19 +144,19 @@ export function NotificationCenter() {
           <path d="M7 14a2 2 0 004 0" />
         </svg>
 
-        {/* Unread badge */}
+        {/* Unread count badge — red */}
         {unreadCount > 0 && (
-          <span className="min-w-4 h-4 text-[10px] font-bold bg-[var(--cyan)] text-black rounded-full flex items-center justify-center absolute -top-1.5 -right-2 px-1">
+          <span className="min-w-4 h-4 text-[10px] font-bold bg-[var(--red)] text-white rounded-full flex items-center justify-center absolute -top-1.5 -right-2 px-1">
             {unreadCount}
           </span>
         )}
       </button>
 
-      {/* Dropdown */}
+      {/* Dropdown panel */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="absolute right-0 top-[calc(100%+8px)] w-[calc(100vw-2rem)] max-w-[380px] bg-[var(--bg-card)] border border-[var(--border)] rounded-xl shadow-2xl overflow-hidden z-50"
+            className="absolute right-0 top-[calc(100%+8px)] w-[calc(100vw-2rem)] max-w-[380px] glass-panel border border-[var(--border)] rounded-xl shadow-2xl overflow-hidden z-50"
             variants={dropdownVariants}
             initial="hidden"
             animate="visible"
@@ -151,63 +167,74 @@ export function NotificationCenter() {
             <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--border)]">
               <span className="text-sm font-medium text-[var(--text)] font-sans">Notifications</span>
               {unreadCount > 0 && (
+                <span className="text-[11px] font-mono text-[var(--text-4)] bg-[rgba(255,255,255,0.06)] rounded-full px-2 py-0.5">
+                  {unreadCount} new
+                </span>
+              )}
+            </div>
+
+            {/* Notification list */}
+            <div className="max-h-[400px] overflow-y-auto">
+              {notifications.map((notification, index) => {
+                const dotColor = dotColors[notification.type];
+
+                return (
+                  <div
+                    key={notification.id}
+                    className={`flex gap-3 px-4 py-3 transition-colors duration-150 hover:bg-[rgba(255,255,255,0.03)] ${
+                      notification.unread ? "bg-[rgba(255,255,255,0.02)]" : ""
+                    } ${index < notifications.length - 1 ? "border-b border-[var(--border)]" : ""}`}
+                  >
+                    {/* Colored dot indicator */}
+                    <div className="shrink-0 mt-1.5">
+                      <span
+                        className="block w-2 h-2 rounded-full"
+                        style={{
+                          backgroundColor: dotColor,
+                          boxShadow: notification.unread
+                            ? `0 0 6px ${dotColor}`
+                            : "none",
+                          opacity: notification.unread ? 1 : 0.4,
+                        }}
+                      />
+                    </div>
+
+                    {/* Content */}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <p className={`text-sm font-sans truncate ${notification.unread ? "font-medium text-[var(--text)]" : "text-[var(--text-3)]"}`}>
+                          {notification.title}
+                        </p>
+                        {notification.unread && (
+                          <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-[var(--cyan)]" />
+                        )}
+                      </div>
+                      <p className="text-xs text-[var(--text-4)] font-sans mt-0.5">
+                        {notification.body}
+                      </p>
+                      <span className="text-[11px] font-mono text-[var(--text-4)] mt-1 block" style={{ fontVariantNumeric: "tabular-nums" }}>
+                        {notification.time}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Footer — Mark all read */}
+            <div className="px-4 py-3 border-t border-[var(--border)] flex items-center justify-between">
+              {unreadCount > 0 ? (
                 <button
                   className="text-xs text-[var(--cyan)] hover:text-[var(--text)] transition-colors duration-150 font-sans"
                   onClick={handleMarkAllRead}
                 >
                   Mark all read
                 </button>
+              ) : (
+                <span className="text-xs text-[var(--text-4)] font-sans">All caught up</span>
               )}
-            </div>
-
-            {/* Notification list */}
-            <div className="max-h-[400px] overflow-y-auto">
-              {notifications.map((notification, index) => (
-                <div
-                  key={notification.id}
-                  className={`flex gap-3 px-4 py-3 ${
-                    notification.unread ? "bg-[rgba(255,255,255,0.03)]" : ""
-                  } ${index < notifications.length - 1 ? "border-b border-[var(--border)]" : ""}`}
-                >
-                  {/* Type icon */}
-                  {(() => {
-                    const typeColor = typeColors[notification.type] ?? "var(--text-3)";
-                    return (
-                      <div
-                        className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5"
-                        style={{
-                          backgroundColor: `color-mix(in srgb, ${typeColor} 15%, transparent)`,
-                          color: typeColor,
-                          opacity: notification.unread ? 1 : 0.5,
-                        }}
-                      >
-                        {typeIcons[notification.type] ?? (
-                          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: typeColor }} />
-                        )}
-                      </div>
-                    );
-                  })()}
-
-                  {/* Content */}
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-[var(--text)] font-sans truncate">
-                      {notification.title}
-                    </p>
-                    <p className="text-xs text-[var(--text-3)] font-sans mt-0.5 line-clamp-2">
-                      {notification.body}
-                    </p>
-                    <span className="text-[11px] font-mono text-[var(--text-4)] mt-1 block">
-                      {notification.time}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Footer */}
-            <div className="px-4 py-3 border-t border-[var(--border)] text-center">
-              <button className="text-xs text-[var(--cyan)] hover:text-[var(--text)] transition-colors duration-150 font-sans">
-                View all notifications
+              <button className="text-xs text-[var(--text-4)] hover:text-[var(--text)] transition-colors duration-150 font-sans">
+                View all
               </button>
             </div>
           </motion.div>

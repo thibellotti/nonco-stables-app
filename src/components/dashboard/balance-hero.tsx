@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 import { SectionLabel } from "@/components/ui/section-label";
 import { balances, usdRates } from "@/lib/mock-data";
 import { formatMoney } from "@/lib/utils";
@@ -141,6 +142,31 @@ function chartY(idx: number): number {
     pad
   );
 }
+
+// ---------------------------------------------------------------------------
+// Stagger animation variants for stat cards
+// ---------------------------------------------------------------------------
+
+const statsContainerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.06,
+    },
+  },
+};
+
+const statCardVariants = {
+  hidden: { opacity: 0, y: 12 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.4,
+      ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+    },
+  },
+};
 
 // ---------------------------------------------------------------------------
 // Component
@@ -436,10 +462,18 @@ export function BalanceHero() {
         )}
       </div>
 
-      {/* Stats row — below chart as mini-cards */}
-      <div className="grid grid-cols-3 gap-3 mt-6">
+      {/* Stats row — below chart as mini-cards with stagger entrance */}
+      <motion.div
+        className="grid grid-cols-3 gap-3 mt-6"
+        variants={statsContainerVariants}
+        initial="hidden"
+        animate="visible"
+      >
         {/* Available */}
-        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-4 flex items-center gap-3">
+        <motion.div
+          variants={statCardVariants}
+          className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-4 flex items-center gap-3"
+        >
           <div className="w-9 h-9 rounded-lg bg-[rgba(5,224,248,0.08)] flex items-center justify-center shrink-0">
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
               <path d="M9 2v14M3 9h12" stroke="var(--cyan)" strokeWidth="1.5" strokeLinecap="round" />
@@ -451,10 +485,13 @@ export function BalanceHero() {
               <AnimatedNumber value={totalAvailable} prefix="$" suffix="M" formatter={(n) => (n / 1_000_000).toFixed(2)} />
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Pending */}
-        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-4 flex items-center gap-3">
+        <motion.div
+          variants={statCardVariants}
+          className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-4 flex items-center gap-3"
+        >
           <div className="w-9 h-9 rounded-lg bg-[var(--amber-dim)] flex items-center justify-center shrink-0">
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
               <circle cx="9" cy="9" r="6.5" stroke="var(--amber)" strokeWidth="1.5" />
@@ -467,10 +504,13 @@ export function BalanceHero() {
               <AnimatedNumber value={totalPending} prefix="$" suffix="M" formatter={(n) => (n / 1_000_000).toFixed(2)} />
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Currencies */}
-        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-4 flex items-center gap-3">
+        <motion.div
+          variants={statCardVariants}
+          className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-4 flex items-center gap-3"
+        >
           <div className="w-9 h-9 rounded-lg bg-[var(--green-dim)] flex items-center justify-center shrink-0">
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
               <circle cx="7" cy="7" r="4.5" stroke="var(--green)" strokeWidth="1.5" />
@@ -483,8 +523,8 @@ export function BalanceHero() {
               <AnimatedNumber value={balances.length} formatter={(n) => Math.round(n).toString()} />
             </div>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 }
