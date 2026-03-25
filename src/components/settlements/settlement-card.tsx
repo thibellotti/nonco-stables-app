@@ -106,7 +106,7 @@ export function SettlementCard({
   if (isProcessing) {
     return (
       <div className="processing-border rounded-lg">
-        <div className="bg-[var(--bg-card)] rounded-lg">
+        <div className="bg-[var(--bg-card)] rounded-lg data-grid-bg">
           {cardInner}
         </div>
       </div>

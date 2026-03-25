@@ -74,6 +74,33 @@ export default function BankPage() {
         />
       </div>
 
+      {/* Flow visualization bar */}
+      {(() => {
+        const total = totalDeposits + totalWithdrawals;
+        if (total === 0) return null;
+        const depositPct = Math.round((totalDeposits / total) * 100);
+        const withdrawalPct = 100 - depositPct;
+        return (
+          <div>
+            <div className="flex h-1.5 w-full rounded-full overflow-hidden gap-px">
+              <div
+                className="h-full rounded-full bg-[var(--cyan)]"
+                style={{ width: `${depositPct}%` }}
+              />
+              <div
+                className="h-full rounded-full bg-[var(--purple)]"
+                style={{ width: `${withdrawalPct}%` }}
+              />
+            </div>
+            <p className="text-[11px] font-sans text-[var(--text-4)] mt-2 tracking-wide">
+              <span className="text-[var(--cyan)]">Inflows {depositPct}%</span>
+              <span className="mx-1.5">·</span>
+              <span className="text-[var(--purple)]">Outflows {withdrawalPct}%</span>
+            </p>
+          </div>
+        );
+      })()}
+
       {/* Pending actions callout */}
       {pendingCount > 0 && (
         <div className="flex items-center gap-3 px-4 py-3 rounded-lg border border-[rgba(249,226,32,0.3)] bg-[rgba(249,226,32,0.05)]">

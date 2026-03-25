@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { PageTransition } from "@/components/ui/page-transition";
 import { transactions } from "@/lib/mock-data";
 import { formatMoney, formatCompact } from "@/lib/utils";
@@ -257,21 +258,37 @@ export default function SettlementsPage() {
 
       {/* Pending settlement cards */}
       {activeTab === "pending" && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.08 } },
+          }}
+        >
           {pendingSettlements.map((s, i) => (
-            <SettlementCard
+            <motion.div
               key={s.id}
-              pair={s.pair}
-              amount={s.amount}
-              status={s.status}
-              counterparty={s.counterparty}
-              dueDate={s.dueDate}
-              settlement={s.settlement}
-              progress={s.progress}
-              index={i}
-            />
+              variants={{
+                hidden: { opacity: 0, y: 12, scale: 0.97 },
+                visible: { opacity: 1, y: 0, scale: 1 },
+              }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <SettlementCard
+                pair={s.pair}
+                amount={s.amount}
+                status={s.status}
+                counterparty={s.counterparty}
+                dueDate={s.dueDate}
+                settlement={s.settlement}
+                progress={s.progress}
+                index={i}
+              />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       )}
 
       {/* Completed settlements */}

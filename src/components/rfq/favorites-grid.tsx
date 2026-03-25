@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { favorites, type Instrument } from "@/lib/mock-data";
 import { formatMoney } from "@/lib/utils";
 import { currencyColors } from "@/lib/currency-colors";
@@ -123,7 +124,15 @@ export function FavoritesGrid({ onQuote, compact = false }: FavoritesGridProps) 
   // Default mode — full 2x2 / 4-col grid with sparklines and rates
   // -------------------------------------------------------------------------
   return (
-    <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
+    <motion.div
+      className="grid grid-cols-2 xl:grid-cols-4 gap-4"
+      initial="hidden"
+      animate="visible"
+      variants={{
+        hidden: {},
+        visible: { transition: { staggerChildren: 0.05 } },
+      }}
+    >
       {favorites.map((fav) => {
         const [base, quote] = fav.instrument.pair.split("/");
         const baseName = currencyNames[base] ?? base;
@@ -132,70 +141,131 @@ export function FavoritesGrid({ onQuote, compact = false }: FavoritesGridProps) 
         const sparkData = pairSparklines[fav.instrument.pair] ?? [1, 1.01, 1, 1.01];
 
         return (
-          <div
+          <FavoriteCard
             key={fav.id}
-            className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg hover:border-[var(--border-outline)] transition-colors duration-200 flex flex-col"
-            style={{
-              borderTopWidth: 2,
-              borderTopColor: colors.border,
-            }}
-          >
-            {/* Top: pair code + star */}
-            <div className="px-4 pt-4">
-              <div className="flex items-start justify-between">
-                <p className="text-[11px] font-mono text-[var(--text-3)] uppercase tracking-wider">
-                  {base}/{quote}
-                </p>
-                {/* Star icon */}
-                <svg
-                  className="w-3.5 h-3.5 text-[var(--cyan)] opacity-40 shrink-0 mt-0.5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  aria-hidden="true"
-                >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-              </div>
-              <p className="text-sm font-bold text-[var(--text)] mt-0.5">
-                {baseName}
-              </p>
-              <p className="text-lg font-mono font-bold text-white tracking-tight mt-1">
-                {rate !== undefined ? rate.toFixed(4) : "\u2014"}
-              </p>
-            </div>
-
-            {/* Sparkline */}
-            <div className="mt-3 h-8 px-4">
-              <Sparkline
-                data={sparkData}
-                color={colors.border}
-                showArea={false}
-                strokeWidth={1.5}
-              />
-            </div>
-
-            {/* Bottom: quantity + quote button */}
-            <div className="flex gap-2 px-4 pt-3 pb-4">
-              <input
-                type="text"
-                inputMode="numeric"
-                aria-label={`Quantity for ${fav.instrument.pair}`}
-                value={formatMoney(quantities[fav.id]).replace(/\.00$/, "")}
-                onChange={(e) => handleQuantityChange(fav.id, e.target.value)}
-                className="flex-1 min-w-0 bg-[var(--bg-highest)] rounded px-3 py-2 font-mono text-sm text-white placeholder:text-[var(--text-4)] focus:outline-none focus:ring-1 focus:ring-[var(--cyan)] focus:ring-opacity-30 transition-colors"
-              />
-              <Button
-                variant="cyan"
-                size="sm"
-                onClick={() => onQuote(fav.instrument, quantities[fav.id])}
-                className="shrink-0"
-              >
-                Quote
-              </Button>
-            </div>
-          </div>
+            fav={fav}
+            base={base}
+            quote={quote}
+            baseName={baseName}
+            rate={rate}
+            colors={colors}
+            sparkData={sparkData}
+            quantity={quantities[fav.id]}
+            onQuantityChange={(value) => handleQuantityChange(fav.id, value)}
+            onQuote={() => onQuote(fav.instrument, quantities[fav.id])}
+          />
         );
       })}
-    </div>
+    </motion.div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// FavoriteCard — extracted to manage hover state for glow + star
+// ---------------------------------------------------------------------------
+
+interface FavoriteCardProps {
+  fav: (typeof favorites)[number];
+  base: string;
+  quote: string;
+  baseName: string;
+  rate: number | undefined;
+  colors: { border: string; bg: string; text: string };
+  sparkData: number[];
+  quantity: number;
+  onQuantityChange: (value: string) => void;
+  onQuote: () => void;
+}
+
+function FavoriteCard({
+  fav,
+  base,
+  quote,
+  baseName,
+  rate,
+  colors,
+  sparkData,
+  quantity,
+  onQuantityChange,
+  onQuote,
+}: FavoriteCardProps) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <motion.div
+      variants={{
+        hidden: { opacity: 0, y: 8 },
+        visible: { opacity: 1, y: 0 },
+      }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg hover:border-[var(--border-outline)] transition-all duration-200 flex flex-col"
+      style={{
+        borderTopWidth: 2,
+        borderTopColor: hovered ? colors.border : colors.border,
+        boxShadow: hovered ? `0 0 20px ${colors.border}15` : "none",
+        filter: hovered ? "brightness(1.05)" : "none",
+        transition: "box-shadow 0.3s ease, filter 0.3s ease, border-color 0.2s ease",
+      }}
+    >
+      {/* Top: pair code + star */}
+      <div className="px-4 pt-4">
+        <div className="flex items-start justify-between">
+          <p className="text-[11px] font-mono text-[var(--text-3)] uppercase tracking-wider">
+            {base}/{quote}
+          </p>
+          {/* Star icon — golden favorite toggle */}
+          <svg
+            className="w-3.5 h-3.5 shrink-0 mt-0.5 transition-opacity duration-200"
+            style={{
+              color: "var(--amber)",
+              opacity: hovered ? 1 : 0.6,
+            }}
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            aria-hidden="true"
+          >
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+          </svg>
+        </div>
+        <p className="text-sm font-bold text-[var(--text)] mt-0.5">
+          {baseName}
+        </p>
+        <p className="text-lg font-mono font-bold text-white tracking-tight mt-1">
+          {rate !== undefined ? rate.toFixed(4) : "\u2014"}
+        </p>
+      </div>
+
+      {/* Sparkline */}
+      <div className="mt-3 h-8 px-4">
+        <Sparkline
+          data={sparkData}
+          color={colors.border}
+          showArea={false}
+          strokeWidth={1.5}
+        />
+      </div>
+
+      {/* Bottom: quantity + quote button */}
+      <div className="flex gap-2 px-4 pt-3 pb-4">
+        <input
+          type="text"
+          inputMode="numeric"
+          aria-label={`Quantity for ${fav.instrument.pair}`}
+          value={formatMoney(quantity).replace(/\.00$/, "")}
+          onChange={(e) => onQuantityChange(e.target.value)}
+          className="flex-1 min-w-0 bg-[var(--bg-highest)] rounded px-3 py-2 font-mono text-sm text-white placeholder:text-[var(--text-4)] focus:outline-none focus:ring-1 focus:ring-[var(--cyan)] focus:ring-opacity-30 transition-colors"
+        />
+        <Button
+          variant="cyan"
+          size="sm"
+          onClick={onQuote}
+          className="shrink-0"
+        >
+          Quote
+        </Button>
+      </div>
+    </motion.div>
   );
 }

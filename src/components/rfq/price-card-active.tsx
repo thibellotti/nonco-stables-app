@@ -295,6 +295,18 @@ export function PriceCardActive({
           <CountdownRing progress={progress} isUrgent={isUrgent} formatted={formatted} />
         </div>
 
+        {/* Horizontal countdown bar */}
+        <div className="w-full h-[2px] rounded-full bg-[var(--border)] overflow-hidden">
+          <div
+            className="h-full rounded-full"
+            style={{
+              width: `${progress * 100}%`,
+              backgroundColor: progress > 0.3 ? "var(--cyan)" : "var(--amber)",
+              transition: "width 1s linear, background-color 0.3s ease",
+            }}
+          />
+        </div>
+
         {/* Settlement tabs + premium */}
         <div className="flex items-center gap-3 flex-wrap">
           <SettlementTabs active={settlement} onChange={onSettlementChange} />

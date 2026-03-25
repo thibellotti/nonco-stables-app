@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { PageTransition } from "@/components/ui/page-transition";
 import { Button } from "@/components/ui/button";
 import { recentTrades } from "@/lib/mock-data";
@@ -107,6 +108,40 @@ function formatCompactVolume(value: number) {
   if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(2)}M`;
   if (value >= 1_000) return `$${(value / 1_000).toFixed(0)}K`;
   return `$${value.toFixed(0)}`;
+}
+
+// ---------------------------------------------------------------------------
+// Date grouping helpers
+// ---------------------------------------------------------------------------
+
+function getDateGroup(date: Date): string {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const yesterday = new Date(today.getTime() - 86400000);
+  const weekAgo = new Date(today.getTime() - 7 * 86400000);
+  const txDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+  if (txDate.getTime() >= today.getTime()) return "Today";
+  if (txDate.getTime() >= yesterday.getTime()) return "Yesterday";
+  if (txDate.getTime() >= weekAgo.getTime()) return "This Week";
+  return "Earlier";
+}
+
+function groupTradesByDate(
+  trades: RecentTrade[]
+): { label: string; items: RecentTrade[] }[] {
+  const groupOrder = ["Today", "Yesterday", "This Week", "Earlier"];
+  const groups: Record<string, RecentTrade[]> = {};
+
+  for (const trade of trades) {
+    const label = getDateGroup(trade.timestamp);
+    if (!groups[label]) groups[label] = [];
+    groups[label].push(trade);
+  }
+
+  return groupOrder
+    .filter((label) => groups[label]?.length)
+    .map((label) => ({ label, items: groups[label] }));
 }
 
 type SortKey = "pair" | "quantity" | "price" | "timestamp";
@@ -314,74 +349,99 @@ export default function TradesPage() {
             </tr>
           </thead>
           <tbody>
-            {filteredTrades.map((trade) => (
-              <tr
-                key={trade.id}
-                className="border-b border-[rgba(255,255,255,0.03)] hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-150"
-              >
-                {/* Pair cell with monogram */}
-                <td className="px-3 sm:px-6 py-3 sm:py-4">
-                  {(() => {
-                    const baseCurrency = trade.pair.split("/")[0];
-                    const baseColor = currencyColors[baseCurrency]?.border ?? "var(--cyan)";
-                    return (
-                      <div className="flex items-center gap-2 sm:gap-3">
-                        <div
-                          className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0"
-                          style={{ backgroundColor: `${baseColor}15`, borderColor: `${baseColor}30`, borderWidth: 1 }}
-                        >
-                          <span className="font-mono text-[11px] font-bold" style={{ color: baseColor }}>
-                            {baseCurrency.slice(0, 2)}
+            {(() => {
+              const groups = groupTradesByDate(filteredTrades);
+              let globalIndex = 0;
+
+              return groups.map((group) => {
+                const rows = group.items.map((trade) => {
+                  const idx = globalIndex++;
+                  return (
+                    <motion.tr
+                      key={trade.id}
+                      initial={{ opacity: 0, y: 4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: idx * 0.03, ease: [0.16, 1, 0.3, 1] }}
+                      className="border-b border-[rgba(255,255,255,0.03)] hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-150"
+                    >
+                      {/* Pair cell with monogram */}
+                      <td className="px-3 sm:px-6 py-3 sm:py-4">
+                        {(() => {
+                          const baseCurrency = trade.pair.split("/")[0];
+                          const baseColor = currencyColors[baseCurrency]?.border ?? "var(--cyan)";
+                          return (
+                            <div className="flex items-center gap-2 sm:gap-3">
+                              <div
+                                className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0"
+                                style={{ backgroundColor: `${baseColor}15`, borderColor: `${baseColor}30`, borderWidth: 1 }}
+                              >
+                                <span className="font-mono text-[11px] font-bold" style={{ color: baseColor }}>
+                                  {baseCurrency.slice(0, 2)}
+                                </span>
+                              </div>
+                              <span className="font-mono text-xs sm:text-sm font-bold text-white">{trade.pair}</span>
+                            </div>
+                          );
+                        })()}
+                      </td>
+
+                      {/* Side pill */}
+                      <td className="px-3 sm:px-6 py-3 sm:py-4">
+                        {trade.side === "buy" ? (
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold font-sans uppercase tracking-[.08em] bg-[rgba(5,224,248,0.1)] text-[var(--cyan)]">
+                            Buy
                           </span>
-                        </div>
-                        <span className="font-mono text-xs sm:text-sm font-bold text-white">{trade.pair}</span>
-                      </div>
-                    );
-                  })()}
-                </td>
+                        ) : (
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold font-sans uppercase tracking-[.08em] bg-[rgba(161,36,248,0.1)] text-[var(--purple)]">
+                            Sell
+                          </span>
+                        )}
+                      </td>
 
-                {/* Side pill */}
-                <td className="px-3 sm:px-6 py-3 sm:py-4">
-                  {trade.side === "buy" ? (
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold font-sans uppercase tracking-[.08em] bg-[rgba(5,224,248,0.1)] text-[var(--cyan)]">
-                      Buy
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold font-sans uppercase tracking-[.08em] bg-[rgba(161,36,248,0.1)] text-[var(--purple)]">
-                      Sell
-                    </span>
-                  )}
-                </td>
+                      {/* Quantity */}
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 text-right">
+                        <span className="font-mono text-xs sm:text-sm text-white tabular-nums">
+                          {formatMoney(trade.quantity)}
+                        </span>
+                      </td>
 
-                {/* Quantity */}
-                <td className="px-3 sm:px-6 py-3 sm:py-4 text-right">
-                  <span className="font-mono text-xs sm:text-sm text-white tabular-nums">
-                    {formatMoney(trade.quantity)}
-                  </span>
-                </td>
+                      {/* Price */}
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 text-right">
+                        <span className="font-mono text-xs sm:text-sm text-white tabular-nums">
+                          {trade.price.toFixed(4)}
+                        </span>
+                      </td>
 
-                {/* Price */}
-                <td className="px-3 sm:px-6 py-3 sm:py-4 text-right">
-                  <span className="font-mono text-xs sm:text-sm text-white tabular-nums">
-                    {trade.price.toFixed(4)}
-                  </span>
-                </td>
+                      {/* Settlement */}
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 hidden sm:table-cell">
+                        <span className="inline-flex items-center px-2.5 py-1 rounded bg-[rgba(255,255,255,0.06)] text-[11px] font-mono font-medium text-[var(--text-3)]">
+                          {trade.settlement}
+                        </span>
+                      </td>
 
-                {/* Settlement */}
-                <td className="px-3 sm:px-6 py-3 sm:py-4 hidden sm:table-cell">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded bg-[rgba(255,255,255,0.06)] text-[11px] font-mono font-medium text-[var(--text-3)]">
-                    {trade.settlement}
-                  </span>
-                </td>
+                      {/* Date */}
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 text-right hidden sm:table-cell">
+                        <span className="font-mono text-xs sm:text-sm text-[var(--text-3)] tabular-nums">
+                          {timeAgo(trade.timestamp)}
+                        </span>
+                      </td>
+                    </motion.tr>
+                  );
+                });
 
-                {/* Date */}
-                <td className="px-3 sm:px-6 py-3 sm:py-4 text-right hidden sm:table-cell">
-                  <span className="font-mono text-xs sm:text-sm text-[var(--text-3)] tabular-nums">
-                    {timeAgo(trade.timestamp)}
-                  </span>
-                </td>
-              </tr>
-            ))}
+                return [
+                  <tr key={`group-${group.label}`}>
+                    <td
+                      colSpan={6}
+                      className="text-[11px] uppercase tracking-[.15em] text-[var(--text-3)] bg-[var(--bg-elevated)] px-6 py-2 font-sans font-medium"
+                    >
+                      {group.label}
+                    </td>
+                  </tr>,
+                  ...rows,
+                ];
+              });
+            })()}
           </tbody>
         </table>
 

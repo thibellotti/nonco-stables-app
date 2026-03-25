@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { motion } from "framer-motion";
 import { PageTransition } from "@/components/ui/page-transition";
 import { Button } from "@/components/ui/button";
 import { Sparkline } from "@/components/ui/sparkline";
@@ -146,13 +148,27 @@ export default function WalletPage() {
         <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] mb-3">
           Holdings
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+        <motion.div
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.05 } },
+          }}
+        >
           {balances.map((b) => {
             const colors = currencyColors[b.currency];
             const meta = currencyMeta[b.currency];
+            const swapStable = b.currency === "EUR" || b.currency === "GBP" ? "USDC" : "USDT";
             return (
-              <div
+              <motion.div
                 key={b.currency}
+                variants={{
+                  hidden: { opacity: 0, y: 8 },
+                  visible: { opacity: 1, y: 0 },
+                }}
+                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                 className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg hover:border-[var(--border-outline)] transition-all duration-200 cursor-pointer relative overflow-hidden group"
                 style={{ borderTopWidth: 2, borderTopColor: colors?.border }}
               >
@@ -202,16 +218,24 @@ export default function WalletPage() {
                       +{b.symbol}{formatMoney(b.pending)} pending
                     </p>
                   )}
+
+                  {/* Swap link — visible on hover */}
+                  <Link
+                    href={`/rfq?pair=${b.currency}/${swapStable}`}
+                    className="text-[11px] uppercase tracking-wider text-[var(--cyan)] hover:text-white transition-colors opacity-0 group-hover:opacity-100 mt-2 inline-block"
+                  >
+                    Swap
+                  </Link>
                 </div>
 
                 {/* Sparkline — pinned bottom-right */}
                 <div className="absolute bottom-0 right-0 w-1/2 h-12 pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
                   <Sparkline data={sparklineData[b.currency] ?? []} color={colors?.border ?? "var(--cyan)"} strokeWidth={2} />
                 </div>
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
     </PageTransition>
   );
