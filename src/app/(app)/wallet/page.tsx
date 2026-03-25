@@ -153,51 +153,46 @@ export default function WalletPage() {
             return (
               <div
                 key={b.currency}
-                className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden hover:border-[var(--border-outline)] transition-colors cursor-pointer relative"
+                className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg hover:border-[var(--border-outline)] transition-colors cursor-pointer"
+                style={{ borderTopWidth: 2, borderTopColor: colors?.border }}
               >
-                {/* Content */}
-                <div className="p-4 pb-12 relative z-10">
+                <div className="p-4 pb-0">
+                  {/* Header: circle + code + name + variation */}
                   <div className="flex items-center gap-2 mb-3">
                     <div
-                      className="w-6 h-6 rounded-full flex items-center justify-center shrink-0"
+                      className="w-2.5 h-2.5 rounded-full shrink-0"
                       style={{ backgroundColor: colors?.bg }}
-                    >
-                      <span
-                        className="text-[8px] font-mono font-bold"
-                        style={{ color: colors?.text }}
-                      >
-                        {b.currency.slice(0, 2)}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-sm font-bold text-white">
-                        {b.currency}
-                      </span>
-                      <span className="text-[11px] text-[var(--text-4)] ml-1.5">
-                        {meta?.name}
-                      </span>
-                    </div>
+                    />
+                    <span className="text-sm font-bold text-white">
+                      {b.currency}
+                    </span>
+                    <span className="text-xs text-[var(--text-4)]">
+                      {meta?.name}
+                    </span>
                     {variations[b.currency] && (
                       <span className={`text-[11px] font-mono font-bold ml-auto ${variations[b.currency].positive ? "text-[var(--green)]" : "text-[var(--red)]"}`}>
                         {variations[b.currency].pct}
                       </span>
                     )}
                   </div>
-                  <p className="text-lg font-mono font-bold text-white tabular-nums">
-                    {b.symbol}
-                    {formatMoney(b.available)}
+
+                  {/* Amount */}
+                  <p className="text-xl font-mono font-bold text-white tabular-nums">
+                    {b.symbol}{formatMoney(b.available)}
                   </p>
+
+                  {/* Pending */}
+                  {b.pending > 0 && (
+                    <p className="text-[11px] text-[var(--amber)] font-mono mt-1 tabular-nums">
+                      +{b.symbol}{formatMoney(b.pending)} pending
+                    </p>
+                  )}
                 </div>
-                {/* Sparkline anchored to bottom */}
-                <div className="absolute bottom-0 left-0 right-0 h-16">
-                  <Sparkline data={sparklineData[b.currency] ?? []} color={colors?.border ?? "var(--cyan)"} width={200} height={64} className="w-full h-full" />
+
+                {/* Sparkline — normal flow, bleeds to card edges */}
+                <div className="mt-3 h-10">
+                  <Sparkline data={sparklineData[b.currency] ?? []} color={colors?.border ?? "var(--cyan)"} width={200} height={40} className="w-full h-full" />
                 </div>
-                {b.pending > 0 && (
-                  <p className="text-[11px] text-[var(--amber)] font-mono mt-1 tabular-nums">
-                    +{b.symbol}
-                    {formatMoney(b.pending)} pending
-                  </p>
-                )}
               </div>
             );
           })}

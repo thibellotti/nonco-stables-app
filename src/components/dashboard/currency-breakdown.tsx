@@ -1,5 +1,5 @@
 import { balances } from "@/lib/mock-data";
-import { formatCompact, cn } from "@/lib/utils";
+import { formatCompact } from "@/lib/utils";
 import { SectionLabel } from "@/components/ui/section-label";
 import { Sparkline } from "@/components/ui/sparkline";
 import { currencyColors } from "@/lib/currency-colors";
@@ -31,26 +31,6 @@ const currencyNames: Record<string, string> = {
   USDC: "USD Coin",
 };
 
-// Tiny arrow icon (6x6)
-function ArrowIcon({ positive }: { positive: boolean }) {
-  return (
-    <svg
-      width="6"
-      height="6"
-      viewBox="0 0 6 6"
-      fill="none"
-      aria-hidden="true"
-      className="shrink-0"
-    >
-      {positive ? (
-        <path d="M3 0.5L5.5 3.5H0.5L3 0.5Z" fill="currentColor" />
-      ) : (
-        <path d="M3 5.5L0.5 2.5H5.5L3 5.5Z" fill="currentColor" />
-      )}
-    </svg>
-  );
-}
-
 export function CurrencyBreakdown() {
   return (
     <section>
@@ -70,59 +50,54 @@ export function CurrencyBreakdown() {
             text: "#808080",
             border: "#808080",
           };
+          const variation = variations[balance.currency];
 
           return (
             <div
               key={balance.currency}
-              className={cn(
-                "bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden relative",
-                "transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]",
-                "cursor-default group hover:border-[var(--border-outline)]"
-              )}
+              className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg cursor-default hover:border-[var(--border-outline)] transition-colors"
+              style={{ borderTopWidth: 2, borderTopColor: colors.border }}
             >
-              {/* Content — above sparkline */}
-              <div className="p-3 sm:p-4 pb-14 relative z-10">
-                {/* Top: currency code + variation */}
-                <div className="flex items-center justify-between mb-2">
+              <div className="p-4 pb-0">
+                {/* Header: dot + code + variation */}
+                <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <div
-                      className="w-4 h-4 rounded-full shrink-0 flex items-center justify-center text-[7px] font-bold text-black"
+                      className="w-2.5 h-2.5 rounded-full shrink-0"
                       style={{ backgroundColor: colors.border }}
-                    >
-                      {balance.currency.slice(0, 2)}
-                    </div>
-                    <span className="font-sans text-xs font-medium text-[var(--text)]">
+                    />
+                    <span className="text-sm font-bold font-sans text-[var(--text)]">
                       {balance.currency}
                     </span>
                   </div>
-                  {variations[balance.currency] && (
+                  {variation && (
                     <span
-                      className="flex items-center gap-0.5 font-mono text-[11px] font-bold"
+                      className="font-mono text-xs font-bold"
                       style={{
-                        color: variations[balance.currency].positive
-                          ? "var(--green)"
-                          : "var(--red)",
+                        color: variation.positive ? "var(--green)" : "var(--red)",
                       }}
                     >
-                      <ArrowIcon positive={variations[balance.currency].positive} />
-                      {variations[balance.currency].pct}
+                      {variation.pct}
                     </span>
                   )}
                 </div>
 
-                {/* Amount */}
-                <p className="font-mono text-xl font-bold tracking-tight text-white leading-none tabular-nums">
+                {/* Amount — big and bold */}
+                <p className="text-2xl font-mono font-bold text-white tabular-nums tracking-tight leading-none">
                   {formatCompact(balance.available, balance.symbol)}
+                </p>
+                <p className="text-xs font-sans text-[var(--text-4)] mt-1">
+                  {currencyNames[balance.currency]}
                 </p>
               </div>
 
-              {/* Sparkline anchored to bottom — taller, full-width */}
-              <div className="absolute bottom-0 left-0 right-0 h-12">
+              {/* Sparkline — fills bottom, no padding */}
+              <div className="mt-3 h-10">
                 <Sparkline
                   data={sparklineData[balance.currency] ?? sparklineData.USD}
                   color={colors.border}
                   width={200}
-                  height={48}
+                  height={40}
                   className="w-full h-full"
                 />
               </div>

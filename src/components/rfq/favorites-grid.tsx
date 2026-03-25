@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { favorites, type Instrument } from "@/lib/mock-data";
 import { formatMoney } from "@/lib/utils";
 import { currencyColors } from "@/lib/currency-colors";
+import { Sparkline } from "@/components/ui/sparkline";
 import { Button } from "@/components/ui/button";
 
 // ---------------------------------------------------------------------------
@@ -36,58 +37,15 @@ const BASE_RATES: Record<string, number> = {
 };
 
 // ---------------------------------------------------------------------------
-// Mini sparkline — decorative SVG with upward-trending random points
+// Mock sparkline data per pair
 // ---------------------------------------------------------------------------
 
-function generateSparklinePoints(seed: number): string {
-  const points: [number, number][] = [];
-  const width = 80;
-  const height = 24;
-  const count = 12;
-  const step = width / (count - 1);
-
-  // Seeded pseudo-random for deterministic rendering per card
-  let s = seed;
-  const rand = () => {
-    s = (s * 16807 + 0) % 2147483647;
-    return (s & 0x7fffffff) / 0x7fffffff;
-  };
-
-  for (let i = 0; i < count; i++) {
-    // Gentle upward trend: base goes from 70% to 30% of height
-    const trend = height * (0.7 - (i / (count - 1)) * 0.4);
-    const noise = (rand() - 0.5) * height * 0.4;
-    const y = Math.max(2, Math.min(height - 2, trend + noise));
-    points.push([i * step, y]);
-  }
-
-  return points.map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(" ");
-}
-
-function MiniSparkline({ color, seed }: { color: string; seed: number }) {
-  const points = useMemo(() => generateSparklinePoints(seed), [seed]);
-
-  return (
-    <svg
-      width={80}
-      height={24}
-      viewBox="0 0 80 24"
-      fill="none"
-      className="shrink-0"
-      aria-hidden="true"
-    >
-      <polyline
-        points={points}
-        stroke={color}
-        strokeOpacity={0.4}
-        strokeWidth={1.5}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
-    </svg>
-  );
-}
+const pairSparklines: Record<string, number[]> = {
+  "MXN/USDT": [17.3, 17.35, 17.4, 17.38, 17.42, 17.45, 17.44, 17.45],
+  "EUR/USDT": [1.08, 1.082, 1.081, 1.084, 1.083, 1.085, 1.083, 1.084],
+  "BRL/USDC": [5.1, 5.12, 5.11, 5.14, 5.13, 5.15, 5.14, 5.15],
+  "USD/USDT": [1.0, 1.0001, 1.0, 1.0002, 1.0001, 1.0002, 1.0001, 1.0002],
+};
 
 // ---------------------------------------------------------------------------
 // Favorites Grid
@@ -166,35 +124,36 @@ export function FavoritesGrid({ onQuote, compact = false }: FavoritesGridProps) 
   // -------------------------------------------------------------------------
   return (
     <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
-      {favorites.map((fav, index) => {
+      {favorites.map((fav) => {
         const [base, quote] = fav.instrument.pair.split("/");
         const baseName = currencyNames[base] ?? base;
         const rate = BASE_RATES[fav.instrument.pair];
         const colors = currencyColors[base] ?? currencyColors["USD"];
+        const sparkData = pairSparklines[fav.instrument.pair] ?? [1, 1.01, 1, 1.01];
 
         return (
           <div
             key={fav.id}
-            className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg hover:border-[var(--border-outline)] hover:bg-[var(--bg-elevated)] min-h-[200px] flex flex-col justify-between group transition-all duration-300"
+            className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg hover:border-[var(--border-outline)] transition-colors duration-200 flex flex-col"
             style={{
-              borderLeftWidth: 2,
-              borderLeftColor: colors.border,
+              borderTopWidth: 2,
+              borderTopColor: colors.border,
             }}
           >
-            {/* Top: pair code + name + sparkline + rate */}
-            <div className="p-6 pb-0">
+            {/* Top: pair code + star */}
+            <div className="px-4 pt-4 pb-0">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-[11px] text-[var(--text-3)] font-mono uppercase tracking-wider">
+                  <p className="text-xs font-mono text-[var(--text-3)]">
                     {base}/{quote}
                   </p>
-                  <p className="text-base lg:text-lg font-bold tracking-tight text-white mt-1">
+                  <p className="text-base font-bold text-[var(--text)] mt-0.5">
                     {baseName}
                   </p>
                 </div>
                 {/* Star icon */}
                 <svg
-                  className="w-4 h-4 text-[var(--cyan)] opacity-50 group-hover:opacity-100 transition-opacity duration-200 shrink-0 mt-0.5"
+                  className="w-3.5 h-3.5 text-[var(--cyan)] opacity-40 shrink-0 mt-0.5"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                   aria-hidden="true"
@@ -205,15 +164,23 @@ export function FavoritesGrid({ onQuote, compact = false }: FavoritesGridProps) 
 
               {/* Rate + sparkline row */}
               <div className="flex items-center justify-between mt-3">
-                <p className="font-mono text-lg text-white tracking-tight">
-                  {rate !== undefined ? rate.toFixed(4) : "—"}
+                <p className="text-lg font-mono text-white tracking-tight">
+                  {rate !== undefined ? rate.toFixed(4) : "\u2014"}
                 </p>
-                <MiniSparkline color={colors.border} seed={index * 7919 + 42} />
+                <Sparkline
+                  data={sparkData}
+                  width={64}
+                  height={24}
+                  color={colors.border}
+                  showArea={false}
+                  strokeWidth={1.5}
+                  className="shrink-0"
+                />
               </div>
             </div>
 
             {/* Bottom: quantity + quote button */}
-            <div className="flex gap-2 p-6 pt-4">
+            <div className="flex gap-2 px-4 pt-3 pb-4">
               <input
                 type="text"
                 inputMode="numeric"
