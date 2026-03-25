@@ -192,7 +192,7 @@ export function BalanceHero() {
   };
 
   return (
-    <section className="relative">
+    <section className="relative overflow-hidden">
       {/* Header row — label + period selector */}
       <div className="flex items-center justify-between mb-6">
         <div>

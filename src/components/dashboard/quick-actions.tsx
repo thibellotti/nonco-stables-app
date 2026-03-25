@@ -1,143 +1,96 @@
 "use client";
 
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { SectionLabel } from "@/components/ui/section-label";
 
+const actions = [
+  {
+    label: "Send",
+    href: "/bank",
+    icon: (
+      <path
+        d="M7 17L17 7M17 7H10M17 7v7"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    ),
+  },
+  {
+    label: "Receive",
+    href: "/bank",
+    icon: (
+      <path
+        d="M17 7L7 17M7 17h7M7 17V10"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    ),
+  },
+  {
+    label: "Convert",
+    href: "/rfq",
+    icon: (
+      <path
+        d="M5 9h14M19 9l-3-3M19 15H5M5 15l3 3"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    ),
+  },
+  {
+    label: "Deposit",
+    href: "/bank",
+    icon: (
+      <path
+        d="M12 5v14M5 12h14"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    ),
+  },
+];
+
 export function QuickActions() {
   return (
-    <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5 h-full flex flex-col">
-      <SectionLabel className="mb-5">Quick Actions</SectionLabel>
+    <div>
+      <SectionLabel className="mb-3">Quick Actions</SectionLabel>
 
-      {/* Primary actions */}
-      <div className="flex flex-col gap-2.5 flex-1">
-        {/* Send Funds */}
-        <button
-          className={cn(
-            "flex items-center gap-3 w-full px-4 py-3.5 rounded-lg",
-            "bg-transparent border border-[var(--border)]",
-            "hover:border-[rgba(5,224,248,0.3)] hover:bg-[rgba(5,224,248,0.04)]",
-            "hover:shadow-[0_0_20px_rgba(5,224,248,0.08)]",
-            "active:scale-[0.98]",
-            "transition-all duration-200 cursor-pointer group"
-          )}
-        >
-          <div className="w-9 h-9 rounded-lg bg-[var(--cyan-dim)] flex items-center justify-center shrink-0 group-hover:bg-[rgba(5,224,248,0.12)] transition-colors">
-            <svg
-              className="w-[18px] h-[18px] text-[var(--cyan)]"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M7 17L17 7M17 7H10M17 7v7" />
-            </svg>
-          </div>
-          <div className="text-left">
-            <span className="text-sm font-medium text-[var(--text)] block leading-none">
-              Send Funds
-            </span>
-            <span className="text-[11px] text-[var(--text-4)] mt-1 block">
-              Transfer to any account
-            </span>
-          </div>
-          <svg
-            className="w-4 h-4 text-[var(--text-4)] ml-auto group-hover:text-[var(--cyan)] transition-colors"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
+      <div className="grid grid-cols-2 gap-2">
+        {actions.map((a) => (
+          <Link
+            key={a.label}
+            href={a.href}
+            className={cn(
+              "flex flex-col items-center justify-center gap-2 py-5 rounded-lg",
+              "bg-[var(--bg-card)] border border-[var(--border)]",
+              "hover:border-[rgba(5,224,248,0.25)] hover:bg-[rgba(5,224,248,0.03)]",
+              "transition-all duration-200 group"
+            )}
           >
-            <path d="M9 18l6-6-6-6" />
-          </svg>
-        </button>
-
-        {/* Convert */}
-        <button
-          className={cn(
-            "flex items-center gap-3 w-full px-4 py-3.5 rounded-lg",
-            "bg-transparent border border-[var(--border)]",
-            "hover:border-[rgba(5,224,248,0.3)] hover:bg-[rgba(5,224,248,0.04)]",
-            "hover:shadow-[0_0_20px_rgba(5,224,248,0.08)]",
-            "active:scale-[0.98]",
-            "transition-all duration-200 cursor-pointer group"
-          )}
-        >
-          <div className="w-9 h-9 rounded-lg bg-[var(--cyan-dim)] flex items-center justify-center shrink-0 group-hover:bg-[rgba(5,224,248,0.12)] transition-colors">
-            <svg
-              className="w-[18px] h-[18px] text-[var(--cyan)]"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M5 9h14M19 9l-3-3M19 15H5M5 15l3 3" />
-            </svg>
-          </div>
-          <div className="text-left">
-            <span className="text-sm font-medium text-[var(--text)] block leading-none">
-              Convert
+            <div className="w-10 h-10 rounded-full bg-[rgba(255,255,255,0.04)] flex items-center justify-center group-hover:bg-[rgba(5,224,248,0.08)] transition-colors">
+              <svg
+                className="w-[18px] h-[18px] text-[var(--text-3)] group-hover:text-[var(--cyan)] transition-colors"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                {a.icon}
+              </svg>
+            </div>
+            <span className="text-xs font-sans font-medium text-[var(--text-3)] group-hover:text-white transition-colors">
+              {a.label}
             </span>
-            <span className="text-[11px] text-[var(--text-4)] mt-1 block">
-              Swap between currencies
-            </span>
-          </div>
-          <svg
-            className="w-4 h-4 text-[var(--text-4)] ml-auto group-hover:text-[var(--cyan)] transition-colors"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M9 18l6-6-6-6" />
-          </svg>
-        </button>
-      </div>
-
-      {/* Secondary links */}
-      <div className="flex items-center gap-4 mt-4 pt-4 border-t border-[var(--border)]">
-        <button className="text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--text-4)] hover:text-[var(--cyan)] transition-colors cursor-pointer flex items-center gap-1.5">
-          <svg
-            className="w-3.5 h-3.5"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M12 5v14M5 12h14" />
-          </svg>
-          Deposit
-        </button>
-        <div className="w-px h-3 bg-[var(--border)]" />
-        <button className="text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--text-4)] hover:text-[var(--cyan)] transition-colors cursor-pointer flex items-center gap-1.5">
-          <svg
-            className="w-3.5 h-3.5"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M17 7L7 17M7 17h7M7 17v-7" />
-          </svg>
-          Receive
-        </button>
+          </Link>
+        ))}
       </div>
     </div>
   );
