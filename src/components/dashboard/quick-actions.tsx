@@ -64,21 +64,21 @@ export function QuickActions() {
     <div>
       <SectionLabel className="mb-3">Quick Actions</SectionLabel>
 
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-2 gap-3">
         {actions.map((a) => (
           <Link
             key={a.label}
             href={a.href}
             className={cn(
-              "flex flex-col items-center justify-center gap-2 py-5 rounded-lg",
+              "flex flex-col items-center justify-center gap-3 py-7 rounded-lg",
               "bg-[var(--bg-card)] border border-[var(--border)]",
               "hover:border-[rgba(5,224,248,0.25)] hover:bg-[rgba(5,224,248,0.03)]",
               "transition-all duration-200 group"
             )}
           >
-            <div className="w-10 h-10 rounded-full bg-[rgba(255,255,255,0.04)] flex items-center justify-center group-hover:bg-[rgba(5,224,248,0.08)] transition-colors">
+            <div className="w-12 h-12 rounded-full bg-[rgba(255,255,255,0.04)] flex items-center justify-center group-hover:bg-[rgba(5,224,248,0.08)] transition-colors">
               <svg
-                className="w-[18px] h-[18px] text-[var(--text-3)] group-hover:text-[var(--cyan)] transition-colors"
+                className="w-5 h-5 text-[var(--text-3)] group-hover:text-[var(--cyan)] transition-colors"
                 viewBox="0 0 24 24"
                 fill="none"
                 aria-hidden="true"
@@ -86,7 +86,7 @@ export function QuickActions() {
                 {a.icon}
               </svg>
             </div>
-            <span className="text-xs font-sans font-medium text-[var(--text-3)] group-hover:text-white transition-colors">
+            <span className="text-sm font-sans font-medium text-[var(--text-3)] group-hover:text-white transition-colors">
               {a.label}
             </span>
           </Link>
