@@ -3,8 +3,6 @@ import { formatCompact, cn } from "@/lib/utils";
 import { SectionLabel } from "@/components/ui/section-label";
 import { currencyColors } from "@/lib/currency-colors";
 
-const totalAvailable = balances.reduce((sum, b) => sum + b.available, 0);
-
 // Hardcoded sparkline data (12 points each, normalized 0–1)
 const sparklineData: Record<string, number[]> = {
   USD:  [0.30, 0.32, 0.35, 0.38, 0.42, 0.48, 0.52, 0.58, 0.62, 0.70, 0.78, 0.85],
@@ -21,6 +19,15 @@ const variations: Record<string, { pct: string; positive: boolean }> = {
   MXN:  { pct: "+2.14%", positive: true },
   USDT: { pct: "+0.01%", positive: true },
   USDC: { pct: "-0.05%", positive: false },
+};
+
+// Full currency names for display
+const currencyNames: Record<string, string> = {
+  USD: "US Dollar",
+  EUR: "Euro",
+  MXN: "Mexican Peso",
+  USDT: "Tether",
+  USDC: "USD Coin",
 };
 
 // Mini sparkline SVG — purely decorative
@@ -97,152 +104,83 @@ function ArrowIcon({ positive }: { positive: boolean }) {
   );
 }
 
-// Donut chart constants
-const RADIUS = 70;
-const CIRCUMFERENCE = 2 * Math.PI * RADIUS; // ~439.82
-const GAP = 2; // 2px visual gap between segments
-
-function DonutChart() {
-  let offset = 0;
-
+export function CurrencyBreakdown() {
   return (
-    <div className="hidden lg:flex flex-col items-center justify-center">
-      <svg viewBox="0 0 160 160" width="160" height="160" className="shrink-0">
+    <section>
+      {/* Header with "View All" action */}
+      <div className="flex items-center justify-between mb-4">
+        <SectionLabel>Stable Assets</SectionLabel>
+        <button className="text-[10px] font-mono text-[var(--cyan)] uppercase tracking-wider hover:text-white transition-colors cursor-pointer">
+          View All
+        </button>
+      </div>
+
+      {/* Currency cards — full-width horizontal row */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
         {balances.map((balance) => {
           const colors = currencyColors[balance.currency] ?? {
             bg: "rgba(255,255,255,0.04)",
             text: "#808080",
             border: "#808080",
           };
-          const pct = totalAvailable > 0 ? balance.available / totalAvailable : 0;
-          const dashLength = Math.max(0, CIRCUMFERENCE * pct - GAP);
-          const dashOffset = -offset;
-          offset += CIRCUMFERENCE * pct;
 
           return (
-            <circle
+            <div
               key={balance.currency}
-              cx="80"
-              cy="80"
-              r={RADIUS}
-              fill="none"
-              stroke={colors.border}
-              strokeWidth="12"
-              strokeDasharray={`${dashLength} ${CIRCUMFERENCE - dashLength}`}
-              strokeDashoffset={dashOffset}
-              strokeLinecap="round"
-              transform="rotate(-90 80 80)"
-              className="transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
-            />
-          );
-        })}
-
-        {/* Center total */}
-        <text
-          x="80"
-          y="76"
-          textAnchor="middle"
-          dominantBaseline="central"
-          className="fill-white font-mono text-[14px] font-bold"
-        >
-          {formatCompact(totalAvailable, "$")}
-        </text>
-        <text
-          x="80"
-          y="94"
-          textAnchor="middle"
-          dominantBaseline="central"
-          className="fill-[var(--text-4)] text-[10px] uppercase tracking-[0.08em]"
-        >
-          TOTAL
-        </text>
-      </svg>
-    </div>
-  );
-}
-
-export function CurrencyBreakdown() {
-  return (
-    <section>
-      <SectionLabel className="mb-4">Balances</SectionLabel>
-
-      <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-6 items-start">
-        {/* Donut — hidden on mobile */}
-        <DonutChart />
-
-        {/* Currency cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-          {balances.map((balance) => {
-            const colors = currencyColors[balance.currency] ?? {
-              bg: "rgba(255,255,255,0.04)",
-              text: "#808080",
-              border: "#808080",
-            };
-            const pct = totalAvailable > 0 ? (balance.available / totalAvailable) * 100 : 0;
-
-            return (
-              <div
-                key={balance.currency}
-                className={cn(
-                  "bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-3 sm:p-5",
-                  "transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]",
-                  "cursor-default group hover:border-[var(--border-outline)] hover:scale-[1.02]"
-                )}
-              >
-                {/* Top: colored dot + currency symbol + variation badge */}
-                <div className="flex items-center gap-2 mb-3">
-                  <div
-                    className="w-2 h-2 rounded-full shrink-0"
-                    style={{ backgroundColor: colors.border }}
-                  />
-                  <span className="font-sans text-xs uppercase tracking-wider text-[var(--text-3)]">
+              className={cn(
+                "bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-3 sm:p-4",
+                "transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]",
+                "cursor-default group hover:border-[var(--border-outline)] hover:scale-[1.02]"
+              )}
+            >
+              {/* Top: colored circle + currency code + variation badge */}
+              <div className="flex items-center gap-2 mb-2">
+                <div
+                  className="w-4 h-4 rounded-full shrink-0 flex items-center justify-center text-[7px] font-bold text-black"
+                  style={{ backgroundColor: colors.border }}
+                >
+                  {balance.currency.slice(0, 2)}
+                </div>
+                <div className="flex flex-col min-w-0">
+                  <span className="font-sans text-xs font-medium text-[var(--text)] leading-none">
                     {balance.currency}
                   </span>
-
-                  {/* Variation badge — right-aligned */}
-                  {variations[balance.currency] && (
-                    <span
-                      className="ml-auto flex items-center gap-0.5 font-mono text-[10px] font-bold"
-                      style={{
-                        color: variations[balance.currency].positive
-                          ? "var(--green)"
-                          : "var(--red)",
-                      }}
-                    >
-                      <ArrowIcon positive={variations[balance.currency].positive} />
-                      {variations[balance.currency].pct}
-                    </span>
-                  )}
+                  <span className="font-sans text-[10px] text-[var(--text-4)] leading-tight">
+                    {currencyNames[balance.currency] ?? balance.currency}
+                  </span>
                 </div>
 
-                {/* Amount */}
-                <p className="font-mono text-base sm:text-lg font-bold tracking-tight text-white leading-none tabular-nums">
-                  {formatCompact(balance.available, balance.symbol)}
-                </p>
-
-                {/* Sparkline */}
-                <div className="mt-3 h-8">
-                  <Sparkline
-                    data={sparklineData[balance.currency] ?? sparklineData.USD}
-                    color={colors.border}
-                  />
-                </div>
-
-                {/* Progress bar */}
-                <div className="mt-2 h-1 w-full bg-[var(--bg-elevated)] rounded-full overflow-hidden">
-                  <div
-                    className="h-full rounded-full transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                {/* Variation badge — right-aligned */}
+                {variations[balance.currency] && (
+                  <span
+                    className="ml-auto flex items-center gap-0.5 font-mono text-[10px] font-bold"
                     style={{
-                      width: `${pct}%`,
-                      backgroundColor: colors.border,
-                      opacity: 0.5,
+                      color: variations[balance.currency].positive
+                        ? "var(--green)"
+                        : "var(--red)",
                     }}
-                  />
-                </div>
+                  >
+                    <ArrowIcon positive={variations[balance.currency].positive} />
+                    {variations[balance.currency].pct}
+                  </span>
+                )}
               </div>
-            );
-          })}
-        </div>
+
+              {/* Amount */}
+              <p className="font-mono text-lg font-bold tracking-tight text-white leading-none tabular-nums">
+                {formatCompact(balance.available, balance.symbol)}
+              </p>
+
+              {/* Sparkline */}
+              <div className="mt-3 h-8">
+                <Sparkline
+                  data={sparklineData[balance.currency] ?? sparklineData.USD}
+                  color={colors.border}
+                />
+              </div>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

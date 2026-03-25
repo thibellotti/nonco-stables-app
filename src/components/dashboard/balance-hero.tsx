@@ -200,7 +200,7 @@ export function BalanceHero() {
       {/* Balance row — number + change badge */}
       <div className="flex items-baseline justify-between flex-wrap gap-4 mb-2">
         <p
-          className="font-mono text-[28px] sm:text-[46px] lg:text-[72px] font-bold tracking-tighter leading-none text-white"
+          className="font-mono text-[28px] sm:text-[46px] lg:text-[56px] font-bold tracking-tighter leading-none text-white"
           style={{ fontVariantNumeric: "tabular-nums slashed-zero" }}
         >
           <AnimatedNumber
@@ -400,7 +400,7 @@ export function BalanceHero() {
       </div>
 
       {/* Stats row — below chart */}
-      <div className="flex flex-wrap items-start gap-x-4 sm:gap-x-8 gap-y-4 mt-6">
+      <div className="flex flex-wrap items-start gap-x-4 sm:gap-x-6 gap-y-4 mt-6">
         {/* Available */}
         <div>
           <div className="font-mono text-[10px] text-[var(--text-4)] uppercase tracking-[.15em]">
