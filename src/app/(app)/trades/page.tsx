@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { PageTransition } from "@/components/ui/page-transition";
+import { TabGroup } from "@/components/ui/tab-group";
 import { Button } from "@/components/ui/button";
 import { recentTrades } from "@/lib/mock-data";
 import type { RecentTrade } from "@/lib/mock-data";
@@ -192,8 +193,8 @@ export default function TradesPage() {
             {sortedPairs.map(([pair, volume], index) => {
               const pct = (volume / totalVolume) * 100;
               const barPct = (volume / maxVolume) * 100;
-              // Cyan at decreasing opacity: 100%, 80%, 60%, 40%, 20%
-              const opacityHex = ["ff", "cc", "99", "66", "33"][index] ?? "33";
+              // Cyan at decreasing opacity: 100%, 75%, 50%, 30%, 15%
+              const opacityHex = ["ff", "bf", "80", "4d", "26"][index] ?? "26";
               return (
                 <div key={pair} className="flex items-center gap-3">
                   <span className="text-xs font-mono font-bold text-white w-20 shrink-0">{pair}</span>
@@ -240,7 +241,7 @@ export default function TradesPage() {
                 className="h-full rounded-full"
                 style={{
                   width: `${buyPct}%`,
-                  background: "linear-gradient(90deg, rgba(5,224,248,0.25), rgba(5,224,248,0.8))",
+                  background: "linear-gradient(90deg, rgba(34,197,94,0.25), rgba(34,197,94,0.8))",
                 }}
               />
             </div>
@@ -261,40 +262,27 @@ export default function TradesPage() {
       {/* Filter Bar */}
       <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-3 sm:gap-4">
         {/* Side filter */}
-        <div className="flex gap-1 bg-[var(--bg-elevated)] rounded-lg p-1">
-          {(["all", "buy", "sell"] as const).map((value) => (
-            <button
-              key={value}
-              type="button"
-              onClick={() => setSideFilter(value)}
-              className={`px-4 py-1.5 rounded-md text-xs uppercase tracking-wider transition-all cursor-pointer ${
-                sideFilter === value
-                  ? "bg-[var(--bg-card)] text-white font-bold"
-                  : "text-[var(--text-4)] hover:text-[var(--text-3)]"
-              }`}
-            >
-              {value === "all" ? "All" : value === "buy" ? "Buy" : "Sell"}
-            </button>
-          ))}
-        </div>
+        <TabGroup
+          tabs={[
+            { value: "all", label: "All" },
+            { value: "buy", label: "Buy" },
+            { value: "sell", label: "Sell" },
+          ]}
+          active={sideFilter}
+          onChange={setSideFilter}
+        />
 
         {/* Settlement filter */}
-        <div className="flex gap-1 bg-[var(--bg-elevated)] rounded-lg p-1">
-          {(["all", "Spot", "T+1", "T+2"] as const).map((value) => (
-            <button
-              key={value}
-              type="button"
-              onClick={() => setSettlementFilter(value)}
-              className={`px-4 py-1.5 rounded-md text-xs uppercase tracking-wider transition-all cursor-pointer ${
-                settlementFilter === value
-                  ? "bg-[var(--bg-card)] text-white font-bold"
-                  : "text-[var(--text-4)] hover:text-[var(--text-3)]"
-              }`}
-            >
-              {value === "all" ? "All" : value}
-            </button>
-          ))}
-        </div>
+        <TabGroup
+          tabs={[
+            { value: "all", label: "All" },
+            { value: "Spot", label: "Spot" },
+            { value: "T+1", label: "T+1" },
+            { value: "T+2", label: "T+2" },
+          ]}
+          active={settlementFilter}
+          onChange={setSettlementFilter}
+        />
 
         {/* Export CSV — pushed right */}
         <Button variant="ghost" size="sm" className="sm:ml-auto">
@@ -388,11 +376,11 @@ export default function TradesPage() {
                       {/* Side pill */}
                       <td className="px-3 sm:px-6 py-3 sm:py-4">
                         {trade.side === "buy" ? (
-                          <span className="inline-flex items-center px-4 py-1.5 rounded-full text-[11px] font-bold font-sans uppercase tracking-[.08em] bg-[rgba(5,224,248,0.1)] text-[var(--cyan)]">
+                          <span className="inline-flex items-center px-4 py-1.5 rounded-full text-[11px] font-bold font-sans uppercase tracking-[.08em] bg-[var(--buy-dim)] text-[var(--buy)]">
                             Buy
                           </span>
                         ) : (
-                          <span className="inline-flex items-center px-4 py-1.5 rounded-full text-[11px] font-bold font-sans uppercase tracking-[.08em] bg-[rgba(161,36,248,0.1)] text-[var(--purple)]">
+                          <span className="inline-flex items-center px-4 py-1.5 rounded-full text-[11px] font-bold font-sans uppercase tracking-[.08em] bg-[var(--sell-dim)] text-[var(--sell)]">
                             Sell
                           </span>
                         )}

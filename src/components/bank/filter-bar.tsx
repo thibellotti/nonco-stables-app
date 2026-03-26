@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { TabGroup } from "@/components/ui/tab-group";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -12,14 +12,14 @@ interface BankFilterBarProps {
 }
 
 // ---------------------------------------------------------------------------
-// Filter tabs
+// Tab definitions for TabGroup
 // ---------------------------------------------------------------------------
 
 const tabs = [
-  { key: "all", label: "All" },
-  { key: "deposit", label: "Deposits" },
-  { key: "withdrawal", label: "Withdrawals" },
-] as const;
+  { value: "all", label: "All" },
+  { value: "deposit", label: "Deposits" },
+  { value: "withdrawal", label: "Withdrawals" },
+];
 
 // ---------------------------------------------------------------------------
 // Bank Filter Bar
@@ -33,25 +33,12 @@ export function BankFilterBar({
 }: BankFilterBarProps) {
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-6 py-3 border-b border-[var(--border)]">
-      {/* Pill toggle */}
-      <div role="tablist" className="flex gap-1 bg-[var(--bg-elevated)] rounded-lg p-1">
-        {tabs.map((tab) => (
-          <button
-            key={tab.key}
-            role="tab"
-            aria-selected={filter === tab.key}
-            onClick={() => onFilterChange(tab.key)}
-            className={cn(
-              "px-4 py-1.5 min-h-[44px] rounded-md text-xs uppercase tracking-wider transition-all cursor-pointer",
-              filter === tab.key
-                ? "bg-[var(--bg-card)] text-white font-bold"
-                : "text-[var(--text-4)] hover:text-[var(--text-3)]"
-            )}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
+      {/* Tab group */}
+      <TabGroup
+        tabs={tabs}
+        active={filter}
+        onChange={onFilterChange}
+      />
 
       {/* Search */}
       <div className="relative w-full sm:w-64">

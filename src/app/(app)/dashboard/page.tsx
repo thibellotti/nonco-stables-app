@@ -6,7 +6,7 @@ import { DeskOfferBanner } from "@/components/ui/desk-offer-banner";
 import { BalanceHero } from "@/components/dashboard/balance-hero";
 import { QuickActions } from "@/components/dashboard/quick-actions";
 import { CurrencyBreakdown } from "@/components/dashboard/currency-breakdown";
-import { CategoryTabs } from "@/components/dashboard/category-tabs";
+import { TabGroup } from "@/components/ui/tab-group";
 import { TransactionList } from "@/components/dashboard/transaction-list";
 import { MarketWatch } from "@/components/dashboard/market-watch";
 
@@ -19,7 +19,7 @@ export default function DashboardPage() {
       <DeskOfferBanner />
 
       {/* Row 1: Portfolio Hero + Quick Actions sidebar */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* LEFT: Portfolio balance + chart */}
         <BalanceHero />
 
@@ -31,11 +31,21 @@ export default function DashboardPage() {
       <CurrencyBreakdown />
 
       {/* Row 3: Recent Activity + Market Watch */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
         {/* LEFT: Transactions — single card */}
         <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden">
           <div className="px-5 py-4">
-            <CategoryTabs active={filter} onChange={setFilter} />
+            <TabGroup
+              tabs={[
+                { value: "all", label: "All" },
+                { value: "deposit", label: "Bank" },
+                { value: "trade", label: "Trades" },
+                { value: "settlement", label: "Settlements" },
+                { value: "withdrawal", label: "Wallet" },
+              ]}
+              active={filter}
+              onChange={setFilter}
+            />
           </div>
           <TransactionList filter={filter} />
         </div>

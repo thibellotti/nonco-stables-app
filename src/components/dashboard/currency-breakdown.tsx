@@ -45,13 +45,13 @@ export function CurrencyBreakdown() {
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border)]">
         <SectionLabel>Stable Assets</SectionLabel>
-        <button className="text-[11px] font-sans font-medium text-[var(--cyan)] uppercase tracking-wider hover:text-white transition-colors cursor-pointer">
+        <button className="px-3 py-1 rounded-full border border-[var(--border-subtle)] text-[11px] font-sans font-medium text-[var(--cyan)] uppercase tracking-wider hover:border-[var(--border-outline)] transition-colors cursor-pointer">
           View All
         </button>
       </div>
 
       {/* Table header */}
-      <div className="hidden sm:grid grid-cols-[1fr_140px_140px_100px_80px] gap-4 px-6 py-3 text-[11px] font-sans uppercase tracking-[.12em] text-[var(--text-4)] border-b border-[var(--border)]">
+      <div className="hidden sm:grid grid-cols-[1fr_140px_140px_100px_96px] gap-4 px-6 py-3 text-[11px] font-sans uppercase tracking-[.12em] text-[var(--text-4)] border-b border-[var(--border)]">
         <span>Currency</span>
         <span className="text-right">Balance</span>
         <span className="text-right">USD Value</span>
@@ -70,7 +70,7 @@ export function CurrencyBreakdown() {
             <div
               key={balance.currency}
               className={cn(
-                "grid grid-cols-[1fr_auto] sm:grid-cols-[1fr_140px_140px_100px_80px] gap-4 items-center px-6 py-4 cursor-default",
+                "grid grid-cols-[1fr_auto] sm:grid-cols-[1fr_140px_140px_100px_96px] gap-4 items-center px-6 py-4 cursor-default",
                 "hover:bg-[rgba(5,224,248,0.02)] transition-colors",
                 idx < balances.length - 1 && "border-b border-[var(--border)]"
               )}
@@ -111,7 +111,7 @@ export function CurrencyBreakdown() {
                   >
                     <path
                       d="M5 8V2M5 2L2.5 4.5M5 2l2.5 2.5"
-                      stroke={variation.positive ? "var(--green)" : "var(--red)"}
+                      stroke={variation.positive ? "var(--status-positive)" : "var(--status-negative)"}
                       strokeWidth="1.2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -120,7 +120,7 @@ export function CurrencyBreakdown() {
                   <span
                     className="font-mono text-xs tabular-nums"
                     style={{
-                      color: variation.positive ? "var(--green)" : "var(--red)",
+                      color: variation.positive ? "var(--status-positive)" : "var(--status-negative)",
                     }}
                   >
                     {variation.pct}
@@ -129,7 +129,7 @@ export function CurrencyBreakdown() {
               )}
 
               {/* Sparkline — compact */}
-              <div className="h-6 w-16 ml-auto hidden sm:block">
+              <div className="h-8 w-20 ml-auto hidden sm:block">
                 <Sparkline
                   data={sparklineData[balance.currency] ?? sparklineData.USD}
                   color={tier.sparkline}
@@ -143,7 +143,7 @@ export function CurrencyBreakdown() {
                 <span
                   className="font-mono text-xs tabular-nums sm:hidden text-right"
                   style={{
-                    color: variation.positive ? "var(--green)" : "var(--red)",
+                    color: variation.positive ? "var(--status-positive)" : "var(--status-negative)",
                   }}
                 >
                   {variation.pct}

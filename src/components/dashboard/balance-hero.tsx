@@ -192,7 +192,7 @@ export function BalanceHero() {
   };
 
   return (
-    <section className="relative overflow-hidden">
+    <section className="relative overflow-hidden bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-6">
       {/* Header row — label + period selector */}
       <div className="flex items-center justify-between mb-6">
         <div>
@@ -295,9 +295,9 @@ export function BalanceHero() {
           // Positions: top (max), middle, bottom (min) — evenly spaced
           return (
             <div className="absolute left-0 top-0 bottom-0 w-11 flex flex-col justify-between py-2 pointer-events-none" aria-hidden="true">
-              <span className="text-[10px] font-mono text-[var(--text-4)] tabular-nums leading-none">{fmt(maxY)}</span>
-              <span className="text-[10px] font-mono text-[var(--text-4)] tabular-nums leading-none">{fmt(midVal)}</span>
-              <span className="text-[10px] font-mono text-[var(--text-4)] tabular-nums leading-none">{fmt(minY)}</span>
+              <span className="text-[11px] font-mono text-[var(--text-3)] tabular-nums leading-none">{fmt(maxY)}</span>
+              <span className="text-[11px] font-mono text-[var(--text-3)] tabular-nums leading-none">{fmt(midVal)}</span>
+              <span className="text-[11px] font-mono text-[var(--text-3)] tabular-nums leading-none">{fmt(minY)}</span>
             </div>
           );
         })()}
@@ -486,9 +486,9 @@ export function BalanceHero() {
         )}
       </div>
 
-      {/* Stats row — below chart as mini-cards with stagger entrance */}
+      {/* Stats row — inline below chart, no separate cards */}
       <motion.div
-        className="grid grid-cols-3 gap-3 mt-6"
+        className="grid grid-cols-3 divide-x divide-[var(--border)] border-t border-[var(--border)] mt-6"
         variants={statsContainerVariants}
         initial="hidden"
         animate="visible"
@@ -496,16 +496,16 @@ export function BalanceHero() {
         {/* Available */}
         <motion.div
           variants={statCardVariants}
-          className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-4 flex items-center gap-3"
+          className="flex items-center gap-3 px-4 py-4"
         >
-          <div className="w-9 h-9 rounded-lg bg-[rgba(5,224,248,0.08)] flex items-center justify-center shrink-0">
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <div className="w-8 h-8 rounded-lg bg-[rgba(5,224,248,0.08)] flex items-center justify-center shrink-0">
+            <svg width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true">
               <path d="M9 2v14M3 9h12" stroke="var(--cyan)" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
           </div>
           <div>
-            <div className="text-[11px] uppercase tracking-[.15em] text-[var(--text-4)]">Available</div>
-            <div className="font-mono text-lg font-bold text-[var(--text)] mt-0.5 tabular-nums">
+            <div className="text-[11px] uppercase tracking-[.12em] font-sans text-[var(--text-4)]">Available</div>
+            <div className="font-mono text-base font-bold text-[var(--text)] mt-0.5 tabular-nums">
               <AnimatedNumber value={totalAvailable} prefix="$" suffix="M" formatter={(n) => (n / 1_000_000).toFixed(2)} />
             </div>
           </div>
@@ -514,17 +514,17 @@ export function BalanceHero() {
         {/* Pending */}
         <motion.div
           variants={statCardVariants}
-          className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-4 flex items-center gap-3"
+          className="flex items-center gap-3 px-4 py-4"
         >
-          <div className="w-9 h-9 rounded-lg bg-[var(--amber-dim)] flex items-center justify-center shrink-0">
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-              <circle cx="9" cy="9" r="6.5" stroke="var(--amber)" strokeWidth="1.5" />
-              <path d="M9 6v3.5l2.5 1.5" stroke="var(--amber)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <div className="w-8 h-8 rounded-lg bg-[var(--status-pending-dim)] flex items-center justify-center shrink-0">
+            <svg width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+              <circle cx="9" cy="9" r="6.5" stroke="var(--status-pending)" strokeWidth="1.5" />
+              <path d="M9 6v3.5l2.5 1.5" stroke="var(--status-pending)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
           <div>
-            <div className="text-[11px] uppercase tracking-[.15em] text-[var(--text-4)]">Pending</div>
-            <div className="font-mono text-lg font-bold text-[var(--amber)] mt-0.5 tabular-nums">
+            <div className="text-[11px] uppercase tracking-[.12em] font-sans text-[var(--text-4)]">Pending</div>
+            <div className="font-mono text-base font-bold text-[var(--status-pending)] mt-0.5 tabular-nums">
               <AnimatedNumber value={totalPending} prefix="$" suffix="M" formatter={(n) => (n / 1_000_000).toFixed(2)} />
             </div>
           </div>
@@ -533,17 +533,17 @@ export function BalanceHero() {
         {/* Currencies */}
         <motion.div
           variants={statCardVariants}
-          className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-4 flex items-center gap-3"
+          className="flex items-center gap-3 px-4 py-4"
         >
-          <div className="w-9 h-9 rounded-lg bg-[var(--green-dim)] flex items-center justify-center shrink-0">
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-              <circle cx="7" cy="7" r="4.5" stroke="var(--green)" strokeWidth="1.5" />
-              <circle cx="11" cy="11" r="4.5" stroke="var(--green)" strokeWidth="1.5" />
+          <div className="w-8 h-8 rounded-lg bg-[var(--status-positive-dim)] flex items-center justify-center shrink-0">
+            <svg width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+              <circle cx="7" cy="7" r="4.5" stroke="var(--status-positive)" strokeWidth="1.5" />
+              <circle cx="11" cy="11" r="4.5" stroke="var(--status-positive)" strokeWidth="1.5" />
             </svg>
           </div>
           <div>
-            <div className="text-[11px] uppercase tracking-[.15em] text-[var(--text-4)]">Currencies</div>
-            <div className="font-mono text-lg font-bold text-[var(--text)] mt-0.5 tabular-nums">
+            <div className="text-[11px] uppercase tracking-[.12em] font-sans text-[var(--text-4)]">Currencies</div>
+            <div className="font-mono text-base font-bold text-[var(--text)] mt-0.5 tabular-nums">
               <AnimatedNumber value={balances.length} formatter={(n) => Math.round(n).toString()} />
             </div>
           </div>

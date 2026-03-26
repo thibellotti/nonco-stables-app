@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { PageTransition } from "@/components/ui/page-transition";
-import { Sparkline } from "@/components/ui/sparkline";
 import { balances, usdRates } from "@/lib/mock-data";
 import { formatMoney, formatCompact } from "@/lib/utils";
 import { currencyColors } from "@/lib/currency-colors";
@@ -12,31 +11,19 @@ import { currencyColors } from "@/lib/currency-colors";
 // Currency metadata — full names, symbols for monogram circles
 // ---------------------------------------------------------------------------
 
-const currencyMeta: Record<string, { name: string; symbol: string }> = {
-  USD: { name: "US Dollar", symbol: "$" },
-  EUR: { name: "Euro", symbol: "\u20AC" },
-  MXN: { name: "Mexican Peso", symbol: "MX" },
-  USDT: { name: "Tether USD", symbol: "\u20AE" },
-  USDC: { name: "USD Coin", symbol: "C" },
+const currencyMeta: Record<string, { name: string }> = {
+  USD: { name: "US Dollar" },
+  EUR: { name: "Euro" },
+  MXN: { name: "Mexican Peso" },
+  USDT: { name: "Tether USD" },
+  USDC: { name: "USD Coin" },
 };
 
 // ---------------------------------------------------------------------------
-// Monochromatic cyan sparkline colors — descending opacity per row
+// Allocation bar colors — descending opacity per row
 // ---------------------------------------------------------------------------
 
-const cyanOpacities = ["#05E0F8", "#05E0F8B3", "#05E0F880", "#05E0F859", "#05E0F840"];
-
-// ---------------------------------------------------------------------------
-// Sparkline + variation data (matches dashboard currency-breakdown)
-// ---------------------------------------------------------------------------
-
-const sparklineData: Record<string, number[]> = {
-  USD: [40, 41, 40.5, 42, 43, 42.5, 44, 45, 44.5, 46, 47, 48],
-  EUR: [38, 37, 36.5, 37, 38, 37.5, 36, 37, 38, 37.5, 38, 37],
-  MXN: [30, 32, 31, 34, 33, 35, 34, 36, 35, 37, 38, 39],
-  USDT: [50, 50.1, 49.9, 50, 50.1, 50, 50.05, 50.1, 49.95, 50, 50.05, 50.1],
-  USDC: [45, 45.2, 45.1, 45.3, 45.4, 45.3, 45.5, 45.6, 45.5, 45.7, 45.8, 45.9],
-};
+const allocationColors = ["#05E0F8", "#05E0F8B3", "#05E0F880", "#05E0F859", "#05E0F840"];
 
 const variations: Record<string, { pct: string; positive: boolean }> = {
   USD: { pct: "+0.81%", positive: true },
@@ -92,7 +79,7 @@ export default function WalletPage() {
               const usdValue =
                 (b.available + b.pending) * (usdRates[b.currency] ?? 1);
               const pct = (usdValue / totalValue) * 100;
-              const color = cyanOpacities[idx] ?? "#05E0F8";
+              const color = allocationColors[idx] ?? "#05E0F8";
               return (
                 <div
                   key={b.currency}
@@ -117,7 +104,7 @@ export default function WalletPage() {
               const usdValue =
                 (b.available + b.pending) * (usdRates[b.currency] ?? 1);
               const pct = (usdValue / totalValue) * 100;
-              const cyanColor = cyanOpacities[i] ?? "#05E0F8";
+              const cyanColor = allocationColors[i] ?? "#05E0F8";
               return (
                 <div key={b.currency} className="flex items-center gap-3">
                   <div
@@ -171,9 +158,6 @@ export default function WalletPage() {
               <th className="px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)] text-right">
                 Balance
               </th>
-              <th className="px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)] hidden md:table-cell w-20">
-                <span className="sr-only">Trend</span>
-              </th>
               <th className="px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)] text-right hidden sm:table-cell">
                 USD Value
               </th>
@@ -205,18 +189,18 @@ export default function WalletPage() {
                   transition={{ delay: i * 0.05, duration: 0.4 }}
                   className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-150"
                 >
-                  {/* Currency — colored dot + code + full name */}
+                  {/* Currency — colored circle with 2-letter code + full name */}
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <div
-                        className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-[12px] font-bold"
+                        className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-[11px] font-bold tracking-tight"
                         style={{
                           backgroundColor: `${colors?.border}15`,
                           color: colors?.border,
                           border: `1px solid ${colors?.border}30`,
                         }}
                       >
-                        {meta?.symbol ?? b.currency.charAt(0)}
+                        {b.currency.slice(0, 2)}
                       </div>
                       <div>
                         <span className="text-sm font-bold text-[var(--text)] block leading-none">
@@ -229,24 +213,16 @@ export default function WalletPage() {
                     </div>
                   </td>
 
-                  {/* Balance in native currency */}
+                  {/* Balance in native currency + mobile USD fallback */}
                   <td className="px-6 py-4 text-right">
-                    <span className="font-mono text-sm font-bold text-white tabular-nums">
+                    <span className="font-mono text-sm font-bold text-white tabular-nums block">
                       {b.symbol}
                       {formatMoney(b.available)}
                     </span>
-                  </td>
-
-                  {/* Sparkline */}
-                  <td className="px-6 py-4 hidden md:table-cell">
-                    <div className="w-16 h-6">
-                      <Sparkline
-                        data={sparklineData[b.currency] ?? []}
-                        color={cyanOpacities[i] ?? "#05E0F8"}
-                        strokeWidth={1.5}
-                        showArea={false}
-                      />
-                    </div>
+                    {/* Mobile: show approximate USD value below balance */}
+                    <span className="font-mono text-[11px] text-[var(--text-4)] tabular-nums block mt-0.5 sm:hidden">
+                      &asymp; ${formatCompact(usdValue)}
+                    </span>
                   </td>
 
                   {/* USD Value */}
@@ -262,8 +238,8 @@ export default function WalletPage() {
                       <span
                         className={`font-mono text-sm font-bold tabular-nums inline-flex items-center gap-1 ${
                           variation.positive
-                            ? "text-[var(--green)]"
-                            : "text-[var(--red)]"
+                            ? "text-[var(--status-positive)]"
+                            : "text-[var(--status-negative)]"
                         }`}
                       >
                         <svg

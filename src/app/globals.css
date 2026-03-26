@@ -50,6 +50,23 @@
   --red: #ef4444;
   --red-dim: rgba(239,68,68,0.08);
 
+  /* Semantic: trading */
+  --buy: #22C55E;
+  --buy-dim: rgba(34,197,94,0.1);
+  --sell: var(--purple);
+  --sell-dim: var(--purple-dim);
+
+  /* Semantic: status */
+  --status-positive: #22C55E;
+  --status-positive-dim: rgba(34,197,94,0.1);
+  --status-negative: var(--red);
+  --status-negative-dim: var(--red-dim);
+  --status-pending: var(--amber);
+  --status-pending-dim: var(--amber-dim);
+  --status-processing: var(--cyan);
+  --status-processing-dim: var(--cyan-dim);
+  --status-neutral: var(--text-4);
+
   /* Borders */
   --border: #18181b;
   --border-subtle: rgba(255,255,255,0.06);

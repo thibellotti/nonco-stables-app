@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
 import { type Transaction, type TransactionType } from "@/lib/mock-data";
 import { cn, formatCompact, timeAgo } from "@/lib/utils";
 import { currencyColors } from "@/lib/currency-colors";
@@ -11,6 +10,108 @@ import { currencyColors } from "@/lib/currency-colors";
 // ---------------------------------------------------------------------------
 
 const PAGE_SIZE = 10;
+
+// ---------------------------------------------------------------------------
+// Date grouping helpers (same pattern as Trades page)
+// ---------------------------------------------------------------------------
+
+function getDateGroup(date: Date): string {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const yesterday = new Date(today.getTime() - 86400000);
+  const weekAgo = new Date(today.getTime() - 7 * 86400000);
+  const txDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+  if (txDate.getTime() >= today.getTime()) return "Today";
+  if (txDate.getTime() >= yesterday.getTime()) return "Yesterday";
+  if (txDate.getTime() >= weekAgo.getTime()) return "This Week";
+  return "Earlier";
+}
+
+function groupTransactionsByDate(
+  txs: Transaction[]
+): { label: string; items: Transaction[] }[] {
+  const groupOrder = ["Today", "Yesterday", "This Week", "Earlier"];
+  const groups: Record<string, Transaction[]> = {};
+
+  for (const tx of txs) {
+    const label = getDateGroup(tx.timestamp);
+    if (!groups[label]) groups[label] = [];
+    groups[label].push(tx);
+  }
+
+  return groupOrder
+    .filter((label) => groups[label]?.length)
+    .map((label) => ({ label, items: groups[label] }));
+}
+
+// ---------------------------------------------------------------------------
+// Status dot indicators
+// ---------------------------------------------------------------------------
+
+function StatusDot({ status }: { status: Transaction["status"] }) {
+  if (status === "completed") {
+    return (
+      <span className="relative flex h-1.5 w-1.5 shrink-0">
+        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[var(--status-positive)]" />
+      </span>
+    );
+  }
+
+  if (status === "pending") {
+    return (
+      <span className="relative flex h-1.5 w-1.5 shrink-0">
+        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--status-pending)] opacity-75" />
+        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[var(--status-pending)]" />
+      </span>
+    );
+  }
+
+  if (status === "failed") {
+    return (
+      <span className="relative flex h-1.5 w-1.5 shrink-0">
+        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[var(--status-negative)]" />
+      </span>
+    );
+  }
+
+  return null;
+}
+
+// ---------------------------------------------------------------------------
+// Status badge (desktop — full badge with dot + text)
+// ---------------------------------------------------------------------------
+
+function StatusBadge({ status }: { status: Transaction["status"] }) {
+  if (status === "completed") {
+    return (
+      <span className="inline-flex items-center gap-1.5 text-[11px] font-sans font-medium uppercase tracking-[.08em] text-[var(--status-positive)]">
+        <StatusDot status="completed" />
+        Completed
+      </span>
+    );
+  }
+
+  if (status === "pending") {
+    return (
+      <span className="inline-flex items-center gap-1.5 text-[11px] font-sans font-medium uppercase tracking-[.08em] text-[var(--status-pending)]">
+        <StatusDot status="pending" />
+        Pending
+      </span>
+    );
+  }
+
+  if (status === "failed") {
+    return (
+      <span className="inline-flex items-center gap-1.5 text-[11px] font-sans font-medium uppercase tracking-[.08em] text-[var(--status-negative)]">
+        <StatusDot status="failed" />
+        Failed
+      </span>
+    );
+  }
+
+  return null;
+}
 
 // ---------------------------------------------------------------------------
 // Transaction icons
@@ -67,15 +168,6 @@ function TxIcon({ type }: { type: TransactionType }) {
 }
 
 // ---------------------------------------------------------------------------
-// Currency pill colors
-// ---------------------------------------------------------------------------
-
-// Currency pill colors derived from shared currency-colors module
-const currencyPillColors: Record<string, { bg: string; text: string }> = Object.fromEntries(
-  Object.entries(currencyColors).map(([k, v]) => [k, { bg: v.bg, text: v.text }])
-);
-
-// ---------------------------------------------------------------------------
 // Transaction row
 // ---------------------------------------------------------------------------
 
@@ -87,16 +179,26 @@ function TransactionRow({
   index: number;
 }) {
   const isPositive = tx.type === "deposit";
-  const pillColor = currencyPillColors[tx.currency] ?? { bg: "rgba(255,255,255,0.04)", text: "var(--text-3)" };
+  const colors = currencyColors[tx.currency] ?? {
+    bg: "rgba(255,255,255,0.04)",
+    text: "var(--text-3)",
+    border: "var(--text-3)",
+  };
 
   return (
     <tr className={`group cursor-pointer transition-colors duration-150 hover:bg-[rgba(255,255,255,0.03)] border-b border-[rgba(255,255,255,0.03)] ${index % 2 === 1 ? "bg-[rgba(255,255,255,0.02)]" : ""}`}>
-      {/* Transaction: icon + name + ref */}
+      {/* Transaction: icon + name + ref + mobile status dot */}
       <td className="px-3 sm:px-6 py-3 sm:py-4">
         <div className="flex items-center gap-2 sm:gap-3">
           <TxIcon type={tx.type} />
           <div className="min-w-0">
-            <p className="text-xs sm:text-sm text-[var(--text)] font-medium truncate">{tx.description}</p>
+            <div className="flex items-center gap-2">
+              <p className="text-xs sm:text-sm text-[var(--text)] font-medium truncate">{tx.description}</p>
+              {/* Mobile-only status dot — visible when Status column is hidden */}
+              <span className="sm:hidden">
+                <StatusDot status={tx.status} />
+              </span>
+            </div>
             <p className="text-[11px] text-[var(--text-4)] font-mono mt-0.5 truncate">
               REF-{tx.id.toUpperCase()}
             </p>
@@ -111,11 +213,11 @@ function TransactionRow({
         </span>
       </td>
 
-      {/* Asset */}
+      {/* Asset — currency-specific colors from currencyColors */}
       <td className="px-3 sm:px-6 py-3 sm:py-4 hidden sm:table-cell">
         <span
           className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold font-mono uppercase tracking-wider"
-          style={{ backgroundColor: pillColor.bg, color: pillColor.text }}
+          style={{ backgroundColor: colors.bg, color: colors.border }}
         >
           {tx.currency}
         </span>
@@ -134,20 +236,16 @@ function TransactionRow({
         </span>
       </td>
 
-      {/* Time + Status */}
+      {/* Status — desktop only, enhanced badges */}
+      <td className="px-3 sm:px-6 py-3 sm:py-4 hidden sm:table-cell">
+        <StatusBadge status={tx.status} />
+      </td>
+
+      {/* Time */}
       <td className="px-3 sm:px-6 py-3 sm:py-4 text-right">
-        <div className="flex flex-col items-end gap-1">
-          <span className="text-[11px] text-[var(--text-4)] font-mono tabular-nums">
-            {timeAgo(tx.timestamp)}
-          </span>
-          {tx.status === "pending" && <Badge variant="amber">Pending</Badge>}
-          {tx.status === "failed" && <Badge variant="red">Failed</Badge>}
-          {tx.status === "completed" && (
-            <span className="font-mono text-[11px] font-medium tracking-[.04em] text-[var(--green)]">
-              COMPLETED
-            </span>
-          )}
-        </div>
+        <span className="text-[11px] text-[var(--text-4)] font-mono tabular-nums">
+          {timeAgo(tx.timestamp)}
+        </span>
       </td>
     </tr>
   );
@@ -170,6 +268,9 @@ export function BankTransactionTable({ transactions }: BankTransactionTableProps
 
   const totalPages = Math.max(1, Math.ceil(transactions.length / PAGE_SIZE));
   const paginated = transactions.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  // Group paginated transactions by date
+  const groups = groupTransactionsByDate(paginated);
 
   return (
     <>
@@ -195,15 +296,31 @@ export function BankTransactionTable({ transactions }: BankTransactionTableProps
                 <th className="px-3 sm:px-6 py-3 text-right text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium">
                   Amount
                 </th>
+                <th className="px-3 sm:px-6 py-3 text-left text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium hidden sm:table-cell">
+                  Status
+                </th>
                 <th className="px-3 sm:px-6 py-3 text-right text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium">
                   Time
                 </th>
               </tr>
             </thead>
             <tbody>
-              {paginated.map((tx, i) => (
-                <TransactionRow key={tx.id} tx={tx} index={i} />
-              ))}
+              {groups.map((group) => {
+                let groupIndex = 0;
+                return [
+                  <tr key={`group-${group.label}`}>
+                    <td
+                      colSpan={6}
+                      className="text-[10px] uppercase tracking-[.15em] text-[var(--text-4)] bg-[rgba(255,255,255,0.02)] px-6 py-1.5 font-sans font-medium"
+                    >
+                      {group.label}
+                    </td>
+                  </tr>,
+                  ...group.items.map((tx) => (
+                    <TransactionRow key={tx.id} tx={tx} index={groupIndex++} />
+                  )),
+                ];
+              })}
             </tbody>
           </table>
         </div>

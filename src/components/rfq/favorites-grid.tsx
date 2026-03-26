@@ -55,9 +55,10 @@ const pairSparklines: Record<string, number[]> = {
 interface FavoritesGridProps {
   onQuote: (instrument: Instrument, quantity: number) => void;
   compact?: boolean;
+  cols?: 2 | 4;
 }
 
-export function FavoritesGrid({ onQuote, compact = false }: FavoritesGridProps) {
+export function FavoritesGrid({ onQuote, compact = false, cols }: FavoritesGridProps) {
   const [quantities, setQuantities] = useState<Record<string, number>>(() =>
     Object.fromEntries(favorites.map((f) => [f.id, f.defaultQuantity]))
   );
@@ -125,7 +126,7 @@ export function FavoritesGrid({ onQuote, compact = false }: FavoritesGridProps) 
   // -------------------------------------------------------------------------
   return (
     <motion.div
-      className="grid grid-cols-2 xl:grid-cols-4 gap-4"
+      className={cols === 2 ? "grid grid-cols-2 gap-4" : "grid grid-cols-2 xl:grid-cols-4 gap-4"}
       initial="hidden"
       animate="visible"
       variants={{
