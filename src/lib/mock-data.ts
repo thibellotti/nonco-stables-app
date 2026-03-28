@@ -523,7 +523,7 @@ export const usdRates: Record<string, number> = {
 // ---------------------------------------------------------------------------
 
 export const boardSections: Record<string, BoardSection> = {
-  latam: { id: "latam", label: "LATAM — MXN, COP, CLP", color: "var(--text-3)" },
+  latam: { id: "latam", label: "LATAM — MXN, COP, CLP", color: "#05E0F8" },
   brl: { id: "brl", label: "Brazil — BRL", color: "var(--purple)" },
   eur: { id: "eur", label: "Europe — EUR", color: "#38bdf8" },
   gbp: { id: "gbp", label: "UK — GBP", color: "var(--amber)" },
@@ -569,7 +569,7 @@ export const tickerItems: TickerItem[] = [
 // ---------------------------------------------------------------------------
 
 export const yieldVaults: YieldVault[] = [
-  { id: "vault-mxn", name: "MXN vault", currency: "MXN", flag: "🇲🇽", institution: "CETES · Banco de México", apy: 10.82, balance: 3_500_000, balanceLabel: "MX$3.5M", earnedMTD: 4810, color: "var(--text-3)", status: "active" },
+  { id: "vault-mxn", name: "MXN vault", currency: "MXN", flag: "🇲🇽", institution: "CETES · Banco de México", apy: 10.82, balance: 3_500_000, balanceLabel: "MX$3.5M", earnedMTD: 4810, color: "#05E0F8", status: "active" },
   { id: "vault-brl", name: "BRL vault", currency: "BRL", flag: "🇧🇷", institution: "Selic · Banco Central", apy: 10.50, balance: 462_000, balanceLabel: "BRL 462K", earnedMTD: 1840, color: "var(--purple)", status: "active" },
   { id: "vault-eur", name: "EUR vault", currency: "EUR", flag: "🇪🇺", institution: "ECB deposit rate", apy: 2.65, balance: 182_000, balanceLabel: "EUR 182K", earnedMTD: 590, color: "#38bdf8", status: "active" },
   { id: "vault-gbp", name: "GBP vault", currency: "GBP", flag: "🇬🇧", institution: "BoE base rate", apy: 4.50, balance: 0, balanceLabel: "—", earnedMTD: 0, color: "var(--amber)", status: "coming-soon" },

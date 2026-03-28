@@ -314,8 +314,8 @@ export function BalanceHero() {
           <defs>
             {/* Vertical area gradient — multi-stop for depth */}
             <linearGradient id="hero-area-fill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="rgba(255,255,255,0.1)" />
-              <stop offset="40%" stopColor="rgba(255,255,255,0.04)" />
+              <stop offset="0%" stopColor="rgba(5,224,248,0.15)" />
+              <stop offset="40%" stopColor="rgba(5,224,248,0.04)" />
               <stop offset="100%" stopColor="rgba(255,255,255,0)" />
             </linearGradient>
 
@@ -329,12 +329,12 @@ export function BalanceHero() {
             >
               <stop
                 offset="0%"
-                stopColor="rgba(255,255,255,0.6)"
+                stopColor="rgba(5,224,248,0.8)"
                 stopOpacity="0.3"
               />
               <stop
                 offset="100%"
-                stopColor="rgba(255,255,255,0.6)"
+                stopColor="rgba(5,224,248,0.8)"
                 stopOpacity="1"
               />
             </linearGradient>
@@ -365,7 +365,7 @@ export function BalanceHero() {
           {/* Line glow — blurred wider stroke behind main line */}
           <path
             d={linePath}
-            stroke="rgba(255,255,255,0.6)"
+            stroke="rgba(5,224,248,0.6)"
             strokeWidth="8"
             strokeLinecap="round"
             filter="url(#line-glow)"
@@ -396,7 +396,7 @@ export function BalanceHero() {
             cx={lastPt.x}
             cy={lastPt.y}
             r="16"
-            fill="white"
+            fill="#05E0F8"
             opacity={hoverIdx !== null ? "0.02" : "0.06"}
             filter="url(#line-glow)"
           />
@@ -406,7 +406,7 @@ export function BalanceHero() {
             cy={lastPt.y}
             r="8"
             fill="none"
-            stroke="white"
+            stroke="#05E0F8"
             strokeWidth="1"
             opacity={hoverIdx !== null ? "0.05" : "0.3"}
           >
@@ -418,10 +418,10 @@ export function BalanceHero() {
             cx={lastPt.x}
             cy={lastPt.y}
             r="3.5"
-            fill="white"
+            fill="#05E0F8"
             opacity={hoverIdx !== null ? "0.2" : "1"}
           />
-          {/* Endpoint — white highlight for "lit" feel */}
+          {/* Endpoint — white highlight */}
           <circle
             cx={lastPt.x}
             cy={lastPt.y}
@@ -451,8 +451,8 @@ export function BalanceHero() {
               style={{
                 left: hoverX - 4,
                 top: `${(chartY(hoverIdx) / CHART_H) * 100}%`,
-                background: "white",
-                boxShadow: "0 0 12px rgba(255,255,255,0.4)",
+                background: "#05E0F8",
+                boxShadow: "0 0 12px rgba(5,224,248,0.5)",
               }}
             />
 
