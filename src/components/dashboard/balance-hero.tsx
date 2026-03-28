@@ -151,7 +151,7 @@ const statsContainerVariants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.06,
+      staggerChildren: 0.05,
     },
   },
 };
@@ -162,7 +162,7 @@ const statCardVariants = {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.4,
+      duration: 0.35,
       ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
     },
   },
@@ -192,7 +192,7 @@ export function BalanceHero() {
   };
 
   return (
-    <section className="relative overflow-hidden bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-6">
+    <section className="relative overflow-hidden bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5">
       {/* Header row — label + period selector */}
       <div className="flex items-center justify-between mb-6">
         <div>
@@ -238,7 +238,7 @@ export function BalanceHero() {
 
         {/* Change badge + period label */}
         <div className="flex items-center gap-3">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[rgba(199,255,16,0.08)] border border-[rgba(199,255,16,0.15)]">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[rgba(34,197,94,0.08)] border border-[rgba(34,197,94,0.15)]">
             <svg
               width="12"
               height="12"

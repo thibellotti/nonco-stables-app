@@ -71,6 +71,9 @@
   --border: #18181b;
   --border-subtle: rgba(255,255,255,0.06);
   --border-outline: #3b494c;
+
+  /* Divider for table rows and lists */
+  --border-row: rgba(255,255,255,0.04);
 }
 
 body {
@@ -93,6 +96,32 @@ body {
   0%, 100% { opacity: 0.6; transform: translateX(-5%); }
   50% { opacity: 1; transform: translateX(5%); }
 }
+
+/* ─── Ticker infinite scroll ─── */
+@keyframes ticker-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-ticker {
+  animation: ticker-scroll 40s linear infinite;
+}
+.animate-ticker:hover {
+  animation-play-state: paused;
+}
+
+/* ─── Flash animation for FX board price cells (0.9s with scale pulse) ─── */
+@keyframes flash-sell {
+  0% { background: var(--purple); color: #fff; transform: scale(1.03); }
+  40% { transform: scale(1); }
+  100% { background: var(--purple-dim); color: var(--purple); transform: scale(1); }
+}
+@keyframes flash-buy {
+  0% { background: var(--status-positive); color: #fff; transform: scale(1.03); }
+  40% { transform: scale(1); }
+  100% { background: var(--status-positive-dim); color: var(--status-positive); transform: scale(1); }
+}
+.flash-sell { animation: flash-sell 0.9s ease-out forwards; }
+.flash-buy { animation: flash-buy 0.9s ease-out forwards; }
 
 /* Scrollbar-none utility */
 .scrollbar-none {
@@ -136,6 +165,12 @@ body {
   position: absolute;
   top: 0; left: 0; right: 0; height: 1px;
   background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+}
+
+/* ─── Dot grid background pattern ─── */
+.dot-grid-bg {
+  background-image: radial-gradient(circle, rgba(5,224,248,0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
 /* ─── Data grid background pattern ─── */
@@ -216,4 +251,25 @@ body {
   font-family: var(--font-mono);
   font-size: 11px;
   color: var(--text-3);
+}
+
+/* ─── Scroll affordance for horizontal tables on mobile ─── */
+.table-scroll-mask {
+  position: relative;
+}
+.table-scroll-mask::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 32px;
+  background: linear-gradient(to right, transparent, var(--bg-card));
+  pointer-events: none;
+  opacity: 0;
+}
+@media (max-width: 640px) {
+  .table-scroll-mask::after {
+    opacity: 1;
+  }
 }

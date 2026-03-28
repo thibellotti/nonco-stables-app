@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { transactions } from "@/lib/mock-data";
 import { formatMoney, formatCompact } from "@/lib/utils";
 import { CompletedTable } from "@/components/settlements/completed-table";
+import { ProgressRing } from "@/components/viz/progress-ring";
 import { currencyColors } from "@/lib/currency-colors";
 
 // ---------------------------------------------------------------------------
@@ -170,7 +171,7 @@ export default function SettlementsPage() {
     <PageTransition className="px-6 md:px-8 w-full space-y-6">
       {/* ── Analytics Row ── */}
       {activeTab === "pending" && (
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Left: Settlement Pipeline */}
           <motion.div
             initial={{ opacity: 0, y: 8 }}
@@ -288,10 +289,25 @@ export default function SettlementsPage() {
               delay: 0.1,
               ease: [0.16, 1, 0.3, 1],
             }}
-            className="bg-[var(--bg-card)] border border-[var(--border)] border-t-2 border-t-[var(--cyan)] rounded-lg p-5 space-y-4"
+            className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5 space-y-4"
           >
             <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)]">
               Overview
+            </div>
+
+            <div className="flex items-center gap-6 justify-center py-4">
+              <div className="text-center">
+                <ProgressRing value={58} color="var(--amber)" size={64} strokeWidth={6} label="T+1" sublabel="$108K" />
+                <div className="text-[10px] font-mono text-[var(--text-4)] mt-1.5 tabular-nums">$108K &middot; 0h left</div>
+              </div>
+              <div className="text-center">
+                <ProgressRing value={18} color="var(--cyan)" size={64} strokeWidth={6} label="T+2" sublabel="$172K" />
+                <div className="text-[10px] font-mono text-[var(--text-4)] mt-1.5 tabular-nums">$172K &middot; 48h left</div>
+              </div>
+              <div className="text-center">
+                <ProgressRing value={0} color="var(--text-4)" size={64} strokeWidth={6} label="T+10" sublabel="—" />
+                <div className="text-[10px] font-mono text-[var(--text-4)] mt-1.5 tabular-nums">$0K &middot; 192h left</div>
+              </div>
             </div>
 
             <div>
@@ -454,7 +470,7 @@ export default function SettlementsPage() {
 
       {/* ── Pending: Table + Sidebar ── */}
       {activeTab === "pending" && (
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
           {/* Table */}
           <motion.div
             initial={{ opacity: 0, y: 8 }}
@@ -543,7 +559,7 @@ export default function SettlementsPage() {
                             duration: 0.3,
                             ease: [0.16, 1, 0.3, 1],
                           }}
-                          className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-150"
+                          className="border-b border-[var(--border-row)] hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-150"
                         >
                           {/* Pair with monogram */}
                           <td className="px-3 sm:px-6 py-3 sm:py-4">
@@ -636,7 +652,7 @@ export default function SettlementsPage() {
                           {/* Status */}
                           <td className="px-3 sm:px-6 py-3 sm:py-4">
                             {isProcessing ? (
-                              <span className="inline-flex items-center gap-1.5 text-[11px] font-bold font-sans uppercase tracking-[.08em] text-[var(--cyan)]">
+                              <span className="inline-flex items-center gap-1.5 text-[11px] font-bold font-sans uppercase tracking-[.1em] text-[var(--cyan)]">
                                 <span className="relative flex h-1.5 w-1.5">
                                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--cyan)] opacity-75" />
                                   <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[var(--cyan)]" />
@@ -644,7 +660,7 @@ export default function SettlementsPage() {
                                 Processing
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1.5 text-[11px] font-bold font-sans uppercase tracking-[.08em] text-[var(--amber)]">
+                              <span className="inline-flex items-center gap-1.5 text-[11px] font-bold font-sans uppercase tracking-[.1em] text-[var(--amber)]">
                                 <span className="w-1.5 h-1.5 rounded-full bg-[var(--amber)]" />
                                 Awaiting
                               </span>
@@ -658,7 +674,7 @@ export default function SettlementsPage() {
 
                 {/* Footer */}
                 <div className="px-4 sm:px-6 py-3 border-t border-[var(--border)] flex items-center justify-between">
-                  <span className="text-[11px] text-[var(--text-4)] font-sans tracking-[.08em]">
+                  <span className="text-[11px] text-[var(--text-4)] font-sans tracking-[.1em]">
                     Showing{" "}
                     <span className="font-mono">
                       {filteredSettlements.length}
@@ -709,7 +725,7 @@ export default function SettlementsPage() {
                       Next Due
                     </span>
                     {next.daysRemaining === 0 ? (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-[var(--cyan-dim)] text-[10px] font-sans font-bold text-[var(--cyan)] uppercase tracking-[.08em]">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-[var(--cyan-dim)] text-[10px] font-sans font-bold text-[var(--cyan)] uppercase tracking-[.1em]">
                         Due Today
                       </span>
                     ) : (
@@ -774,7 +790,7 @@ export default function SettlementsPage() {
 
                   <div className="mt-3">
                     {isProcessing ? (
-                      <span className="inline-flex items-center gap-1.5 text-[11px] font-bold font-sans uppercase tracking-[.08em] text-[var(--cyan)]">
+                      <span className="inline-flex items-center gap-1.5 text-[11px] font-bold font-sans uppercase tracking-[.1em] text-[var(--cyan)]">
                         <span className="relative flex h-1.5 w-1.5">
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--cyan)] opacity-75" />
                           <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[var(--cyan)]" />
@@ -782,7 +798,7 @@ export default function SettlementsPage() {
                         Processing
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1.5 text-[11px] font-bold font-sans uppercase tracking-[.08em] text-[var(--amber)]">
+                      <span className="inline-flex items-center gap-1.5 text-[11px] font-bold font-sans uppercase tracking-[.1em] text-[var(--amber)]">
                         <span className="w-1.5 h-1.5 rounded-full bg-[var(--amber)]" />
                         Awaiting
                       </span>
@@ -841,7 +857,7 @@ export default function SettlementsPage() {
               </div>
 
               <div className="mt-4 pt-3 border-t border-[var(--border)] flex items-center justify-between">
-                <span className="text-[11px] uppercase tracking-[.08em] font-sans font-medium text-[var(--text-4)]">
+                <span className="text-[11px] uppercase tracking-[.1em] font-sans font-medium text-[var(--text-4)]">
                   Total
                 </span>
                 <span className="font-mono text-sm font-bold text-white tabular-nums">
@@ -879,7 +895,7 @@ export default function SettlementsPage() {
                       <div
                         className={`flex-1 flex items-center justify-between pb-3 ${
                           !isLast
-                            ? "border-b border-[rgba(255,255,255,0.04)]"
+                            ? "border-b border-[var(--border-row)]"
                             : ""
                         } mb-1`}
                       >

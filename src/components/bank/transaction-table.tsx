@@ -85,7 +85,7 @@ function StatusDot({ status }: { status: Transaction["status"] }) {
 function StatusBadge({ status }: { status: Transaction["status"] }) {
   if (status === "completed") {
     return (
-      <span className="inline-flex items-center gap-1.5 text-[11px] font-sans font-medium uppercase tracking-[.08em] text-[var(--status-positive)]">
+      <span className="inline-flex items-center gap-1.5 text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--status-positive)]">
         <StatusDot status="completed" />
         Completed
       </span>
@@ -94,7 +94,7 @@ function StatusBadge({ status }: { status: Transaction["status"] }) {
 
   if (status === "pending") {
     return (
-      <span className="inline-flex items-center gap-1.5 text-[11px] font-sans font-medium uppercase tracking-[.08em] text-[var(--status-pending)]">
+      <span className="inline-flex items-center gap-1.5 text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--status-pending)]">
         <StatusDot status="pending" />
         Pending
       </span>
@@ -103,7 +103,7 @@ function StatusBadge({ status }: { status: Transaction["status"] }) {
 
   if (status === "failed") {
     return (
-      <span className="inline-flex items-center gap-1.5 text-[11px] font-sans font-medium uppercase tracking-[.08em] text-[var(--status-negative)]">
+      <span className="inline-flex items-center gap-1.5 text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--status-negative)]">
         <StatusDot status="failed" />
         Failed
       </span>

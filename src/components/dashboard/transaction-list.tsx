@@ -272,7 +272,7 @@ function TransactionRow({ tx }: { tx: (typeof transactions)[number] }) {
       {/* ── Desktop row — visible only on sm+ ── */}
       <div
         className={cn(
-          "hidden sm:flex items-center gap-3.5 px-5 py-3.5",
+          "hidden sm:flex items-center gap-3.5 px-6 py-3.5",
           "transition-colors duration-150 ease-[cubic-bezier(0.16,1,0.3,1)]",
           "hover:bg-[rgba(255,255,255,0.03)] cursor-pointer"
         )}
@@ -356,12 +356,12 @@ export function TransactionList({ filter, limit }: TransactionListProps) {
       {groups.map((group, groupIdx) => (
         <div key={group.label}>
           {/* Date header */}
-          <div className="px-5 py-3 text-[11px] font-sans font-medium uppercase tracking-[.15em] text-[var(--text-4)] border-b border-[var(--border)] bg-[rgba(255,255,255,0.02)]">
+          <div className="px-6 py-3 text-[11px] font-sans font-medium uppercase tracking-[.15em] text-[var(--text-4)] border-b border-[var(--border)] bg-[rgba(255,255,255,0.02)]">
             {group.label}
           </div>
 
           {/* Rows */}
-          <div className="divide-y divide-[rgba(255,255,255,0.04)]">
+          <div className="divide-y divide-[var(--border-row)]">
             {group.items.map((tx) => (
               <TransactionRow key={tx.id} tx={tx} />
             ))}

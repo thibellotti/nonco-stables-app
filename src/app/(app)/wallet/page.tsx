@@ -3,12 +3,14 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { PageTransition } from "@/components/ui/page-transition";
+import { DonutChart } from "@/components/viz/donut-chart";
+import { Sparkline } from "@/components/ui/sparkline";
 import { balances, usdRates } from "@/lib/mock-data";
-import { formatMoney, formatCompact } from "@/lib/utils";
+import { formatMoney, formatCompact, cn } from "@/lib/utils";
 import { currencyColors } from "@/lib/currency-colors";
 
 // ---------------------------------------------------------------------------
-// Currency metadata — full names, symbols for monogram circles
+// Currency metadata
 // ---------------------------------------------------------------------------
 
 const currencyMeta: Record<string, { name: string }> = {
@@ -20,10 +22,8 @@ const currencyMeta: Record<string, { name: string }> = {
 };
 
 // ---------------------------------------------------------------------------
-// Allocation bar colors — descending opacity per row
+// 24h variations
 // ---------------------------------------------------------------------------
-
-const allocationColors = ["#05E0F8", "#05E0F8B3", "#05E0F880", "#05E0F859", "#05E0F840"];
 
 const variations: Record<string, { pct: string; positive: boolean }> = {
   USD: { pct: "+0.81%", positive: true },
@@ -34,10 +34,97 @@ const variations: Record<string, { pct: string; positive: boolean }> = {
 };
 
 // ---------------------------------------------------------------------------
-// Wallet page — portfolio overview
+// Sparkline mock data per currency (7-point, ~1 week)
 // ---------------------------------------------------------------------------
 
-import { Button } from "@/components/ui/button";
+const sparklineData: Record<string, number[]> = {
+  USD: [420, 425, 422, 428, 424, 426, 425],
+  EUR: [198, 194, 197, 200, 196, 199, 196],
+  MXN: [198, 202, 200, 205, 199, 203, 200],
+  USDT: [308, 312, 310, 315, 311, 309, 310],
+  USDC: [280, 275, 285, 278, 282, 280, 280],
+};
+
+// ---------------------------------------------------------------------------
+// Hero action pills
+// ---------------------------------------------------------------------------
+
+const heroActions: {
+  label: string;
+  href?: string;
+  icon: React.ReactNode;
+  iconBg: string;
+}[] = [
+  {
+    label: "Receive",
+    iconBg: "bg-[rgba(34,197,94,0.08)]",
+    icon: (
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <path d="M7 3v8M7 11l-3-3M7 11l3-3" stroke="#22C55E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+  {
+    label: "Send",
+    iconBg: "bg-[rgba(249,226,32,0.08)]",
+    icon: (
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <path d="M7 11V3M7 3L4 6M7 3l3 3" stroke="var(--amber)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+  {
+    label: "Convert",
+    href: "/fx",
+    iconBg: "bg-[var(--cyan-dim)]",
+    icon: (
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <path d="M3 5h8M11 5l-2-2M11 9H3M3 9l2 2" stroke="var(--cyan)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+  {
+    label: "Earn",
+    href: "/yield",
+    iconBg: "bg-[rgba(161,36,248,0.08)]",
+    icon: (
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <path d="M2 11l3-4 2.5 2L11 3" stroke="var(--purple)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+  {
+    label: "Deposit",
+    iconBg: "bg-[rgba(255,255,255,0.04)]",
+    icon: (
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <path d="M7 3v8M3 7h8" stroke="var(--text-3)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+];
+
+// ---------------------------------------------------------------------------
+// Animation variants
+// ---------------------------------------------------------------------------
+
+const stagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.05 } },
+};
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 8 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] as const },
+  },
+};
+
+// ---------------------------------------------------------------------------
+// Wallet page — portfolio overview
+// ---------------------------------------------------------------------------
 
 export default function WalletPage() {
   const totalValue = balances.reduce(
@@ -45,106 +132,117 @@ export default function WalletPage() {
     0
   );
 
+  // Donut segments from balances
+  const donutSegments = balances.map((b) => ({
+    value: (b.available + b.pending) * (usdRates[b.currency] ?? 1),
+    color: currencyColors[b.currency]?.border ?? "#05E0F8",
+    label: b.currency,
+  }));
+
   return (
-    <PageTransition className="px-6 md:px-8 w-full space-y-8">
-      {/* Total Value + Allocation — side by side */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6">
-        {/* LEFT: Total value */}
-        <div className="bg-[var(--bg-card)] border border-[var(--border)] border-t-2 border-t-[var(--cyan)] rounded-lg p-6">
-          <div className="flex items-start justify-between">
-            <div>
-              <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)]">
-                Total Value
-              </div>
-              <p className="text-4xl font-mono font-bold text-white tabular-nums mt-2 tracking-tight">
-                ${formatMoney(totalValue)}
-              </p>
-              <p className="text-sm text-[var(--text-4)] mt-2">
-                {balances.length} currencies managed
-              </p>
-            </div>
-            <div className="flex gap-2">
-              <Button variant="cyan" size="sm">
-                Deposit
-              </Button>
-              <Button variant="ghost" size="sm">
-                Withdraw
-              </Button>
-            </div>
+    <PageTransition className="px-6 md:px-8 w-full space-y-6">
+      {/* ----------------------------------------------------------------- */}
+      {/* HERO — Donut + Total Balance + Action Pills                       */}
+      {/* ----------------------------------------------------------------- */}
+      <div className="relative bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-8 overflow-hidden">
+        {/* Radial glow */}
+        <div
+          className="pointer-events-none absolute"
+          style={{
+            top: -60,
+            right: -60,
+            width: 240,
+            height: 240,
+            borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(5,224,248,0.05), transparent)",
+          }}
+        />
+
+        {/* Dot-grid pattern */}
+        <div
+          className="pointer-events-none absolute inset-0 opacity-100"
+          style={{
+            backgroundImage: "radial-gradient(circle, rgba(5,224,248,0.04) 1px, transparent 1px)",
+            backgroundSize: "24px 24px",
+          }}
+        />
+
+        {/* Content */}
+        <div className="relative flex flex-col md:flex-row items-start md:items-center gap-8">
+          {/* LEFT — Donut chart */}
+          <div className="shrink-0">
+            <DonutChart
+              segments={donutSegments}
+              size={140}
+              strokeWidth={12}
+              centerLabel={formatCompact(totalValue)}
+              centerSub="TOTAL"
+            />
           </div>
 
-          {/* Horizontal composition bar */}
-          <div className="flex h-3 rounded-full overflow-hidden mt-4 gap-1">
-            {balances.map((b, idx) => {
-              const usdValue =
-                (b.available + b.pending) * (usdRates[b.currency] ?? 1);
-              const pct = (usdValue / totalValue) * 100;
-              const color = allocationColors[idx] ?? "#05E0F8";
-              return (
-                <div
-                  key={b.currency}
-                  className="h-full rounded-full"
-                  style={{
-                    width: `${pct}%`,
-                    background: color,
-                  }}
-                />
-              );
-            })}
-          </div>
-        </div>
+          {/* RIGHT — Balance info + pills */}
+          <div className="flex-1 min-w-0">
+            <div className="text-[10px] uppercase tracking-[0.15em] font-sans text-[var(--text-4)]">
+              Total Balance
+            </div>
+            <p className="text-4xl md:text-5xl font-mono font-extrabold text-white tabular-nums mt-2 tracking-tighter">
+              ${formatMoney(totalValue)}
+            </p>
+            <p className="text-sm font-sans mt-1.5 flex items-center gap-1.5">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                <path d="M5 2L8 6H2L5 2Z" fill="var(--status-positive)" />
+              </svg>
+              <span className="text-[var(--cyan)] font-mono tabular-nums">+0.77%</span>
+              <span className="text-[var(--text-4)]">· updated just now</span>
+            </p>
 
-        {/* RIGHT: Allocation breakdown */}
-        <div className="bg-[var(--bg-card)] border border-[var(--border)] border-t-2 border-t-[var(--border-outline)] rounded-lg p-6">
-          <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)] mb-4">
-            Allocation
-          </div>
-          <div className="space-y-3">
-            {balances.map((b, i) => {
-              const usdValue =
-                (b.available + b.pending) * (usdRates[b.currency] ?? 1);
-              const pct = (usdValue / totalValue) * 100;
-              const cyanColor = allocationColors[i] ?? "#05E0F8";
-              return (
-                <div key={b.currency} className="flex items-center gap-3">
-                  <div
-                    className="w-3 h-3 rounded-full shrink-0"
-                    style={{ backgroundColor: cyanColor }}
-                  />
-                  <span className="text-xs font-medium text-[var(--text-3)] w-12">
-                    {b.currency}
-                  </span>
-                  <div className="flex-1 h-2 bg-[rgba(255,255,255,0.03)] rounded-full overflow-hidden">
-                    <div
-                      className="h-full rounded-full"
-                      style={{
-                        width: `${pct}%`,
-                        background: `linear-gradient(90deg, ${cyanColor}66, ${cyanColor})`,
-                      }}
-                    />
+            {/* Action pills */}
+            <div className="flex flex-wrap gap-2 mt-6">
+              {heroActions.map((action) => {
+                const inner = (
+                  <div className="flex flex-col items-center gap-2">
+                    <div className={cn("w-7 h-7 rounded-full flex items-center justify-center", action.iconBg)}>
+                      {action.icon}
+                    </div>
+                    <span className="text-[9px] uppercase tracking-[0.1em] font-sans text-[var(--text-4)]">
+                      {action.label}
+                    </span>
                   </div>
-                  <span className="text-[11px] font-mono text-[var(--text-4)] w-10 text-right tabular-nums">
-                    {pct.toFixed(0)}%
-                  </span>
-                  <span className="text-xs font-mono text-white w-16 text-right tabular-nums">
-                    {formatCompact(usdValue)}
-                  </span>
-                </div>
-              );
-            })}
+                );
+
+                const cls =
+                  "flex flex-col items-center gap-2 px-4 py-3 rounded-lg border border-[var(--border-subtle)] bg-[rgba(255,255,255,0.03)] hover:bg-[rgba(5,224,248,0.05)] hover:border-[rgba(5,224,248,0.15)] transition-all duration-150";
+
+                if (action.href) {
+                  return (
+                    <Link key={action.label} href={action.href} className={cls}>
+                      {inner}
+                    </Link>
+                  );
+                }
+
+                return (
+                  <button key={action.label} type="button" className={cls}>
+                    {inner}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Holdings table */}
+      {/* ----------------------------------------------------------------- */}
+      {/* HOLDINGS TABLE — with sparklines                                  */}
+      {/* ----------------------------------------------------------------- */}
       <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        variants={stagger}
+        initial="hidden"
+        animate="show"
         className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden"
       >
-        <div className="px-6 py-4 border-b border-[var(--border)]">
-          <span className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)]">
+        <div className="px-6 py-3 border-b border-[var(--border)]">
+          <span className="text-[11px] uppercase tracking-[0.15em] font-sans text-[var(--text-3)]">
             Holdings
           </span>
         </div>
@@ -152,22 +250,25 @@ export default function WalletPage() {
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-[var(--border)]">
-              <th className="px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)]">
+              <th className="px-6 py-3 text-[11px] tracking-[0.15em] uppercase font-sans font-medium text-[var(--text-4)]">
                 Currency
               </th>
-              <th className="px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)] text-right">
+              <th className="px-6 py-3 text-[11px] tracking-[0.15em] uppercase font-sans font-medium text-[var(--text-4)] hidden md:table-cell">
+                <span className="sr-only">Trend</span>
+              </th>
+              <th className="px-6 py-3 text-[11px] tracking-[0.15em] uppercase font-sans font-medium text-[var(--text-4)] text-right">
                 Balance
               </th>
-              <th className="px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)] text-right hidden sm:table-cell">
+              <th className="px-6 py-3 text-[11px] tracking-[0.15em] uppercase font-sans font-medium text-[var(--text-4)] text-right hidden sm:table-cell">
                 USD Value
               </th>
-              <th className="px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)] text-right hidden lg:table-cell">
+              <th className="px-6 py-3 text-[11px] tracking-[0.15em] uppercase font-sans font-medium text-[var(--text-4)] text-right hidden lg:table-cell">
                 24h Change
               </th>
-              <th className="px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)] text-right hidden lg:table-cell">
+              <th className="px-6 py-3 text-[11px] tracking-[0.15em] uppercase font-sans font-medium text-[var(--text-4)] text-right hidden lg:table-cell">
                 Pending
               </th>
-              <th className="px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)] text-right">
+              <th className="px-6 py-3 text-[11px] tracking-[0.15em] uppercase font-sans font-medium text-[var(--text-4)] text-right">
                 <span className="sr-only">Action</span>
               </th>
             </tr>
@@ -180,20 +281,19 @@ export default function WalletPage() {
               const usdValue = b.available * (usdRates[b.currency] ?? 1);
               const swapStable =
                 b.currency === "EUR" || b.currency === "GBP" ? "USDC" : "USDT";
+              const sparkData = sparklineData[b.currency];
 
               return (
                 <motion.tr
                   key={b.currency}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: i * 0.05, duration: 0.4 }}
-                  className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-150"
+                  variants={fadeUp}
+                  className="group border-b border-[var(--border-row)] hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-150"
                 >
-                  {/* Currency — colored circle with 2-letter code + full name */}
+                  {/* Currency — colored circle + full name */}
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <div
-                        className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-[11px] font-bold tracking-tight"
+                        className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-[11px] font-bold tracking-tight transition-[filter] duration-150 group-hover:brightness-125"
                         style={{
                           backgroundColor: `${colors?.border}15`,
                           color: colors?.border,
@@ -213,13 +313,27 @@ export default function WalletPage() {
                     </div>
                   </td>
 
-                  {/* Balance in native currency + mobile USD fallback */}
+                  {/* Sparkline */}
+                  <td className="py-4 pr-2 hidden md:table-cell">
+                    {sparkData && (
+                      <div className="w-16 h-7">
+                        <Sparkline
+                          data={sparkData}
+                          color={colors?.border ?? "var(--cyan)"}
+                          showArea={true}
+                          strokeWidth={1.5}
+                        />
+                      </div>
+                    )}
+                  </td>
+
+                  {/* Balance in native currency */}
                   <td className="px-6 py-4 text-right">
                     <span className="font-mono text-sm font-bold text-white tabular-nums block">
                       {b.symbol}
                       {formatMoney(b.available)}
                     </span>
-                    {/* Mobile: show approximate USD value below balance */}
+                    {/* Mobile: approximate USD below */}
                     <span className="font-mono text-[11px] text-[var(--text-4)] tabular-nums block mt-0.5 sm:hidden">
                       &asymp; ${formatCompact(usdValue)}
                     </span>
@@ -236,11 +350,12 @@ export default function WalletPage() {
                   <td className="px-6 py-4 text-right hidden lg:table-cell">
                     {variation && (
                       <span
-                        className={`font-mono text-sm font-bold tabular-nums inline-flex items-center gap-1 ${
+                        className={cn(
+                          "font-mono text-sm font-bold tabular-nums inline-flex items-center gap-1",
                           variation.positive
                             ? "text-[var(--status-positive)]"
                             : "text-[var(--status-negative)]"
-                        }`}
+                        )}
                       >
                         <svg
                           width="10"
@@ -248,14 +363,9 @@ export default function WalletPage() {
                           viewBox="0 0 10 10"
                           fill="none"
                           aria-hidden="true"
-                          className={
-                            variation.positive ? "" : "rotate-180"
-                          }
+                          className={variation.positive ? "" : "rotate-180"}
                         >
-                          <path
-                            d="M5 2L8 6H2L5 2Z"
-                            fill="currentColor"
-                          />
+                          <path d="M5 2L8 6H2L5 2Z" fill="currentColor" />
                         </svg>
                         {variation.pct}
                       </span>
@@ -270,9 +380,7 @@ export default function WalletPage() {
                         {formatMoney(b.pending)}
                       </span>
                     ) : (
-                      <span className="text-[11px] text-[var(--text-4)]">
-                        &mdash;
-                      </span>
+                      <span className="text-[11px] text-[var(--text-4)]">&mdash;</span>
                     )}
                   </td>
 
@@ -305,28 +413,38 @@ export default function WalletPage() {
         </div>
       </motion.div>
 
-      {/* Recent Wallet Activity */}
+      {/* ----------------------------------------------------------------- */}
+      {/* RECENT ACTIVITY                                                   */}
+      {/* ----------------------------------------------------------------- */}
       <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden">
-        <div className="px-6 py-4 border-b border-[var(--border)] flex items-center justify-between">
-          <span className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)]">
+        <div className="px-6 py-3 border-b border-[var(--border)] flex items-center justify-between">
+          <span className="text-[11px] uppercase tracking-[0.15em] font-sans text-[var(--text-3)]">
             Recent Activity
           </span>
           <Link
             href="/bank"
             className="text-[11px] font-sans text-[var(--cyan)] hover:text-white transition-colors"
           >
-            View all
+            All activity &rarr;
           </Link>
         </div>
-        <div className="divide-y divide-[rgba(255,255,255,0.04)]">
+        <div className="divide-y divide-[var(--border-row)]">
           {[
             { desc: "Deposit — Citibank wire", amount: "+$250,000", currency: "USD", time: "3h ago", positive: true },
-            { desc: "Convert — EUR to USDC", amount: "-€54,000", currency: "EUR", time: "1d ago", positive: false },
+            { desc: "Convert — EUR to USDC", amount: "-\u20AC54,000", currency: "EUR", time: "1d ago", positive: false },
             { desc: "Deposit — Tether Treasury", amount: "+$500,000", currency: "USDT", time: "1d ago", positive: true },
             { desc: "Withdrawal — Banorte S.A.", amount: "-MX$875,000", currency: "MXN", time: "2d ago", positive: false },
           ].map((tx, i) => (
-            <div key={i} className="flex items-center gap-3 px-6 py-3.5 hover:bg-[rgba(255,255,255,0.02)] transition-colors">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${tx.positive ? "bg-[rgba(5,224,248,0.08)]" : "bg-[rgba(255,255,255,0.04)]"}`}>
+            <div
+              key={i}
+              className="flex items-center gap-3 px-6 py-3.5 hover:bg-[rgba(255,255,255,0.03)] transition-colors"
+            >
+              <div
+                className={cn(
+                  "w-8 h-8 rounded-full flex items-center justify-center shrink-0",
+                  tx.positive ? "bg-[rgba(5,224,248,0.08)]" : "bg-[rgba(255,255,255,0.04)]"
+                )}
+              >
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                   {tx.positive ? (
                     <path d="M10 4L4 10M4 10h4M4 10V6" stroke="var(--cyan)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -338,7 +456,12 @@ export default function WalletPage() {
               <div className="flex-1 min-w-0">
                 <span className="text-sm font-sans text-[var(--text)] truncate block">{tx.desc}</span>
               </div>
-              <span className={`font-mono text-sm font-semibold tabular-nums ${tx.positive ? "text-[var(--cyan)]" : "text-[var(--text-3)]"}`}>
+              <span
+                className={cn(
+                  "font-mono text-sm font-semibold tabular-nums",
+                  tx.positive ? "text-[var(--cyan)]" : "text-[var(--text-3)]"
+                )}
+              >
                 {tx.amount}
               </span>
               <span className="text-[11px] font-mono text-[var(--text-4)] tabular-nums w-12 text-right">

@@ -1,5 +1,6 @@
+import Link from "next/link";
 import { cn, formatCompact, formatMoney } from "@/lib/utils";
-import { balances } from "@/lib/mock-data";
+import { balances, usdRates } from "@/lib/mock-data";
 import { SectionLabel } from "@/components/ui/section-label";
 import { Sparkline } from "@/components/ui/sparkline";
 
@@ -43,11 +44,14 @@ export function CurrencyBreakdown() {
   return (
     <section className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border)]">
+      <div className="flex items-center justify-between px-6 py-3 border-b border-[var(--border)]">
         <SectionLabel>Stable Assets</SectionLabel>
-        <button className="px-3 py-1 rounded-full border border-[var(--border-subtle)] text-[11px] font-sans font-medium text-[var(--cyan)] uppercase tracking-wider hover:border-[var(--border-outline)] transition-colors cursor-pointer">
-          View All
-        </button>
+        <Link
+          href="/wallet"
+          className="font-sans text-[11px] text-[var(--cyan)] uppercase tracking-[.1em] hover:opacity-80 transition-opacity"
+        >
+          View wallet &rarr;
+        </Link>
       </div>
 
       {/* Table header */}
@@ -100,7 +104,7 @@ export function CurrencyBreakdown() {
 
               {/* 24h Change */}
               {variation && (
-                <div className="flex items-center justify-end gap-1 hidden sm:flex">
+                <div className="items-center justify-end gap-1 hidden sm:flex">
                   <svg
                     width="10"
                     height="10"
@@ -156,4 +160,3 @@ export function CurrencyBreakdown() {
     </section>
   );
 }
-

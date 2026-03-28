@@ -6,7 +6,7 @@ function SkeletonPulse({ className }: { className?: string }) {
 
 export default function TradesLoading() {
   return (
-    <div className="px-6 md:px-8 w-full space-y-8">
+    <div className="px-6 md:px-8 w-full space-y-6">
       {/* Hero header */}
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div className="space-y-3">

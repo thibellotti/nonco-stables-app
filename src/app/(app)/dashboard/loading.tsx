@@ -6,7 +6,7 @@ function SkeletonPulse({ className }: { className?: string }) {
 
 export default function DashboardLoading() {
   return (
-    <div className="px-6 md:px-8 w-full space-y-8">
+    <div className="px-6 md:px-8 w-full space-y-6">
       {/* Desk offer banner skeleton */}
       <SkeletonPulse className="h-14 w-full" />
 

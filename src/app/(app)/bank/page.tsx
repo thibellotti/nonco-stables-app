@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { PageTransition } from "@/components/ui/page-transition";
 import { transactions } from "@/lib/mock-data";
 import { BankFilterBar } from "@/components/bank/filter-bar";
@@ -57,9 +58,14 @@ export default function BankPage() {
   const withdrawalPct = 100 - depositPct;
 
   return (
-    <PageTransition className="px-6 md:px-8 w-full space-y-8">
+    <PageTransition className="px-6 md:px-8 w-full space-y-6">
       {/* Treasury Flow — consolidated single card */}
-      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5">
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5"
+      >
         <div className="flex items-center justify-between mb-5">
           <span className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)]">
             Treasury Flow
@@ -163,10 +169,15 @@ export default function BankPage() {
             </div>
           )}
         </div>
-      </div>
+      </motion.div>
 
       {/* Filter + Table */}
-      <div className="bg-[var(--bg-card)] rounded-lg border border-[var(--border)]">
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+        className="bg-[var(--bg-card)] rounded-lg border border-[var(--border)]"
+      >
         <BankFilterBar
           filter={filter}
           onFilterChange={(f) => {
@@ -178,7 +189,7 @@ export default function BankPage() {
           }}
         />
         <BankTransactionTable transactions={filtered} />
-      </div>
+      </motion.div>
     </PageTransition>
   );
 }

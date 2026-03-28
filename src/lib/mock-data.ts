@@ -52,6 +52,82 @@ export interface Balance {
   symbol: string;
 }
 
+// FX Board instrument with live pricing data
+export interface BoardInstrument {
+  id: string;
+  pair: string;
+  baseCurrency: string;
+  quoteCurrency: string;
+  sell: number;
+  buy: number;
+  sellQty: number;
+  buyQty: number;
+  change24h: number;
+  prevClose: number;
+  section: "latam" | "brl" | "eur" | "gbp";
+}
+
+export interface BoardSection {
+  id: string;
+  label: string;
+  color: string;
+}
+
+// Yield vault
+export interface YieldVault {
+  id: string;
+  name: string;
+  currency: string;
+  flag: string;
+  institution: string;
+  apy: number;
+  balance: number;
+  balanceLabel: string;
+  earnedMTD: number;
+  color: string;
+  status: "active" | "coming-soon";
+}
+
+// Payment
+export interface Payment {
+  id: string;
+  payee: string;
+  reference: string;
+  corridor: string;
+  amount: number;
+  status: "completed" | "processing" | "failed";
+  date: Date;
+}
+
+// Third-party payee
+export interface ThirdPartyPayee {
+  id: string;
+  name: string;
+  reference: string;
+  type: "vendor" | "contractor" | "payroll";
+  corridor: string;
+  amount: number;
+  status: "settled" | "processing";
+  date: string;
+}
+
+// API key
+export interface ApiKey {
+  id: string;
+  name: string;
+  prefix: string;
+  environment: "live" | "sandbox";
+  createdAt: string;
+  lastUsed: string;
+}
+
+// Ticker item
+export interface TickerItem {
+  pair: string;
+  rate: string;
+  change: number;
+}
+
 export interface RecentTrade {
   id: string;
   pair: string;
@@ -441,3 +517,102 @@ export const usdRates: Record<string, number> = {
   GBP: 1.27,
   BRL: 0.195,
 };
+
+// ---------------------------------------------------------------------------
+// Board Sections
+// ---------------------------------------------------------------------------
+
+export const boardSections: Record<string, BoardSection> = {
+  latam: { id: "latam", label: "LATAM — MXN, COP, CLP", color: "var(--cyan)" },
+  brl: { id: "brl", label: "Brazil — BRL", color: "var(--purple)" },
+  eur: { id: "eur", label: "Europe — EUR", color: "#38bdf8" },
+  gbp: { id: "gbp", label: "UK — GBP", color: "var(--amber)" },
+};
+
+// ---------------------------------------------------------------------------
+// FX Board Instruments (14)
+// ---------------------------------------------------------------------------
+
+export const boardInstruments: BoardInstrument[] = [
+  { id: "mxn-usdt", pair: "MXN/USDT", baseCurrency: "MXN", quoteCurrency: "USDT", sell: 17.4480, buy: 17.4560, sellQty: 1000, buyQty: 1000, change24h: 0.12, prevClose: 17.3981, section: "latam" },
+  { id: "mxn-usdc", pair: "MXN/USDC", baseCurrency: "MXN", quoteCurrency: "USDC", sell: 17.4475, buy: 17.4555, sellQty: 1000, buyQty: 1000, change24h: 0.11, prevClose: 17.3961, section: "latam" },
+  { id: "mxn-ausd", pair: "MXN/AUSD", baseCurrency: "MXN", quoteCurrency: "AUSD", sell: 17.4460, buy: 17.4540, sellQty: 500, buyQty: 500, change24h: 0.10, prevClose: 17.3948, section: "latam" },
+  { id: "mxn-usd1", pair: "MXN/USD1", baseCurrency: "MXN", quoteCurrency: "USD1", sell: 17.4462, buy: 17.4542, sellQty: 500, buyQty: 500, change24h: 0.11, prevClose: 17.3950, section: "latam" },
+  { id: "mxn-usd", pair: "MXN/USD", baseCurrency: "MXN", quoteCurrency: "USD", sell: 17.4478, buy: 17.4558, sellQty: 2000, buyQty: 2000, change24h: 0.12, prevClose: 17.3980, section: "latam" },
+  { id: "cop-usdt", pair: "COP/USDT", baseCurrency: "COP", quoteCurrency: "USDT", sell: 4116.20, buy: 4119.80, sellQty: 500, buyQty: 500, change24h: 0.21, prevClose: 4109.58, section: "latam" },
+  { id: "clp-usdt", pair: "CLP/USDT", baseCurrency: "CLP", quoteCurrency: "USDT", sell: 941.80, buy: 943.20, sellQty: 500, buyQty: 500, change24h: -0.15, prevClose: 944.30, section: "latam" },
+  { id: "brl-usdc", pair: "BRL/USDC", baseCurrency: "BRL", quoteCurrency: "USDC", sell: 5.1440, buy: 5.1530, sellQty: 1000, buyQty: 1000, change24h: 0.31, prevClose: 5.1333, section: "brl" },
+  { id: "brl-usdt", pair: "BRL/USDT", baseCurrency: "BRL", quoteCurrency: "USDT", sell: 5.1438, buy: 5.1528, sellQty: 1000, buyQty: 1000, change24h: 0.30, prevClose: 5.1338, section: "brl" },
+  { id: "eur-usdt", pair: "EUR/USDT", baseCurrency: "EUR", quoteCurrency: "USDT", sell: 1.0831, buy: 1.0839, sellQty: 2000, buyQty: 2000, change24h: -0.04, prevClose: 1.0843, section: "eur" },
+  { id: "eur-usdc", pair: "EUR/USDC", baseCurrency: "EUR", quoteCurrency: "USDC", sell: 1.0830, buy: 1.0838, sellQty: 2000, buyQty: 2000, change24h: -0.04, prevClose: 1.0842, section: "eur" },
+  { id: "gbp-usdc", pair: "GBP/USDC", baseCurrency: "GBP", quoteCurrency: "USDC", sell: 1.2646, buy: 1.2654, sellQty: 1000, buyQty: 1000, change24h: -0.08, prevClose: 1.2665, section: "gbp" },
+  { id: "gbp-usdt", pair: "GBP/USDT", baseCurrency: "GBP", quoteCurrency: "USDT", sell: 1.2645, buy: 1.2653, sellQty: 1000, buyQty: 1000, change24h: -0.08, prevClose: 1.2663, section: "gbp" },
+];
+
+// ---------------------------------------------------------------------------
+// Ticker Items
+// ---------------------------------------------------------------------------
+
+export const tickerItems: TickerItem[] = [
+  { pair: "MXN/USDT", rate: "17.4520", change: 0.12 },
+  { pair: "BRL/USDC", rate: "5.1485", change: 0.31 },
+  { pair: "EUR/USDT", rate: "1.0835", change: -0.04 },
+  { pair: "GBP/USDC", rate: "1.2650", change: -0.08 },
+  { pair: "COP/USDT", rate: "4118.00", change: 0.21 },
+  { pair: "CLP/USDT", rate: "942.50", change: -0.15 },
+  { pair: "USD/USDC", rate: "1.0001", change: 0.00 },
+  { pair: "USD/USDT", rate: "1.0002", change: 0.00 },
+];
+
+// ---------------------------------------------------------------------------
+// Yield Vaults (4)
+// ---------------------------------------------------------------------------
+
+export const yieldVaults: YieldVault[] = [
+  { id: "vault-mxn", name: "MXN vault", currency: "MXN", flag: "🇲🇽", institution: "CETES · Banco de México", apy: 10.82, balance: 3_500_000, balanceLabel: "MX$3.5M", earnedMTD: 4810, color: "var(--cyan)", status: "active" },
+  { id: "vault-brl", name: "BRL vault", currency: "BRL", flag: "🇧🇷", institution: "Selic · Banco Central", apy: 10.50, balance: 462_000, balanceLabel: "BRL 462K", earnedMTD: 1840, color: "var(--purple)", status: "active" },
+  { id: "vault-eur", name: "EUR vault", currency: "EUR", flag: "🇪🇺", institution: "ECB deposit rate", apy: 2.65, balance: 182_000, balanceLabel: "EUR 182K", earnedMTD: 590, color: "#38bdf8", status: "active" },
+  { id: "vault-gbp", name: "GBP vault", currency: "GBP", flag: "🇬🇧", institution: "BoE base rate", apy: 4.50, balance: 0, balanceLabel: "—", earnedMTD: 0, color: "var(--amber)", status: "coming-soon" },
+];
+
+// ---------------------------------------------------------------------------
+// Payments (4)
+// ---------------------------------------------------------------------------
+
+export const payments: Payment[] = [
+  { id: "PAY-382", payee: "Grupo Bursátil Mexicano", reference: "INV-382", corridor: "→ MXN", amount: 240_000, status: "completed", date: new Date(Date.now() - days(1)) },
+  { id: "PAY-041", payee: "DolarApp", reference: "REF-041", corridor: "→ EUR", amount: 88_500, status: "completed", date: new Date(Date.now() - days(2)) },
+  { id: "PAY-039", payee: "Remitly BR", reference: "REF-039", corridor: "→ BRL", amount: 52_000, status: "processing", date: new Date(Date.now() - days(3)) },
+  { id: "PAY-038", payee: "Wirex EU", reference: "REF-038", corridor: "→ GBP", amount: 31_200, status: "completed", date: new Date(Date.now() - days(4)) },
+];
+
+// ---------------------------------------------------------------------------
+// Third-party Payees (4)
+// ---------------------------------------------------------------------------
+
+export const thirdPartyPayees: ThirdPartyPayee[] = [
+  { id: "3P-441", name: "Pinheiro Neto Advogados", reference: "PAY-441", type: "vendor", corridor: "→ BRL", amount: 18_000, status: "settled", date: "Mar 22" },
+  { id: "3P-440", name: "Cora Salinas", reference: "PAY-440", type: "contractor", corridor: "→ MXN", amount: 4_200, status: "settled", date: "Mar 21" },
+  { id: "3P-439", name: "RSM UK LLP", reference: "PAY-439", type: "vendor", corridor: "→ GBP", amount: 12_500, status: "settled", date: "Mar 20" },
+  { id: "3P-438", name: "LatAm BD team", reference: "PAY-438", type: "payroll", corridor: "→ MXN", amount: 9_800, status: "processing", date: "Mar 24" },
+];
+
+// ---------------------------------------------------------------------------
+// API Keys (2)
+// ---------------------------------------------------------------------------
+
+export const apiKeys: ApiKey[] = [
+  { id: "key-1", name: "Production", prefix: "sk_live_••••••••7f2a", environment: "live", createdAt: "Jan 12, 2025", lastUsed: "3 min ago" },
+  { id: "key-2", name: "Sandbox", prefix: "sk_test_••••••••3c8e", environment: "sandbox", createdAt: "Jan 12, 2025", lastUsed: "1h ago" },
+];
+
+// ---------------------------------------------------------------------------
+// Reports Data
+// ---------------------------------------------------------------------------
+
+export const reportCorridors = [
+  { corridor: "USD → MXN", trades: 168, volume: 11_200_000, share: 60.9, avgSize: 66_700 },
+  { corridor: "USD → BRL", trades: 74, volume: 3_800_000, share: 20.7, avgSize: 51_400 },
+  { corridor: "USD → EUR", trades: 42, volume: 2_400_000, share: 13.0, avgSize: 57_100 },
+  { corridor: "USD → GBP", trades: 28, volume: 1_000_000, share: 5.4, avgSize: 35_700 },
+];

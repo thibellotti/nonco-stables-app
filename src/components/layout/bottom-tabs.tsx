@@ -3,9 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { navItems } from "@/lib/nav-items";
-
-const tabs = navItems;
+import { mobileTabItems } from "@/lib/nav-items";
 
 export function BottomTabs() {
   const pathname = usePathname();
@@ -13,7 +11,7 @@ export function BottomTabs() {
   return (
     <nav aria-label="Mobile navigation" className="fixed bottom-0 inset-x-0 z-50 flex lg:hidden bg-black border-t border-[var(--border)]">
       <div className="flex w-full justify-around items-center h-16 pb-[env(safe-area-inset-bottom)]">
-        {tabs.map((tab) => {
+        {mobileTabItems.map((tab) => {
           const isActive =
             pathname === tab.href || pathname.startsWith(tab.href + "/");
 
@@ -36,7 +34,7 @@ export function BottomTabs() {
               >
                 {tab.icon}
               </span>
-              <span className="text-[11px] font-sans uppercase tracking-widest mt-1">{tab.label}</span>
+              <span className="text-[10px] font-sans uppercase tracking-widest mt-0.5">{tab.label}</span>
             </Link>
           );
         })}

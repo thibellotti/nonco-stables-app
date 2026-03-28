@@ -79,7 +79,7 @@ export default function RFQPage() {
   const hasActiveQuote = quote !== null || isLoading;
 
   return (
-    <PageTransition className="px-6 md:px-8 w-full space-y-8">
+    <PageTransition className="px-6 md:px-8 w-full space-y-6">
       {hasActiveQuote ? (
         <>
           {/* Active quote — 2 columns: PriceCard + Favorites */}

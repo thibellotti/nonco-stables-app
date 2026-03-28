@@ -181,9 +181,9 @@ export default function TradesPage() {
     });
 
   return (
-    <PageTransition className="px-6 md:px-8 w-full space-y-8">
+    <PageTransition className="px-6 md:px-8 w-full space-y-6">
       {/* Analytics: Volume by Pair + Summary */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Volume by Pair */}
         <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5">
           <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] mb-4">
@@ -198,12 +198,12 @@ export default function TradesPage() {
               return (
                 <div key={pair} className="flex items-center gap-3">
                   <span className="text-xs font-mono font-bold text-white w-20 shrink-0">{pair}</span>
-                  <div className="flex-1 h-2.5 bg-[rgba(255,255,255,0.03)] rounded-full overflow-hidden">
+                  <div className="flex-1 h-3.5 bg-[rgba(255,255,255,0.03)] rounded-full overflow-hidden">
                     <div
                       className="h-full rounded-full"
                       style={{
                         width: `${barPct}%`,
-                        background: `linear-gradient(90deg, #05E0F840, #05E0F8${opacityHex})`,
+                        background: `linear-gradient(90deg, #05E0F850, #05E0F8${opacityHex})`,
                       }}
                     />
                   </div>
@@ -220,7 +220,7 @@ export default function TradesPage() {
         </div>
 
         {/* Summary */}
-        <div className="bg-[var(--bg-card)] border border-[var(--border)] border-t-2 border-t-[var(--cyan)] rounded-lg p-5 space-y-4">
+        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5 space-y-4">
           <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)]">Summary</div>
 
           <div>
@@ -304,7 +304,7 @@ export default function TradesPage() {
       </div>
 
       {/* Trade Table */}
-      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden overflow-x-auto">
+      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden overflow-x-auto table-scroll-mask">
         {filteredTrades.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
             <div className="w-12 h-12 rounded-full bg-[var(--bg-elevated)] flex items-center justify-center mb-4">
@@ -376,11 +376,11 @@ export default function TradesPage() {
                       {/* Side pill */}
                       <td className="px-3 sm:px-6 py-3 sm:py-4">
                         {trade.side === "buy" ? (
-                          <span className="inline-flex items-center px-4 py-1.5 rounded-full text-[11px] font-bold font-sans uppercase tracking-[.08em] bg-[var(--buy-dim)] text-[var(--buy)]">
+                          <span className="inline-flex items-center px-4 py-1.5 rounded-full text-[11px] font-bold font-sans uppercase tracking-[.1em] bg-[var(--buy-dim)] text-[var(--buy)]">
                             Buy
                           </span>
                         ) : (
-                          <span className="inline-flex items-center px-4 py-1.5 rounded-full text-[11px] font-bold font-sans uppercase tracking-[.08em] bg-[var(--sell-dim)] text-[var(--sell)]">
+                          <span className="inline-flex items-center px-4 py-1.5 rounded-full text-[11px] font-bold font-sans uppercase tracking-[.1em] bg-[var(--sell-dim)] text-[var(--sell)]">
                             Sell
                           </span>
                         )}
@@ -434,8 +434,8 @@ export default function TradesPage() {
         </table>
 
         {/* Footer */}
-        <div className="px-4 sm:px-6 py-4 border-t border-[var(--border)]">
-          <span className="text-[11px] text-[var(--text-4)] tracking-[.08em]">
+        <div className="px-6 py-3 border-t border-[var(--border)]">
+          <span className="text-[11px] text-[var(--text-4)] tracking-[.1em]">
             Showing <span className="font-mono">{filteredTrades.length}</span> of <span className="font-mono">{allTrades.length}</span> trades
           </span>
         </div>
