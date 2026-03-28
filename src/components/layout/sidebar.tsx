@@ -58,7 +58,7 @@ export function Sidebar() {
                   )}
                 >
                   {isActive && (
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 rounded-r-full bg-[var(--cyan)]" />
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 rounded-r-full bg-[var(--cyan)] shadow-[0_0_8px_rgba(5,224,248,0.3)]" />
                   )}
                   <span className="mr-3 shrink-0">{item.icon}</span>
                   <span className="text-[12.5px] tracking-normal font-sans">{item.label}</span>

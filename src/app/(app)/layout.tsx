@@ -8,7 +8,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <AppProviders>
       <Sidebar />
       <PageHeader />
-      <main className="lg:pl-[220px] pt-20 pb-24 lg:pb-8 min-h-screen">
+      <main className="lg:pl-[220px] pt-20 pb-28 lg:pb-8 min-h-screen">
         {children}
       </main>
       <BottomTabs />

@@ -56,7 +56,7 @@ export default function PaymentsPage() {
   });
 
   return (
-    <PageTransition className="px-6 md:px-8 w-full space-y-6">
+    <PageTransition className="px-4 sm:px-6 md:px-8 w-full space-y-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* LEFT: New payment form */}
         <motion.div

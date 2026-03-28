@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nonco Stables — Full Design Audit</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', -apple-system, sans-serif; background: #0a0a0a; color: #e5e2e1; line-height: 1.6; padding: 40px 24px; max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 28px; font-weight: 800; letter-spacing: -1px; margin-bottom: 8px; color: #fff; }
+  h2 { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; margin: 48px 0 16px; color: #05E0F8; border-bottom: 1px solid #1a1a1a; padding-bottom: 12px; }
+  h3 { font-size: 15px; font-weight: 700; margin: 28px 0 10px; color: #fff; }
+  p { font-size: 14px; color: #9caaad; margin-bottom: 12px; }
+  .subtitle { font-size: 14px; color: #737373; margin-bottom: 32px; }
+  .tag { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; padding: 4px 10px; border-radius: 6px; margin-bottom: 16px; }
+  .tag-critical { background: rgba(239,68,68,0.1); color: #ef4444; }
+  .tag-high { background: rgba(249,226,32,0.1); color: #f9e220; }
+  .tag-medium { background: rgba(5,224,248,0.1); color: #05E0F8; }
+  .tag-low { background: rgba(255,255,255,0.05); color: #737373; }
+  .issue { background: #141414; border: 1px solid #1a1a1a; border-radius: 10px; padding: 16px 20px; margin-bottom: 12px; }
+  .issue-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .issue-title { font-size: 13px; font-weight: 700; color: #fff; }
+  .issue-desc { font-size: 12px; color: #9caaad; }
+  .fix { font-size: 12px; color: #05E0F8; margin-top: 8px; padding-top: 8px; border-top: 1px solid #1a1a1a; }
+  .fix::before { content: "→ "; font-weight: 700; }
+  code { font-family: 'JetBrains Mono', monospace; font-size: 11px; background: #1a1a1a; padding: 2px 6px; border-radius: 4px; color: #05E0F8; }
+  .page-section { margin-bottom: 40px; }
+  .severity-bar { display: flex; gap: 8px; margin-bottom: 20px; }
+  .severity-item { font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .score { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; font-family: monospace; padding: 4px 10px; border-radius: 6px; background: #1a1a1a; margin-left: 8px; }
+  .divider { height: 1px; background: linear-gradient(90deg, transparent, #333, transparent); margin: 40px 0; }
+  .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+  .summary-card { background: #141414; border: 1px solid #1a1a1a; border-radius: 10px; padding: 16px; }
+  .summary-card h4 { font-size: 12px; font-weight: 700; color: #05E0F8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .summary-card ul { list-style: none; padding: 0; }
+  .summary-card li { font-size: 12px; color: #9caaad; padding: 3px 0; }
+  .summary-card li::before { content: "•"; color: #05E0F8; margin-right: 6px; }
+</style>
+</head>
+<body>
+
+<h1>Nonco Stables — Design Audit Completo</h1>
+<p class="subtitle">Análise page-by-page com olhar de designer e dev senior. Cada issue tem severidade, diagnóstico e fix proposto.</p>
+
+<div class="severity-bar">
+  <div class="severity-item"><div class="dot" style="background:#ef4444"></div> Critical — quebra a experiência</div>
+  <div class="severity-item"><div class="dot" style="background:#f9e220"></div> High — impacta usabilidade</div>
+  <div class="severity-item"><div class="dot" style="background:#05E0F8"></div> Medium — polish visual</div>
+  <div class="severity-item"><div class="dot" style="background:#555"></div> Low — detalhe fino</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>🏗 Global — Sistema de Design</h2>
+
+<div class="issue">
+  <div class="issue-header"><span class="tag tag-high">HIGH</span><span class="issue-title">Inconsistência de espaçamento entre páginas</span></div>
+  <div class="issue-desc">Algumas páginas usam <code>space-y-8</code>, outras <code>space-y-6</code>. Card padding varia entre <code>px-5 py-3</code> e <code>px-6 py-4</code>. Não há ritmo visual consistente.</div>
+  <div class="fix">Padronizar: todas as páginas usam <code>space-y-6</code> entre seções. Card headers sempre <code>px-6 py-3</code>. Card body sempre <code>p-6</code>. Form spacing <code>space-y-4</code>.</div>
+</div>
+
+<div class="issue">
+  <div class="issue-header"><span class="tag tag-high">HIGH</span><span class="issue-title">Font size drift em labels</span></div>
+  <div class="issue-desc">Section labels alternam entre <code>text-[10px]</code> e <code>text-[11px]</code>. Tracking varia entre <code>0.08em</code>, <code>0.1em</code>, e <code>0.15em</code>.</div>
+  <div class="fix">Criar 3 tiers fixos: micro-label = <code>text-[9px] tracking-[0.12em]</code>, label = <code>text-[11px] tracking-[0.1em]</code>, body = <code>text-sm</code>.</div>
+</div>
+
+<div class="issue">
+  <div class="issue-header"><span class="tag tag-medium">MEDIUM</span><span class="issue-title">Ticker global vs contextual</span></div>
+  <div class="issue-desc">O ticker foi adicionado ao layout global mas agora está no <code>main</code> de todas as páginas com <code>px-6 md:px-8 mb-6</code>. Em páginas como API Keys e Third Party, rates FX são irrelevantes.</div>
+  <div class="fix">Mover ticker para DENTRO das páginas que precisam: Dashboard, FX Board, e Wallet. Remover do layout global. Ou: deixar global mas com design mais sutil — altura 28px, sem border, opacidade 60%, integrado ao header.</div>
+</div>
+
+<div class="issue">
+  <div class="issue-header"><span class="tag tag-medium">MEDIUM</span><span class="issue-title">Ausência de page titles/headers claros</span></div>
+  <div class="issue-desc">O PageHeader mostra "Nonco / Page Title" como breadcrumb mas algumas páginas ainda usam <code>SectionLabel</code> como pseudo-título. Não há hierarquia clara de "onde estou".</div>
+  <div class="fix">Cada página deve ter um header consistente: título grande (h1, text-xl font-bold) + subtítulo descritivo. O breadcrumb do header já existe — as pages não precisam de SectionLabel como primeiro elemento.</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>📊 Dashboard</h2>
+<span class="score">7.5/10</span>
+
+<div class="issue">
+  <div class="issue-header"><span class="tag tag-high">HIGH</span><span class="issue-title">Competição visual entre BalanceHero e QuickActions</span></div>
+  <div class="issue-desc">O hero chart (lado esquerdo) e quick actions (lado direito) competem por atenção em grid 1:1. O chart é denso e detalhado, mas os quick actions são simétricos e ocupam o mesmo espaço visual. Resultado: nenhum dos dois se destaca.</div>
+  <div class="fix">Fazer o hero chart full-width (100%), mover quick actions para uma row horizontal abaixo do hero (flex row com 4-5 pills inline, similiar ao wallet hero). Isso dá ao chart o protagonismo que merece e os quick actions ficam como nav secundária.</div>
+</div>
+
+<div class="issue">
+  <div class="issue-header"><span class="tag tag-medium">MEDIUM</span><span class="issue-title">CurrencyBreakdown com DonutChart duplica informação</span></div>
+  <div class="issue-desc">O donut chart + legend + table mostram os mesmos 5 currencies 3 vezes. A informação não progride — é redundante.</div>
+  <div class="fix">Simplificar: donut com legend inline no header da table (uma única row), sem duplicar a lista. Ou: remover donut do breakdown e manter só na wallet page (onde faz mais sentido como portfolio view).</div>
+</div>
+
+<div class="issue">
+  <div class="issue-header"><span class="tag tag-medium">MEDIUM</span><span class="issue-title">Market Watch grid e Activity competem na mesma row</span></div>
+  <div class="issue-desc">Market Watch (2x3 grid) e Activity (lista de transações) lado a lado em grid 1:1. Em telas < 1024px empilham mal. A Activity fica comprimida.</div>
+  <div class="fix">Market Watch full-width (1 row de 6 cards em grid-cols-3 md:grid-cols-6). Activity abaixo, full-width, com max 4-5 items e "View all" link.</div>
+</div>
+
+<div class="issue">
+  <div class="issue-header"><span class="tag tag-low">LOW</span><span class="issue-title">DeskOfferBanner animação banner-shimmer pode ser distrativa</span></div>
+  <div class="issue-desc">A animação de 4s infinite no gradiente de fundo pode cansar em uso prolongado.</div>
+  <div class="fix">Reduzir a 1 iteração ou manter mas com <code>animation-fill-mode: forwards</code> após 2 ciclos.</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>💰 Wallet</h2>
+<span class="score">8/10</span>
+
+<div class="issue">
+  <div class="issue-header"><span class="tag tag-medium">MEDIUM</span><span class="issue-title">Hero donut + balance poderia ter mais impacto</span></div>
+  <div class="issue-desc">O donut está a 140px e o balance em text-5xl. Em telas grandes, a área tem muito espaço vazio entre os dois. A composição não é equilibrada.</div>
+  <div class="fix">Aumentar donut para 160-180px em desktop. Ou: inverter layout — balance gigante em cima, donut menor abaixo com legend horizontal. O número é o protagonista, não o chart.</div>
+</div>
+
+<div class="issue">
+  <div class="issue-header"><span class="tag tag-medium">MEDIUM</span><span class="issue-title">Action pills poderiam ser mais distintas</span></div>
+  <div class="issue-desc">5 action pills com ícones muito similares (todos círculos cyan com arrows). Difícil distinguir rapidamente Send de Receive de Deposit.</div>
+  <div class="fix">Usar cores diferentes por ação: Receive=green, Send=red/amber, Convert=cyan, Earn=purple, Deposit=white. Ou: usar ícones mais distintos (não apenas arrows).</div>
+</div>
+
+<div class="issue">
+  <div class="issue-header"><span class="tag tag-low">LOW</span><span class="issue-title">Holdings table sparklines são muito sutis</span></div>
+  <div class="issue-desc">Sparklines a 48x24px com cor do currency são quase invisíveis no fundo escuro. Não agregam informação útil no tamanho atual.</div>
+  <div class="fix">Aumentar para 64x28px e adicionar area fill (não só stroke). Ou: remover sparklines da table e deixar o donut como única viz nesta page.</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>📈 FX Board</h2>
+<span class="score">8.5/10</span>
+
+<div class="issue">
+  <div class="issue-header"><span class="tag tag-medium">MEDIUM</span><span class="issue-title">Board muito largo para telas médias</span></div>
+  <div class="issue-desc">8 colunas com larguras fixas (w-8, w-20, w-28, etc.) totalizam ~700px mínimo. Em telas 1024-1200px com sidebar, o conteúdo fica apertado ou overflow.</div>
+  <div class="fix">Esconder colunas Sell qty e Prev close em <code>hidden xl:flex</code>. Manter: Status, Pair, Sell price, Buy price, Buy qty, 24h change. Desktop full mostra tudo.</div>
+</div>
+
+<div class="issue">
+  <div class="issue-header"><span class="tag tag-low">LOW</span><span class="issue-title">Section separators são muito discretos</span></div>
+  <div class="issue-desc">As section dividers (LATAM, BRL, EUR, GBP) são quase invisíveis: dot 2px + text 10px em bg opacity 0.02. Perdem-se no contexto das rows.</div>
+  <div class="fix">Aumentar presença: dot para 6px, left-border de 3px na cor da seção, ou background gradient sutil da cor da seção (opacity 0.04).</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>🏦 Yield Vaults</h2>
+<span class="score">8/10</span>
+
+<div class="issue">
+  <div class="issue-header"><span class="tag tag-high">HIGH</span><span class="issue-title">4 vault cards em 1 row é apertado</span></div>
+  <div class="issue-desc">Em <code>xl:grid-cols-4</code> os cards ficam estreitos (~220px cada). O APY grande (28px) + chart + stats + button criam scroll interno. Em MD ficam 2 colunas que é melhor.</div>
+  <div class="fix">Mudar para <code>grid-cols-1 md:grid-cols-2 lg:grid-cols-3</code> max. O 4º vault (coming-soon) pode ficar como um card menor ou um "banner" de "GBP vault coming soon" ao invés de um card completo.</div>
+</div>
+
+<div class="issue">
+  <div class="issue-header"><span class="tag tag-medium">MEDIUM</span><span class="issue-title">Metrics strip sem hierarquia</span></div>
+  <div class="issue-desc">4 métricas lado a lado com tamanhos iguais. "Total Deployed" ($1.84M) é a métrica principal mas tem o mesmo peso visual que "Blended APY".</div>
+  <div class="fix">Fazer "Total Deployed" span 2 cols ou ter font-size maior (text-3xl). As outras 3 ficam menores. Hierarquia: 1 metric hero + 3 secondary.</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>💸 Payments</h2>
+<span class="score">7/10</span>
+
+<div class="issue">
+  <div class="issue-header"><span class="tag tag-high">HIGH</span><span class="issue-title">Form muito longo sem agrupamento visual</span></div>
+  <div class="issue-desc">O form de pagamento tem 7 campos + flow diagram + quote summary + button empilhados. Parece uma parede de inputs. Não há agrupamento visual.</div>
+  <div class="fix">Dividir em 3 grupos visuais com dividers ou cards internos: (1) "From" — send from + amount, (2) "To" — recipient + CLABE + currency, (3) "Summary" — flow diagram + quote + button. Cada grupo com um mini-header de seção.</div>
+</div>
+
+<div class="issue">
+  <div class="issue-header"><span class="tag tag-medium">MEDIUM</span><span class="issue-title">FlowDiagram hardcoded, não reage ao form</span></div>
+  <div class="issue-desc">O FlowDiagram mostra "USDT $240,000 → MXN 4,181,798" hardcoded. Deveria reagir ao amount e currency selecionados no form.</div>
+  <div class="fix">Conectar FlowDiagram ao form state. Calcular dynamically: from.value = formatted amount, to.value = amount × rate, rate = rate do par selecionado.</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>🌐 Bridge & Onchain</h2>
+<span class="score">6.5/10</span>
+
+<div class="issue">
+  <div class="issue-header"><span class="tag tag-high">HIGH</span><span class="issue-title">Páginas parecem landing pages, não app pages</span></div>
+  <div class="issue-desc">Bridge e Onchain usam layout centered com heading grande + subtítulo + form card. Parecem páginas de marketing, não seções de um app. A data-grid-bg ajuda mas não resolve.</div>
+  <div class="fix">Repensar como app pages: remover headings gigantes, usar o card diretamente com o form como elemento principal. Adicionar sidebar info ou stats cards que deem contexto (ex: Bridge — "6 chains supported, avg time 45s, $2.4M bridged this month").</div>
+</div>
+
+<div class="issue">
+  <div class="issue-header"><span class="tag tag-medium">MEDIUM</span><span class="issue-title">Feature pills no bottom são genéricos</span></div>
+  <div class="issue-desc">Os pills "Fast", "Secure", "6 chains", "Low fees" parecem copy de landing page. Não agregam valor funcional dentro do app.</div>
+  <div class="fix">Substituir por dados reais em cards: "Avg settlement: 45s", "Chains: ETH, Base, SOL...", "Fee: ~$0.80". Informação > marketing.</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>📋 Trades</h2>
+<span class="score">8/10</span>
+
+<div class="issue">
+  <div class="issue-header"><span class="tag tag-medium">MEDIUM</span><span class="issue-title">Volume by Pair chart é muito comprimido</span></div>
+  <div class="issue-desc">As bars de volume por pair ficam em 2.5px de height (h-2.5) e são difíceis de ler. O gradient de cyan é quase imperceptível.</div>
+  <div class="fix">Aumentar bars para h-4 ou h-5. Usar cor sólida com opacity tiers ao invés de gradient fino. Ou substituir por mini bar-chart vertical (como o BarChart component).</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>⏱ Settlements</h2>
+<span class="score">7.5/10</span>
+
+<div class="issue">
+  <div class="issue-header"><span class="tag tag-medium">MEDIUM</span><span class="issue-title">Progress rings adicionados mas sem contexto claro</span></div>
+  <div class="issue-desc">Os ProgressRing (T+1 58%, T+2 18%) foram inseridos mas o "58%" não é auto-explicativo. 58% do quê?</div>
+  <div class="fix">Adicionar tooltip ou sublabel: "58% complete" → "58% — $108K of $186K settled". O ring precisa contar uma história, não só mostrar um número.</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>📊 Reports</h2>
+<span class="score">7.5/10</span>
+
+<div class="issue">
+  <div class="issue-header"><span class="tag tag-high">HIGH</span><span class="issue-title">Period selector não muda dados</span></div>
+  <div class="issue-desc">Os pills MTD/30d/QTD/YTD são clicáveis mas todos mostram os mesmos dados hardcoded. Dá sensação de bug.</div>
+  <div class="fix">Adicionar pelo menos 2-3 datasets diferentes (MTD vs 30d vs QTD) com variações nos números. Ou: manter MTD como único e remover os outros pills até ter dados reais.</div>
+</div>
+
+<div class="issue">
+  <div class="issue-header"><span class="tag tag-medium">MEDIUM</span><span class="issue-title">BarChart muito pequeno relativo à table</span></div>
+  <div class="issue-desc">O BarChart com height=80 acima de uma table detalhada parece um afterthought. É a viz principal da página mas não tem presença.</div>
+  <div class="fix">Aumentar BarChart para height=120-140. Ou: fazer o chart full-width acima da two-column layout, como hero da página.</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>🔑 API Keys & Third Party</h2>
+<span class="score">7/10</span>
+
+<div class="issue">
+  <div class="issue-header"><span class="tag tag-medium">MEDIUM</span><span class="issue-title">Pages muito simples — parecem "admin panels"</span></div>
+  <div class="issue-desc">API Keys e Third Party são basicamente uma table com filtros. Não têm nenhum grafismo ou viz que dê personalidade. Parecem um CRUD admin genérico.</div>
+  <div class="fix">API Keys: adicionar usage stats (requests/day mini chart, last 7 days). Third Party: adicionar payment volume by payee mini viz. Nem toda page precisa de um hero chart, mas algum elemento visual que não seja "só texto + table".</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>🧩 Layout Global</h2>
+
+<div class="issue">
+  <div class="issue-header"><span class="tag tag-critical">CRITICAL</span><span class="issue-title">Ticker no layout global polui páginas não-trading</span></div>
+  <div class="issue-desc">O ticker está em <code>(app)/layout.tsx</code> como <code>&lt;div className="px-6 md:px-8 mb-6"&gt;&lt;TickerBar /&gt;&lt;/div&gt;</code>. Aparece em TODAS as páginas, incluindo API Keys, Reports, Settings. Rates FX são irrelevantes nessas páginas e adicionam ruído visual.</div>
+  <div class="fix"><strong>Opção A:</strong> Mover ticker para dentro de Dashboard, FX Board e Wallet apenas (3 páginas onde rates importam). <strong>Opção B:</strong> Integrar ao sidebar (bottom section) como lista vertical compacta — sempre visível mas sem ocupar espaço do conteúdo. <strong>Opção C:</strong> Manter global mas como um "collapse" no page-header: ícone de "rates" que expande/colapsa a faixa.</div>
+</div>
+
+<div class="issue">
+  <div class="issue-header"><span class="tag tag-high">HIGH</span><span class="issue-title">PageHeader breadcrumb não aproveita o espaço</span></div>
+  <div class="issue-desc">O header mostra "Nonco / Dashboard" em texto pequeno. O resto do header é espaço vazio (notification bell + avatar à direita). 64px de height para tão pouca informação é desperdício.</div>
+  <div class="fix">Integrar o ticker ao header: "Nonco / Dashboard" à esquerda, ticker scrolling ao centro, notification + avatar à direita. Usa o espaço que já existe sem adicionar uma nova barra.</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>📐 Resumo Executivo</h2>
+
+<div class="summary-grid">
+  <div class="summary-card">
+    <h4>🔴 Critical (1)</h4>
+    <ul>
+      <li>Ticker global polui páginas não-trading</li>
+    </ul>
+  </div>
+  <div class="summary-card">
+    <h4>🟡 High (6)</h4>
+    <ul>
+      <li>Spacing inconsistente entre páginas</li>
+      <li>Font size drift em labels</li>
+      <li>Dashboard: hero vs quick-actions competem</li>
+      <li>Yield: 4 cols muito apertado</li>
+      <li>Payments: form sem agrupamento</li>
+      <li>Bridge/Onchain: parecem landing pages</li>
+    </ul>
+  </div>
+  <div class="summary-card">
+    <h4>🔵 Medium (10)</h4>
+    <ul>
+      <li>Ticker positioning</li>
+      <li>Page titles ausentes</li>
+      <li>Dashboard: donut redundante</li>
+      <li>Dashboard: market watch layout</li>
+      <li>Wallet: donut composição</li>
+      <li>Wallet: action pills iguais</li>
+      <li>FX Board: colunas em telas médias</li>
+      <li>Reports: bar chart pequeno</li>
+      <li>Settlements: rings sem contexto</li>
+      <li>API Keys/3P: muito simples</li>
+    </ul>
+  </div>
+  <div class="summary-card">
+    <h4>⚪ Low (3)</h4>
+    <ul>
+      <li>Banner shimmer distrativo</li>
+      <li>Sparklines muito sutis</li>
+      <li>FX sections discretas</li>
+    </ul>
+  </div>
+</div>
+
+<div style="margin-top:32px;padding:20px;background:rgba(5,224,248,0.04);border:1px solid rgba(5,224,248,0.1);border-radius:12px">
+  <h3 style="color:#05E0F8;margin-bottom:8px">Recomendação de prioridade</h3>
+  <p style="color:#ccc;font-size:13px;line-height:1.8">
+    <strong>Sprint 1 (layout):</strong> Integrar ticker ao header, padronizar spacing global, fix font sizes<br>
+    <strong>Sprint 2 (dashboard):</strong> Hero full-width, quick actions horizontal, market watch row<br>
+    <strong>Sprint 3 (pages):</strong> Wallet donut, Yield grid, Payments form groups, Bridge/Onchain app-style<br>
+    <strong>Sprint 4 (polish):</strong> Reports bar chart, Settlements ring labels, FX Board responsive, API Keys stats
+  </p>
+</div>
+
+</body>
+</html>

@@ -47,7 +47,7 @@ export default function ThirdPartyPage() {
   });
 
   return (
-    <PageTransition className="px-6 md:px-8 w-full space-y-6">
+    <PageTransition className="px-4 sm:px-6 md:px-8 w-full space-y-6">
       {/* Top row */}
       <div className="flex items-center justify-end">
         <Button variant="cyan" size="sm">

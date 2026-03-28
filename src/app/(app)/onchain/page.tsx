@@ -42,7 +42,7 @@ export default function OnchainPage() {
   const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
 
   return (
-    <PageTransition className="px-6 md:px-8 w-full space-y-6">
+    <PageTransition className="px-4 sm:px-6 md:px-8 w-full space-y-6">
       {/* Page context header */}
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-lg bg-[var(--cyan-dim)] border border-[rgba(5,224,248,0.12)] flex items-center justify-center">

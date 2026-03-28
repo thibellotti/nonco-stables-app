@@ -41,7 +41,7 @@ export default function BridgePage() {
   }
 
   return (
-    <PageTransition className="px-6 md:px-8 w-full space-y-6">
+    <PageTransition className="px-4 sm:px-6 md:px-8 w-full space-y-6">
       {/* Page context header */}
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-lg bg-[rgba(56,189,248,0.08)] border border-[rgba(56,189,248,0.12)] flex items-center justify-center">

@@ -140,21 +140,21 @@ export default function WalletPage() {
   }));
 
   return (
-    <PageTransition className="px-6 md:px-8 w-full space-y-6">
+    <PageTransition className="px-4 sm:px-6 md:px-8 w-full space-y-6">
       {/* ----------------------------------------------------------------- */}
       {/* HERO — Donut + Total Balance + Action Pills                       */}
       {/* ----------------------------------------------------------------- */}
-      <div className="relative bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-8 overflow-hidden">
+      <div className="card-primary relative bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-4 sm:p-6 md:p-8 overflow-hidden">
         {/* Radial glow */}
         <div
           className="pointer-events-none absolute"
           style={{
             top: -60,
             right: -60,
-            width: 240,
-            height: 240,
+            width: 280,
+            height: 280,
             borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(5,224,248,0.05), transparent)",
+            background: "radial-gradient(circle, rgba(5,224,248,0.07), transparent)",
           }}
         />
 
@@ -168,12 +168,12 @@ export default function WalletPage() {
         />
 
         {/* Content */}
-        <div className="relative flex flex-col md:flex-row items-start md:items-center gap-8">
+        <div className="relative flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-8">
           {/* LEFT — Donut chart */}
           <div className="shrink-0">
             <DonutChart
               segments={donutSegments}
-              size={140}
+              size={120}
               strokeWidth={12}
               centerLabel={formatCompact(totalValue)}
               centerSub="TOTAL"
@@ -181,14 +181,14 @@ export default function WalletPage() {
           </div>
 
           {/* RIGHT — Balance info + pills */}
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 text-center md:text-left">
             <div className="text-[10px] uppercase tracking-[0.15em] font-sans text-[var(--text-4)]">
               Total Balance
             </div>
             <p className="text-4xl md:text-5xl font-mono font-extrabold text-white tabular-nums mt-2 tracking-tighter">
               ${formatMoney(totalValue)}
             </p>
-            <p className="text-sm font-sans mt-1.5 flex items-center gap-1.5">
+            <p className="text-sm font-sans mt-1.5 flex items-center justify-center md:justify-start gap-1.5">
               <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
                 <path d="M5 2L8 6H2L5 2Z" fill="var(--status-positive)" />
               </svg>
@@ -197,21 +197,21 @@ export default function WalletPage() {
             </p>
 
             {/* Action pills */}
-            <div className="flex flex-wrap gap-2 mt-6">
+            <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 mt-6">
               {heroActions.map((action) => {
                 const inner = (
                   <div className="flex flex-col items-center gap-2">
                     <div className={cn("w-7 h-7 rounded-full flex items-center justify-center", action.iconBg)}>
                       {action.icon}
                     </div>
-                    <span className="text-[9px] uppercase tracking-[0.1em] font-sans text-[var(--text-4)]">
+                    <span className="text-[9px] sm:text-[11px] uppercase tracking-[0.1em] font-sans text-[var(--text-4)]">
                       {action.label}
                     </span>
                   </div>
                 );
 
                 const cls =
-                  "flex flex-col items-center gap-2 px-4 py-3 rounded-lg border border-[var(--border-subtle)] bg-[rgba(255,255,255,0.03)] hover:bg-[rgba(5,224,248,0.05)] hover:border-[rgba(5,224,248,0.15)] transition-all duration-150";
+                  "flex flex-col items-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3 rounded-lg border border-[var(--border-subtle)] bg-[rgba(255,255,255,0.03)] hover:bg-[rgba(5,224,248,0.05)] hover:border-[rgba(5,224,248,0.15)] transition-all duration-150";
 
                 if (action.href) {
                   return (

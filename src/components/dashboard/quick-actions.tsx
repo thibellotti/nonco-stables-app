@@ -69,24 +69,24 @@ const actions = [
 
 export function QuickActions() {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
       {actions.map((a) => {
         const inner = (
           <>
             <span
-              className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors"
+              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0 transition-colors"
               style={{ backgroundColor: a.bg, color: a.color }}
             >
               {a.icon}
             </span>
-            <span className="text-[13px] font-sans font-medium text-[var(--text)]">
+            <span className="text-[11px] sm:text-[13px] font-sans font-medium text-[var(--text)]">
               {a.label}
             </span>
           </>
         );
 
         const classes = cn(
-          "inline-flex items-center gap-3 pl-2 pr-5 py-2 rounded-full",
+          "inline-flex items-center gap-2 sm:gap-3 pl-1.5 pr-3 py-1.5 sm:pl-2 sm:pr-5 sm:py-2 rounded-full",
           "border border-[var(--border)] bg-[var(--bg-card)]",
           "hover:bg-[var(--bg-elevated)] transition-all duration-200"
         );

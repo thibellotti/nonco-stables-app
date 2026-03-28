@@ -30,7 +30,7 @@ export function PageHeader() {
   const items = [...tickerItems, ...tickerItems];
 
   return (
-    <header className="fixed top-0 right-0 left-0 lg:left-[220px] h-16 z-40 bg-[rgba(0,0,0,0.85)] backdrop-blur-xl border-b border-[var(--border)]">
+    <header className="fixed top-0 right-0 left-0 lg:left-[220px] h-16 z-40 bg-[rgba(10,10,10,0.75)] backdrop-blur-xl backdrop-saturate-150 border-b border-[var(--border)]">
       <div className="flex items-center h-full px-6 lg:px-8 gap-4">
         {/* LEFT: Page title */}
         <div className="flex items-center gap-1.5 shrink-0">

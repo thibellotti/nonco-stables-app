@@ -192,7 +192,7 @@ export function BalanceHero() {
   };
 
   return (
-    <section className="relative overflow-hidden bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5">
+    <section className="card-primary relative overflow-hidden bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5">
       {/* Header row — label + period selector */}
       <div className="flex items-center justify-between mb-6">
         <div>
@@ -226,7 +226,7 @@ export function BalanceHero() {
       <div className="flex items-baseline justify-between flex-wrap gap-4 mb-2">
         <p
           className="font-mono text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tighter leading-none text-white"
-          style={{ fontVariantNumeric: "tabular-nums slashed-zero" }}
+          style={{ fontVariantNumeric: "tabular-nums slashed-zero", textShadow: "0 0 40px rgba(5,224,248,0.15)" }}
         >
           <AnimatedNumber
             value={totalBalance}
@@ -488,7 +488,7 @@ export function BalanceHero() {
 
       {/* Stats row — inline below chart, no separate cards */}
       <motion.div
-        className="grid grid-cols-3 divide-x divide-[var(--border)] border-t border-[var(--border)] mt-6"
+        className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-0 sm:divide-x sm:divide-[var(--border)] border-t border-[var(--border)] mt-6"
         variants={statsContainerVariants}
         initial="hidden"
         animate="visible"
@@ -496,16 +496,16 @@ export function BalanceHero() {
         {/* Available */}
         <motion.div
           variants={statCardVariants}
-          className="flex items-center gap-3 px-4 py-4"
+          className="flex items-center gap-3 px-4 py-3 sm:py-4"
         >
-          <div className="w-8 h-8 rounded-lg bg-[rgba(5,224,248,0.08)] flex items-center justify-center shrink-0">
+          <div className="hidden sm:flex w-8 h-8 rounded-lg bg-[rgba(5,224,248,0.08)] items-center justify-center shrink-0">
             <svg width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true">
               <path d="M9 2v14M3 9h12" stroke="var(--cyan)" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
           </div>
-          <div>
+          <div className="flex sm:block items-center justify-between w-full sm:w-auto">
             <div className="text-[11px] uppercase tracking-[.12em] font-sans text-[var(--text-4)]">Available</div>
-            <div className="font-mono text-base font-bold text-[var(--text)] mt-0.5 tabular-nums">
+            <div className="font-mono text-base font-bold text-[var(--text)] sm:mt-0.5 tabular-nums">
               <AnimatedNumber value={totalAvailable} prefix="$" suffix="M" formatter={(n) => (n / 1_000_000).toFixed(2)} />
             </div>
           </div>
@@ -514,17 +514,17 @@ export function BalanceHero() {
         {/* Pending */}
         <motion.div
           variants={statCardVariants}
-          className="flex items-center gap-3 px-4 py-4"
+          className="flex items-center gap-3 px-4 py-3 sm:py-4"
         >
-          <div className="w-8 h-8 rounded-lg bg-[var(--status-pending-dim)] flex items-center justify-center shrink-0">
+          <div className="hidden sm:flex w-8 h-8 rounded-lg bg-[var(--status-pending-dim)] items-center justify-center shrink-0">
             <svg width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true">
               <circle cx="9" cy="9" r="6.5" stroke="var(--status-pending)" strokeWidth="1.5" />
               <path d="M9 6v3.5l2.5 1.5" stroke="var(--status-pending)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
-          <div>
+          <div className="flex sm:block items-center justify-between w-full sm:w-auto">
             <div className="text-[11px] uppercase tracking-[.12em] font-sans text-[var(--text-4)]">Pending</div>
-            <div className="font-mono text-base font-bold text-[var(--status-pending)] mt-0.5 tabular-nums">
+            <div className="font-mono text-base font-bold text-[var(--status-pending)] sm:mt-0.5 tabular-nums">
               <AnimatedNumber value={totalPending} prefix="$" suffix="M" formatter={(n) => (n / 1_000_000).toFixed(2)} />
             </div>
           </div>
@@ -533,17 +533,17 @@ export function BalanceHero() {
         {/* Currencies */}
         <motion.div
           variants={statCardVariants}
-          className="flex items-center gap-3 px-4 py-4"
+          className="flex items-center gap-3 px-4 py-3 sm:py-4"
         >
-          <div className="w-8 h-8 rounded-lg bg-[var(--status-positive-dim)] flex items-center justify-center shrink-0">
+          <div className="hidden sm:flex w-8 h-8 rounded-lg bg-[var(--status-positive-dim)] items-center justify-center shrink-0">
             <svg width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true">
               <circle cx="7" cy="7" r="4.5" stroke="var(--status-positive)" strokeWidth="1.5" />
               <circle cx="11" cy="11" r="4.5" stroke="var(--status-positive)" strokeWidth="1.5" />
             </svg>
           </div>
-          <div>
+          <div className="flex sm:block items-center justify-between w-full sm:w-auto">
             <div className="text-[11px] uppercase tracking-[.12em] font-sans text-[var(--text-4)]">Currencies</div>
-            <div className="font-mono text-base font-bold text-[var(--text)] mt-0.5 tabular-nums">
+            <div className="font-mono text-base font-bold text-[var(--text)] sm:mt-0.5 tabular-nums">
               <AnimatedNumber value={balances.length} formatter={(n) => Math.round(n).toString()} />
             </div>
           </div>

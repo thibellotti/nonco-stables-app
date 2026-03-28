@@ -76,12 +76,47 @@
   --border-row: rgba(255,255,255,0.04);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background: rgba(5, 224, 248, 0.2);
+  color: #fff;
+}
+
 body {
   font-family: var(--font-sans);
   background: var(--bg);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Card hover lift — reusable utility ─── */
+.card-hover {
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.card-hover:hover {
+  transform: translateY(-1px);
+  border-color: var(--border-outline);
+}
+
+/* ─── Primary card with gradient top line ─── */
+.card-primary {
+  position: relative;
+}
+.card-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  opacity: 0.5;
+  border-radius: inherit;
+  z-index: 1;
 }
 
 /* ─── Custom Scrollbar ─── */

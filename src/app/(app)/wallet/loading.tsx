@@ -6,7 +6,7 @@ function SkeletonPulse({ className }: { className?: string }) {
 
 export default function WalletLoading() {
   return (
-    <div className="px-6 md:px-8 w-full space-y-6">
+    <div className="px-4 sm:px-6 md:px-8 w-full space-y-6">
       {/* Hero */}
       <div className="space-y-4">
         <div className="space-y-3">

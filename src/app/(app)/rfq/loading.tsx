@@ -6,7 +6,7 @@ function SkeletonPulse({ className }: { className?: string }) {
 
 export default function RFQLoading() {
   return (
-    <div className="px-6 md:px-8 w-full space-y-6">
+    <div className="px-4 sm:px-6 md:px-8 w-full space-y-6">
       {/* Favorites section label */}
       <div className="space-y-2">
         <SkeletonPulse className="h-3 w-20" />

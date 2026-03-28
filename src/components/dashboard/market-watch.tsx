@@ -61,7 +61,7 @@ export function MarketWatch({ onRequestRfs }: MarketWatchProps) {
             {/* Rate */}
             <div
               className={cn(
-                "text-base font-mono font-extrabold tabular-nums mt-1",
+                "text-sm sm:text-base font-mono font-extrabold tabular-nums mt-1",
                 p.positive
                   ? "text-[var(--status-positive)]"
                   : "text-[var(--status-negative)]"

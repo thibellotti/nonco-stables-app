@@ -158,7 +158,7 @@ function TrendArrow({ trend }: { trend: "up" | "down" | "neutral" }) {
 
 export default function YieldPage() {
   return (
-    <PageTransition className="px-6 md:px-8 w-full space-y-6">
+    <PageTransition className="px-4 sm:px-6 md:px-8 w-full space-y-6">
       {/* Page header */}
       <SectionLabel>Yield Vaults</SectionLabel>
 
@@ -167,7 +167,7 @@ export default function YieldPage() {
         variants={staggerContainer}
         initial="hidden"
         animate="show"
-        className="flex flex-col md:flex-row gap-[1px] bg-[var(--bg-highest)] rounded-xl overflow-hidden"
+        className="card-primary flex flex-col md:flex-row gap-[1px] bg-[var(--bg-highest)] rounded-xl overflow-hidden"
       >
         {metrics.map((m) => (
           <motion.div
@@ -214,7 +214,7 @@ export default function YieldPage() {
               <motion.div
                 key={vault.id}
                 variants={fadeUp}
-                className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden flex flex-col transition-all duration-200 hover:border-[var(--border-outline)] hover:translate-y-[-1px]"
+                className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden flex flex-col transition-all duration-200 hover:border-[var(--border-outline)] hover:translate-y-[-1px] hover:shadow-lg hover:shadow-[rgba(5,224,248,0.05)]"
               >
                 {/* Top color bar */}
                 <div className="h-[3px] w-full" style={{ background: vault.color }} />

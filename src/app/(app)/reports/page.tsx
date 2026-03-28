@@ -24,7 +24,7 @@ const metrics = [
 
 export default function ReportsPage() {
   return (
-    <PageTransition className="px-6 md:px-8 w-full space-y-6">
+    <PageTransition className="px-4 sm:px-6 md:px-8 w-full space-y-6">
       {/* Top row: Period label + Export */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
         <span className="text-[11px] uppercase tracking-[.15em] font-sans font-medium text-[var(--text-4)]">

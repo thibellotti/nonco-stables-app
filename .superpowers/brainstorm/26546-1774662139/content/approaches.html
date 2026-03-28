@@ -1,0 +1,209 @@
+<h2>3 Design Directions for Nonco Stables</h2>
+<p class="subtitle">Each approach combines data-viz, geometric elements, and unique layouts per section — but with different emphasis. Click the one that resonates most.</p>
+
+<div class="cards">
+  <!-- Approach A -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0a0a0a;padding:24px;min-height:320px;position:relative;overflow:hidden">
+      <!-- Geometric pattern background -->
+      <div style="position:absolute;inset:0;opacity:0.04;background-image:linear-gradient(rgba(5,224,248,0.3) 1px,transparent 1px),linear-gradient(90deg,rgba(5,224,248,0.3) 1px,transparent 1px);background-size:32px 32px"></div>
+
+      <!-- Dashboard mockup -->
+      <div style="position:relative;font-family:system-ui,sans-serif">
+        <div style="display:flex;gap:16px;margin-bottom:16px">
+          <!-- Hero metric -->
+          <div style="flex:2;background:linear-gradient(135deg,#141414,#1a1a1a);border:1px solid #222;border-radius:12px;padding:20px;position:relative;overflow:hidden">
+            <div style="position:absolute;top:-20px;right:-20px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(5,224,248,0.08),transparent)"></div>
+            <div style="font-size:9px;color:#666;text-transform:uppercase;letter-spacing:2px">Portfolio Value</div>
+            <div style="font-size:28px;font-weight:800;color:#fff;font-family:monospace;margin:8px 0 4px">$1,411,660</div>
+            <div style="font-size:10px;color:#05E0F8">+0.77% today</div>
+            <!-- Mini area chart -->
+            <svg viewBox="0 0 200 40" style="width:100%;height:32px;margin-top:12px">
+              <defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#05E0F8" stop-opacity="0.3"/><stop offset="1" stop-color="#05E0F8" stop-opacity="0"/></linearGradient></defs>
+              <path d="M0 30 Q25 28 50 25 T100 18 T150 22 T200 12 V40 H0Z" fill="url(#g1)"/>
+              <path d="M0 30 Q25 28 50 25 T100 18 T150 22 T200 12" fill="none" stroke="#05E0F8" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <!-- Quick stats -->
+          <div style="flex:1;display:flex;flex-direction:column;gap:8px">
+            <div style="flex:1;background:#141414;border:1px solid #222;border-radius:10px;padding:14px;border-left:3px solid #05E0F8">
+              <div style="font-size:8px;color:#666;text-transform:uppercase;letter-spacing:1.5px">Available</div>
+              <div style="font-size:16px;font-weight:700;color:#fff;font-family:monospace;margin-top:4px">$1.13M</div>
+            </div>
+            <div style="flex:1;background:#141414;border:1px solid #222;border-radius:10px;padding:14px;border-left:3px solid #a124f8">
+              <div style="font-size:8px;color:#666;text-transform:uppercase;letter-spacing:1.5px">Yield MTD</div>
+              <div style="font-size:16px;font-weight:700;color:#a124f8;font-family:monospace;margin-top:4px">$7,240</div>
+            </div>
+          </div>
+        </div>
+        <!-- Currency allocation with donut -->
+        <div style="background:#141414;border:1px solid #222;border-radius:10px;padding:16px;display:flex;align-items:center;gap:20px">
+          <svg viewBox="0 0 80 80" style="width:64px;height:64px;flex-shrink:0">
+            <circle cx="40" cy="40" r="30" fill="none" stroke="#222" stroke-width="8"/>
+            <circle cx="40" cy="40" r="30" fill="none" stroke="#05E0F8" stroke-width="8" stroke-dasharray="62 126" stroke-dashoffset="-2" stroke-linecap="round"/>
+            <circle cx="40" cy="40" r="30" fill="none" stroke="#a124f8" stroke-width="8" stroke-dasharray="38 150" stroke-dashoffset="-64" stroke-linecap="round"/>
+            <circle cx="40" cy="40" r="30" fill="none" stroke="#c7ff10" stroke-width="8" stroke-dasharray="30 158" stroke-dashoffset="-104" stroke-linecap="round"/>
+            <circle cx="40" cy="40" r="30" fill="none" stroke="#f9e220" stroke-width="8" stroke-dasharray="22 166" stroke-dashoffset="-136" stroke-linecap="round"/>
+          </svg>
+          <div style="display:flex;gap:16px;flex:1">
+            <div><div style="font-size:8px;color:#05E0F8">USD</div><div style="font-size:12px;color:#999;font-family:monospace">33%</div></div>
+            <div><div style="font-size:8px;color:#a124f8">USDT</div><div style="font-size:12px;color:#999;font-family:monospace">22%</div></div>
+            <div><div style="font-size:8px;color:#c7ff10">USDC</div><div style="font-size:12px;color:#999;font-family:monospace">20%</div></div>
+            <div><div style="font-size:8px;color:#f9e220">MXN</div><div style="font-size:12px;color:#999;font-family:monospace">14%</div></div>
+            <div><div style="font-size:8px;color:#38bdf8">EUR</div><div style="font-size:12px;color:#999;font-family:monospace">11%</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A) Integrated Data-Viz</h3>
+      <p>Every card has a gráfico embutido — area charts, donut charts, sparklines, progress bars. Os dados contam a história visualmente. Layout clean com bastante espaço. Patterns geométricos sutis no background. Cada seção se diferencia pelo TIPO de visualização (dashboard = area chart, yield = donut, FX = live grid, payments = flow diagram).</p>
+    </div>
+  </div>
+
+  <!-- Approach B -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0a0a0a;padding:24px;min-height:320px;position:relative;overflow:hidden">
+      <!-- Abstract geometric decoration -->
+      <svg style="position:absolute;top:0;right:0;width:200px;height:200px;opacity:0.06" viewBox="0 0 200 200">
+        <circle cx="150" cy="50" r="80" fill="none" stroke="#05E0F8" stroke-width="0.5"/>
+        <circle cx="150" cy="50" r="60" fill="none" stroke="#05E0F8" stroke-width="0.5"/>
+        <circle cx="150" cy="50" r="40" fill="none" stroke="#05E0F8" stroke-width="0.5"/>
+        <line x1="70" y1="0" x2="200" y2="130" stroke="#05E0F8" stroke-width="0.3"/>
+        <line x1="100" y1="0" x2="200" y2="100" stroke="#05E0F8" stroke-width="0.3"/>
+      </svg>
+
+      <div style="position:relative;font-family:system-ui,sans-serif">
+        <!-- Section hero with large icon -->
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
+          <div style="width:48px;height:48px;border-radius:14px;background:rgba(5,224,248,0.08);border:1px solid rgba(5,224,248,0.15);display:flex;align-items:center;justify-content:center">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#05E0F8" stroke-width="1.5"><path d="M3 17l4-5 4 2.5L19 7"/><path d="M15 7h4v4"/></svg>
+          </div>
+          <div>
+            <div style="font-size:18px;font-weight:700;color:#fff;letter-spacing:-0.5px">FX Stables</div>
+            <div style="font-size:11px;color:#666">Live institutional rates across 4 corridors</div>
+          </div>
+        </div>
+
+        <!-- Rate cards with glow -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div style="background:#141414;border:1px solid #222;border-radius:10px;padding:14px;position:relative;overflow:hidden">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#05E0F8,transparent)"></div>
+            <div style="font-size:9px;color:#666;text-transform:uppercase;letter-spacing:1.5px">MXN/USDT</div>
+            <div style="font-size:22px;font-weight:800;color:#fff;font-family:monospace;margin:6px 0">17.4520</div>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <span style="font-size:10px;color:#22C55E;font-family:monospace">+0.12%</span>
+              <span style="font-size:8px;background:#05E0F8;color:#000;padding:2px 6px;border-radius:4px;font-weight:700">RFS</span>
+            </div>
+          </div>
+          <div style="background:#141414;border:1px solid #222;border-radius:10px;padding:14px;position:relative;overflow:hidden">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#a124f8,transparent)"></div>
+            <div style="font-size:9px;color:#666;text-transform:uppercase;letter-spacing:1.5px">EUR/USDT</div>
+            <div style="font-size:22px;font-weight:800;color:#fff;font-family:monospace;margin:6px 0">1.0835</div>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <span style="font-size:10px;color:#ef4444;font-family:monospace">-0.04%</span>
+              <span style="font-size:8px;background:#05E0F8;color:#000;padding:2px 6px;border-radius:4px;font-weight:700">RFS</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Geometric divider -->
+        <div style="margin:16px 0;height:1px;background:linear-gradient(90deg,transparent,#333,transparent)"></div>
+
+        <!-- Mini vault cards -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+          <div style="background:#141414;border:1px solid #222;border-radius:8px;padding:10px;text-align:center">
+            <div style="font-size:16px;margin-bottom:4px">🇲🇽</div>
+            <div style="font-size:9px;color:#666">MXN Vault</div>
+            <div style="font-size:14px;font-weight:700;color:#05E0F8;font-family:monospace">10.82%</div>
+          </div>
+          <div style="background:#141414;border:1px solid #222;border-radius:8px;padding:10px;text-align:center">
+            <div style="font-size:16px;margin-bottom:4px">🇧🇷</div>
+            <div style="font-size:9px;color:#666">BRL Vault</div>
+            <div style="font-size:14px;font-weight:700;color:#a124f8;font-family:monospace">10.50%</div>
+          </div>
+          <div style="background:#141414;border:1px solid #222;border-radius:8px;padding:10px;text-align:center">
+            <div style="font-size:16px;margin-bottom:4px">🇪🇺</div>
+            <div style="font-size:9px;color:#666">EUR Vault</div>
+            <div style="font-size:14px;font-weight:700;color:#38bdf8;font-family:monospace">2.65%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B) Hero Sections + Grafismos</h3>
+      <p>Cada página abre com um hero section que tem ícone grande + título + subtítulo + grafismo geométrico abstrato decorativo. Cards têm gradient accent bars no topo que identificam a seção. Decorações SVG (círculos concêntricos, linhas diagonais) no background. Menos data-viz, mais identidade editorial. Cada page parece uma "capa" diferente.</p>
+    </div>
+  </div>
+
+  <!-- Approach C -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0a0a0a;padding:24px;min-height:320px;position:relative;overflow:hidden">
+      <!-- Dot grid pattern -->
+      <div style="position:absolute;inset:0;opacity:0.03;background-image:radial-gradient(circle,#05E0F8 1px,transparent 1px);background-size:20px 20px"></div>
+
+      <div style="position:relative;font-family:system-ui,sans-serif">
+        <!-- Magazine-style hero with large number -->
+        <div style="margin-bottom:20px">
+          <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:4px">
+            <div style="font-size:42px;font-weight:800;color:#fff;font-family:monospace;letter-spacing:-2px;line-height:1">$1.41M</div>
+            <div style="display:flex;align-items:center;gap:4px;background:rgba(34,197,94,0.1);padding:3px 8px;border-radius:6px">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="#22C55E"><path d="M5 2L8 6H2Z"/></svg>
+              <span style="font-size:11px;color:#22C55E;font-family:monospace;font-weight:600">0.77%</span>
+            </div>
+          </div>
+          <div style="font-size:11px;color:#555;letter-spacing:0.5px">Portfolio value · 5 currencies · 3 vaults earning yield</div>
+        </div>
+
+        <!-- Horizontal metrics strip -->
+        <div style="display:flex;gap:1px;margin-bottom:16px;background:#222;border-radius:10px;overflow:hidden">
+          <div style="flex:1;background:#141414;padding:12px 14px">
+            <div style="font-size:8px;color:#555;text-transform:uppercase;letter-spacing:1.5px">Available</div>
+            <div style="font-size:15px;font-weight:700;color:#fff;font-family:monospace;margin-top:3px">$1.13M</div>
+          </div>
+          <div style="flex:1;background:#141414;padding:12px 14px">
+            <div style="font-size:8px;color:#555;text-transform:uppercase;letter-spacing:1.5px">Pending</div>
+            <div style="font-size:15px;font-weight:700;color:#f9e220;font-family:monospace;margin-top:3px">$280K</div>
+          </div>
+          <div style="flex:1;background:#141414;padding:12px 14px">
+            <div style="font-size:8px;color:#555;text-transform:uppercase;letter-spacing:1.5px">Yield MTD</div>
+            <div style="font-size:15px;font-weight:700;color:#c7ff10;font-family:monospace;margin-top:3px">$7,240</div>
+          </div>
+          <div style="flex:1;background:#141414;padding:12px 14px">
+            <div style="font-size:8px;color:#555;text-transform:uppercase;letter-spacing:1.5px">Blended APY</div>
+            <div style="font-size:15px;font-weight:700;color:#a124f8;font-family:monospace;margin-top:3px">5.14%</div>
+          </div>
+        </div>
+
+        <!-- Combined chart + allocation -->
+        <div style="background:#141414;border:1px solid #1a1a1a;border-radius:10px;padding:16px">
+          <svg viewBox="0 0 300 60" style="width:100%;height:48px">
+            <defs>
+              <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#05E0F8" stop-opacity="0.2"/>
+                <stop offset="1" stop-color="#05E0F8" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path d="M0 45 C30 42 60 38 90 35 S150 28 180 25 S240 18 270 20 S290 15 300 12 V60 H0Z" fill="url(#g2)"/>
+            <path d="M0 45 C30 42 60 38 90 35 S150 28 180 25 S240 18 270 20 S290 15 300 12" fill="none" stroke="#05E0F8" stroke-width="1.5"/>
+            <!-- Dot at current value -->
+            <circle cx="300" cy="12" r="3" fill="#05E0F8"/>
+            <circle cx="300" cy="12" r="6" fill="none" stroke="#05E0F8" stroke-width="1" opacity="0.3"/>
+          </svg>
+          <!-- Stacked bar below -->
+          <div style="display:flex;height:6px;border-radius:3px;overflow:hidden;gap:2px;margin-top:10px">
+            <div style="flex:33;background:#05E0F8;border-radius:3px"></div>
+            <div style="flex:22;background:#a124f8;border-radius:3px"></div>
+            <div style="flex:20;background:#6366f1;border-radius:3px"></div>
+            <div style="flex:14;background:#c7ff10;border-radius:3px"></div>
+            <div style="flex:11;background:#38bdf8;border-radius:3px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C) Magazine Editorial + Data Dense</h3>
+      <p>Números gigantes como headline editorial. Métricas em strip horizontal (tipo Bloomberg terminal moderno). Area chart + allocation bar combinados. Dot-grid pattern no fundo. Cada page tem uma "manchete" numérica diferente que comunica o dado mais importante em tamanho gigante. Combina density de dados com respiração — pouca decoração, os dados SÃO o grafismo.</p>
+    </div>
+  </div>
+</div>

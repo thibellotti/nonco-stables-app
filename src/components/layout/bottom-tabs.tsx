@@ -9,8 +9,12 @@ export function BottomTabs() {
   const pathname = usePathname();
 
   return (
-    <nav aria-label="Mobile navigation" className="fixed bottom-0 inset-x-0 z-50 flex lg:hidden bg-black border-t border-[var(--border)]">
-      <div className="flex w-full justify-around items-center h-16 pb-[env(safe-area-inset-bottom)]">
+    <nav
+      aria-label="Mobile navigation"
+      className="fixed bottom-0 inset-x-0 z-50 lg:hidden bg-[rgba(0,0,0,0.92)] backdrop-blur-xl border-t border-[var(--border)]"
+      style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
+    >
+      <div className="flex w-full justify-around items-center h-14">
         {mobileTabItems.map((tab) => {
           const isActive =
             pathname === tab.href || pathname.startsWith(tab.href + "/");
@@ -20,7 +24,7 @@ export function BottomTabs() {
               key={tab.href}
               href={tab.href}
               className={cn(
-                "flex flex-col items-center justify-center gap-0.5 flex-1 py-2 min-h-[44px] transition-all duration-200",
+                "flex flex-col items-center justify-center gap-1 flex-1 py-1.5 min-h-[44px] transition-all duration-200",
                 isActive
                   ? "text-[var(--cyan)]"
                   : "text-[var(--text-4)]"
@@ -28,13 +32,13 @@ export function BottomTabs() {
             >
               <span
                 className={cn(
-                  "flex items-center justify-center",
-                  isActive && "bg-[rgba(5,224,248,0.05)] rounded-full px-4 py-1"
+                  "flex items-center justify-center w-10 h-7 rounded-full transition-colors",
+                  isActive && "bg-[rgba(5,224,248,0.1)]"
                 )}
               >
                 {tab.icon}
               </span>
-              <span className="text-[10px] font-sans uppercase tracking-widest mt-0.5">{tab.label}</span>
+              <span className="text-[9px] font-sans font-medium uppercase tracking-[0.08em]">{tab.label}</span>
             </Link>
           );
         })}
