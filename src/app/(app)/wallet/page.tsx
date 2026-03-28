@@ -76,7 +76,7 @@ export default function WalletPage() {
   const allocations = balances.map((b) => {
     const value = (b.available + b.pending) * (usdRates[b.currency] ?? 1);
     const pct = totalValue > 0 ? (value / totalValue) * 100 : 0;
-    const color = currencyColors[b.currency]?.border ?? "#05E0F8";
+    const color = currencyColors[b.currency]?.border ?? "#ffffff";
     return { currency: b.currency, value, pct, color };
   });
 
@@ -90,7 +90,7 @@ export default function WalletPage() {
         <div
           className="pointer-events-none absolute -top-20 -right-20 w-60 h-60 rounded-full"
           style={{
-            background: "radial-gradient(circle, rgba(5,224,248,0.06), transparent)",
+            background: "radial-gradient(circle, rgba(255,255,255,0.03), transparent)",
           }}
         />
 
@@ -280,7 +280,7 @@ export default function WalletPage() {
                   <td className="px-6 py-4 text-right">
                     <Link
                       href={`/rfq?pair=${b.currency}/${swapStable}`}
-                      className="text-[11px] uppercase tracking-wider font-bold text-[var(--cyan)] hover:text-white transition-colors"
+                      className="text-[11px] uppercase tracking-wider font-bold text-white hover:opacity-70 transition-colors"
                     >
                       Swap
                     </Link>
@@ -315,7 +315,7 @@ export default function WalletPage() {
           </span>
           <Link
             href="/bank"
-            className="text-[11px] font-sans text-[var(--cyan)] hover:text-white transition-colors"
+            className="text-[11px] font-sans text-white hover:opacity-70 transition-colors"
           >
             All activity &rarr;
           </Link>
@@ -334,12 +334,12 @@ export default function WalletPage() {
               <div
                 className={cn(
                   "w-8 h-8 rounded-full flex items-center justify-center shrink-0",
-                  tx.positive ? "bg-[rgba(5,224,248,0.08)]" : "bg-[rgba(255,255,255,0.04)]"
+                  tx.positive ? "bg-[rgba(255,255,255,0.06)]" : "bg-[rgba(255,255,255,0.04)]"
                 )}
               >
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                   {tx.positive ? (
-                    <path d="M10 4L4 10M4 10h4M4 10V6" stroke="var(--cyan)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M10 4L4 10M4 10h4M4 10V6" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   ) : (
                     <path d="M4 10L10 4M10 4H6M10 4v4" stroke="var(--text-4)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   )}
@@ -351,7 +351,7 @@ export default function WalletPage() {
               <span
                 className={cn(
                   "font-mono text-sm font-semibold tabular-nums",
-                  tx.positive ? "text-[var(--cyan)]" : "text-[var(--text-3)]"
+                  tx.positive ? "text-[var(--status-positive)]" : "text-[var(--text-3)]"
                 )}
               >
                 {tx.amount}

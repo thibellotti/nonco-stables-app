@@ -7,21 +7,21 @@ import { cn, formatCompact, timeAgo } from "@/lib/utils";
 // ---------------------------------------------------------------------------
 
 const iconColors: Record<TransactionType, string> = {
-  deposit: "var(--cyan)",
+  deposit: "rgba(255,255,255,0.5)",
   withdrawal: "var(--purple)",
   trade: "var(--green)",
   settlement: "var(--amber)",
 };
 
 const iconBgColors: Record<TransactionType, string> = {
-  deposit: "rgba(5,224,248,0.1)",
+  deposit: "rgba(255,255,255,0.06)",
   withdrawal: "var(--purple-dim)",
   trade: "var(--green-dim)",
   settlement: "var(--amber-dim)",
 };
 
 const iconBgColorsMobile: Record<TransactionType, string> = {
-  deposit: "rgba(5,224,248,0.12)",
+  deposit: "rgba(255,255,255,0.06)",
   withdrawal: "rgba(161,36,248,0.1)",
   trade: "rgba(199,255,16,0.1)",
   settlement: "rgba(249,226,32,0.1)",
@@ -166,7 +166,7 @@ function StatusDot({ status }: { status: string }) {
   if (status === "completed") {
     return (
       <div className="flex items-center gap-1.5">
-        <span className="w-1.5 h-1.5 rounded-full bg-[var(--cyan)]" />
+        <span className="w-1.5 h-1.5 rounded-full bg-white" />
         <span className="text-[11px] font-sans text-[var(--text-3)]">
           Completed
         </span>
@@ -245,7 +245,7 @@ function TransactionRow({ tx }: { tx: (typeof transactions)[number] }) {
           <span
             className={cn(
               "font-mono text-2xl font-bold tabular-nums",
-              isPositive ? "text-[var(--cyan)]" : "text-[var(--text)]"
+              isPositive ? "text-[var(--status-positive)]" : "text-[var(--text)]"
             )}
           >
             {isPositive ? "+" : "-"}
@@ -296,7 +296,7 @@ function TransactionRow({ tx }: { tx: (typeof transactions)[number] }) {
           <span
             className={cn(
               "font-mono text-sm font-semibold tabular-nums",
-              isPositive ? "text-[var(--cyan)]" : "text-[var(--text)]"
+              isPositive ? "text-[var(--status-positive)]" : "text-[var(--text)]"
             )}
           >
             {isPositive ? "+" : "-"}
@@ -372,7 +372,7 @@ export function TransactionList({ filter, limit }: TransactionListProps) {
       {/* Footer */}
       {hasMore && (
         <div className="flex justify-center py-4 border-t border-[var(--border)]">
-          <button className="text-xs font-sans text-[var(--cyan)] hover:text-white transition-colors cursor-pointer">
+          <button className="text-xs font-sans text-white hover:opacity-70 transition-colors cursor-pointer">
             View all {filtered.length} transactions
           </button>
         </div>

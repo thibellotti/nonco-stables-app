@@ -51,7 +51,7 @@ export function TabGroup<T extends string>({
                 color:
                   tab.countColor ??
                   (active === tab.value
-                    ? "var(--cyan)"
+                    ? "var(--text)"
                     : "var(--text-4)"),
               }}
             >

@@ -26,14 +26,14 @@ export function BottomTabs() {
               className={cn(
                 "flex flex-col items-center justify-center gap-1 flex-1 py-1.5 min-h-[44px] transition-all duration-200",
                 isActive
-                  ? "text-[var(--cyan)]"
+                  ? "text-white"
                   : "text-[var(--text-4)]"
               )}
             >
               <span
                 className={cn(
                   "flex items-center justify-center w-10 h-7 rounded-full transition-colors",
-                  isActive && "bg-[rgba(5,224,248,0.1)]"
+                  isActive && "bg-[rgba(255,255,255,0.06)]"
                 )}
               >
                 {tab.icon}

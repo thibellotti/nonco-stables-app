@@ -88,12 +88,12 @@ export default function ThirdPartyPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search payee or reference..."
-            className="flex-1 bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-3 py-2 text-xs font-sans text-[var(--text)] outline-none focus:border-[var(--cyan)] transition-colors placeholder:text-[var(--text-4)] w-full sm:w-auto"
+            className="flex-1 bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-3 py-2 text-xs font-sans text-[var(--text)] outline-none focus:border-white/30 transition-colors placeholder:text-[var(--text-4)] w-full sm:w-auto"
           />
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value as TypeFilter)}
-            className="bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-3 py-2 text-xs font-sans text-[var(--text)] outline-none focus:border-[var(--cyan)] transition-colors"
+            className="bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-3 py-2 text-xs font-sans text-[var(--text)] outline-none focus:border-white/30 transition-colors"
           >
             {typeFilters.map((t) => (
               <option key={t} value={t}>
@@ -104,7 +104,7 @@ export default function ThirdPartyPage() {
           <select
             value={corridorFilter}
             onChange={(e) => setCorridorFilter(e.target.value as CorridorFilter)}
-            className="bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-3 py-2 text-xs font-sans text-[var(--text)] outline-none focus:border-[var(--cyan)] transition-colors"
+            className="bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-3 py-2 text-xs font-sans text-[var(--text)] outline-none focus:border-white/30 transition-colors"
           >
             {corridorFilters.map((c) => (
               <option key={c} value={c}>
@@ -192,7 +192,7 @@ export default function ThirdPartyPage() {
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <button className="text-[11px] uppercase tracking-wider font-bold text-[var(--cyan)] hover:text-white transition-colors cursor-pointer font-sans">
+                        <button className="text-[11px] uppercase tracking-wider font-bold text-white hover:opacity-70 transition-colors cursor-pointer font-sans">
                           View
                         </button>
                       </td>

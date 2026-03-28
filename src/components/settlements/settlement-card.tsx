@@ -35,10 +35,10 @@ export function SettlementCard({
   const isProcessing = status === "processing";
 
   const statusBadge = isProcessing ? (
-    <span className="flex items-center gap-1.5 bg-[rgba(5,224,248,0.1)] text-[var(--cyan)] text-[11px] font-bold font-mono px-2 py-1 rounded-sm">
+    <span className="flex items-center gap-1.5 bg-[rgba(255,255,255,0.06)] text-white text-[11px] font-bold font-mono px-2 py-1 rounded-sm">
       <span className="relative flex h-1.5 w-1.5">
-        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--cyan)] opacity-75" />
-        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[var(--cyan)]" />
+        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
+        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white" />
       </span>
       PROCESSING
     </span>
@@ -52,7 +52,7 @@ export function SettlementCard({
   );
 
   const progressGradient = isProcessing
-    ? "linear-gradient(90deg, var(--cyan-dark, #0a8a9e), var(--cyan))"
+    ? "linear-gradient(90deg, rgba(255,255,255,0.4), rgba(255,255,255,0.8))"
     : "linear-gradient(90deg, #d97706, var(--amber))";
 
   const cardInner = (
@@ -74,7 +74,7 @@ export function SettlementCard({
           <span className="text-2xl sm:text-3xl font-bold font-mono text-white tabular-nums">
             {formatMoney(amount)}
           </span>
-          <span className="text-sm font-mono font-bold text-[var(--cyan)]">
+          <span className="text-sm font-mono font-bold text-[var(--text-3)]">
             {pair.split("/")[0]}
           </span>
         </div>

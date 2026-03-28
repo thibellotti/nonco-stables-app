@@ -56,7 +56,7 @@ export default function LoginPage() {
           transition={{ duration: 1.4, ease: "easeOut" }}
           className="pointer-events-none absolute -top-32 -right-32 w-[500px] h-[500px]"
           style={{
-            background: "radial-gradient(circle, rgba(5,224,248,0.08) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%)",
           }}
         />
 
@@ -67,7 +67,7 @@ export default function LoginPage() {
           transition={{ duration: 1.8, delay: 0.3 }}
           className="pointer-events-none absolute -bottom-48 -left-24 w-[400px] h-[400px]"
           style={{
-            background: "radial-gradient(circle, rgba(5,224,248,0.05) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%)",
           }}
         />
 
@@ -96,7 +96,7 @@ export default function LoginPage() {
             <h1 className="font-sans text-4xl xl:text-5xl font-bold text-white tracking-tight leading-[1.05]">
               NONCO
               <br />
-              <span className="text-[var(--cyan)]">STABLES</span>
+              <span className="text-white">STABLES</span>
             </h1>
             <p className="text-base xl:text-lg font-sans text-[var(--text-3)] mt-4 max-w-[400px] leading-relaxed">
               Institutional stablecoin settlement for global enterprises
@@ -113,7 +113,7 @@ export default function LoginPage() {
                 transition={{ duration: 0.5, delay: 0.4 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
                 className="flex gap-3.5"
               >
-                <div className="w-1 h-1 rounded-full bg-[var(--cyan)] mt-2 shrink-0" />
+                <div className="w-1 h-1 rounded-full bg-white mt-2 shrink-0" />
                 <div>
                   <p className="text-sm font-medium text-[var(--text)] leading-none">
                     {feature.title}
@@ -152,7 +152,7 @@ export default function LoginPage() {
           transition={{ duration: 1.2, ease: "easeOut" }}
           className="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] lg:hidden"
           style={{
-            background: "rgba(5,224,248,0.05)",
+            background: "rgba(255,255,255,0.03)",
             filter: "blur(120px)",
           }}
         />
@@ -175,7 +175,7 @@ export default function LoginPage() {
               alt="Nonco Stables"
               className="h-7 w-auto lg:hidden"
             />
-            <div className="w-12 h-[2px] bg-[var(--cyan)] mt-5 lg:hidden" />
+            <div className="w-12 h-[2px] bg-white mt-5 lg:hidden" />
 
             <p className="text-lg font-light text-[var(--text-3)] mt-5 lg:mt-0 text-center lg:text-left">
               Sign in to your account
@@ -195,7 +195,7 @@ export default function LoginPage() {
                 required
                 placeholder="name@institution.com"
                 autoComplete="email"
-                className="w-full bg-[var(--bg-card)] border-0 ring-1 ring-[var(--border-outline)] focus:ring-2 focus:ring-[var(--cyan)] rounded-lg px-4 py-3.5 font-mono text-sm text-[var(--text)] placeholder:text-[var(--text-4)] outline-none transition-shadow duration-200"
+                className="w-full bg-[var(--bg-card)] border-0 ring-1 ring-[var(--border-outline)] focus:ring-2 focus:ring-white rounded-lg px-4 py-3.5 font-mono text-sm text-[var(--text)] placeholder:text-[var(--text-4)] outline-none transition-shadow duration-200"
               />
             </motion.div>
 
@@ -207,7 +207,7 @@ export default function LoginPage() {
                 </label>
                 <button
                   type="button"
-                  className="text-[11px] tracking-[.1em] text-[var(--text-4)] hover:text-[var(--cyan)] transition-colors cursor-pointer py-1 px-2 -mr-2"
+                  className="text-[11px] tracking-[.1em] text-[var(--text-4)] hover:text-white transition-colors cursor-pointer py-1 px-2 -mr-2"
                 >
                   Forgot?
                 </button>
@@ -219,7 +219,7 @@ export default function LoginPage() {
                   required
                   placeholder="Enter password"
                   autoComplete="current-password"
-                  className="w-full bg-[var(--bg-card)] border-0 ring-1 ring-[var(--border-outline)] focus:ring-2 focus:ring-[var(--cyan)] rounded-lg px-4 py-3.5 pr-12 font-mono text-sm text-[var(--text)] placeholder:text-[var(--text-4)] outline-none transition-shadow duration-200"
+                  className="w-full bg-[var(--bg-card)] border-0 ring-1 ring-[var(--border-outline)] focus:ring-2 focus:ring-white rounded-lg px-4 py-3.5 pr-12 font-mono text-sm text-[var(--text)] placeholder:text-[var(--text-4)] outline-none transition-shadow duration-200"
                 />
                 <button
                   type="button"
@@ -245,7 +245,7 @@ export default function LoginPage() {
 
             {/* Sign In */}
             <motion.div custom={2} variants={fadeUp} initial="hidden" animate="visible">
-              <Button type="submit" variant="cyan" size="lg" className="w-full hover:shadow-[0_0_25px_rgba(5,224,248,0.3)]">
+              <Button type="submit" variant="cyan" size="lg" className="w-full">
                 Sign In
               </Button>
             </motion.div>
@@ -285,9 +285,9 @@ export default function LoginPage() {
           {/* Terms footer */}
           <motion.p custom={5} variants={fadeUp} initial="hidden" animate="visible" className="text-[11px] text-[var(--text-4)] text-center mt-8 leading-relaxed">
             By continuing, you agree to our{" "}
-            <a href="#" className="text-[var(--text-3)] hover:text-[var(--cyan)] transition-colors underline underline-offset-4 decoration-[var(--border)]">Terms of Service</a>
+            <a href="#" className="text-[var(--text-3)] hover:text-white transition-colors underline underline-offset-4 decoration-[var(--border)]">Terms of Service</a>
             {" "}and{" "}
-            <a href="#" className="text-[var(--text-3)] hover:text-[var(--cyan)] transition-colors underline underline-offset-4 decoration-[var(--border)]">Privacy Policy</a>.
+            <a href="#" className="text-[var(--text-3)] hover:text-white transition-colors underline underline-offset-4 decoration-[var(--border)]">Privacy Policy</a>.
           </motion.p>
         </div>
       </div>

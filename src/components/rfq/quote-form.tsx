@@ -28,7 +28,7 @@ export function QuoteForm({ onQuote }: QuoteFormProps) {
         <select
           value={selectedPair}
           onChange={(e) => setSelectedPair(e.target.value)}
-          className="w-full appearance-none bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm font-mono text-[var(--text)] focus:border-[var(--cyan)] focus:outline-none focus:ring-1 focus:ring-[var(--cyan)]/20 transition-colors cursor-pointer"
+          className="w-full appearance-none bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm font-mono text-[var(--text)] focus:border-white focus:outline-none focus:ring-1 focus:ring-white/20 transition-colors cursor-pointer"
         >
           {instruments.map((inst) => (
             <option key={inst.pair} value={inst.pair}>
@@ -56,7 +56,7 @@ export function QuoteForm({ onQuote }: QuoteFormProps) {
           placeholder="Quantity"
           value={quantity}
           onChange={(e) => setQuantity(e.target.value)}
-          className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-3 pr-14 text-sm font-mono text-[var(--text)] placeholder:text-[var(--text-4)] focus:border-[var(--cyan)] focus:outline-none focus:ring-1 focus:ring-[var(--cyan)]/20 transition-colors"
+          className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-3 pr-14 text-sm font-mono text-[var(--text)] placeholder:text-[var(--text-4)] focus:border-white focus:outline-none focus:ring-1 focus:ring-white/20 transition-colors"
         />
         <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[11px] font-mono text-[var(--text-4)]">
           {instruments.find((i) => i.pair === selectedPair)?.baseCurrency ?? "USD"}

@@ -69,7 +69,7 @@ export default function DashboardPage() {
           </span>
           <Link
             href="/bank"
-            className="text-[11px] font-sans text-[var(--cyan)] hover:text-white transition-colors"
+            className="text-[11px] font-sans text-white hover:opacity-70 transition-colors"
           >
             View all &rarr;
           </Link>

@@ -193,8 +193,8 @@ export default function TradesPage() {
             {sortedPairs.map(([pair, volume], index) => {
               const pct = (volume / totalVolume) * 100;
               const barPct = (volume / maxVolume) * 100;
-              // Cyan at decreasing opacity: 100%, 75%, 50%, 30%, 15%
-              const opacityHex = ["ff", "bf", "80", "4d", "26"][index] ?? "26";
+              // White at decreasing opacity: 80%, 60%, 45%, 30%, 15%
+              const opacity = [0.8, 0.6, 0.45, 0.3, 0.15][index] ?? 0.15;
               return (
                 <div key={pair} className="flex items-center gap-3">
                   <span className="text-xs font-mono font-bold text-white w-20 shrink-0">{pair}</span>
@@ -203,7 +203,7 @@ export default function TradesPage() {
                       className="h-full rounded-full"
                       style={{
                         width: `${barPct}%`,
-                        background: `linear-gradient(90deg, #05E0F850, #05E0F8${opacityHex})`,
+                        background: `linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,${opacity}))`,
                       }}
                     />
                   </div>
@@ -356,7 +356,7 @@ export default function TradesPage() {
                       <td className="px-3 sm:px-6 py-3 sm:py-4">
                         {(() => {
                           const baseCurrency = trade.pair.split("/")[0];
-                          const baseColor = currencyColors[baseCurrency]?.border ?? "var(--cyan)";
+                          const baseColor = currencyColors[baseCurrency]?.border ?? "rgba(255,255,255,0.5)";
                           return (
                             <div className="flex items-center gap-2 sm:gap-3">
                               <div

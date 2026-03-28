@@ -180,13 +180,13 @@ function SettlementTabs({
           className={cn(
             "relative px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer",
             active === key
-              ? "bg-[var(--bg-card)] text-[var(--cyan)] shadow-sm"
+              ? "bg-[var(--bg-card)] text-white shadow-sm"
               : "bg-transparent text-[var(--text-4)] hover:text-[var(--text-3)]"
           )}
         >
           {label}
           {active === key && (
-            <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-[2px] rounded-full bg-[var(--cyan)] shadow-[0_0_6px_rgba(5,224,248,0.4)]" />
+            <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-[2px] rounded-full bg-white" />
           )}
         </button>
       ))}
@@ -221,7 +221,7 @@ function TenorPills({
             className={cn(
               "px-3 py-1.5 rounded-md text-xs font-mono font-bold transition-all duration-200 cursor-pointer border",
               active === tenor
-                ? "bg-[var(--cyan)] text-black border-[var(--cyan)]"
+                ? "bg-white text-black border-white"
                 : "bg-transparent text-[var(--text-3)] border-[var(--border)] hover:border-[var(--border-outline)] hover:text-[var(--text-2)]"
             )}
           >
@@ -259,7 +259,7 @@ function PriceTimer({
         {expired ? (
           <button
             onClick={onRefresh}
-            className="flex items-center gap-1.5 text-xs font-sans font-medium text-[var(--cyan)] hover:text-[var(--cyan-light)] transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 text-xs font-sans font-medium text-white hover:text-[var(--text-2)] transition-colors cursor-pointer"
           >
             <RefreshIcon />
             Refresh
@@ -280,7 +280,7 @@ function PriceTimer({
           className="h-full rounded-full transition-all duration-1000 linear"
           style={{
             width: `${progress * 100}%`,
-            backgroundColor: isUrgent ? "var(--amber)" : "var(--cyan)",
+            backgroundColor: isUrgent ? "var(--amber)" : "white",
           }}
         />
       </div>
@@ -397,7 +397,7 @@ function SummaryGrid({
             className={cn(
               "font-medium truncate",
               mono ? "font-mono tabular-nums" : "font-sans",
-              accent ? "text-sm text-[var(--cyan)] font-bold" : "text-xs text-[var(--text)]"
+              accent ? "text-sm text-white font-bold" : "text-xs text-[var(--text)]"
             )}
           >
             {value}
@@ -619,14 +619,14 @@ function RfsDialogContent({
       {/* ── Header ─────────────────────────────────────── */}
       <div className="flex items-start justify-between px-6 py-5 border-b border-[var(--border)]">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-[var(--cyan-dim)] flex items-center justify-center text-[var(--cyan)]">
+          <div className="w-9 h-9 rounded-lg bg-[rgba(255,255,255,0.06)] flex items-center justify-center text-white">
             <StreamIcon />
           </div>
           <div>
             <h2 className="text-base font-bold text-white font-sans">
               Request for Stream
             </h2>
-            <p className="text-xs font-sans text-[var(--cyan)] mt-0.5">
+            <p className="text-xs font-sans text-[var(--text-3)] mt-0.5">
               {selectedPair} · {SETTLEMENT_DISPLAY[settlement]}
               {settlement === "forward" && ` · ${tenor}`}
             </p>
@@ -654,7 +654,7 @@ function RfsDialogContent({
               <select
                 value={selectedPair}
                 onChange={(e) => handlePairChange(e.target.value)}
-                className="w-full appearance-none bg-[var(--bg)] border border-[var(--border)] rounded-lg px-3 py-2.5 text-sm font-sans text-[var(--text)] focus:border-[var(--cyan)] focus:outline-none transition-colors cursor-pointer"
+                className="w-full appearance-none bg-[var(--bg)] border border-[var(--border)] rounded-lg px-3 py-2.5 text-sm font-sans text-[var(--text)] focus:border-white focus:outline-none transition-colors cursor-pointer"
               >
                 {allPairs.map((pair) => (
                   <option key={pair} value={pair}>
@@ -685,7 +685,7 @@ function RfsDialogContent({
                 inputMode="numeric"
                 value={notionalInput}
                 onChange={handleNotionalChange}
-                className="w-full bg-[var(--bg)] border border-[var(--border)] rounded-lg px-3 py-2.5 pr-14 text-sm font-mono text-[var(--text)] placeholder:text-[var(--text-4)] focus:border-[var(--cyan)] focus:outline-none transition-colors tabular-nums"
+                className="w-full bg-[var(--bg)] border border-[var(--border)] rounded-lg px-3 py-2.5 pr-14 text-sm font-mono text-[var(--text)] placeholder:text-[var(--text-4)] focus:border-white focus:outline-none transition-colors tabular-nums"
               />
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-mono text-[var(--text-4)]">
                 {quoteCurrency}

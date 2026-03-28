@@ -8,7 +8,7 @@ export default function NotFound() {
       <div
         className="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px]"
         style={{
-          background: "rgba(5,224,248,0.05)",
+          background: "rgba(255,255,255,0.03)",
           filter: "blur(120px)",
         }}
       />

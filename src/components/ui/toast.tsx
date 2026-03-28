@@ -50,7 +50,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 }
 
 const variantStyles: Record<ToastVariant, string> = {
-  success: "border-l-[var(--cyan)] text-[var(--cyan)]",
+  success: "border-l-white text-white",
   error: "border-l-[var(--red)] text-[var(--red)]",
   info: "border-l-[var(--text-3)] text-[var(--text-3)]",
 };

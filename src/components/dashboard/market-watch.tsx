@@ -35,10 +35,9 @@ export function MarketWatch({ onRequestRfs }: MarketWatchProps) {
 
         <span className="inline-flex items-center gap-1.5">
           <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--green)] opacity-75" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--green)]" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-white" />
           </span>
-          <span className="font-sans text-[11px] text-[var(--green)] uppercase tracking-[.1em]">
+          <span className="font-sans text-[11px] text-[var(--text-4)] uppercase tracking-[.1em]">
             Live
           </span>
         </span>
@@ -60,12 +59,7 @@ export function MarketWatch({ onRequestRfs }: MarketWatchProps) {
 
             {/* Rate */}
             <div
-              className={cn(
-                "text-sm sm:text-base font-mono font-extrabold tabular-nums mt-1",
-                p.positive
-                  ? "text-[var(--status-positive)]"
-                  : "text-[var(--status-negative)]"
-              )}
+              className="text-sm sm:text-base font-mono font-extrabold tabular-nums mt-1 text-white"
             >
               {p.price}
             </div>
@@ -82,7 +76,7 @@ export function MarketWatch({ onRequestRfs }: MarketWatchProps) {
               >
                 {p.change}
               </span>
-              <span className="text-[9px] px-2 py-0.5 rounded bg-[var(--cyan)] text-black font-bold font-sans uppercase">
+              <span className="text-[9px] px-2 py-0.5 rounded border border-[var(--border-outline)] text-[var(--text-3)] font-bold font-sans uppercase">
                 RFS
               </span>
             </div>
@@ -94,7 +88,7 @@ export function MarketWatch({ onRequestRfs }: MarketWatchProps) {
       <div className="flex justify-center py-3 border-t border-[var(--border)]">
         <Link
           href="/fx"
-          className="font-sans text-[11px] text-[var(--cyan)] uppercase tracking-[.1em] hover:opacity-80 transition-opacity"
+          className="font-sans text-[11px] text-white uppercase tracking-[.1em] hover:opacity-70 transition-opacity"
         >
           Full board &rarr;
         </Link>

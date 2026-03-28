@@ -45,10 +45,10 @@ export default function OnchainPage() {
     <PageTransition className="px-4 sm:px-6 md:px-8 w-full space-y-6">
       {/* Page context header */}
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-lg bg-[var(--cyan-dim)] border border-[rgba(5,224,248,0.12)] flex items-center justify-center">
+        <div className="w-10 h-10 rounded-lg bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.08)] flex items-center justify-center">
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-            <path d="M9 2v14M2 9h14" stroke="var(--cyan)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            <circle cx="9" cy="9" r="6" stroke="var(--cyan)" strokeWidth="1.2" opacity="0.4" />
+            <path d="M9 2v14M2 9h14" stroke="var(--text-3)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <circle cx="9" cy="9" r="6" stroke="var(--text-3)" strokeWidth="1.2" opacity="0.4" />
           </svg>
         </div>
         <div>
@@ -129,7 +129,7 @@ export default function OnchainPage() {
           value={address}
           onChange={(e) => setAddress(e.target.value)}
           placeholder="0x..."
-          className="flex-1 bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-mono text-[var(--text)] outline-none focus:border-[var(--cyan)] transition-colors placeholder:text-[var(--text-4)]"
+          className="flex-1 bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-mono text-[var(--text)] outline-none focus:border-white transition-colors placeholder:text-[var(--text-4)]"
         />
         <Button variant="cyan" size="md">
           Connect

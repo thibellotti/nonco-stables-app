@@ -12,10 +12,10 @@ import { formatMoney, formatCompact } from "@/lib/utils";
 // ---------------------------------------------------------------------------
 
 const metrics = [
-  { label: "Total volume", value: 18_400_000, prefix: "$", format: "compact", color: "var(--cyan)" },
+  { label: "Total volume", value: 18_400_000, prefix: "$", format: "compact", color: "white" },
   { label: "FX revenue", value: 27_600, prefix: "$", format: "money", color: "var(--green)" },
   { label: "Yield revenue", value: 7_240, prefix: "$", format: "money", color: "var(--purple)" },
-  { label: "Total P&L", value: 34_840, prefix: "$", format: "money", color: "var(--cyan)" },
+  { label: "Total P&L", value: 34_840, prefix: "$", format: "money", color: "white" },
 ];
 
 // ---------------------------------------------------------------------------
@@ -88,7 +88,7 @@ export default function ReportsPage() {
         </div>
         <BarChart
           bars={[
-            { label: "MXN", value: 60.9, color: "var(--cyan)" },
+            { label: "MXN", value: 60.9, color: "rgba(255,255,255,0.7)" },
             { label: "BRL", value: 20.7, color: "var(--purple)" },
             { label: "EUR", value: 13.0, color: "#38bdf8" },
             { label: "GBP", value: 5.4, color: "var(--amber)" },
@@ -161,7 +161,7 @@ export default function ReportsPage() {
                       <div className="flex items-center justify-end gap-2">
                         <div className="w-16 h-1.5 bg-[rgba(255,255,255,0.03)] rounded-full overflow-hidden hidden sm:block">
                           <div
-                            className="h-full rounded-full bg-[var(--cyan)]"
+                            className="h-full rounded-full bg-white"
                             style={{ width: `${c.share}%`, opacity: 1 - i * 0.2 }}
                           />
                         </div>
@@ -258,7 +258,7 @@ export default function ReportsPage() {
           {/* Yield total */}
           <div className="px-6 py-3 border-t border-[var(--border)] flex items-center justify-between">
             <span className="text-[11px] text-[var(--text-4)] font-sans">Total earned</span>
-            <span className="text-sm font-mono font-bold text-[var(--cyan)] tabular-nums">
+            <span className="text-sm font-mono font-bold text-white tabular-nums">
               ${formatMoney(yieldVaults.filter((v) => v.status === "active").reduce((sum, v) => sum + v.earnedMTD, 0))}
             </span>
           </div>

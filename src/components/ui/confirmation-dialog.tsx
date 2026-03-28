@@ -26,10 +26,10 @@ interface ConfirmationDialogProps {
 
 function BuyIcon() {
   return (
-    <div className="w-14 h-14 mx-auto rounded-full bg-[var(--cyan)]/10 flex items-center justify-center">
+    <div className="w-14 h-14 mx-auto rounded-full bg-[rgba(255,255,255,0.06)] flex items-center justify-center">
       <svg
         className="w-7 h-7"
-        style={{ color: "var(--cyan)" }}
+        style={{ color: "white" }}
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"

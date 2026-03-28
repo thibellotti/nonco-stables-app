@@ -16,7 +16,7 @@ const VB_H = 40;
 
 export function Sparkline({
   data,
-  color = "var(--cyan)",
+  color = "rgba(255,255,255,0.6)",
   showArea = true,
   strokeWidth = 1.5,
   className,

@@ -117,7 +117,7 @@ export default function RFQPage() {
             <div className="px-6 py-3 border-t border-[var(--border)] flex justify-center">
               <Link
                 href="/trades"
-                className="text-xs font-sans font-medium text-[var(--text-4)] hover:text-[var(--cyan)] transition-colors duration-200"
+                className="text-xs font-sans font-medium text-[var(--text-4)] hover:text-white transition-colors duration-200"
               >
                 View all trades &rarr;
               </Link>
@@ -132,8 +132,8 @@ export default function RFQPage() {
             <div className="relative overflow-hidden bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-6 lg:p-8 flex flex-col">
               {/* Decorative background */}
               <div className="absolute inset-0 data-grid-bg opacity-50 pointer-events-none" />
-              <div className="absolute -right-32 -top-32 w-80 h-80 rounded-full bg-[var(--cyan-wash)] blur-[100px] pointer-events-none" />
-              <div className="absolute -left-20 -bottom-20 w-60 h-60 rounded-full bg-[var(--cyan-wash)] blur-[80px] opacity-50 pointer-events-none" />
+              <div className="absolute -right-32 -top-32 w-80 h-80 rounded-full bg-[rgba(255,255,255,0.03)] blur-[100px] pointer-events-none" />
+              <div className="absolute -left-20 -bottom-20 w-60 h-60 rounded-full bg-[rgba(255,255,255,0.03)] blur-[80px] opacity-50 pointer-events-none" />
 
               <div className="relative flex flex-col flex-1">
                 {/* Header */}
@@ -225,7 +225,7 @@ export default function RFQPage() {
             <div className="px-6 py-3 border-t border-[var(--border)] flex justify-center">
               <Link
                 href="/trades"
-                className="text-xs font-sans font-medium text-[var(--text-4)] hover:text-[var(--cyan)] transition-colors duration-200"
+                className="text-xs font-sans font-medium text-[var(--text-4)] hover:text-white transition-colors duration-200"
               >
                 View all trades &rarr;
               </Link>

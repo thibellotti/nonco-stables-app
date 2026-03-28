@@ -322,7 +322,7 @@ export default function FxBoardPage() {
                       delay: idx * 0.03,
                       ease: [0.16, 1, 0.3, 1],
                     }}
-                    className="flex items-center gap-0 px-4 py-2.5 border-b border-[rgba(255,255,255,0.03)] hover:bg-[rgba(5,224,248,0.03)] hover:shadow-[inset_2px_0_0_var(--cyan)] transition-all duration-100 cursor-pointer"
+                    className="flex items-center gap-0 px-4 py-2.5 border-b border-[rgba(255,255,255,0.03)] hover:bg-[rgba(255,255,255,0.03)] hover:shadow-[inset_2px_0_0_rgba(255,255,255,0.15)] transition-all duration-100 cursor-pointer"
                     role="button"
                     tabIndex={0}
                     onClick={() => openRfs(inst.pair)}
@@ -443,7 +443,7 @@ export default function FxBoardPage() {
             <p className="text-xs text-[var(--text-4)]">
               Candlestick and depth charts for all corridors
             </p>
-            <button className="mt-4 text-[11px] font-sans font-medium text-[var(--cyan)] hover:underline underline-offset-2 transition-colors cursor-pointer">
+            <button className="mt-4 text-[11px] font-sans font-medium text-white hover:opacity-70 underline-offset-2 transition-colors cursor-pointer">
               Notify me when available
             </button>
           </div>
@@ -488,7 +488,7 @@ export default function FxBoardPage() {
             <p className="text-xs text-[var(--text-4)]">
               Full execution history with export options
             </p>
-            <Link href="/trades" className="mt-4 inline-flex items-center gap-1 text-[11px] font-sans font-medium text-[var(--cyan)] hover:underline underline-offset-2 transition-colors">
+            <Link href="/trades" className="mt-4 inline-flex items-center gap-1 text-[11px] font-sans font-medium text-white hover:opacity-70 underline-offset-2 transition-colors">
               View recent trades <span aria-hidden="true">&rarr;</span>
             </Link>
           </div>

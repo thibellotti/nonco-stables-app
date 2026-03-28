@@ -24,7 +24,7 @@ const TIMER_CIRCUMFERENCE = 2 * Math.PI * TIMER_RADIUS;
 
 function CountdownRing({ progress, isUrgent, formatted }: { progress: number; isUrgent: boolean; formatted: string }) {
   const offset = TIMER_CIRCUMFERENCE * (1 - progress);
-  const color = isUrgent ? "var(--amber)" : "var(--cyan)";
+  const color = isUrgent ? "var(--amber)" : "white";
 
   return (
     <div className="flex flex-col items-center gap-1">
@@ -90,7 +90,7 @@ function SettlementTabs({ active, onChange }: { active: Settlement; onChange: (s
           className={cn(
             "px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer",
             active === key
-              ? "bg-[var(--cyan)] text-black"
+              ? "bg-white text-black"
               : "bg-transparent text-[var(--text-3)] hover:text-white"
           )}
         >
@@ -208,7 +208,7 @@ export function PriceCardActive({
   const { bid, ask } = getPrices(quote, settlement);
   const premium = forwardPremium(quote, settlement);
 
-  const baseColor = currencyColors[base]?.border ?? "var(--cyan)";
+  const baseColor = currencyColors[base]?.border ?? "#ffffff";
   const quoteColor = currencyColors[quoteCcy]?.border ?? "#6366f1";
 
   // Pending trade state for confirmation dialog
@@ -243,12 +243,12 @@ export function PriceCardActive({
         "relative overflow-hidden rounded-lg transition-all duration-300",
         expired
           ? "bg-[var(--bg-card)] border border-[var(--border)]"
-          : "bg-[var(--bg-card)] border border-[rgba(5,224,248,0.3)] pulse-glow-active"
+          : "bg-[var(--bg-card)] border border-[rgba(255,255,255,0.15)] pulse-glow-active"
       )}
     >
       {/* Glow effect */}
       {!expired && !flash && (
-        <div className="absolute -right-20 -top-20 w-64 h-64 bg-[var(--cyan-wash)] rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute -right-20 -top-20 w-64 h-64 bg-[rgba(255,255,255,0.02)] rounded-full blur-[100px] pointer-events-none" />
       )}
 
       {/* Trade flash overlay */}
@@ -303,7 +303,7 @@ export function PriceCardActive({
             className="h-full rounded-full"
             style={{
               width: `${progress * 100}%`,
-              backgroundColor: progress > 0.3 ? "var(--cyan)" : "var(--amber)",
+              backgroundColor: progress > 0.3 ? "white" : "var(--amber)",
               transition: "width 1s linear, background-color 0.3s ease",
             }}
           />
@@ -323,7 +323,7 @@ export function PriceCardActive({
         <div className="grid grid-cols-2 gap-4">
           {/* BUY */}
           <div className="bg-[var(--bg-card)] rounded-lg border border-[var(--border-subtle)] p-6 flex flex-col items-center gap-5">
-            <span className="text-[11px] font-sans uppercase tracking-[.1em] text-[var(--cyan)] font-bold">
+            <span className="text-[11px] font-sans uppercase tracking-[.1em] text-white font-bold">
               Buy
             </span>
             <span className="font-mono text-5xl sm:text-6xl font-bold text-white tabular-nums tracking-tighter">
@@ -332,7 +332,7 @@ export function PriceCardActive({
             <button
               onClick={() => handleTrade("buy", ask)}
               disabled={expired}
-              className="w-full bg-[var(--cyan)] text-black rounded-full py-4 font-bold font-sans text-sm uppercase tracking-wider hover:brightness-110 active:scale-[0.98] transition-all duration-200 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full bg-white text-black rounded-full py-4 font-bold font-sans text-sm uppercase tracking-wider hover:bg-white/90 active:scale-[0.98] transition-all duration-200 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
             >
               Buy {base}
             </button>

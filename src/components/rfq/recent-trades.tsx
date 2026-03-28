@@ -58,7 +58,7 @@ export function RecentTrades({ extraTrades = [], limit }: RecentTradesProps) {
                 <span
                   className={`inline-flex items-center px-2 sm:px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider ${
                     trade.side === "buy"
-                      ? "bg-[var(--cyan-dim)] text-[var(--cyan)]"
+                      ? "bg-[rgba(255,255,255,0.08)] text-[var(--text)]"
                       : "bg-[var(--purple-dim)] text-[var(--purple)]"
                   }`}
                 >

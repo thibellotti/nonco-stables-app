@@ -56,7 +56,7 @@ const initialNotifications: Notification[] = [
 // Color mapping for notification dot indicators
 const dotColors: Record<NotificationType, string> = {
   settlement: "var(--amber)",
-  deposit: "var(--cyan)",
+  deposit: "var(--status-positive)",
   price: "var(--green)",
   withdrawal: "var(--purple)",
 };
@@ -206,7 +206,7 @@ export function NotificationCenter() {
                           {notification.title}
                         </p>
                         {notification.unread && (
-                          <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-[var(--cyan)]" />
+                          <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-white" />
                         )}
                       </div>
                       <p className="text-xs text-[var(--text-4)] font-sans mt-0.5">
@@ -225,7 +225,7 @@ export function NotificationCenter() {
             <div className="px-4 py-3 border-t border-[var(--border)] flex items-center justify-between">
               {unreadCount > 0 ? (
                 <button
-                  className="text-xs text-[var(--cyan)] hover:text-[var(--text)] transition-colors duration-150 font-sans"
+                  className="text-xs text-white hover:text-[var(--text)] transition-colors duration-150 font-sans"
                   onClick={handleMarkAllRead}
                 >
                   Mark all read

@@ -51,7 +51,7 @@ export function BankFilterBar({
           aria-label="Search transactions"
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="bg-black rounded-lg pl-10 pr-4 py-2 text-xs font-mono text-white placeholder:text-[var(--text-4)] border border-[var(--border)] focus:border-[var(--cyan)] focus:outline-none transition-colors w-full"
+          className="bg-black rounded-lg pl-10 pr-4 py-2 text-xs font-mono text-white placeholder:text-[var(--text-4)] border border-[var(--border)] focus:border-white focus:outline-none transition-colors w-full"
         />
       </div>
     </div>

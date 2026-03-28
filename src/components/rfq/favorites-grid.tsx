@@ -103,7 +103,7 @@ export function FavoritesGrid({ onQuote, compact = false, cols }: FavoritesGridP
                   aria-label={`Quantity for ${fav.instrument.pair}`}
                   value={formatMoney(quantities[fav.id]).replace(/\.00$/, "")}
                   onChange={(e) => handleQuantityChange(fav.id, e.target.value)}
-                  className="w-24 bg-[var(--bg-highest)] rounded px-2 py-1.5 font-mono text-xs text-white placeholder:text-[var(--text-4)] focus:outline-none focus:ring-1 focus:ring-[var(--cyan)] focus:ring-opacity-30 transition-colors"
+                  className="w-24 bg-[var(--bg-highest)] rounded px-2 py-1.5 font-mono text-xs text-white placeholder:text-[var(--text-4)] focus:outline-none focus:ring-1 focus:ring-white focus:ring-opacity-30 transition-colors"
                 />
                 <Button
                   variant="cyan"
@@ -241,7 +241,7 @@ function FavoriteCard({
           aria-label={`Quantity for ${fav.instrument.pair}`}
           value={formatMoney(quantity).replace(/\.00$/, "")}
           onChange={(e) => onQuantityChange(e.target.value)}
-          className="flex-1 min-w-0 bg-[var(--bg-highest)] rounded px-3 py-2 font-mono text-sm text-white placeholder:text-[var(--text-4)] focus:outline-none focus:ring-1 focus:ring-[var(--cyan)] focus:ring-opacity-30 transition-colors"
+          className="flex-1 min-w-0 bg-[var(--bg-highest)] rounded px-3 py-2 font-mono text-sm text-white placeholder:text-[var(--text-4)] focus:outline-none focus:ring-1 focus:ring-white focus:ring-opacity-30 transition-colors"
         />
         <Button
           variant="cyan"

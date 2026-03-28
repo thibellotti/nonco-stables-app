@@ -81,16 +81,16 @@ export default function BankPage() {
             {/* Inflows */}
             <div>
               <div className="flex items-center gap-2 mb-1.5">
-                <div className="w-6 h-6 rounded-md bg-[rgba(5,224,248,0.08)] flex items-center justify-center">
+                <div className="w-6 h-6 rounded-md bg-[rgba(255,255,255,0.06)] flex items-center justify-center">
                   <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                    <path d="M10 4L4 10M4 10h4.5M4 10V5.5" stroke="var(--cyan)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M10 4L4 10M4 10h4.5M4 10V5.5" stroke="var(--text-3)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
                 <span className="text-[11px] uppercase tracking-[.15em] text-[var(--text-4)]">
                   Inflows
                 </span>
               </div>
-              <p className="text-2xl font-mono font-bold text-[var(--cyan)] tabular-nums">
+              <p className="text-2xl font-mono font-bold text-white tabular-nums">
                 {formatCompact(totalDeposits)}
               </p>
             </div>
@@ -144,7 +144,7 @@ export default function BankPage() {
             <div className="mt-5">
               <div className="flex h-2 w-full rounded-full overflow-hidden gap-px">
                 <div
-                  className="h-full rounded-full bg-[var(--cyan)]"
+                  className="h-full rounded-full bg-white"
                   style={{ width: `${depositPct}%` }}
                 />
                 <div
@@ -154,7 +154,7 @@ export default function BankPage() {
               </div>
               <div className="flex items-center justify-between mt-2">
                 <p className="text-[11px] font-sans text-[var(--text-4)] tracking-wide">
-                  <span className="text-[var(--cyan)]">Inflows {depositPct}%</span>
+                  <span className="text-white">Inflows {depositPct}%</span>
                   <span className="mx-1.5">&middot;</span>
                   <span className="text-[rgba(255,255,255,0.5)]">Outflows {withdrawalPct}%</span>
                 </p>

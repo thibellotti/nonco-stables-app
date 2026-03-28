@@ -118,12 +118,12 @@ function StatusBadge({ status }: { status: Transaction["status"] }) {
 // ---------------------------------------------------------------------------
 
 const iconColors: Record<string, string> = {
-  deposit: "var(--cyan)",
+  deposit: "var(--text-3)",
   withdrawal: "var(--purple)",
 };
 
 const iconBgColors: Record<string, string> = {
-  deposit: "rgba(5,224,248,0.1)",
+  deposit: "rgba(255,255,255,0.06)",
   withdrawal: "var(--purple-dim)",
 };
 
@@ -228,7 +228,7 @@ function TransactionRow({
         <span
           className={cn(
             "font-mono text-xs sm:text-sm font-bold tabular-nums",
-            isPositive ? "text-[var(--cyan)]" : "text-white"
+            isPositive ? "text-[var(--status-positive)]" : "text-white"
           )}
         >
           {isPositive ? "+" : "-"}
@@ -346,7 +346,7 @@ export function BankTransactionTable({ transactions }: BankTransactionTableProps
               className={cn(
                 "w-8 h-8 text-[11px] font-mono font-bold rounded transition-colors cursor-pointer",
                 p === page
-                  ? "bg-[var(--cyan)] text-black"
+                  ? "bg-white text-black"
                   : "text-[var(--text-4)] hover:text-white border border-[var(--border)] hover:border-[var(--text-4)]"
               )}
             >

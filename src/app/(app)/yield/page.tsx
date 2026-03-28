@@ -38,7 +38,7 @@ const metrics: Metric[] = [
     value: "$1.84M",
     sub: "3 vaults active",
     trend: "up",
-    color: "var(--cyan)",
+    color: "white",
   },
   {
     label: "Earned MTD",
@@ -75,7 +75,7 @@ const yieldHistory = [
     apy: "10.82%",
     earned: "$4,810",
     status: "accruing" as const,
-    color: "var(--cyan)",
+    color: "var(--text-3)",
   },
   {
     period: "Mar 2026",
@@ -102,7 +102,7 @@ const yieldHistory = [
     apy: "10.75%",
     earned: "$4,320",
     status: "paid" as const,
-    color: "var(--cyan)",
+    color: "var(--text-3)",
   },
 ];
 
@@ -214,7 +214,7 @@ export default function YieldPage() {
               <motion.div
                 key={vault.id}
                 variants={fadeUp}
-                className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden flex flex-col transition-all duration-200 hover:border-[var(--border-outline)] hover:translate-y-[-1px] hover:shadow-lg hover:shadow-[rgba(5,224,248,0.05)]"
+                className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden flex flex-col transition-all duration-200 hover:border-[var(--border-outline)] hover:translate-y-[-1px] hover:shadow-lg hover:shadow-[rgba(255,255,255,0.03)]"
               >
                 {/* Top color bar */}
                 <div className="h-[3px] w-full" style={{ background: vault.color }} />
@@ -287,8 +287,8 @@ export default function YieldPage() {
                       "cursor-pointer hover:brightness-110"
                     )}
                     style={{
-                      borderColor: vault.color,
-                      color: vault.color,
+                      borderColor: "rgba(255,255,255,0.2)",
+                      color: "rgba(255,255,255,0.7)",
                     }}
                   >
                     Manage

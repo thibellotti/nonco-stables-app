@@ -212,7 +212,7 @@ export function BalanceHero() {
               onClick={() => setActivePeriod(p)}
               className={
                 activePeriod === p
-                  ? "font-sans text-[11px] uppercase tracking-[.1em] px-3 py-1 rounded-full bg-[var(--cyan-dim)] text-[var(--cyan)] border border-[rgba(5,224,248,0.2)] cursor-default"
+                  ? "font-sans text-[11px] uppercase tracking-[.1em] px-3 py-1 rounded-full bg-[rgba(255,255,255,0.08)] text-white border border-[rgba(255,255,255,0.12)] cursor-default"
                   : "font-sans text-[11px] uppercase tracking-[.1em] px-3 py-1 rounded-full bg-[rgba(255,255,255,0.03)] text-[var(--text-4)] cursor-pointer hover:bg-[rgba(255,255,255,0.06)] transition-colors"
               }
             >
@@ -226,7 +226,7 @@ export function BalanceHero() {
       <div className="flex items-baseline justify-between flex-wrap gap-4 mb-2">
         <p
           className="font-mono text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tighter leading-none text-white"
-          style={{ fontVariantNumeric: "tabular-nums slashed-zero", textShadow: "0 0 40px rgba(5,224,248,0.15)" }}
+          style={{ fontVariantNumeric: "tabular-nums slashed-zero" }}
         >
           <AnimatedNumber
             value={totalBalance}
@@ -314,9 +314,9 @@ export function BalanceHero() {
           <defs>
             {/* Vertical area gradient — multi-stop for depth */}
             <linearGradient id="hero-area-fill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="rgba(5,224,248,0.15)" />
-              <stop offset="40%" stopColor="rgba(5,224,248,0.06)" />
-              <stop offset="100%" stopColor="rgba(5,224,248,0)" />
+              <stop offset="0%" stopColor="rgba(255,255,255,0.1)" />
+              <stop offset="40%" stopColor="rgba(255,255,255,0.04)" />
+              <stop offset="100%" stopColor="rgba(255,255,255,0)" />
             </linearGradient>
 
             {/* Horizontal line gradient — left: faded, right: full */}
@@ -329,12 +329,12 @@ export function BalanceHero() {
             >
               <stop
                 offset="0%"
-                stopColor="var(--cyan)"
+                stopColor="rgba(255,255,255,0.6)"
                 stopOpacity="0.3"
               />
               <stop
                 offset="100%"
-                stopColor="var(--cyan)"
+                stopColor="rgba(255,255,255,0.6)"
                 stopOpacity="1"
               />
             </linearGradient>
@@ -365,7 +365,7 @@ export function BalanceHero() {
           {/* Line glow — blurred wider stroke behind main line */}
           <path
             d={linePath}
-            stroke="var(--cyan)"
+            stroke="rgba(255,255,255,0.6)"
             strokeWidth="8"
             strokeLinecap="round"
             filter="url(#line-glow)"
@@ -396,7 +396,7 @@ export function BalanceHero() {
             cx={lastPt.x}
             cy={lastPt.y}
             r="16"
-            fill="var(--cyan)"
+            fill="white"
             opacity={hoverIdx !== null ? "0.02" : "0.06"}
             filter="url(#line-glow)"
           />
@@ -406,7 +406,7 @@ export function BalanceHero() {
             cy={lastPt.y}
             r="8"
             fill="none"
-            stroke="var(--cyan)"
+            stroke="white"
             strokeWidth="1"
             opacity={hoverIdx !== null ? "0.05" : "0.3"}
           >
@@ -418,7 +418,7 @@ export function BalanceHero() {
             cx={lastPt.x}
             cy={lastPt.y}
             r="3.5"
-            fill="var(--cyan)"
+            fill="white"
             opacity={hoverIdx !== null ? "0.2" : "1"}
           />
           {/* Endpoint — white highlight for "lit" feel */}
@@ -440,7 +440,7 @@ export function BalanceHero() {
               style={{
                 left: hoverX,
                 background:
-                  "linear-gradient(to bottom, transparent, var(--cyan), transparent)",
+                  "linear-gradient(to bottom, transparent, rgba(255,255,255,0.5), transparent)",
                 opacity: 0.25,
               }}
             />
@@ -451,14 +451,14 @@ export function BalanceHero() {
               style={{
                 left: hoverX - 4,
                 top: `${(chartY(hoverIdx) / CHART_H) * 100}%`,
-                background: "var(--cyan)",
-                boxShadow: "0 0 12px rgba(5,224,248,0.6)",
+                background: "white",
+                boxShadow: "0 0 12px rgba(255,255,255,0.4)",
               }}
             />
 
-            {/* Tooltip card — polished with cyan accent border */}
+            {/* Tooltip card — polished with white accent border */}
             <div
-              className="absolute pointer-events-none z-10 bg-[var(--bg-card)] border border-[var(--border)] border-t-2 border-t-[rgba(5,224,248,0.5)] rounded px-2.5 py-1.5 shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
+              className="absolute pointer-events-none z-10 bg-[var(--bg-card)] border border-[var(--border)] border-t-2 border-t-[rgba(255,255,255,0.3)] rounded px-2.5 py-1.5 shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
               style={{
                 left:
                   hoverX > 160
@@ -498,9 +498,9 @@ export function BalanceHero() {
           variants={statCardVariants}
           className="flex items-center gap-3 px-4 py-3 sm:py-4"
         >
-          <div className="hidden sm:flex w-8 h-8 rounded-lg bg-[rgba(5,224,248,0.08)] items-center justify-center shrink-0">
+          <div className="hidden sm:flex w-8 h-8 rounded-lg bg-[rgba(255,255,255,0.06)] items-center justify-center shrink-0">
             <svg width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-              <path d="M9 2v14M3 9h12" stroke="var(--cyan)" strokeWidth="1.5" strokeLinecap="round" />
+              <path d="M9 2v14M3 9h12" stroke="var(--text-3)" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
           </div>
           <div className="flex sm:block items-center justify-between w-full sm:w-auto">

@@ -31,13 +31,13 @@ const usdValues: Record<string, number> = {
   USDC: 280_000,
 };
 
-// Cyan opacity tiers for monochrome palette
-const cyanTiers: Record<string, { dot: string; sparkline: string }> = {
-  USD:  { dot: "rgba(5,224,248,1)",    sparkline: "rgba(5,224,248,0.9)"  },
-  EUR:  { dot: "rgba(5,224,248,0.7)",  sparkline: "rgba(5,224,248,0.65)" },
-  MXN:  { dot: "rgba(5,224,248,0.5)",  sparkline: "rgba(5,224,248,0.45)" },
-  USDT: { dot: "rgba(5,224,248,0.35)", sparkline: "rgba(5,224,248,0.3)"  },
-  USDC: { dot: "rgba(5,224,248,0.25)", sparkline: "rgba(5,224,248,0.2)"  },
+// White opacity tiers for monochrome palette
+const whiteTiers: Record<string, { dot: string; sparkline: string }> = {
+  USD:  { dot: "rgba(255,255,255,1)",    sparkline: "rgba(255,255,255,0.4)"  },
+  EUR:  { dot: "rgba(255,255,255,0.7)",  sparkline: "rgba(255,255,255,0.3)" },
+  MXN:  { dot: "rgba(255,255,255,0.5)",  sparkline: "rgba(255,255,255,0.25)" },
+  USDT: { dot: "rgba(255,255,255,0.35)", sparkline: "rgba(255,255,255,0.2)"  },
+  USDC: { dot: "rgba(255,255,255,0.25)", sparkline: "rgba(255,255,255,0.15)"  },
 };
 
 export function CurrencyBreakdown() {
@@ -48,7 +48,7 @@ export function CurrencyBreakdown() {
         <SectionLabel>Stable Assets</SectionLabel>
         <Link
           href="/wallet"
-          className="font-sans text-[11px] text-[var(--cyan)] uppercase tracking-[.1em] hover:opacity-80 transition-opacity"
+          className="font-sans text-[11px] text-white uppercase tracking-[.1em] hover:opacity-70 transition-opacity"
         >
           View wallet &rarr;
         </Link>
@@ -66,7 +66,7 @@ export function CurrencyBreakdown() {
       {/* Table rows */}
       <div>
         {balances.map((balance, idx) => {
-          const tier = cyanTiers[balance.currency] ?? cyanTiers.USD;
+          const tier = whiteTiers[balance.currency] ?? whiteTiers.USD;
           const variation = variations[balance.currency];
           const usdVal = usdValues[balance.currency] ?? balance.available;
 
@@ -75,7 +75,7 @@ export function CurrencyBreakdown() {
               key={balance.currency}
               className={cn(
                 "grid grid-cols-[1fr_auto] sm:grid-cols-[1fr_140px_140px_100px_96px] gap-4 items-center px-6 py-4 cursor-default",
-                "hover:bg-[rgba(5,224,248,0.02)] transition-colors",
+                "hover:bg-[rgba(255,255,255,0.02)] transition-colors",
                 idx < balances.length - 1 && "border-b border-[var(--border)]"
               )}
             >

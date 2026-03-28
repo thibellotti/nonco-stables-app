@@ -196,7 +196,7 @@ export default function SettlementsPage() {
                     duration: 0.6,
                     ease: [0.16, 1, 0.3, 1],
                   }}
-                  className="h-full bg-[var(--cyan)]"
+                  className="h-full bg-white"
                 />
                 <motion.div
                   initial={{ width: 0 }}
@@ -217,7 +217,7 @@ export default function SettlementsPage() {
             {/* Legend */}
             <div className="flex items-center gap-6 mb-6">
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-sm bg-[var(--cyan)]" />
+                <span className="w-2.5 h-2.5 rounded-sm bg-white" />
                 <span className="text-[11px] font-sans text-[var(--text-3)]">
                   Processing
                 </span>
@@ -247,7 +247,7 @@ export default function SettlementsPage() {
               {sortedTerms.map(([term, volume], index) => {
                 const pct = (volume / totalPendingAmount) * 100;
                 const barPct = (volume / maxTermVolume) * 100;
-                const opacityHex = ["ff", "cc", "66"][index] ?? "33";
+                const opacity = [1, 0.8, 0.4][index] ?? 0.2;
                 return (
                   <div key={term} className="flex items-center gap-3">
                     <span className="text-xs font-mono font-bold text-white w-12 shrink-0">
@@ -264,7 +264,7 @@ export default function SettlementsPage() {
                         }}
                         className="h-full rounded-full"
                         style={{
-                          background: `linear-gradient(90deg, #05E0F840, #05E0F8${opacityHex})`,
+                          background: `linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,${opacity}))`,
                         }}
                       />
                     </div>
@@ -301,7 +301,7 @@ export default function SettlementsPage() {
                 <div className="text-[10px] font-mono text-[var(--text-4)] mt-1.5 tabular-nums">$108K &middot; 0h left</div>
               </div>
               <div className="text-center">
-                <ProgressRing value={18} color="var(--cyan)" size={64} strokeWidth={6} label="T+2" sublabel="$172K" />
+                <ProgressRing value={18} color="rgba(255,255,255,0.5)" size={64} strokeWidth={6} label="T+2" sublabel="$172K" />
                 <div className="text-[10px] font-mono text-[var(--text-4)] mt-1.5 tabular-nums">$172K &middot; 48h left</div>
               </div>
               <div className="text-center">
@@ -321,7 +321,7 @@ export default function SettlementsPage() {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-lg font-mono font-medium text-[var(--cyan)] tabular-nums">
+                <p className="text-lg font-mono font-medium text-white tabular-nums">
                   {processingCount}
                 </p>
                 <p className="text-xs text-[var(--text-4)] font-sans">
@@ -360,7 +360,7 @@ export default function SettlementsPage() {
                   className="h-full rounded-full"
                   style={{
                     background:
-                      "linear-gradient(90deg, rgba(5,224,248,0.25), rgba(5,224,248,0.8))",
+                      "linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.5))",
                   }}
                 />
               </div>
@@ -544,9 +544,9 @@ export default function SettlementsPage() {
                       const isProcessing = s.status === "processing";
                       const baseCurrency = s.pair.split("/")[0];
                       const baseColor =
-                        currencyColors[baseCurrency]?.border ?? "var(--cyan)";
+                        currencyColors[baseCurrency]?.border ?? "rgba(255,255,255,0.5)";
                       const progressGradient = isProcessing
-                        ? "linear-gradient(90deg, rgba(5,224,248,0.6), var(--cyan))"
+                        ? "linear-gradient(90deg, rgba(255,255,255,0.3), rgba(255,255,255,0.7))"
                         : "linear-gradient(90deg, #d97706, var(--amber))";
 
                       return (
@@ -616,7 +616,7 @@ export default function SettlementsPage() {
                                 {s.dueDate.replace(", 2026", "")}
                               </span>
                               {s.daysRemaining === 0 ? (
-                                <span className="text-[10px] font-sans text-[var(--cyan)]">
+                                <span className="text-[10px] font-sans text-white">
                                   Due today
                                 </span>
                               ) : (
@@ -652,10 +652,10 @@ export default function SettlementsPage() {
                           {/* Status */}
                           <td className="px-3 sm:px-6 py-3 sm:py-4">
                             {isProcessing ? (
-                              <span className="inline-flex items-center gap-1.5 text-[11px] font-bold font-sans uppercase tracking-[.1em] text-[var(--cyan)]">
+                              <span className="inline-flex items-center gap-1.5 text-[11px] font-bold font-sans uppercase tracking-[.1em] text-white">
                                 <span className="relative flex h-1.5 w-1.5">
-                                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--cyan)] opacity-75" />
-                                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[var(--cyan)]" />
+                                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
+                                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white" />
                                 </span>
                                 Processing
                               </span>
@@ -713,19 +713,19 @@ export default function SettlementsPage() {
               const isProcessing = next.status === "processing";
               const baseCurrency = next.pair.split("/")[0];
               const baseColor =
-                currencyColors[baseCurrency]?.border ?? "var(--cyan)";
+                currencyColors[baseCurrency]?.border ?? "#ffffff";
               const progressGradient = isProcessing
-                ? "linear-gradient(90deg, rgba(5,224,248,0.6), var(--cyan))"
+                ? "linear-gradient(90deg, rgba(255,255,255,0.4), rgba(255,255,255,0.8))"
                 : "linear-gradient(90deg, #d97706, var(--amber))";
 
               return (
-                <div className="bg-[var(--bg-card)] border border-[var(--border)] border-t-2 border-t-[var(--cyan)] rounded-lg p-5">
+                <div className="bg-[var(--bg-card)] border border-[var(--border)] border-t-2 border-t-white rounded-lg p-5">
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-[11px] uppercase tracking-[.12em] font-sans font-medium text-[var(--text-4)]">
                       Next Due
                     </span>
                     {next.daysRemaining === 0 ? (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-[var(--cyan-dim)] text-[10px] font-sans font-bold text-[var(--cyan)] uppercase tracking-[.1em]">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-[rgba(255,255,255,0.06)] text-[10px] font-sans font-bold text-white uppercase tracking-[.1em]">
                         Due Today
                       </span>
                     ) : (
@@ -790,10 +790,10 @@ export default function SettlementsPage() {
 
                   <div className="mt-3">
                     {isProcessing ? (
-                      <span className="inline-flex items-center gap-1.5 text-[11px] font-bold font-sans uppercase tracking-[.1em] text-[var(--cyan)]">
+                      <span className="inline-flex items-center gap-1.5 text-[11px] font-bold font-sans uppercase tracking-[.1em] text-white">
                         <span className="relative flex h-1.5 w-1.5">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--cyan)] opacity-75" />
-                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[var(--cyan)]" />
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
+                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white" />
                         </span>
                         Processing
                       </span>
@@ -817,8 +817,8 @@ export default function SettlementsPage() {
               <div className="mt-3 space-y-3">
                 {sortedExposure.map(([name, amount], index) => {
                   const proportion = amount / totalPendingAmount;
-                  const opacityHex =
-                    ["ff", "cc", "99", "66", "44", "33"][index] ?? "33";
+                  const opacity =
+                    [1, 0.8, 0.6, 0.4, 0.27, 0.2][index] ?? 0.2;
                   return (
                     <div key={name}>
                       <div className="flex items-center justify-between mb-1.5">
@@ -847,7 +847,7 @@ export default function SettlementsPage() {
                           }}
                           className="h-full rounded-full"
                           style={{
-                            background: `linear-gradient(90deg, #05E0F840, #05E0F8${opacityHex})`,
+                            background: `linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,${opacity}))`,
                           }}
                         />
                       </div>
@@ -883,7 +883,7 @@ export default function SettlementsPage() {
                         <div
                           className={`w-2 h-2 rounded-full shrink-0 mt-1.5 ${
                             isProcessing
-                              ? "bg-[var(--cyan)]"
+                              ? "bg-white"
                               : "bg-[var(--bg-bright)]"
                           }`}
                         />

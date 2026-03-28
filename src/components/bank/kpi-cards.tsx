@@ -31,16 +31,16 @@ export function BankKpiCards({
         {/* Inflows */}
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-7 h-7 rounded-lg bg-[rgba(5,224,248,0.08)] flex items-center justify-center">
+            <div className="w-7 h-7 rounded-lg bg-[rgba(255,255,255,0.06)] flex items-center justify-center">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                <path d="M10 4L4 10M4 10h4.5M4 10V5.5" stroke="var(--cyan)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M10 4L4 10M4 10h4.5M4 10V5.5" stroke="var(--text-3)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
             <div className="text-[11px] uppercase tracking-[.15em] text-[var(--text-4)]">
               Inflows
             </div>
           </div>
-          <p className="text-2xl font-mono font-bold text-[var(--cyan)] tabular-nums">
+          <p className="text-2xl font-mono font-bold text-white tabular-nums">
             {formatCompact(totalDeposits)}
           </p>
           <div className="mt-3 h-2.5 rounded-full bg-[rgba(255,255,255,0.03)] overflow-hidden">
@@ -48,7 +48,7 @@ export function BankKpiCards({
               className="h-full rounded-full transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
               style={{
                 width: `${depositPct}%`,
-                background: "linear-gradient(90deg, rgba(5,224,248,0.25), rgba(5,224,248,0.9))",
+                background: "linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.5))",
               }}
             />
           </div>

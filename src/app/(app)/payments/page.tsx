@@ -80,7 +80,7 @@ export default function PaymentsPage() {
               <select
                 value={sendFrom}
                 onChange={(e) => setSendFrom(e.target.value)}
-                className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-sans text-[var(--text)] outline-none focus:border-[var(--cyan)] transition-colors"
+                className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-sans text-[var(--text)] outline-none focus:border-white/30 transition-colors"
               >
                 {sendFromOptions.map((opt) => (
                   <option key={opt.currency} value={opt.currency}>
@@ -102,7 +102,7 @@ export default function PaymentsPage() {
                 type="text"
                 value={recipient}
                 onChange={(e) => setRecipient(e.target.value)}
-                className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-sans text-[var(--text)] outline-none focus:border-[var(--cyan)] transition-colors placeholder:text-[var(--text-4)]"
+                className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-sans text-[var(--text)] outline-none focus:border-white/30 transition-colors placeholder:text-[var(--text-4)]"
               />
             </div>
 
@@ -115,7 +115,7 @@ export default function PaymentsPage() {
                 type="text"
                 value={clabe}
                 onChange={(e) => setClabe(e.target.value)}
-                className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-mono text-[var(--text)] outline-none focus:border-[var(--cyan)] transition-colors placeholder:text-[var(--text-4)]"
+                className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-mono text-[var(--text)] outline-none focus:border-white/30 transition-colors placeholder:text-[var(--text-4)]"
               />
             </div>
 
@@ -129,7 +129,7 @@ export default function PaymentsPage() {
                   type="number"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-mono text-[var(--text)] outline-none focus:border-[var(--cyan)] transition-colors placeholder:text-[var(--text-4)]"
+                  className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-mono text-[var(--text)] outline-none focus:border-white/30 transition-colors placeholder:text-[var(--text-4)]"
                   placeholder="0.00"
                 />
               </div>
@@ -140,7 +140,7 @@ export default function PaymentsPage() {
                 <select
                   value={deliverIn}
                   onChange={(e) => setDeliverIn(e.target.value)}
-                  className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-sans text-[var(--text)] outline-none focus:border-[var(--cyan)] transition-colors"
+                  className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-sans text-[var(--text)] outline-none focus:border-white/30 transition-colors"
                 >
                   {deliverCurrencies.map((c) => (
                     <option key={c} value={c}>
@@ -160,7 +160,7 @@ export default function PaymentsPage() {
                 type="text"
                 value={reference}
                 onChange={(e) => setReference(e.target.value)}
-                className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-mono text-[var(--text)] outline-none focus:border-[var(--cyan)] transition-colors placeholder:text-[var(--text-4)]"
+                className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-mono text-[var(--text)] outline-none focus:border-white/30 transition-colors placeholder:text-[var(--text-4)]"
               />
             </div>
 
@@ -169,7 +169,7 @@ export default function PaymentsPage() {
 
             {/* Flow diagram */}
             <FlowDiagram
-              from={{ label: sendFrom, value: `$${formatMoney(numericAmount)}`, color: "var(--cyan)" }}
+              from={{ label: sendFrom, value: `$${formatMoney(numericAmount)}`, color: "rgba(255,255,255,0.5)" }}
               to={{ label: deliverIn, value: formatMoney(recipientGets), color: "var(--green)" }}
               rate={fxRate.toFixed(4)}
               className="mb-4"
@@ -195,7 +195,7 @@ export default function PaymentsPage() {
               </div>
               <div className="border-t border-[var(--border)] pt-3 flex items-center justify-between">
                 <span className="text-[11px] font-sans text-[var(--text-4)]">Recipient gets</span>
-                <span className="text-lg font-mono font-bold text-[var(--cyan)] tabular-nums">
+                <span className="text-lg font-mono font-bold text-white tabular-nums">
                   {deliverIn === "MXN" ? "MX$" : deliverIn === "BRL" ? "R$" : deliverIn === "EUR" ? "\u20AC" : deliverIn === "GBP" ? "\u00A3" : "$"}
                   {formatMoney(recipientGets)}
                 </span>
@@ -229,12 +229,12 @@ export default function PaymentsPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search payee or reference..."
-              className="flex-1 bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-3 py-2 text-xs font-sans text-[var(--text)] outline-none focus:border-[var(--cyan)] transition-colors placeholder:text-[var(--text-4)] w-full sm:w-auto"
+              className="flex-1 bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-3 py-2 text-xs font-sans text-[var(--text)] outline-none focus:border-white/30 transition-colors placeholder:text-[var(--text-4)] w-full sm:w-auto"
             />
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
-              className="bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-3 py-2 text-xs font-sans text-[var(--text)] outline-none focus:border-[var(--cyan)] transition-colors"
+              className="bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-3 py-2 text-xs font-sans text-[var(--text)] outline-none focus:border-white/30 transition-colors"
             >
               {statusFilters.map((s) => (
                 <option key={s} value={s}>

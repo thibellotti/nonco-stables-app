@@ -35,7 +35,7 @@ export function DeskOfferBanner() {
   return (
     <div className={`relative flex items-center gap-3 px-4 py-3.5 rounded-lg bg-[var(--bg-card)] border overflow-hidden ${
       countdown < 60
-        ? "border-[rgba(5,224,248,0.4)] shadow-[0_0_15px_rgba(5,224,248,0.08)]"
+        ? "border-[rgba(255,255,255,0.2)] shadow-[0_0_15px_rgba(255,255,255,0.04)]"
         : "border-[var(--border)]"
     }`}>
       {/* Animated gradient background */}
@@ -43,25 +43,25 @@ export function DeskOfferBanner() {
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "linear-gradient(90deg, rgba(5,224,248,0.06) 0%, rgba(5,224,248,0.02) 40%, transparent 70%)",
+            "linear-gradient(90deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.015) 40%, transparent 70%)",
           animation: "banner-shimmer 4s ease-in-out infinite",
         }}
       />
 
-      {/* Cyan left accent bar */}
-      <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-[var(--cyan)]" />
+      {/* Left accent bar */}
+      <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-white" />
 
       {/* Pulsing dot — bigger and more visible */}
       <div className="relative ml-2 shrink-0">
-        <div className="w-2.5 h-2.5 rounded-full bg-[var(--cyan)]" />
-        <div className="absolute inset-0 w-2.5 h-2.5 rounded-full bg-[var(--cyan)] animate-ping opacity-75" />
+        <div className="w-2.5 h-2.5 rounded-full bg-white" />
+        <div className="absolute inset-0 w-2.5 h-2.5 rounded-full bg-white animate-ping opacity-75" />
       </div>
 
       {/* Content */}
       <div className="flex-1 min-w-0 relative">
         <p className="text-sm font-medium text-[var(--text)]">
           Trading desk has{" "}
-          <span className="text-[var(--cyan)] font-mono font-bold">USDT at 17.42</span> —
+          <span className="text-white font-mono font-bold">USDT at 17.42</span> —
           limited inventory
         </p>
         <div className="flex items-center gap-3 mt-0.5">
@@ -75,7 +75,7 @@ export function DeskOfferBanner() {
               <circle cx="10" cy="10" r="8" fill="none" stroke="var(--bg-elevated)" strokeWidth="2" />
               <circle
                 cx="10" cy="10" r="8" fill="none"
-                stroke={countdown < 60 ? "var(--amber)" : "var(--cyan)"}
+                stroke={countdown < 60 ? "var(--amber)" : "white"}
                 strokeWidth="2"
                 strokeDasharray={50.27}
                 strokeDashoffset={50.27 * (1 - countdown / 272)}

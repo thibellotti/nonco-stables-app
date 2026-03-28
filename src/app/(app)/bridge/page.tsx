@@ -71,7 +71,7 @@ export default function BridgePage() {
             <select
               value={fromChain}
               onChange={(e) => setFromChain(e.target.value)}
-              className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-sans text-[var(--text)] outline-none focus:border-[var(--cyan)] transition-colors"
+              className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-sans text-[var(--text)] outline-none focus:border-white transition-colors"
             >
               {chains.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -85,7 +85,7 @@ export default function BridgePage() {
           <div className="flex justify-center">
             <button
               onClick={swapChains}
-              className="w-10 h-10 rounded-full bg-[var(--bg-elevated)] border border-[var(--border)] flex items-center justify-center hover:border-[var(--cyan)] transition-colors cursor-pointer"
+              className="w-10 h-10 rounded-full bg-[var(--bg-elevated)] border border-[var(--border)] flex items-center justify-center hover:border-white transition-colors cursor-pointer"
               aria-label="Swap chains"
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -102,7 +102,7 @@ export default function BridgePage() {
             <select
               value={toChain}
               onChange={(e) => setToChain(e.target.value)}
-              className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-sans text-[var(--text)] outline-none focus:border-[var(--cyan)] transition-colors"
+              className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-sans text-[var(--text)] outline-none focus:border-white transition-colors"
             >
               {chains.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -121,7 +121,7 @@ export default function BridgePage() {
               <select
                 value={token}
                 onChange={(e) => setToken(e.target.value)}
-                className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-sans text-[var(--text)] outline-none focus:border-[var(--cyan)] transition-colors"
+                className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-sans text-[var(--text)] outline-none focus:border-white transition-colors"
               >
                 {tokens.map((t) => (
                   <option key={t} value={t}>
@@ -138,7 +138,7 @@ export default function BridgePage() {
                 type="number"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-mono text-[var(--text)] outline-none focus:border-[var(--cyan)] transition-colors placeholder:text-[var(--text-4)]"
+                className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-mono text-[var(--text)] outline-none focus:border-white transition-colors placeholder:text-[var(--text-4)]"
                 placeholder="0.00"
               />
             </div>
@@ -156,7 +156,7 @@ export default function BridgePage() {
             </div>
             <div className="border-t border-[var(--border)] pt-3 flex items-center justify-between">
               <span className="text-[11px] font-sans text-[var(--text-4)]">You receive</span>
-              <span className="text-lg font-mono font-bold text-[var(--cyan)] tabular-nums">
+              <span className="text-lg font-mono font-bold text-white tabular-nums">
                 ${formatMoney(youReceive)}
               </span>
             </div>

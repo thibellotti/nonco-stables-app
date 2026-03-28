@@ -72,7 +72,7 @@ export function PageHeader() {
         {/* RIGHT: Notifications + Avatar */}
         <div className="flex items-center gap-3 shrink-0 ml-auto">
           <NotificationCenter />
-          <div className="w-7 h-7 rounded-full bg-[rgba(5,224,248,0.1)] border border-[var(--border)] flex items-center justify-center text-[9px] font-bold text-[var(--cyan)]">
+          <div className="w-7 h-7 rounded-full bg-[rgba(255,255,255,0.08)] border border-[var(--border)] flex items-center justify-center text-[9px] font-bold text-[var(--text)]">
             FM
           </div>
         </div>
