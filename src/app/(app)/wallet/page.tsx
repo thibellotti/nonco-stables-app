@@ -35,39 +35,12 @@ const variations: Record<string, { pct: string; positive: boolean }> = {
 // Hero action pills
 // ---------------------------------------------------------------------------
 
-const heroActions: {
-  label: string;
-  href?: string;
-  color: string;
-  path: string;
-}[] = [
-  {
-    label: "Send",
-    color: "#f9e220",
-    path: "M7 17L17 7M17 7H10M17 7v7",
-  },
-  {
-    label: "Receive",
-    color: "#22C55E",
-    path: "M17 7L7 17M7 17h7M7 17V10",
-  },
-  {
-    label: "Convert",
-    href: "/fx",
-    color: "#05E0F8",
-    path: "M5 9h14M19 9l-3-3M19 15H5M5 15l3 3",
-  },
-  {
-    label: "Earn",
-    href: "/yield",
-    color: "#a124f8",
-    path: "M3 17l4-5 4 2.5L19 7M15 7h4v4",
-  },
-  {
-    label: "Deposit",
-    color: "#e5e2e1",
-    path: "M12 5v14M12 19l-4-4M12 19l4-4",
-  },
+const heroActions: { label: string; href?: string; path: string }[] = [
+  { label: "Send", path: "M7 17L17 7M17 7H10M17 7v7" },
+  { label: "Receive", path: "M17 7L7 17M7 17h7M7 17V10" },
+  { label: "Convert", href: "/fx", path: "M5 9h14M19 9l-3-3M19 15H5M5 15l3 3" },
+  { label: "Earn", href: "/yield", path: "M3 17l4-5 4 2.5L19 7M15 7h4v4" },
+  { label: "Deposit", path: "M12 5v14M12 19l-4-4M12 19l4-4" },
 ];
 
 // ---------------------------------------------------------------------------
@@ -171,48 +144,20 @@ export default function WalletPage() {
             ))}
           </div>
 
-          {/* Action pills row */}
+          {/* Action pills row — monochrome, quiet */}
           <div className="flex gap-2 mt-6 overflow-x-auto scrollbar-none pb-0.5">
             {heroActions.map((action) => {
               const inner = (
-                <div className="flex items-center gap-2">
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d={action.path}
-                      stroke={action.color}
-                      strokeWidth="1.8"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
+                <>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="opacity-40">
+                    <path d={action.path} stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
-                  <span className="text-[11px] sm:text-xs font-sans font-medium text-[var(--text-3)] whitespace-nowrap">
-                    {action.label}
-                  </span>
-                </div>
+                  <span className="text-[11px] sm:text-xs font-sans font-medium whitespace-nowrap">{action.label}</span>
+                </>
               );
-
-              const cls =
-                "flex items-center gap-2 px-4 py-2.5 rounded-full bg-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.08)] transition-colors duration-150 shrink-0";
-
-              if (action.href) {
-                return (
-                  <Link key={action.label} href={action.href} className={cls}>
-                    {inner}
-                  </Link>
-                );
-              }
-
-              return (
-                <button key={action.label} type="button" className={cls}>
-                  {inner}
-                </button>
-              );
+              const cls = "inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.08)] text-[var(--text-3)] hover:text-[var(--text)] transition-all duration-150 shrink-0 cursor-pointer";
+              if (action.href) return <Link key={action.label} href={action.href} className={cls}>{inner}</Link>;
+              return <button key={action.label} type="button" className={cls}>{inner}</button>;
             })}
           </div>
         </div>
