@@ -192,7 +192,7 @@ export function BalanceHero() {
   };
 
   return (
-    <section className="card-primary relative overflow-hidden bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5">
+    <section className="card-primary relative overflow-hidden bg-[var(--bg-card)] rounded-lg p-5">
       {/* Header row — label + period selector */}
       <div className="flex items-center justify-between mb-6">
         <div>

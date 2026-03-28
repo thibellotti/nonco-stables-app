@@ -59,17 +59,17 @@ export default function ApiKeysPage() {
 
       {/* Usage stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-4">
+        <div className="bg-[var(--bg-elevated)] rounded-lg p-4">
           <div className="text-[9px] text-[var(--text-4)] uppercase tracking-[0.1em]">Requests today</div>
           <div className="text-xl font-mono font-bold text-white mt-1">1,247</div>
           <div className="text-[10px] text-[var(--status-positive)] mt-0.5">+12% vs avg</div>
         </div>
-        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-4">
+        <div className="bg-[var(--bg-elevated)] rounded-lg p-4">
           <div className="text-[9px] text-[var(--text-4)] uppercase tracking-[0.1em]">Success rate</div>
           <div className="text-xl font-mono font-bold text-[var(--status-positive)] mt-1">99.8%</div>
           <div className="text-[10px] text-[var(--text-4)] mt-0.5">Last 24h</div>
         </div>
-        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-4">
+        <div className="bg-[var(--bg-elevated)] rounded-lg p-4">
           <div className="text-[9px] text-[var(--text-4)] uppercase tracking-[0.1em]">Avg latency</div>
           <div className="text-xl font-mono font-bold text-white mt-1">48ms</div>
           <div className="text-[10px] text-[var(--text-4)] mt-0.5">p50</div>

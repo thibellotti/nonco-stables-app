@@ -57,7 +57,7 @@ export default function ReportsPage() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.06, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5"
+            className="bg-[var(--bg-elevated)] rounded-lg p-5"
           >
             <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)]">
               {m.label}

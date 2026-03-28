@@ -60,15 +60,15 @@ export default function ThirdPartyPage() {
 
       {/* Metrics row */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-4">
+        <div className="bg-[var(--bg-elevated)] rounded-lg p-4">
           <div className="text-[9px] text-[var(--text-4)] uppercase tracking-[0.1em]">Active payees</div>
           <div className="text-xl font-mono font-bold text-white mt-1">12</div>
         </div>
-        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-4">
+        <div className="bg-[var(--bg-elevated)] rounded-lg p-4">
           <div className="text-[9px] text-[var(--text-4)] uppercase tracking-[0.1em]">Volume MTD</div>
           <div className="text-xl font-mono font-bold text-white mt-1">$44.5K</div>
         </div>
-        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-4">
+        <div className="bg-[var(--bg-elevated)] rounded-lg p-4">
           <div className="text-[9px] text-[var(--text-4)] uppercase tracking-[0.1em]">Processing</div>
           <div className="text-xl font-mono font-bold text-[var(--amber)] mt-1">1</div>
         </div>

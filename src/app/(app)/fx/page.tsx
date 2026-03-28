@@ -129,8 +129,11 @@ function SectionSeparator({
 }) {
   return (
     <div
-      className="col-span-full flex items-center gap-2.5 px-4 py-2 bg-[rgba(255,255,255,0.03)] border-l-2"
-      style={{ borderLeftColor: color }}
+      className="col-span-full flex items-center gap-2.5 px-4 py-2 border-l-2"
+      style={{
+        borderLeftColor: color,
+        background: `linear-gradient(90deg, color-mix(in srgb, ${color} 6%, transparent), transparent)`,
+      }}
     >
       <span
         className="w-2.5 h-2.5 rounded-full shrink-0"
@@ -230,7 +233,7 @@ export default function FxBoardPage() {
   const grouped = groupBySection(instruments);
 
   return (
-    <PageTransition className="px-4 sm:px-6 md:px-8 w-full space-y-6">
+    <PageTransition className="px-4 sm:px-6 md:px-8 w-full space-y-4">
       {/* ── Top bar: Tabs + Live indicator + RFS button ── */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
         <TabGroup
@@ -280,10 +283,10 @@ export default function FxBoardPage() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden"
+          className="bg-[var(--bg-card)] rounded-lg overflow-hidden"
         >
           {/* Header row */}
-          <div className="flex items-center gap-0 border-b border-[var(--border)] px-4 py-3">
+          <div className="flex items-center gap-0 bg-[rgba(255,255,255,0.02)] px-4 py-3">
             {COLUMNS.map((col) => (
               <div
                 key={col.key}
@@ -319,7 +322,7 @@ export default function FxBoardPage() {
                       delay: idx * 0.03,
                       ease: [0.16, 1, 0.3, 1],
                     }}
-                    className="flex items-center gap-0 px-4 py-3 border-b border-[rgba(255,255,255,0.03)] hover:bg-[rgba(5,224,248,0.03)] hover:shadow-[inset_2px_0_0_var(--cyan)] transition-all duration-100 cursor-pointer"
+                    className="flex items-center gap-0 px-4 py-2.5 border-b border-[rgba(255,255,255,0.03)] hover:bg-[rgba(5,224,248,0.03)] hover:shadow-[inset_2px_0_0_var(--cyan)] transition-all duration-100 cursor-pointer"
                     role="button"
                     tabIndex={0}
                     onClick={() => openRfs(inst.pair)}
@@ -392,8 +395,8 @@ export default function FxBoardPage() {
           </div>
 
           {/* Footer */}
-          <div className="px-4 py-3 border-t border-[var(--border)] flex items-center justify-between">
-            <span className="text-[11px] font-sans text-[var(--text-4)] tracking-[.06em]">
+          <div className="px-4 py-2 border-t border-[var(--border)] flex items-center justify-between">
+            <span className="text-[10px] font-sans text-[var(--text-4)] tracking-[.06em]">
               <span className="font-mono">{instruments.length}</span> instruments
               across{" "}
               <span className="font-mono">

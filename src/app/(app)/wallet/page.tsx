@@ -3,8 +3,6 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { PageTransition } from "@/components/ui/page-transition";
-import { DonutChart } from "@/components/viz/donut-chart";
-import { Sparkline } from "@/components/ui/sparkline";
 import { balances, usdRates } from "@/lib/mock-data";
 import { formatMoney, formatCompact, cn } from "@/lib/utils";
 import { currencyColors } from "@/lib/currency-colors";
@@ -34,73 +32,41 @@ const variations: Record<string, { pct: string; positive: boolean }> = {
 };
 
 // ---------------------------------------------------------------------------
-// Sparkline mock data per currency (7-point, ~1 week)
-// ---------------------------------------------------------------------------
-
-const sparklineData: Record<string, number[]> = {
-  USD: [420, 425, 422, 428, 424, 426, 425],
-  EUR: [198, 194, 197, 200, 196, 199, 196],
-  MXN: [198, 202, 200, 205, 199, 203, 200],
-  USDT: [308, 312, 310, 315, 311, 309, 310],
-  USDC: [280, 275, 285, 278, 282, 280, 280],
-};
-
-// ---------------------------------------------------------------------------
 // Hero action pills
 // ---------------------------------------------------------------------------
 
 const heroActions: {
   label: string;
   href?: string;
-  icon: React.ReactNode;
-  iconBg: string;
+  color: string;
+  path: string;
 }[] = [
   {
-    label: "Receive",
-    iconBg: "bg-[rgba(34,197,94,0.08)]",
-    icon: (
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-        <path d="M7 3v8M7 11l-3-3M7 11l3-3" stroke="#22C55E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    ),
+    label: "Send",
+    color: "#f9e220",
+    path: "M7 17L17 7M17 7H10M17 7v7",
   },
   {
-    label: "Send",
-    iconBg: "bg-[rgba(249,226,32,0.08)]",
-    icon: (
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-        <path d="M7 11V3M7 3L4 6M7 3l3 3" stroke="var(--amber)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    ),
+    label: "Receive",
+    color: "#22C55E",
+    path: "M17 7L7 17M7 17h7M7 17V10",
   },
   {
     label: "Convert",
     href: "/fx",
-    iconBg: "bg-[var(--cyan-dim)]",
-    icon: (
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-        <path d="M3 5h8M11 5l-2-2M11 9H3M3 9l2 2" stroke="var(--cyan)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    ),
+    color: "#05E0F8",
+    path: "M5 9h14M19 9l-3-3M19 15H5M5 15l3 3",
   },
   {
     label: "Earn",
     href: "/yield",
-    iconBg: "bg-[rgba(161,36,248,0.08)]",
-    icon: (
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-        <path d="M2 11l3-4 2.5 2L11 3" stroke="var(--purple)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    ),
+    color: "#a124f8",
+    path: "M3 17l4-5 4 2.5L19 7M15 7h4v4",
   },
   {
     label: "Deposit",
-    iconBg: "bg-[rgba(255,255,255,0.04)]",
-    icon: (
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-        <path d="M7 3v8M3 7h8" stroke="var(--text-3)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    ),
+    color: "#e5e2e1",
+    path: "M12 5v14M12 19l-4-4M12 19l4-4",
   },
 ];
 
@@ -123,150 +89,158 @@ const fadeUp = {
 };
 
 // ---------------------------------------------------------------------------
-// Wallet page — portfolio overview
+// Wallet page — Mercury/Revolut Business-style portfolio view
 // ---------------------------------------------------------------------------
 
 export default function WalletPage() {
+  // Compute total portfolio value
   const totalValue = balances.reduce(
     (sum, b) => sum + (b.available + b.pending) * (usdRates[b.currency] ?? 1),
     0
   );
 
-  // Donut segments from balances
-  const donutSegments = balances.map((b) => ({
-    value: (b.available + b.pending) * (usdRates[b.currency] ?? 1),
-    color: currencyColors[b.currency]?.border ?? "#05E0F8",
-    label: b.currency,
-  }));
+  // Allocation segments for the thin bar + legend
+  const allocations = balances.map((b) => {
+    const value = (b.available + b.pending) * (usdRates[b.currency] ?? 1);
+    const pct = totalValue > 0 ? (value / totalValue) * 100 : 0;
+    const color = currencyColors[b.currency]?.border ?? "#05E0F8";
+    return { currency: b.currency, value, pct, color };
+  });
 
   return (
     <PageTransition className="px-4 sm:px-6 md:px-8 w-full space-y-6">
-      {/* ----------------------------------------------------------------- */}
-      {/* HERO — Donut + Total Balance + Action Pills                       */}
-      {/* ----------------------------------------------------------------- */}
-      <div className="card-primary relative bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-4 sm:p-6 md:p-8 overflow-hidden">
-        {/* Radial glow */}
+      {/* --------------------------------------------------------------- */}
+      {/* HERO — Total balance + allocation bar + action pills            */}
+      {/* --------------------------------------------------------------- */}
+      <div className="relative overflow-hidden rounded-xl bg-[var(--bg-card)] border border-[var(--border)] p-6 sm:p-8">
+        {/* Subtle radial glow */}
         <div
-          className="pointer-events-none absolute"
+          className="pointer-events-none absolute -top-20 -right-20 w-60 h-60 rounded-full"
           style={{
-            top: -60,
-            right: -60,
-            width: 280,
-            height: 280,
-            borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(5,224,248,0.07), transparent)",
+            background: "radial-gradient(circle, rgba(5,224,248,0.06), transparent)",
           }}
         />
 
-        {/* Dot-grid pattern */}
-        <div
-          className="pointer-events-none absolute inset-0 opacity-100"
-          style={{
-            backgroundImage: "radial-gradient(circle, rgba(5,224,248,0.04) 1px, transparent 1px)",
-            backgroundSize: "24px 24px",
-          }}
-        />
-
-        {/* Content */}
-        <div className="relative flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-8">
-          {/* LEFT — Donut chart */}
-          <div className="shrink-0">
-            <DonutChart
-              segments={donutSegments}
-              size={120}
-              strokeWidth={12}
-              centerLabel={formatCompact(totalValue)}
-              centerSub="TOTAL"
-            />
+        <div className="relative">
+          {/* Label */}
+          <div className="text-[11px] uppercase tracking-[.15em] text-[var(--text-4)] font-sans">
+            Total Balance
           </div>
 
-          {/* RIGHT — Balance info + pills */}
-          <div className="flex-1 min-w-0 text-center md:text-left">
-            <div className="text-[10px] uppercase tracking-[0.15em] font-sans text-[var(--text-4)]">
-              Total Balance
-            </div>
-            <p className="text-4xl md:text-5xl font-mono font-extrabold text-white tabular-nums mt-2 tracking-tighter">
+          {/* Balance + change */}
+          <div className="flex items-baseline gap-4 mt-2">
+            <span className="text-4xl sm:text-5xl font-mono font-extrabold text-white tabular-nums tracking-tighter">
               ${formatMoney(totalValue)}
-            </p>
-            <p className="text-sm font-sans mt-1.5 flex items-center justify-center md:justify-start gap-1.5">
-              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
-                <path d="M5 2L8 6H2L5 2Z" fill="var(--status-positive)" />
+            </span>
+            <span className="inline-flex items-center gap-1.5 text-sm font-mono text-[var(--status-positive)]">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true">
+                <path d="M5 2L8 6H2Z" />
               </svg>
-              <span className="text-[var(--cyan)] font-mono tabular-nums">+0.77%</span>
-              <span className="text-[var(--text-4)]">· updated just now</span>
-            </p>
+              0.77%
+            </span>
+          </div>
 
-            {/* Action pills */}
-            <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 mt-6">
-              {heroActions.map((action) => {
-                const inner = (
-                  <div className="flex flex-col items-center gap-2">
-                    <div className={cn("w-7 h-7 rounded-full flex items-center justify-center", action.iconBg)}>
-                      {action.icon}
-                    </div>
-                    <span className="text-[9px] sm:text-[11px] uppercase tracking-[0.1em] font-sans text-[var(--text-4)]">
-                      {action.label}
-                    </span>
-                  </div>
-                );
+          {/* Allocation bar — thin, elegant */}
+          <div className="flex h-1.5 rounded-full overflow-hidden mt-5 gap-0.5">
+            {allocations.map((a) => (
+              <div
+                key={a.currency}
+                className="h-full rounded-full first:rounded-l-full last:rounded-r-full"
+                style={{
+                  width: `${a.pct}%`,
+                  backgroundColor: a.color,
+                  opacity: 0.85,
+                }}
+              />
+            ))}
+          </div>
 
-                const cls =
-                  "flex flex-col items-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3 rounded-lg border border-[var(--border-subtle)] bg-[rgba(255,255,255,0.03)] hover:bg-[rgba(5,224,248,0.05)] hover:border-[rgba(5,224,248,0.15)] transition-all duration-150";
+          {/* Inline legend */}
+          <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3">
+            {allocations.map((a) => (
+              <span
+                key={a.currency}
+                className="inline-flex items-center gap-1.5 text-[11px] text-[var(--text-4)] font-sans"
+              >
+                <span
+                  className="w-2 h-2 rounded-full shrink-0"
+                  style={{ backgroundColor: a.color }}
+                />
+                {a.currency} {Math.round(a.pct)}%
+              </span>
+            ))}
+          </div>
 
-                if (action.href) {
-                  return (
-                    <Link key={action.label} href={action.href} className={cls}>
-                      {inner}
-                    </Link>
-                  );
-                }
+          {/* Action pills row */}
+          <div className="flex gap-2 mt-6 overflow-x-auto scrollbar-none pb-0.5">
+            {heroActions.map((action) => {
+              const inner = (
+                <div className="flex items-center gap-2">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d={action.path}
+                      stroke={action.color}
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <span className="text-[11px] sm:text-xs font-sans font-medium text-[var(--text-3)] whitespace-nowrap">
+                    {action.label}
+                  </span>
+                </div>
+              );
 
+              const cls =
+                "flex items-center gap-2 px-4 py-2.5 rounded-full bg-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.08)] transition-colors duration-150 shrink-0";
+
+              if (action.href) {
                 return (
-                  <button key={action.label} type="button" className={cls}>
+                  <Link key={action.label} href={action.href} className={cls}>
                     {inner}
-                  </button>
+                  </Link>
                 );
-              })}
-            </div>
+              }
+
+              return (
+                <button key={action.label} type="button" className={cls}>
+                  {inner}
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
 
-      {/* ----------------------------------------------------------------- */}
-      {/* HOLDINGS TABLE — with sparklines                                  */}
-      {/* ----------------------------------------------------------------- */}
+      {/* --------------------------------------------------------------- */}
+      {/* HOLDINGS TABLE — clean, spacious                                */}
+      {/* --------------------------------------------------------------- */}
       <motion.div
         variants={stagger}
         initial="hidden"
         animate="show"
         className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden"
       >
-        <div className="px-6 py-3 border-b border-[var(--border)]">
-          <span className="text-[11px] uppercase tracking-[0.15em] font-sans text-[var(--text-3)]">
-            Holdings
-          </span>
-        </div>
-
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-[var(--border)]">
               <th className="px-6 py-3 text-[11px] tracking-[0.15em] uppercase font-sans font-medium text-[var(--text-4)]">
                 Currency
               </th>
-              <th className="px-6 py-3 text-[11px] tracking-[0.15em] uppercase font-sans font-medium text-[var(--text-4)] hidden md:table-cell">
-                <span className="sr-only">Trend</span>
-              </th>
               <th className="px-6 py-3 text-[11px] tracking-[0.15em] uppercase font-sans font-medium text-[var(--text-4)] text-right">
                 Balance
               </th>
               <th className="px-6 py-3 text-[11px] tracking-[0.15em] uppercase font-sans font-medium text-[var(--text-4)] text-right hidden sm:table-cell">
-                USD Value
+                Value
               </th>
               <th className="px-6 py-3 text-[11px] tracking-[0.15em] uppercase font-sans font-medium text-[var(--text-4)] text-right hidden lg:table-cell">
-                24h Change
-              </th>
-              <th className="px-6 py-3 text-[11px] tracking-[0.15em] uppercase font-sans font-medium text-[var(--text-4)] text-right hidden lg:table-cell">
-                Pending
+                24h
               </th>
               <th className="px-6 py-3 text-[11px] tracking-[0.15em] uppercase font-sans font-medium text-[var(--text-4)] text-right">
                 <span className="sr-only">Action</span>
@@ -274,14 +248,13 @@ export default function WalletPage() {
             </tr>
           </thead>
           <tbody>
-            {balances.map((b, i) => {
+            {balances.map((b) => {
               const colors = currencyColors[b.currency];
               const meta = currencyMeta[b.currency];
               const variation = variations[b.currency];
-              const usdValue = b.available * (usdRates[b.currency] ?? 1);
+              const usdValue = (b.available + b.pending) * (usdRates[b.currency] ?? 1);
               const swapStable =
                 b.currency === "EUR" || b.currency === "GBP" ? "USDC" : "USDT";
-              const sparkData = sparklineData[b.currency];
 
               return (
                 <motion.tr
@@ -293,7 +266,7 @@ export default function WalletPage() {
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <div
-                        className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-[11px] font-bold tracking-tight transition-[filter] duration-150 group-hover:brightness-125"
+                        className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 text-[11px] font-bold tracking-tight transition-[filter] duration-150 group-hover:brightness-125"
                         style={{
                           backgroundColor: `${colors?.border}15`,
                           color: colors?.border,
@@ -311,20 +284,6 @@ export default function WalletPage() {
                         </span>
                       </div>
                     </div>
-                  </td>
-
-                  {/* Sparkline */}
-                  <td className="py-4 pr-2 hidden md:table-cell">
-                    {sparkData && (
-                      <div className="w-16 h-7">
-                        <Sparkline
-                          data={sparkData}
-                          color={colors?.border ?? "var(--cyan)"}
-                          showArea={true}
-                          strokeWidth={1.5}
-                        />
-                      </div>
-                    )}
                   </td>
 
                   {/* Balance in native currency */}
@@ -351,15 +310,15 @@ export default function WalletPage() {
                     {variation && (
                       <span
                         className={cn(
-                          "font-mono text-sm font-bold tabular-nums inline-flex items-center gap-1",
+                          "font-mono text-xs font-semibold tabular-nums inline-flex items-center gap-1 px-2 py-0.5 rounded-full",
                           variation.positive
-                            ? "text-[var(--status-positive)]"
-                            : "text-[var(--status-negative)]"
+                            ? "text-[var(--status-positive)] bg-[rgba(34,197,94,0.08)]"
+                            : "text-[var(--status-negative)] bg-[rgba(239,68,68,0.08)]"
                         )}
                       >
                         <svg
-                          width="10"
-                          height="10"
+                          width="8"
+                          height="8"
                           viewBox="0 0 10 10"
                           fill="none"
                           aria-hidden="true"
@@ -369,18 +328,6 @@ export default function WalletPage() {
                         </svg>
                         {variation.pct}
                       </span>
-                    )}
-                  </td>
-
-                  {/* Pending */}
-                  <td className="px-6 py-4 text-right hidden lg:table-cell">
-                    {b.pending > 0 ? (
-                      <span className="font-mono text-[11px] text-[var(--amber)] tabular-nums">
-                        +{b.symbol}
-                        {formatMoney(b.pending)}
-                      </span>
-                    ) : (
-                      <span className="text-[11px] text-[var(--text-4)]">&mdash;</span>
                     )}
                   </td>
 
@@ -413,9 +360,9 @@ export default function WalletPage() {
         </div>
       </motion.div>
 
-      {/* ----------------------------------------------------------------- */}
-      {/* RECENT ACTIVITY                                                   */}
-      {/* ----------------------------------------------------------------- */}
+      {/* --------------------------------------------------------------- */}
+      {/* RECENT ACTIVITY — compact, 4 items                              */}
+      {/* --------------------------------------------------------------- */}
       <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden">
         <div className="px-6 py-3 border-b border-[var(--border)] flex items-center justify-between">
           <span className="text-[11px] uppercase tracking-[0.15em] font-sans text-[var(--text-3)]">
