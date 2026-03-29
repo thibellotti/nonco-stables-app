@@ -239,7 +239,7 @@ function AmbientParticles() {
 }
 
 // ─── Camera controller — auto-orbit + scroll-driven + offset ───
-function CameraRig({ scrollProgress }: { scrollProgress: number }) {
+function CameraRig({ scrollProgress, offset = 0 }: { scrollProgress: number; offset?: number }) {
   const { camera } = useThree();
   const angle = useRef(0);
   const smoothScroll = useRef(0);
@@ -252,13 +252,14 @@ function CameraRig({ scrollProgress }: { scrollProgress: number }) {
     const combined = angle.current + scrollAngle;
     const scrollY = Math.sin(smoothScroll.current * Math.PI * 0.5) * 60;
 
-    const tx = Math.sin(combined) * CONFIG.cam.dist;
+    // Camera orbits around the globe (at offset), keeping rings concentric
+    const tx = offset + Math.sin(combined) * CONFIG.cam.dist;
     const tz = Math.cos(combined) * CONFIG.cam.dist;
 
     camera.position.x += (tx - camera.position.x) * 0.04;
     camera.position.y += (scrollY - camera.position.y) * 0.04;
     camera.position.z += (tz - camera.position.z) * 0.04;
-    camera.lookAt(0, 0, 0);
+    camera.lookAt(offset, 0, 0);
   });
 
   return null;
@@ -268,7 +269,7 @@ function CameraRig({ scrollProgress }: { scrollProgress: number }) {
 function Scene({ scrollProgress, offset = 0 }: { scrollProgress: number; offset?: number }) {
   return (
     <>
-      <CameraRig scrollProgress={scrollProgress} />
+      <CameraRig scrollProgress={scrollProgress} offset={offset} />
       {/* Globe + rings shifted right in 3D space via offset */}
       <group position={[offset, 0, 0]}>
         <Globe />
@@ -313,7 +314,7 @@ export function ParticleGlobe({ size, opacity = 0.35, offset = 0, className }: P
       aria-hidden="true"
     >
       <Canvas
-        camera={{ position: [0, 0, CONFIG.cam.dist], fov: 50, near: 1, far: 1500 }}
+        camera={{ position: [offset, 0, CONFIG.cam.dist], fov: 50, near: 1, far: 1500 }}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance", outputColorSpace: THREE.SRGBColorSpace }}
         style={{ background: "transparent" }}
         onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
