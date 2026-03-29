@@ -265,14 +265,17 @@ function CameraRig({ scrollProgress }: { scrollProgress: number }) {
 }
 
 // ─── Scene ───
-function Scene({ scrollProgress }: { scrollProgress: number }) {
+function Scene({ scrollProgress, offset = 0 }: { scrollProgress: number; offset?: number }) {
   return (
     <>
       <CameraRig scrollProgress={scrollProgress} />
-      <Globe />
-      {CONFIG.rings.map((ring, i) => (
-        <OrbitalRing key={i} {...ring} scrollProgress={scrollProgress} isLogo={i === 0} />
-      ))}
+      {/* Globe + rings shifted right in 3D space via offset */}
+      <group position={[offset, 0, 0]}>
+        <Globe />
+        {CONFIG.rings.map((ring, i) => (
+          <OrbitalRing key={i} {...ring} scrollProgress={scrollProgress} isLogo={i === 0} />
+        ))}
+      </group>
       <AmbientParticles />
     </>
   );
@@ -316,7 +319,7 @@ export function ParticleGlobe({ size, opacity = 0.35, offset = 0, className }: P
         onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
       >
         <fog attach="fog" args={["#000000", 100, 700]} />
-        <Scene scrollProgress={scrollProgress} />
+        <Scene scrollProgress={scrollProgress} offset={offset} />
       </Canvas>
     </div>
   );

@@ -200,8 +200,8 @@ export function BalanceHero() {
   return (
     <section className="card-primary relative bg-[var(--bg-card)] rounded-lg p-5">
       {/* Particle globe — right side, tall, centered vertically */}
-      <div className="absolute inset-0 pointer-events-none hidden lg:block" style={{ zIndex: 0, transform: "translateX(30%)" }}>
-        <ParticleGlobe opacity={0.4} />
+      <div className="absolute inset-0 pointer-events-none hidden lg:block" style={{ zIndex: 0 }}>
+        <ParticleGlobe opacity={0.4} offset={70} />
       </div>
 
       {/* Header */}
