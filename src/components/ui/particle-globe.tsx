@@ -1,74 +1,156 @@
 "use client";
 
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useEffect, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
 THREE.ColorManagement.enabled = true;
 
-const BRAND_CYAN = "#05e0f8";
+const CYAN = "#05e0f8";
 
-// Fibonacci sphere — uniform point distribution
-function fibonacciSphere(n: number, radius: number): Float32Array {
-  const positions = new Float32Array(n * 3);
+// ─── Config matching nonco.com/stables ───
+const CONFIG = {
+  cam: { dist: 340, rotateSpeed: 0.02, scrollInfluence: 0.8 },
+  globe: { radius: 90, particles: 2000, rotSpeed: 0.08 },
+  rings: [
+    {
+      // Inner ring — stablecoin symbols
+      items: ["USDC", "USDT", "DAI", "TUSD", "GUSD", "PAX", "BUSD", "FRAX"],
+      radius: 150,
+      speed: 0.12,
+      tiltX: 65,
+      tiltZ: 25,
+      size: 14,
+    },
+    {
+      // Outer ring — fiat currency symbols (opposite tilt = crossing orbits)
+      items: ["$", "€", "£", "¥", "₹", "MX$", "R$", "A$", "C$", "₩", "CHF", "₺"],
+      radius: 200,
+      speed: -0.1,
+      tiltX: 65,
+      tiltZ: -25,
+      size: 12,
+    },
+  ],
+  ambient: { count: 1000, spreadMin: 200, spreadMax: 600, sizeMin: 1.5, sizeMax: 5 },
+};
+
+// ─── Fibonacci sphere ───
+function fibSphere(n: number, r: number): Float32Array {
+  const pos = new Float32Array(n * 3);
   const gr = (1 + Math.sqrt(5)) / 2;
   for (let i = 0; i < n; i++) {
     const theta = (2 * Math.PI * i) / gr;
     const phi = Math.acos(1 - 2 * (i + 0.5) / n);
-    positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-    positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
-    positions[i * 3 + 2] = radius * Math.cos(phi);
+    pos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+    pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+    pos[i * 3 + 2] = r * Math.cos(phi);
   }
-  return positions;
+  return pos;
 }
 
-// The central particle globe
+// ─── Text → CanvasTexture ───
+const texCache = new Map<string, THREE.CanvasTexture>();
+function textTexture(text: string, sz = 128): THREE.CanvasTexture {
+  if (texCache.has(text)) return texCache.get(text)!;
+  const c = document.createElement("canvas");
+  c.width = sz * 2;
+  c.height = sz * 2;
+  const ctx = c.getContext("2d")!;
+  ctx.clearRect(0, 0, c.width, c.height);
+  ctx.fillStyle = CYAN;
+  const fs = text.length > 2 ? sz * 0.6 : text.length > 1 ? sz * 0.8 : sz * 1.1;
+  ctx.font = `700 ${fs}px -apple-system, "Space Grotesk", sans-serif`;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(text, c.width / 2, c.height / 2);
+  const tex = new THREE.CanvasTexture(c);
+  tex.minFilter = THREE.LinearFilter;
+  tex.magFilter = THREE.LinearFilter;
+  texCache.set(text, tex);
+  return tex;
+}
+
+// ─── Central globe ───
 function Globe() {
   const ref = useRef<THREE.Points>(null);
   const geo = useMemo(() => {
     const g = new THREE.BufferGeometry();
-    g.setAttribute("position", new THREE.BufferAttribute(fibonacciSphere(2000, 90), 3));
+    g.setAttribute("position", new THREE.BufferAttribute(fibSphere(CONFIG.globe.particles, CONFIG.globe.radius), 3));
     return g;
   }, []);
 
   useFrame((_, dt) => {
-    if (ref.current) ref.current.rotation.y += dt * 0.08;
+    if (ref.current) ref.current.rotation.y += dt * CONFIG.globe.rotSpeed;
   });
 
   return (
     <points ref={ref} geometry={geo}>
-      <pointsMaterial
-        color={BRAND_CYAN}
-        size={1.8}
-        sizeAttenuation
-        transparent
-        opacity={0.75}
-        depthWrite={false}
-      />
+      <pointsMaterial color={CYAN} size={1.8} sizeAttenuation transparent opacity={0.75} depthWrite={false} />
     </points>
   );
 }
 
-// Ambient particles spread wide
+// ─── Orbital ring with currency sprites ───
+function OrbitalRing({
+  items, radius, speed, tiltX, tiltZ, size, scrollProgress,
+}: {
+  items: string[]; radius: number; speed: number; tiltX: number; tiltZ: number; size: number; scrollProgress: number;
+}) {
+  const groupRef = useRef<THREE.Group>(null);
+  const baseRot = useRef(0);
+  const smoothScroll = useRef(0);
+
+  const positions = useMemo(
+    () => items.map((_, i) => {
+      const a = (i / items.length) * Math.PI * 2;
+      return [Math.cos(a) * radius, 0, Math.sin(a) * radius] as [number, number, number];
+    }),
+    [items, radius]
+  );
+
+  const textures = useMemo(() => items.map((t) => textTexture(t)), [items]);
+
+  useFrame((_, dt) => {
+    if (!groupRef.current) return;
+    baseRot.current += dt * speed;
+    smoothScroll.current += (scrollProgress - smoothScroll.current) * 0.03;
+    groupRef.current.rotation.y = baseRot.current + smoothScroll.current * Math.PI * 0.4 * Math.sign(speed);
+  });
+
+  return (
+    <group rotation={[(tiltX * Math.PI) / 180, 0, (tiltZ * Math.PI) / 180]}>
+      <group ref={groupRef}>
+        {items.map((item, i) => (
+          <sprite key={item + i} position={positions[i]} scale={[size, size, 1]}>
+            <spriteMaterial map={textures[i]} transparent depthWrite={false} opacity={0.85} />
+          </sprite>
+        ))}
+      </group>
+    </group>
+  );
+}
+
+// ─── Ambient particles ───
 function AmbientParticles() {
   const ref = useRef<THREE.Points>(null);
   const { positions, sizes } = useMemo(() => {
-    const count = 800;
-    const pos = new Float32Array(count * 3);
-    const siz = new Float32Array(count);
-    for (let i = 0; i < count; i++) {
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(2 * Math.random() - 1);
-      const r = 150 + Math.random() * 500;
-      pos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
-      pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
-      pos[i * 3 + 2] = r * Math.cos(phi);
-      siz[i] = 1.5 + Math.random() * 3.5;
+    const c = CONFIG.ambient.count;
+    const p = new Float32Array(c * 3);
+    const s = new Float32Array(c);
+    for (let i = 0; i < c; i++) {
+      const th = Math.random() * Math.PI * 2;
+      const ph = Math.acos(2 * Math.random() - 1);
+      const r = CONFIG.ambient.spreadMin + Math.random() * (CONFIG.ambient.spreadMax - CONFIG.ambient.spreadMin);
+      p[i * 3] = r * Math.sin(ph) * Math.cos(th);
+      p[i * 3 + 1] = r * Math.sin(ph) * Math.sin(th);
+      p[i * 3 + 2] = r * Math.cos(ph);
+      s[i] = CONFIG.ambient.sizeMin + Math.random() * (CONFIG.ambient.sizeMax - CONFIG.ambient.sizeMin);
     }
-    return { positions: pos, sizes: siz };
+    return { positions: p, sizes: s };
   }, []);
 
-  const colorVec = useMemo(() => new THREE.Vector3(0.02, 0.878, 0.973), []);
+  const uColor = useMemo(() => new THREE.Vector3(0.02, 0.878, 0.973), []);
 
   useFrame((_, dt) => {
     if (ref.current) {
@@ -86,20 +168,19 @@ function AmbientParticles() {
       <shaderMaterial
         transparent
         depthWrite={false}
-        uniforms={{ uColor: { value: colorVec } }}
+        uniforms={{ uColor: { value: uColor } }}
         vertexShader={`
           attribute float size;
           void main() {
             vec4 mv = modelViewMatrix * vec4(position, 1.0);
-            gl_PointSize = size * (200.0 / -mv.z);
+            gl_PointSize = size * (250.0 / -mv.z);
             gl_Position = projectionMatrix * mv;
           }
         `}
         fragmentShader={`
           uniform vec3 uColor;
           void main() {
-            float d = length(gl_PointCoord - 0.5);
-            if (d > 0.5) discard;
+            if (length(gl_PointCoord - 0.5) > 0.5) discard;
             gl_FragColor = vec4(uColor, 0.7);
           }
         `}
@@ -108,55 +189,75 @@ function AmbientParticles() {
   );
 }
 
-// Camera auto-rotation
-function CameraRig() {
+// ─── Camera controller — auto-orbit + scroll-driven ───
+function CameraRig({ scrollProgress }: { scrollProgress: number }) {
   const { camera } = useThree();
   const angle = useRef(0);
+  const smoothScroll = useRef(0);
 
   useFrame((_, dt) => {
-    angle.current += dt * 0.02;
-    const dist = 280;
-    camera.position.x += (Math.sin(angle.current) * dist - camera.position.x) * 0.04;
-    camera.position.z += (Math.cos(angle.current) * dist - camera.position.z) * 0.04;
+    angle.current += dt * CONFIG.cam.rotateSpeed;
+    smoothScroll.current += (scrollProgress - smoothScroll.current) * 0.06;
+
+    const scrollAngle = smoothScroll.current * Math.PI * CONFIG.cam.scrollInfluence;
+    const combined = angle.current + scrollAngle;
+    const scrollY = Math.sin(smoothScroll.current * Math.PI * 0.5) * 80;
+
+    const tx = Math.sin(combined) * CONFIG.cam.dist;
+    const tz = Math.cos(combined) * CONFIG.cam.dist;
+
+    camera.position.x += (tx - camera.position.x) * 0.04;
+    camera.position.y += (scrollY - camera.position.y) * 0.04;
+    camera.position.z += (tz - camera.position.z) * 0.04;
     camera.lookAt(0, 0, 0);
   });
 
   return null;
 }
 
-// Exported component
+// ─── Scene ───
+function Scene({ scrollProgress }: { scrollProgress: number }) {
+  return (
+    <>
+      <CameraRig scrollProgress={scrollProgress} />
+      <Globe />
+      {CONFIG.rings.map((ring, i) => (
+        <OrbitalRing key={i} {...ring} scrollProgress={scrollProgress} />
+      ))}
+      <AmbientParticles />
+    </>
+  );
+}
+
+// ─── Exported component ───
 interface ParticleGlobeProps {
   size?: number;
   opacity?: number;
   className?: string;
 }
 
-export function ParticleGlobe({
-  size = 500,
-  opacity = 0.35,
-  className,
-}: ParticleGlobeProps) {
+export function ParticleGlobe({ size = 900, opacity = 0.3, className }: ParticleGlobeProps) {
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      setScrollProgress(Math.min(window.scrollY / window.innerHeight, 1));
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <div
-      className={className}
-      style={{ width: size, height: size, opacity, pointerEvents: "none" }}
-      aria-hidden="true"
-    >
+    <div className={className} style={{ width: size, height: size, opacity, pointerEvents: "none" }} aria-hidden="true">
       <Canvas
-        camera={{ position: [0, 0, 280], fov: 50, near: 1, far: 1500 }}
-        gl={{
-          antialias: true,
-          alpha: true,
-          powerPreference: "high-performance",
-          outputColorSpace: THREE.SRGBColorSpace,
-        }}
+        camera={{ position: [0, 0, CONFIG.cam.dist], fov: 50, near: 1, far: 1500 }}
+        gl={{ antialias: true, alpha: true, powerPreference: "high-performance", outputColorSpace: THREE.SRGBColorSpace }}
         style={{ background: "transparent" }}
         onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
       >
-        <fog attach="fog" args={["#000000", 80, 600]} />
-        <CameraRig />
-        <Globe />
-        <AmbientParticles />
+        <fog attach="fog" args={["#000000", 100, 700]} />
+        <Scene scrollProgress={scrollProgress} />
       </Canvas>
     </div>
   );

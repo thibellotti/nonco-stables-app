@@ -202,9 +202,9 @@ export function BalanceHero() {
       {/* Nonco brand geometric shapes */}
       <BrandShapes />
 
-      {/* Nonco Stables particle globe — large background element */}
-      <div className="absolute -right-[200px] -top-[200px] -bottom-[200px] pointer-events-none hidden lg:flex items-center justify-center">
-        <ParticleGlobe size={900} opacity={0.25} />
+      {/* Nonco Stables particle globe — full scene with orbital rings */}
+      <div className="absolute -right-[300px] -top-[300px] -bottom-[300px] pointer-events-none hidden lg:flex items-center justify-center">
+        <ParticleGlobe size={1100} opacity={0.28} />
       </div>
 
       {/* Corner brackets — geometric identity */}

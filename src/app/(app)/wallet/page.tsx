@@ -101,9 +101,9 @@ export default function WalletPage() {
         {/* Corner brackets — geometric identity */}
         <CornerBrackets size={18} color="rgba(255,255,255,0.08)" corners={["tl", "tr"]} />
 
-        {/* Particle globe — large, atmospheric */}
-        <div className="absolute -right-[180px] -top-[180px] -bottom-[180px] pointer-events-none hidden lg:flex items-center justify-center">
-          <ParticleGlobe size={800} opacity={0.2} />
+        {/* Particle globe — full scene with orbital rings */}
+        <div className="absolute -right-[280px] -top-[280px] -bottom-[280px] pointer-events-none hidden lg:flex items-center justify-center">
+          <ParticleGlobe size={1000} opacity={0.22} />
         </div>
 
         {/* Subtle radial glow */}
