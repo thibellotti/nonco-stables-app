@@ -2,11 +2,14 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
 import { SectionLabel } from "@/components/ui/section-label";
-import { BrandShapes } from "@/components/ui/brand-shapes";
-import { CornerBrackets } from "@/components/ui/corner-brackets";
-
 import { balances, usdRates } from "@/lib/mock-data";
+
+const ParticleGlobe = dynamic(
+  () => import("@/components/ui/particle-globe").then((m) => ({ default: m.ParticleGlobe })),
+  { ssr: false }
+);
 import { formatMoney } from "@/lib/utils";
 
 // ---------------------------------------------------------------------------
@@ -196,15 +199,10 @@ export function BalanceHero() {
 
   return (
     <section className="card-primary relative overflow-hidden bg-[var(--bg-card)] rounded-lg p-5">
-      {/* Stables gradient overlay */}
-      <div className="absolute inset-0 pointer-events-none rounded-lg" style={{ background: 'linear-gradient(135deg, rgba(5,224,248,0.06), transparent 60%)' }} />
-
-      {/* Nonco brand geometric shapes */}
-      <BrandShapes />
-
-
-      {/* Corner brackets — geometric identity */}
-      <CornerBrackets size={20} color="rgba(255,255,255,0.1)" corners={["tl", "tr", "bl", "br"]} />
+      {/* Particle globe — right side of hero */}
+      <div className="absolute -right-[100px] -top-[100px] -bottom-[100px] pointer-events-none hidden lg:flex items-center justify-center" style={{ width: 600 }}>
+        <ParticleGlobe size={600} opacity={0.5} />
+      </div>
 
       {/* Header row — label + period selector */}
       <div className="flex items-center justify-between mb-6">
