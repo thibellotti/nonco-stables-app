@@ -83,7 +83,7 @@ const change24h = 12_340;
 const changePct = ((change24h / (totalBalance - change24h)) * 100).toFixed(2);
 
 // ---------------------------------------------------------------------------
-// Smooth chart — Catmull-Rom spline interpolation
+// Chart data + horizontal-diagonal path (Nonco geometric style)
 // ---------------------------------------------------------------------------
 
 const chartPoints = [
@@ -95,38 +95,29 @@ const maxY = Math.max(...chartPoints);
 const minY = Math.min(...chartPoints);
 const range = maxY - minY || 1;
 
-function smoothPath(pts: number[], w: number, h: number, pad = 8): string {
-  const coords = pts.map((y, i) => ({
-    x: (i / (pts.length - 1)) * w,
-    y: h - ((y - minY) / range) * (h - pad * 2) - pad,
-  }));
-  let d = `M${coords[0].x.toFixed(1)},${coords[0].y.toFixed(1)}`;
-  for (let i = 0; i < coords.length - 1; i++) {
-    const p0 = coords[Math.max(0, i - 1)];
-    const p1 = coords[i];
-    const p2 = coords[i + 1];
-    const p3 = coords[Math.min(coords.length - 1, i + 2)];
-    const cp1x = p1.x + (p2.x - p0.x) / 6;
-    const cp1y = p1.y + (p2.y - p0.y) / 6;
-    const cp2x = p2.x - (p3.x - p1.x) / 6;
-    const cp2y = p2.y - (p3.y - p1.y) / 6;
-    d += ` C${cp1x.toFixed(1)},${cp1y.toFixed(1)} ${cp2x.toFixed(1)},${cp2y.toFixed(1)} ${p2.x.toFixed(1)},${p2.y.toFixed(1)}`;
+const CHART_W = 800;
+const CHART_H = 160;
+const CHART_PAD = 8;
+
+const chartCoords = chartPoints.map((y, i) => ({
+  x: (i / (chartPoints.length - 1)) * CHART_W,
+  y: CHART_H - ((y - minY) / range) * (CHART_H - CHART_PAD * 2) - CHART_PAD,
+}));
+
+// Horizontal-then-diagonal: flat 60%, then angle to next point
+function hDiagPath(pts: typeof chartCoords): string {
+  let d = `M${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`;
+  for (let i = 1; i < pts.length; i++) {
+    const prev = pts[i - 1];
+    const curr = pts[i];
+    const midX = prev.x + (curr.x - prev.x) * 0.6;
+    d += ` L${midX.toFixed(1)},${prev.y.toFixed(1)} L${curr.x.toFixed(1)},${curr.y.toFixed(1)}`;
   }
   return d;
 }
 
-const CHART_W = 800;
-const CHART_H = 160;
-
-const linePath = smoothPath(chartPoints, CHART_W, CHART_H);
-const lastPt = {
-  x: CHART_W,
-  y:
-    CHART_H -
-    ((chartPoints[chartPoints.length - 1] - minY) / range) *
-      (CHART_H - 16) -
-    8,
-};
+const linePath = hDiagPath(chartCoords);
+const lastPt = chartCoords[chartCoords.length - 1];
 const areaPath = `${linePath} L${CHART_W},${CHART_H} L0,${CHART_H} Z`;
 
 // ---------------------------------------------------------------------------
@@ -199,18 +190,21 @@ export function BalanceHero() {
 
   return (
     <section className="card-primary relative overflow-hidden bg-[var(--bg-card)] rounded-lg p-5">
-      {/* Particle globe — right side, tall, centered vertically */}
-      <div className="absolute pointer-events-none hidden lg:block" style={{ top: "50%", right: "0px", transform: "translateY(-50%)", width: "700px", height: "700px", zIndex: 0 }}>
-        <ParticleGlobe opacity={0.45} />
+      {/* Particle globe — large background, positioned right */}
+      <div className="absolute top-0 bottom-0 pointer-events-none hidden lg:block" style={{ left: '55%', right: '-40%', zIndex: 0 }}>
+        <ParticleGlobe opacity={0.4} />
       </div>
 
+      {/* Content — constrained to left on lg so globe has space */}
+      <div className="relative z-10 lg:max-w-[78%]">
+
       {/* Header */}
-      <div className="mb-4 relative z-10">
+      <div className="mb-4">
         <SectionLabel>Portfolio</SectionLabel>
       </div>
 
       {/* Balance row — number + change badge */}
-      <div className="flex items-baseline justify-between flex-wrap gap-4 mb-2 relative z-10">
+      <div className="flex items-start justify-between flex-wrap gap-4 mb-2">
         <p
           className="font-mono text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tighter leading-none text-white"
           style={{ fontVariantNumeric: "tabular-nums slashed-zero" }}
@@ -273,7 +267,7 @@ export function BalanceHero() {
 
       {/* Full-width area chart — interactive */}
       <div
-        className="relative z-10 h-[180px] lg:h-[220px] mt-4 cursor-crosshair pl-12"
+        className="relative h-[180px] lg:h-[220px] mt-4 cursor-crosshair pl-12"
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onTouchMove={(e) => {
@@ -309,183 +303,93 @@ export function BalanceHero() {
         })()}
 
         <svg
-          width="100%"
-          height="100%"
           viewBox={`0 0 ${CHART_W} ${CHART_H}`}
           preserveAspectRatio="none"
           fill="none"
-          className="absolute top-0 bottom-0 right-0 left-12"
+          className="absolute top-0 left-12"
+          style={{ width: 'calc(100% - 48px)', height: '100%' }}
           aria-hidden="true"
         >
           <defs>
-            {/* Vertical area gradient — multi-stop for depth */}
             <linearGradient id="hero-area-fill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="rgba(5,224,248,0.15)" />
-              <stop offset="40%" stopColor="rgba(5,224,248,0.04)" />
-              <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+              <stop offset="0%" stopColor="rgba(5,224,248,0.06)" />
+              <stop offset="100%" stopColor="rgba(5,224,248,0)" />
             </linearGradient>
-
-            {/* Horizontal line gradient — left: faded, right: full */}
-            <linearGradient
-              id="hero-line-gradient"
-              x1="0"
-              y1="0"
-              x2="1"
-              y2="0"
-            >
-              <stop
-                offset="0%"
-                stopColor="rgba(5,224,248,0.8)"
-                stopOpacity="0.3"
-              />
-              <stop
-                offset="100%"
-                stopColor="rgba(5,224,248,0.8)"
-                stopOpacity="1"
-              />
-            </linearGradient>
-
-            {/* Glow filter for line bloom + endpoint */}
-            <filter id="line-glow" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="4" result="blur" />
-            </filter>
           </defs>
 
-          {/* Subtle grid lines — dashed for texture */}
+          {/* Subtle dashed grid */}
           {[0.25, 0.5, 0.75].map((pct) => (
-            <line
-              key={pct}
-              x1="0"
-              y1={CHART_H * pct}
-              x2={CHART_W}
-              y2={CHART_H * pct}
-              stroke="rgba(255,255,255,0.04)"
-              strokeWidth="1"
-              strokeDasharray="4 6"
-            />
+            <line key={pct} x1="0" y1={CHART_H * pct} x2={CHART_W} y2={CHART_H * pct} stroke="rgba(255,255,255,0.04)" strokeWidth="1" strokeDasharray="2 6" />
           ))}
 
-          {/* Area fill */}
+          {/* Area fill — subtle */}
           <path d={areaPath} fill="url(#hero-area-fill)" />
 
-          {/* Line glow — blurred wider stroke behind main line */}
-          <path
-            d={linePath}
-            stroke="rgba(5,224,248,0.6)"
-            strokeWidth="8"
-            strokeLinecap="round"
-            filter="url(#line-glow)"
-            opacity="0.15"
-          />
-
-          {/* Main line — slightly thicker */}
-          <path
-            d={linePath}
-            stroke="url(#hero-line-gradient)"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-
-          {/* Baseline — grounds the chart */}
-          <line
-            x1="0"
-            y1={CHART_H - 1}
-            x2={CHART_W}
-            y2={CHART_H - 1}
-            stroke="rgba(255,255,255,0.06)"
-            strokeWidth="1"
-          />
-
-          {/* Endpoint — outermost glow (blurred) */}
-          <circle
-            cx={lastPt.x}
-            cy={lastPt.y}
-            r="16"
-            fill="#05E0F8"
-            opacity={hoverIdx !== null ? "0.02" : "0.06"}
-            filter="url(#line-glow)"
-          />
-          {/* Endpoint — animated pulse ring */}
-          <circle
-            cx={lastPt.x}
-            cy={lastPt.y}
-            r="8"
-            fill="none"
-            stroke="#05E0F8"
-            strokeWidth="1"
-            opacity={hoverIdx !== null ? "0.05" : "0.3"}
-          >
-            <animate attributeName="r" values="8;12;8" dur="2s" repeatCount="indefinite" />
-            <animate attributeName="opacity" values={hoverIdx !== null ? "0.05;0.02;0.05" : "0.3;0.1;0.3"} dur="2s" repeatCount="indefinite" />
-          </circle>
-          {/* Endpoint — circle center */}
-          <circle
-            cx={lastPt.x}
-            cy={lastPt.y}
-            r="3.5"
-            fill="#05E0F8"
-            opacity={hoverIdx !== null ? "0.2" : "1"}
-          />
-          {/* Endpoint — white highlight */}
-          <circle
-            cx={lastPt.x}
-            cy={lastPt.y}
-            r="1.5"
-            fill="white"
-            opacity={hoverIdx !== null ? "0.1" : "0.6"}
-          />
+          {/* Main line — angular, thin */}
+          <path d={linePath} stroke="rgba(5,224,248,0.85)" strokeWidth="1.2" fill="none" />
         </svg>
 
-        {/* Hover tooltip, vertical line + dot */}
+        {/* Endpoint — square marker */}
+        <div className="absolute top-0 bottom-0 left-12 pointer-events-none" style={{ width: 'calc(100% - 48px)' }}>
+          <div
+            className="absolute"
+            style={{
+              left: `${(lastPt.x / CHART_W) * 100}%`,
+              top: `${(lastPt.y / CHART_H) * 100}%`,
+              width: 5,
+              height: 5,
+              transform: 'translate(-50%, -50%)',
+              background: '#05E0F8',
+              boxShadow: hoverIdx !== null
+                ? 'none'
+                : '0 0 6px rgba(5,224,248,0.6)',
+              opacity: hoverIdx !== null ? 0.3 : 1,
+              transition: 'opacity 0.2s',
+            }}
+          />
+        </div>
+
+        {/* Hover — vertical line + square marker + bracket tooltip */}
         {hoverIdx !== null && (
           <>
-            {/* Vertical line */}
+            {/* Vertical line — subtle */}
             <div
               className="absolute top-0 bottom-0 w-px pointer-events-none"
-              style={{
-                left: hoverX,
-                background:
-                  "linear-gradient(to bottom, transparent, rgba(255,255,255,0.5), transparent)",
-                opacity: 0.25,
-              }}
+              style={{ left: hoverX, background: "rgba(5,224,248,0.1)" }}
             />
 
-            {/* Hover point — round dot */}
+            {/* Hover point — square */}
             <div
-              className="absolute w-2 h-2 rounded-full pointer-events-none"
+              className="absolute pointer-events-none"
               style={{
-                left: hoverX - 4,
-                top: `calc(${(chartY(hoverIdx) / CHART_H) * 100}% - 4px)`,
+                left: hoverX - 2.5,
+                top: `calc(${(chartY(hoverIdx) / CHART_H) * 100}% - 2.5px)`,
+                width: 5,
+                height: 5,
                 background: "#05E0F8",
-                boxShadow: "0 0 12px rgba(5,224,248,0.5)",
               }}
             />
 
-            {/* Tooltip card — polished with white accent border */}
+            {/* Tooltip — bracket corners */}
             <div
-              className="absolute pointer-events-none z-10 bg-[var(--bg-card)] border border-[var(--border)] border-t-2 border-t-[rgba(255,255,255,0.3)] rounded px-2.5 py-1.5 shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
+              className="absolute pointer-events-none z-10"
               style={{
-                left:
-                  hoverX > 160
-                    ? hoverX - 120
-                    : hoverX + 12,
+                left: hoverX > 160 ? hoverX - 110 : hoverX + 14,
                 top: `${(chartY(hoverIdx) / CHART_H) * 100}%`,
                 transform: "translateY(-50%)",
               }}
             >
-              <div className="text-[11px] font-sans text-[var(--text-4)] mb-0.5">
-                Mar {hoverIdx + 1}
-              </div>
-              <div
-                className="text-xs font-mono font-semibold text-white"
-                style={{ fontVariantNumeric: "tabular-nums" }}
-              >
-                $
-                {formatMoney(
-                  totalBalance *
-                    (chartPoints[hoverIdx] / chartPoints[chartPoints.length - 1]),
-                )}
+              <div className="relative px-2.5 py-1 bg-[#0a0a0a]">
+                <div className="absolute top-0 left-0 w-1 h-1 border-t border-l border-[rgba(5,224,248,0.4)]" />
+                <div className="absolute top-0 right-0 w-1 h-1 border-t border-r border-[rgba(5,224,248,0.4)]" />
+                <div className="absolute bottom-0 left-0 w-1 h-1 border-b border-l border-[rgba(5,224,248,0.4)]" />
+                <div className="absolute bottom-0 right-0 w-1 h-1 border-b border-r border-[rgba(5,224,248,0.4)]" />
+                <div className="text-[10px] font-sans text-[var(--text-4)]">
+                  Mar {hoverIdx + 1}
+                </div>
+                <div className="text-xs font-mono font-semibold text-white tabular-nums">
+                  ${formatMoney(totalBalance * (chartPoints[hoverIdx] / chartPoints[chartPoints.length - 1]))}
+                </div>
               </div>
             </div>
           </>
@@ -494,7 +398,7 @@ export function BalanceHero() {
 
       {/* Stats row — inline below chart, no separate cards */}
       <motion.div
-        className="relative z-10 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-0 sm:divide-x sm:divide-[var(--border)] border-t border-[var(--border)] mt-6"
+        className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-0 sm:divide-x sm:divide-[var(--border)] border-t border-[var(--border)] mt-6"
         variants={statsContainerVariants}
         initial="hidden"
         animate="visible"
@@ -555,6 +459,7 @@ export function BalanceHero() {
           </div>
         </motion.div>
       </motion.div>
+      </div>
     </section>
   );
 }

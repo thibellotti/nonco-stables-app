@@ -9,6 +9,7 @@ import { TransactionList } from "@/components/dashboard/transaction-list";
 import { MarketWatch } from "@/components/dashboard/market-watch";
 import { RfsDialog } from "@/components/rfs/rfs-dialog";
 import { GeoDivider } from "@/components/ui/geo-divider";
+import { GeoShape } from "@/components/ui/geo-shape";
 
 // ---------------------------------------------------------------------------
 // Inline quick actions — no separate component
@@ -60,7 +61,10 @@ export default function DashboardPage() {
         <div className="lg:col-span-3 flex flex-col">
           <CurrencyBreakdown />
         </div>
-        <div className="lg:col-span-2 flex flex-col [&>*]:flex-1">
+        <div className="lg:col-span-2 flex flex-col [&>*]:flex-1 relative overflow-hidden">
+          {/* Grafismo — Overview / Market Watch */}
+          <GeoShape variant="target" size={50} className="absolute" style={{ bottom: -12, right: -10, opacity: 0.1 }} />
+          <GeoShape variant="diamond" size={14} className="absolute" style={{ top: 12, left: 12, opacity: 0.18 }} />
           <MarketWatch onRequestRfs={handleRequestRfs} />
         </div>
       </div>
@@ -69,7 +73,10 @@ export default function DashboardPage() {
       <GeoDivider variant="dots" className="my-1" />
 
       {/* Recent Activity — compact, borderless header */}
-      <div className="rounded-lg overflow-hidden">
+      <div className="relative rounded-lg overflow-hidden">
+        {/* Grafismo — Recent Activity */}
+        <GeoShape variant="three-dots" size={32} className="absolute" style={{ top: 4, right: 8, opacity: 0.15 }} />
+
         <div className="flex items-center justify-between px-1 mb-3">
           <span className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)]">
             Recent Activity

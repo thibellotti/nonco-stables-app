@@ -4,6 +4,9 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { PageTransition } from "@/components/ui/page-transition";
 import { Button } from "@/components/ui/button";
+import { BrandShapes } from "@/components/ui/brand-shapes";
+import { CornerBrackets } from "@/components/ui/corner-brackets";
+import { GeoShape } from "@/components/ui/geo-shape";
 import { formatMoney } from "@/lib/utils";
 
 // ---------------------------------------------------------------------------
@@ -60,8 +63,19 @@ export default function BridgePage() {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden"
+        className="relative w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden"
       >
+        {/* Brand grafismos */}
+        <BrandShapes />
+        <CornerBrackets corners={["tl", "br"]} size={16} color="rgba(255,255,255,0.06)" />
+
+        {/* Geo shapes — "Connection" theme (nodes forming a triangle) */}
+        <GeoShape variant="node" size={32} className="absolute" style={{ top: '12%', left: '8%', opacity: 0.25 }} />
+        <GeoShape variant="node" size={32} className="absolute" style={{ top: '14%', right: '15%', opacity: 0.25 }} />
+        <GeoShape variant="node" size={32} className="absolute" style={{ bottom: '18%', left: '45%', opacity: 0.25 }} />
+        <GeoShape variant="dash-h" size={60} className="absolute" style={{ top: '13%', left: '22%', opacity: 0.15 }} />
+        <GeoShape variant="square-circles" size={44} className="absolute" style={{ bottom: '-8px', right: '-6px', opacity: 0.2 }} />
+
         <div className="p-6 space-y-5">
           {/* From chain */}
           <div className="space-y-1.5">

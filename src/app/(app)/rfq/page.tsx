@@ -9,6 +9,9 @@ import { QuoteForm } from "@/components/rfq/quote-form";
 import { PriceCard } from "@/components/rfq/price-card";
 import { RecentTrades } from "@/components/rfq/recent-trades";
 import { useToast } from "@/components/ui/toast";
+import { BrandShapes } from "@/components/ui/brand-shapes";
+import { CornerBrackets } from "@/components/ui/corner-brackets";
+import { GeoShape } from "@/components/ui/geo-shape";
 import {
   type Instrument,
   type Quote,
@@ -130,6 +133,18 @@ export default function RFQPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
             {/* Left: Request for Quote hero panel */}
             <div className="relative overflow-hidden bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-6 lg:p-8 flex flex-col">
+              {/* Brand grafismos */}
+              <BrandShapes />
+              <CornerBrackets size={18} color="rgba(5,224,248,0.08)" corners={["tl", "br"]} />
+
+              {/* Geo shapes — "Targeting" theme */}
+              <GeoShape variant="target" size={80} className="absolute" style={{ top: '8%', right: '6%', opacity: 0.35 }} />
+              <GeoShape variant="crosshair" size={50} className="absolute" style={{ bottom: '-8px', left: '-10px', opacity: 0.15 }} />
+              <GeoShape variant="diamond" size={20} className="absolute" style={{ top: '22%', left: '18%', opacity: 0.25 }} />
+              <GeoShape variant="diamond" size={14} className="absolute" style={{ bottom: '30%', right: '28%', opacity: 0.2 }} />
+              <GeoShape variant="diamond" size={18} className="absolute" style={{ top: '55%', right: '12%', opacity: 0.18 }} />
+              <GeoShape variant="plus" size={16} className="absolute" style={{ top: '14%', left: '48%', opacity: 0.2 }} />
+
               {/* Decorative background */}
               <div className="absolute inset-0 data-grid-bg opacity-50 pointer-events-none" />
               <div className="absolute -right-32 -top-32 w-80 h-80 rounded-full bg-[rgba(255,255,255,0.03)] blur-[100px] pointer-events-none" />

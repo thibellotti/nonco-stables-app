@@ -36,11 +36,12 @@ function seeded(seed: number): number {
 
 // Positions: right-side biased, edge-clipped, center exclusion
 const CONFIGS: ShapeConfig[] = [
-  { index: 0, x: 82, y: 8,  size: 120, opacity: 0.18, phaseOffset: 0,    speedX: 0.18, speedY: 0.14, ampX: 8,  ampY: 6 },
-  { index: 1, x: 92, y: 55, size: 56,  opacity: 0.14, phaseOffset: 1.2,  speedX: 0.22, speedY: 0.16, ampX: 5,  ampY: 4 },
-  { index: 2, x: 75, y: 80, size: 72,  opacity: 0.12, phaseOffset: 2.8,  speedX: 0.15, speedY: 0.12, ampX: 6,  ampY: 5 },
-  { index: 3, x: 95, y: 28, size: 36,  opacity: 0.16, phaseOffset: 4.1,  speedX: 0.25, speedY: 0.20, ampX: 4,  ampY: 3 },
-  { index: 4, x: 68, y: 40, size: 88,  opacity: 0.10, phaseOffset: 5.5,  speedX: 0.12, speedY: 0.10, ampX: 7,  ampY: 5 },
+  // Spread: top-right hero, mid-right accent, bottom-right anchor. Avoid balance/bar zone.
+  { index: 0, x: 88, y: 5,   size: 130, opacity: 0.40, phaseOffset: 0,    speedX: 0.15, speedY: 0.12, ampX: 6,  ampY: 4 },
+  { index: 3, x: 97, y: 45,  size: 32,  opacity: 0.35, phaseOffset: 1.8,  speedX: 0.20, speedY: 0.18, ampX: 3,  ampY: 2 },
+  { index: 1, x: 82, y: 88,  size: 60,  opacity: 0.30, phaseOffset: 3.2,  speedX: 0.18, speedY: 0.14, ampX: 4,  ampY: 3 },
+  { index: 2, x: 96, y: 80,  size: 52,  opacity: 0.25, phaseOffset: 4.5,  speedX: 0.12, speedY: 0.10, ampX: 3,  ampY: 2 },
+  { index: 4, x: 70, y: 5,   size: 60,  opacity: 0.20, phaseOffset: 5.8,  speedX: 0.10, speedY: 0.08, ampX: 5,  ampY: 4 },
 ];
 
 export function BrandShapes() {

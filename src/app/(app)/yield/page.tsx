@@ -4,6 +4,9 @@ import { motion } from "framer-motion";
 import { PageTransition } from "@/components/ui/page-transition";
 import { SectionLabel } from "@/components/ui/section-label";
 import { Badge } from "@/components/ui/badge";
+import { CornerBrackets } from "@/components/ui/corner-brackets";
+import { GeoDivider } from "@/components/ui/geo-divider";
+import { GeoShape } from "@/components/ui/geo-shape";
 import { yieldVaults } from "@/lib/mock-data";
 import { MiniAreaChart } from "@/components/viz/mini-area-chart";
 import { cn } from "@/lib/utils";
@@ -167,8 +170,15 @@ export default function YieldPage() {
         variants={staggerContainer}
         initial="hidden"
         animate="show"
-        className="card-primary flex flex-col md:flex-row gap-[1px] bg-[var(--bg-highest)] rounded-xl overflow-hidden"
+        className="card-primary relative flex flex-col md:flex-row gap-[1px] bg-[var(--bg-highest)] rounded-xl overflow-hidden"
       >
+        {/* Geo shapes — "Growth" theme */}
+        <GeoShape variant="ring-square" size={100} className="absolute" style={{ top: '-20px', right: '-18px', opacity: 0.2 }} />
+        <GeoShape variant="node" size={28} className="absolute" style={{ top: '18%', left: '12%', opacity: 0.3 }} />
+        <GeoShape variant="node" size={22} className="absolute" style={{ bottom: '20%', right: '38%', opacity: 0.25 }} />
+        <GeoShape variant="three-dots" size={40} className="absolute" style={{ bottom: '10%', left: '30%', opacity: 0.2 }} />
+        <GeoShape variant="hex" size={45} className="absolute" style={{ top: '40%', left: '55%', opacity: 0.12 }} />
+
         {metrics.map((m, idx) => (
           <motion.div
             key={m.label}
@@ -216,6 +226,9 @@ export default function YieldPage() {
         ))}
       </motion.div>
 
+      {/* Brand separator */}
+      <GeoDivider variant="squares" className="my-2" />
+
       {/* ── Vault cards ── */}
       <div>
         <SectionLabel className="mb-4">Active Vaults</SectionLabel>
@@ -231,6 +244,9 @@ export default function YieldPage() {
                 variants={fadeUp}
                 className="group relative bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden flex flex-col transition-all duration-200 hover:border-[var(--border-outline)] hover:translate-y-[-1px] hover:shadow-lg hover:shadow-[rgba(255,255,255,0.03)]"
               >
+                {/* Brand corner brackets */}
+                <CornerBrackets corners={["tr", "bl"]} size={14} color="rgba(5,224,248,0.08)" />
+
                 {/* Hover arc — appears on hover */}
                 <svg
                   width="24" height="24" viewBox="0 0 24 24"

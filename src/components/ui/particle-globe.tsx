@@ -135,7 +135,7 @@ function Globe() {
 
   return (
     <points ref={ref} geometry={geo}>
-      <pointsMaterial color={CYAN} size={1.0} sizeAttenuation transparent opacity={0.7} depthWrite={false} />
+      <pointsMaterial color={CYAN} size={1.5} sizeAttenuation transparent opacity={0.7} depthWrite={false} />
     </points>
   );
 }
@@ -255,7 +255,6 @@ function Scene({ scrollProgress, offset = 0 }: { scrollProgress: number; offset?
   return (
     <>
       <CameraRig />
-      {/* Globe + rings at origin — camera offset makes them appear right */}
       <Globe />
       {CONFIG.rings.map((ring, i) => (
         <OrbitalRing key={i} {...ring} scrollProgress={scrollProgress} isLogo={i === 0} />

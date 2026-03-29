@@ -9,6 +9,8 @@ import { formatMoney, formatCompact } from "@/lib/utils";
 import { CompletedTable } from "@/components/settlements/completed-table";
 import { ProgressRing } from "@/components/viz/progress-ring";
 import { currencyColors } from "@/lib/currency-colors";
+import { CornerBrackets } from "@/components/ui/corner-brackets";
+import { GeoShape } from "@/components/ui/geo-shape";
 
 // ---------------------------------------------------------------------------
 // Mock data — expanded for richer display
@@ -177,8 +179,12 @@ export default function SettlementsPage() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="bg-[var(--bg-elevated)] rounded-lg p-5"
+            className="relative bg-[var(--bg-elevated)] rounded-lg p-5"
           >
+            <CornerBrackets size={14} color="rgba(255,255,255,0.06)" corners={["tl","tr"]} />
+            <GeoShape variant="ring-square" size={70} className="absolute" style={{ bottom: '-14px', right: '-14px', opacity: 0.15 }} />
+            <GeoShape variant="diamond" size={16} className="absolute" style={{ top: '14px', left: '48px', opacity: 0.2 }} />
+            <GeoShape variant="node" size={20} className="absolute" style={{ top: '50%', right: '16px', opacity: 0.18 }} />
             <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] mb-4">
               Settlement Pipeline
             </div>

@@ -4,6 +4,8 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { PageTransition } from "@/components/ui/page-transition";
 import { Button } from "@/components/ui/button";
+import { CornerBrackets } from "@/components/ui/corner-brackets";
+import { GeoShape } from "@/components/ui/geo-shape";
 
 // ---------------------------------------------------------------------------
 // Wallet options
@@ -62,8 +64,15 @@ export default function OnchainPage() {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
-        className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full"
+        className="relative overflow-hidden grid grid-cols-1 sm:grid-cols-3 gap-4 w-full"
       >
+        <CornerBrackets size={14} color="rgba(255,255,255,0.06)" corners={["tr","bl"]} />
+
+        {/* Grafismo — Blockchain theme */}
+        <GeoShape variant="hex" size={50} className="absolute" style={{ top: -10, right: -8, opacity: 0.18 }} />
+        <GeoShape variant="node" size={24} className="absolute" style={{ top: 30, left: 20, opacity: 0.2 }} />
+        <GeoShape variant="node" size={24} className="absolute" style={{ bottom: 24, right: 80, opacity: 0.2 }} />
+        <GeoShape variant="dash-v" size={40} className="absolute" style={{ top: 16, left: 4, opacity: 0.1 }} />
         {wallets.map((w) => (
           <button
             key={w.id}

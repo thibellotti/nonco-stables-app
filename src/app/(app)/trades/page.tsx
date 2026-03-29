@@ -9,6 +9,8 @@ import { recentTrades } from "@/lib/mock-data";
 import type { RecentTrade } from "@/lib/mock-data";
 import { formatMoney, timeAgo } from "@/lib/utils";
 import { currencyColors } from "@/lib/currency-colors";
+import { GeoDivider } from "@/components/ui/geo-divider";
+import { GeoShape } from "@/components/ui/geo-shape";
 
 // ---------------------------------------------------------------------------
 // Filter types
@@ -259,6 +261,8 @@ export default function TradesPage() {
         </div>
       </div>
 
+      <GeoDivider variant="squares" className="my-6" />
+
       {/* Filter Bar */}
       <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-3 sm:gap-4">
         {/* Side filter */}
@@ -304,7 +308,10 @@ export default function TradesPage() {
       </div>
 
       {/* Trade Table */}
-      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden overflow-x-auto table-scroll-mask">
+      <div className="relative bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden overflow-x-auto table-scroll-mask">
+        <GeoShape variant="target" size={60} className="absolute" style={{ top: '-10px', right: '-10px', opacity: 0.12 }} />
+        <GeoShape variant="plus" size={16} className="absolute" style={{ top: '48px', right: '64px', opacity: 0.15 }} />
+        <GeoShape variant="plus" size={16} className="absolute" style={{ bottom: '32px', left: '24px', opacity: 0.15 }} />
         {filteredTrades.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
             <div className="w-12 h-12 rounded-full bg-[var(--bg-elevated)] flex items-center justify-center mb-4">
