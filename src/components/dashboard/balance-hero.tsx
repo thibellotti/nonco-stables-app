@@ -198,10 +198,10 @@ export function BalanceHero() {
   };
 
   return (
-    <section className="card-primary relative overflow-hidden bg-[var(--bg-card)] rounded-lg p-5">
-      {/* Particle globe — LARGE, right side, overflows hero */}
-      <div className="absolute pointer-events-none hidden lg:block" style={{ right: -250, top: -300, width: 1000, height: 1000 }}>
-        <ParticleGlobe size={1000} opacity={0.55} />
+    <section className="card-primary relative bg-[var(--bg-card)] rounded-lg p-5" style={{ overflow: "visible" }}>
+      {/* Particle globe — RIGHT side, vertically centered, overflows card without clipping */}
+      <div className="absolute pointer-events-none hidden lg:block" style={{ right: -300, top: "50%", transform: "translateY(-50%)", width: 1400, height: 1400, zIndex: 0 }}>
+        <ParticleGlobe size={1400} opacity={0.45} />
       </div>
 
       {/* Header */}
@@ -210,7 +210,7 @@ export function BalanceHero() {
       </div>
 
       {/* Balance row — number + change badge */}
-      <div className="flex items-baseline justify-between flex-wrap gap-4 mb-2">
+      <div className="flex items-baseline justify-between flex-wrap gap-4 mb-2 relative z-10">
         <p
           className="font-mono text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tighter leading-none text-white"
           style={{ fontVariantNumeric: "tabular-nums slashed-zero" }}
@@ -273,7 +273,7 @@ export function BalanceHero() {
 
       {/* Full-width area chart — interactive */}
       <div
-        className="relative h-[180px] lg:h-[220px] mt-4 cursor-crosshair pl-12"
+        className="relative z-10 h-[180px] lg:h-[220px] mt-4 cursor-crosshair pl-12"
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onTouchMove={(e) => {
@@ -494,7 +494,7 @@ export function BalanceHero() {
 
       {/* Stats row — inline below chart, no separate cards */}
       <motion.div
-        className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-0 sm:divide-x sm:divide-[var(--border)] border-t border-[var(--border)] mt-6"
+        className="relative z-10 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-0 sm:divide-x sm:divide-[var(--border)] border-t border-[var(--border)] mt-6"
         variants={statsContainerVariants}
         initial="hidden"
         animate="visible"

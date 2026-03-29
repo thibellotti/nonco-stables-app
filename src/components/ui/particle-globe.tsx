@@ -52,34 +52,45 @@ function fibSphere(n: number, r: number): Float32Array {
 // ─── Stablecoin logo texture: circle container + abbreviation inside ───
 const texCache = new Map<string, THREE.CanvasTexture>();
 
-function logoTexture(text: string, sz = 256): THREE.CanvasTexture {
-  const key = `logo-${text}`;
+function logoTexture(text: string, sz = 512): THREE.CanvasTexture {
+  const key = `logo-${text}-v2`;
   if (texCache.has(key)) return texCache.get(key)!;
   const c = document.createElement("canvas");
   c.width = sz; c.height = sz;
   const ctx = c.getContext("2d")!;
   const cx = sz / 2;
+  const r = cx * 0.82;
 
-  // Circle background
+  // Solid circle fill — matching nonco.com badge style
   ctx.beginPath();
-  ctx.arc(cx, cx, cx * 0.85, 0, Math.PI * 2);
-  ctx.fillStyle = "rgba(5, 224, 248, 0.12)";
+  ctx.arc(cx, cx, r, 0, Math.PI * 2);
+  ctx.fillStyle = "rgba(5, 224, 248, 0.15)";
   ctx.fill();
 
-  // Circle border
+  // Thick circle border
   ctx.beginPath();
-  ctx.arc(cx, cx, cx * 0.85, 0, Math.PI * 2);
-  ctx.strokeStyle = "rgba(5, 224, 248, 0.5)";
-  ctx.lineWidth = sz * 0.02;
+  ctx.arc(cx, cx, r, 0, Math.PI * 2);
+  ctx.strokeStyle = "rgba(5, 224, 248, 0.6)";
+  ctx.lineWidth = sz * 0.035;
   ctx.stroke();
 
-  // Abbreviation text (first letter large, or symbol)
+  // Inner circle highlight
+  ctx.beginPath();
+  ctx.arc(cx, cx, r * 0.75, 0, Math.PI * 2);
+  ctx.strokeStyle = "rgba(5, 224, 248, 0.1)";
+  ctx.lineWidth = sz * 0.01;
+  ctx.stroke();
+
+  // Symbol inside — bold, centered
   ctx.fillStyle = CYAN;
-  const symbol = text === "USDC" ? "$" : text === "USDT" ? "₮" : text === "DAI" ? "◆" : text === "TUSD" ? "$" : text === "GUSD" ? "$" : text === "PAX" ? "₱" : text === "BUSD" ? "B" : text === "FRAX" ? "F" : text[0];
-  ctx.font = `700 ${sz * 0.45}px -apple-system, "Space Grotesk", sans-serif`;
+  const symbols: Record<string, string> = {
+    USDC: "$", USDT: "₮", DAI: "◆", TUSD: "T", GUSD: "G", PAX: "P", BUSD: "B", FRAX: "F",
+  };
+  const sym = symbols[text] ?? text[0];
+  ctx.font = `800 ${sz * 0.4}px -apple-system, "Space Grotesk", sans-serif`;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText(symbol, cx, cx);
+  ctx.fillText(sym, cx, cx);
 
   const tex = new THREE.CanvasTexture(c);
   tex.minFilter = THREE.LinearFilter;
@@ -89,7 +100,7 @@ function logoTexture(text: string, sz = 256): THREE.CanvasTexture {
 }
 
 // ─── Fiat currency text: large bold symbol ───
-function currencyTexture(text: string, sz = 256): THREE.CanvasTexture {
+function currencyTexture(text: string, sz = 512): THREE.CanvasTexture {
   const key = `fiat-${text}`;
   if (texCache.has(key)) return texCache.get(key)!;
   const c = document.createElement("canvas");
