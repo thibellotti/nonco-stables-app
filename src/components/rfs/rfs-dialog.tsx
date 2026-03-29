@@ -617,7 +617,10 @@ function RfsDialogContent({
       className="relative w-full max-w-lg bg-[var(--bg-card)] border border-[var(--border)] rounded-xl overflow-hidden"
     >
       {/* ── Header ─────────────────────────────────────── */}
-      <div className="flex items-start justify-between px-6 py-5 border-b border-[var(--border)]">
+      <div
+        className="flex items-start justify-between px-6 py-5 border-b border-[var(--border)]"
+        style={{ background: 'linear-gradient(135deg, rgba(5,224,248,0.08), var(--bg-card) 60%)' }}
+      >
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-lg bg-[rgba(255,255,255,0.06)] flex items-center justify-center text-white">
             <StreamIcon />

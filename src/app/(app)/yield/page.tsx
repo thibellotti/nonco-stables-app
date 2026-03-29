@@ -169,12 +169,19 @@ export default function YieldPage() {
         animate="show"
         className="card-primary flex flex-col md:flex-row gap-[1px] bg-[var(--bg-highest)] rounded-xl overflow-hidden"
       >
-        {metrics.map((m) => (
+        {metrics.map((m, idx) => (
           <motion.div
             key={m.label}
             variants={fadeUp}
-            className="bg-[var(--bg-card)] p-5 flex-1"
+            className="relative bg-[var(--bg-card)] p-5 flex-1 overflow-hidden"
           >
+            {/* Stables gradient on hero metric (Total Deployed) */}
+            {idx === 0 && (
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{ background: 'linear-gradient(135deg, rgba(5,224,248,0.06), transparent 60%)' }}
+              />
+            )}
             <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)]">
               {m.label}
             </div>

@@ -86,6 +86,12 @@ export default function WalletPage() {
       {/* HERO — Total balance + allocation bar + action pills            */}
       {/* --------------------------------------------------------------- */}
       <div className="relative overflow-hidden rounded-xl bg-[var(--bg-card)] border border-[var(--border)] p-6 sm:p-8">
+        {/* Stables gradient overlay */}
+        <div
+          className="absolute inset-0 pointer-events-none rounded-xl"
+          style={{ background: 'linear-gradient(135deg, rgba(5,224,248,0.06), transparent 60%)' }}
+        />
+
         {/* Subtle radial glow */}
         <div
           className="pointer-events-none absolute -top-20 -right-20 w-60 h-60 rounded-full"

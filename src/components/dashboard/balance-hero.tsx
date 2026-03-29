@@ -193,6 +193,9 @@ export function BalanceHero() {
 
   return (
     <section className="card-primary relative overflow-hidden bg-[var(--bg-card)] rounded-lg p-5">
+      {/* Stables gradient overlay */}
+      <div className="absolute inset-0 pointer-events-none rounded-lg" style={{ background: 'linear-gradient(135deg, rgba(5,224,248,0.06), transparent 60%)' }} />
+
       {/* Header row — label + period selector */}
       <div className="flex items-center justify-between mb-6">
         <div>

@@ -56,7 +56,7 @@ export default function LoginPage() {
           transition={{ duration: 1.4, ease: "easeOut" }}
           className="pointer-events-none absolute -top-32 -right-32 w-[500px] h-[500px]"
           style={{
-            background: "radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(5,224,248,0.06) 0%, transparent 70%)",
           }}
         />
 
@@ -67,7 +67,7 @@ export default function LoginPage() {
           transition={{ duration: 1.8, delay: 0.3 }}
           className="pointer-events-none absolute -bottom-48 -left-24 w-[400px] h-[400px]"
           style={{
-            background: "radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(5,224,248,0.04) 0%, transparent 70%)",
           }}
         />
 

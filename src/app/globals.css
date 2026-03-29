@@ -19,19 +19,19 @@
 }
 
 :root {
-  /* Surface hierarchy — MD3-inspired, from nonco.com HSL tokens */
-  --bg: #131313;
+  /* Surface hierarchy — aligned with nonco.com brand tokens */
+  --bg: #000000;
   --bg-card: #141414;
   --bg-elevated: #1c1b1b;
   --bg-muted: #201f1f;
   --bg-highest: #2a2a2a;
   --bg-bright: #353534;
 
-  /* Text hierarchy */
-  --text: #e5e2e1;
-  --text-2: #bac9cc;
-  --text-3: #9caaad;
-  --text-4: #737373;
+  /* Text hierarchy — white with opacity, no warm tint */
+  --text: rgba(255,255,255,0.88);
+  --text-2: rgba(255,255,255,0.65);
+  --text-3: rgba(255,255,255,0.45);
+  --text-4: rgba(255,255,255,0.3);
 
   /* Nonco Stables Blue — the dominant color */
   --cyan: #05E0F8;
@@ -68,12 +68,15 @@
   --status-neutral: var(--text-4);
 
   /* Borders */
-  --border: #18181b;
+  --border: #1a1a1a;
   --border-subtle: rgba(255,255,255,0.06);
   --border-outline: #3b494c;
 
   /* Divider for table rows and lists */
   --border-row: rgba(255,255,255,0.04);
+
+  /* Official stables gradient */
+  --gradient-stables: linear-gradient(135deg, rgba(5,224,248,0.12), rgba(5,224,248,0.03));
 }
 
 html {
@@ -224,7 +227,7 @@ body {
 
 /* ─── Glass panel utility ─── */
 .glass-panel {
-  background: rgba(19, 19, 19, 0.7);
+  background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
 }
