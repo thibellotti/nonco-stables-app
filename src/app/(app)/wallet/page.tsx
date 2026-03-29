@@ -103,7 +103,7 @@ export default function WalletPage() {
 
         {/* Particle globe */}
         <div className="absolute -right-20 -top-12 -bottom-12 pointer-events-none hidden lg:flex items-center justify-center">
-          <ParticleGlobe size={420} particleCount={1800} opacity={0.25} />
+          <ParticleGlobe size={420} opacity={0.3} />
         </div>
 
         {/* Subtle radial glow */}

@@ -204,7 +204,7 @@ export function BalanceHero() {
 
       {/* Nonco Stables particle globe — BIG, 3D, signature */}
       <div className="absolute -right-24 -top-16 -bottom-16 pointer-events-none hidden lg:flex items-center justify-center">
-        <ParticleGlobe size={520} particleCount={2200} opacity={0.35} />
+        <ParticleGlobe size={520} opacity={0.4} />
       </div>
 
       {/* Corner brackets — geometric identity */}
