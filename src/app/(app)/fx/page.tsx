@@ -14,7 +14,6 @@ import {
 } from "@/lib/mock-data";
 import Link from "next/link";
 import { RfsDialog } from "@/components/rfs/rfs-dialog";
-import { Diamond } from "@/components/ui/diamond";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -136,7 +135,7 @@ function SectionSeparator({
         background: `linear-gradient(90deg, color-mix(in srgb, ${color} 6%, transparent), transparent)`,
       }}
     >
-      <Diamond size={8} color={color} />
+      <span className="w-2 h-2 rounded-full shrink-0" style={{ background: color }} />
       <span className="font-sans text-[11px] font-bold uppercase tracking-[.15em] text-[var(--text-4)]">
         {label}
       </span>

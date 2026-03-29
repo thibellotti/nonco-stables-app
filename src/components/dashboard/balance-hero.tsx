@@ -420,14 +420,11 @@ export function BalanceHero() {
             <animate attributeName="r" values="8;12;8" dur="2s" repeatCount="indefinite" />
             <animate attributeName="opacity" values={hoverIdx !== null ? "0.05;0.02;0.05" : "0.3;0.1;0.3"} dur="2s" repeatCount="indefinite" />
           </circle>
-          {/* Endpoint — diamond center (Nonco brand shape) */}
-          <rect
-            x={lastPt.x}
-            y={lastPt.y}
-            width="7"
-            height="7"
-            rx="1"
-            transform={`rotate(45 ${lastPt.x} ${lastPt.y})`}
+          {/* Endpoint — circle center */}
+          <circle
+            cx={lastPt.x}
+            cy={lastPt.y}
+            r="3.5"
             fill="#05E0F8"
             opacity={hoverIdx !== null ? "0.2" : "1"}
           />
@@ -455,15 +452,13 @@ export function BalanceHero() {
               }}
             />
 
-            {/* Hover point — diamond (Nonco brand shape) */}
+            {/* Hover point — round dot */}
             <div
-              className="absolute w-2.5 h-2.5 pointer-events-none"
+              className="absolute w-2 h-2 rounded-full pointer-events-none"
               style={{
-                left: hoverX - 5,
-                top: `calc(${(chartY(hoverIdx) / CHART_H) * 100}% - 5px)`,
+                left: hoverX - 4,
+                top: `calc(${(chartY(hoverIdx) / CHART_H) * 100}% - 4px)`,
                 background: "#05E0F8",
-                transform: "rotate(45deg)",
-                borderRadius: "1px",
                 boxShadow: "0 0 12px rgba(5,224,248,0.5)",
               }}
             />

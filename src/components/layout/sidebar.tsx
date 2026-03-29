@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { navGroups } from "@/lib/nav-items";
-import { Diamond } from "@/components/ui/diamond";
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -24,7 +23,7 @@ export function Sidebar() {
       {/* Account selector */}
       <div className="mx-3 mt-3">
         <div className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] cursor-pointer hover:border-[var(--border-outline)] transition-colors">
-          <Diamond size={5} color="var(--status-positive)" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[var(--status-positive)] shrink-0" />
           <span className="text-[12px] font-medium text-[var(--text)] flex-1">Treasury 01</span>
           <span className="text-[10px] font-bold text-[var(--text-2)] bg-[rgba(255,255,255,0.08)] px-1.5 py-0.5 rounded">Verified</span>
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" className="shrink-0 text-[var(--text-4)]">
@@ -85,7 +84,7 @@ export function Sidebar() {
             <span className="text-[12px] font-medium text-[var(--text)] truncate">Fernando M.</span>
             <span className="text-[10px] text-[var(--text-4)]">Admin</span>
           </div>
-          <Diamond size={5} color="var(--status-positive)" className="ml-auto" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[var(--status-positive)] ml-auto" />
         </div>
       </div>
     </aside>

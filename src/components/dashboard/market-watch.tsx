@@ -6,7 +6,6 @@
 
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { Diamond } from "@/components/ui/diamond";
 
 interface MarketWatchProps {
   onRequestRfs?: (pair: string) => void;
@@ -35,7 +34,10 @@ export function MarketWatch({ onRequestRfs }: MarketWatchProps) {
         </span>
 
         <span className="inline-flex items-center gap-1.5">
-          <Diamond size={6} color="#05E0F8" className="animate-pulse" />
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--cyan)] opacity-50" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[var(--cyan)]" />
+          </span>
           <span className="font-sans text-[11px] text-[var(--text-4)] uppercase tracking-[.1em]">
             Live
           </span>

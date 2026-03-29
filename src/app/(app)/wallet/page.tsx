@@ -6,7 +6,6 @@ import { PageTransition } from "@/components/ui/page-transition";
 import { balances, usdRates } from "@/lib/mock-data";
 import { formatMoney, formatCompact, cn } from "@/lib/utils";
 import { currencyColors } from "@/lib/currency-colors";
-import { Diamond } from "@/components/ui/diamond";
 import { BrandShapes } from "@/components/ui/brand-shapes";
 
 // ---------------------------------------------------------------------------
@@ -146,7 +145,7 @@ export default function WalletPage() {
                 key={a.currency}
                 className="inline-flex items-center gap-1.5 text-[11px] text-[var(--text-4)] font-sans"
               >
-                <Diamond size={6} color={a.color} />
+                <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: a.color }} />
                 {a.currency} {Math.round(a.pct)}%
               </span>
             ))}
