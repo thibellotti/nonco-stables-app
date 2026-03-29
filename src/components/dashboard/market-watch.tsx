@@ -76,7 +76,7 @@ export function MarketWatch({ onRequestRfs }: MarketWatchProps) {
               >
                 {p.change}
               </span>
-              <span className="text-[9px] px-2 py-0.5 rounded border border-[var(--border-outline)] text-[var(--text-3)] font-bold font-sans uppercase">
+              <span className="text-[9px] px-2 py-0.5 rounded bg-[var(--cyan)] text-black font-bold font-sans uppercase">
                 RFS
               </span>
             </div>

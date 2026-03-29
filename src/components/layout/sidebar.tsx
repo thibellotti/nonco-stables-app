@@ -53,12 +53,12 @@ export function Sidebar() {
                   className={cn(
                     "relative flex items-center px-5 py-2 transition-all duration-200",
                     isActive
-                      ? "text-white bg-[rgba(255,255,255,0.06)]"
+                      ? "text-[var(--cyan)] bg-[rgba(5,224,248,0.06)]"
                       : "text-[var(--text-4)] hover:text-[var(--text)] hover:bg-[var(--bg-elevated)]"
                   )}
                 >
                   {isActive && (
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 rounded-r-full bg-white" />
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 rounded-r-full bg-[var(--cyan)]" />
                   )}
                   <span className="mr-3 shrink-0">{item.icon}</span>
                   <span className="text-[12.5px] tracking-normal font-sans">{item.label}</span>

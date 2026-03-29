@@ -113,8 +113,8 @@ body {
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-  opacity: 0.5;
+  background: linear-gradient(90deg, transparent, rgba(5,224,248,0.4), transparent);
+  opacity: 0.6;
   border-radius: inherit;
   z-index: 1;
 }
