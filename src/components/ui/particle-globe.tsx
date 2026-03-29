@@ -239,30 +239,13 @@ function AmbientParticles() {
 }
 
 // ─── Camera controller — auto-orbit + scroll-driven + offset ───
-function CameraRig({ scrollProgress, offset = 0 }: { scrollProgress: number; offset?: number }) {
+function CameraRig({ offset = 0 }: { offset?: number }) {
   const { camera } = useThree();
-  const angle = useRef(0);
-  const smoothScroll = useRef(0);
 
-  // Camera orbits around a point to the LEFT of the globe.
-  // Globe stays at origin. Camera looks LEFT → globe appears RIGHT in frame.
-  const orbitCenter = -offset;
-
-  useFrame((_, dt) => {
-    angle.current += dt * CONFIG.cam.rotateSpeed;
-    smoothScroll.current += (scrollProgress - smoothScroll.current) * 0.06;
-
-    const scrollAngle = smoothScroll.current * Math.PI * CONFIG.cam.scrollInfluence;
-    const combined = angle.current + scrollAngle;
-    const scrollY = Math.sin(smoothScroll.current * Math.PI * 0.5) * 40;
-
-    const tx = orbitCenter + Math.sin(combined) * CONFIG.cam.dist;
-    const tz = Math.cos(combined) * CONFIG.cam.dist;
-
-    camera.position.x += (tx - camera.position.x) * 0.04;
-    camera.position.y += (scrollY - camera.position.y) * 0.04;
-    camera.position.z += (tz - camera.position.z) * 0.04;
-    camera.lookAt(orbitCenter, 0, 0);
+  useFrame(() => {
+    // Fixed camera — no orbit. Globe and rings rotate themselves.
+    camera.position.set(-offset, 0, CONFIG.cam.dist);
+    camera.lookAt(-offset, 0, 0);
   });
 
   return null;
@@ -272,7 +255,7 @@ function CameraRig({ scrollProgress, offset = 0 }: { scrollProgress: number; off
 function Scene({ scrollProgress, offset = 0 }: { scrollProgress: number; offset?: number }) {
   return (
     <>
-      <CameraRig scrollProgress={scrollProgress} offset={offset} />
+      <CameraRig offset={offset} />
       {/* Globe + rings at origin — camera offset makes them appear right */}
       <Globe />
       {CONFIG.rings.map((ring, i) => (
