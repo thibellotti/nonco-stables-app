@@ -239,13 +239,12 @@ function AmbientParticles() {
 }
 
 // ─── Camera controller — auto-orbit + scroll-driven + offset ───
-function CameraRig({ offset = 0 }: { offset?: number }) {
+function CameraRig() {
   const { camera } = useThree();
 
   useFrame(() => {
-    // Fixed camera — no orbit. Globe and rings rotate themselves.
-    camera.position.set(-offset, 0, CONFIG.cam.dist);
-    camera.lookAt(-offset, 0, 0);
+    camera.position.set(0, 0, CONFIG.cam.dist);
+    camera.lookAt(0, 0, 0);
   });
 
   return null;
@@ -255,7 +254,7 @@ function CameraRig({ offset = 0 }: { offset?: number }) {
 function Scene({ scrollProgress, offset = 0 }: { scrollProgress: number; offset?: number }) {
   return (
     <>
-      <CameraRig offset={offset} />
+      <CameraRig />
       {/* Globe + rings at origin — camera offset makes them appear right */}
       <Globe />
       {CONFIG.rings.map((ring, i) => (
@@ -298,7 +297,7 @@ export function ParticleGlobe({ size, opacity = 0.35, offset = 0, className }: P
       aria-hidden="true"
     >
       <Canvas
-        camera={{ position: [-offset, 0, CONFIG.cam.dist], fov: 35, near: 1, far: 1500 }}
+        camera={{ position: [0, 0, CONFIG.cam.dist], fov: 50, near: 1, far: 1500 }}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance", outputColorSpace: THREE.SRGBColorSpace }}
         style={{ background: "transparent" }}
         onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
