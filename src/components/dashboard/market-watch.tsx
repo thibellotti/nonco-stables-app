@@ -6,6 +6,7 @@
 
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { CornerBrackets } from "@/components/ui/corner-brackets";
 
 interface MarketWatchProps {
   onRequestRfs?: (pair: string) => void;
@@ -51,7 +52,7 @@ export function MarketWatch({ onRequestRfs }: MarketWatchProps) {
             key={p.pair}
             type="button"
             onClick={() => onRequestRfs?.(p.pair)}
-            className="bg-[var(--bg)] border border-[var(--border)] rounded-lg p-2.5 cursor-pointer hover:border-[var(--border-outline)] transition-all text-left"
+            className="group relative bg-[var(--bg)] border border-[var(--border)] rounded-lg p-2.5 cursor-pointer hover:border-[var(--border-outline)] transition-all text-left"
           >
             {/* Pair name */}
             <div className="text-xs font-bold font-sans text-[var(--text)]">
@@ -80,6 +81,11 @@ export function MarketWatch({ onRequestRfs }: MarketWatchProps) {
               <span className="text-[9px] px-2 py-0.5 rounded bg-[var(--cyan)] text-black font-bold font-sans uppercase">
                 RFS
               </span>
+            </div>
+
+            {/* Hover corner brackets — diagonal accent */}
+            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+              <CornerBrackets size={12} color="rgba(5,224,248,0.3)" corners={["tl", "br"]} />
             </div>
           </button>
         ))}

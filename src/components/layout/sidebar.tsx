@@ -34,8 +34,16 @@ export function Sidebar() {
 
       {/* Navigation */}
       <nav aria-label="Main navigation" className="flex-1 overflow-y-auto scrollbar-none pt-3 pb-3">
-        {navGroups.map((group) => (
+        {navGroups.map((group, groupIndex) => (
           <div key={group.label} className="mb-1">
+            {/* Geo separator between groups */}
+            {groupIndex > 0 && (
+              <div className="flex items-center px-5 py-1" aria-hidden="true">
+                <div className="w-1 h-1 rounded-full bg-[rgba(255,255,255,0.08)]" />
+                <div className="flex-1 h-px bg-[rgba(255,255,255,0.04)] mx-2" />
+                <div className="w-1 h-1 rounded-full bg-[rgba(255,255,255,0.08)]" />
+              </div>
+            )}
             <div className="px-5 pt-3 pb-1.5">
               <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--text-4)]">
                 {group.label}

@@ -62,14 +62,30 @@ export default function ReportsPage() {
             <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)]">
               {m.label}
             </div>
-            <p
-              className="text-2xl font-mono font-bold tabular-nums mt-2 tracking-tight"
-              style={{ color: m.color }}
-            >
-              {m.format === "compact"
-                ? formatCompact(m.value)
-                : `${m.prefix}${formatMoney(m.value)}`}
-            </p>
+            <div className="flex items-center gap-1.5 mt-2">
+              {/* Total volume: ascending bars accent */}
+              {m.label === "Total volume" && (
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0 opacity-15" aria-hidden="true">
+                  <rect x="1" y="9" width="3" height="4" rx="0.5" fill="white" />
+                  <rect x="5.5" y="5" width="3" height="8" rx="0.5" fill="white" />
+                  <rect x="10" y="1" width="3" height="12" rx="0.5" fill="white" />
+                </svg>
+              )}
+              {/* FX revenue: arrow up accent */}
+              {m.label === "FX revenue" && (
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0 opacity-15" aria-hidden="true">
+                  <path d="M7 12V3M7 3L3.5 6.5M7 3l3.5 3.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              )}
+              <p
+                className="text-2xl font-mono font-bold tabular-nums tracking-tight"
+                style={{ color: m.color }}
+              >
+                {m.format === "compact"
+                  ? formatCompact(m.value)
+                  : `${m.prefix}${formatMoney(m.value)}`}
+              </p>
+            </div>
           </motion.div>
         ))}
       </div>

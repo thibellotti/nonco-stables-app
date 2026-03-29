@@ -185,12 +185,20 @@ export default function YieldPage() {
             <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)]">
               {m.label}
             </div>
-            <p className={cn(
-              "font-mono font-bold text-white tabular-nums mt-2 tracking-tight",
-              m.label === "Total Deployed" ? "text-3xl" : "text-2xl"
-            )}>
-              {m.value}
-            </p>
+            {m.label === "Total Deployed" ? (
+              <div className="flex items-center gap-2 mt-2">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" className="shrink-0 opacity-20" aria-hidden="true">
+                  <path d="M9 1.5A7.5 7.5 0 0 1 16.5 9" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
+                <span className="font-mono font-bold text-white tabular-nums tracking-tight text-3xl">
+                  {m.value}
+                </span>
+              </div>
+            ) : (
+              <p className="font-mono font-bold text-white tabular-nums mt-2 tracking-tight text-2xl">
+                {m.value}
+              </p>
+            )}
             <div className="flex items-center gap-1.5 mt-2">
               <span
                 className={cn(
@@ -221,8 +229,17 @@ export default function YieldPage() {
               <motion.div
                 key={vault.id}
                 variants={fadeUp}
-                className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden flex flex-col transition-all duration-200 hover:border-[var(--border-outline)] hover:translate-y-[-1px] hover:shadow-lg hover:shadow-[rgba(255,255,255,0.03)]"
+                className="group relative bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden flex flex-col transition-all duration-200 hover:border-[var(--border-outline)] hover:translate-y-[-1px] hover:shadow-lg hover:shadow-[rgba(255,255,255,0.03)]"
               >
+                {/* Hover arc — appears on hover */}
+                <svg
+                  width="24" height="24" viewBox="0 0 24 24"
+                  className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"
+                  fill="none" aria-hidden="true"
+                >
+                  <path d="M24 0A24 24 0 0 0 0 24" stroke={vault.color} strokeWidth="1.2" opacity="0.4" />
+                </svg>
+
                 {/* Top color bar */}
                 <div className="h-[3px] w-full" style={{ background: vault.color }} />
 

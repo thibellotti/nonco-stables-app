@@ -8,6 +8,7 @@ import { CurrencyBreakdown } from "@/components/dashboard/currency-breakdown";
 import { TransactionList } from "@/components/dashboard/transaction-list";
 import { MarketWatch } from "@/components/dashboard/market-watch";
 import { RfsDialog } from "@/components/rfs/rfs-dialog";
+import { GeoDivider } from "@/components/ui/geo-divider";
 
 // ---------------------------------------------------------------------------
 // Inline quick actions — no separate component
@@ -51,6 +52,9 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      {/* Geometric divider */}
+      <GeoDivider variant="squares" className="my-1" />
+
       {/* Bento middle row — Stable Assets (3col) + Market Watch (2col), equal height */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-stretch">
         <div className="lg:col-span-3 flex flex-col">
@@ -60,6 +64,9 @@ export default function DashboardPage() {
           <MarketWatch onRequestRfs={handleRequestRfs} />
         </div>
       </div>
+
+      {/* Geometric divider */}
+      <GeoDivider variant="dots" className="my-1" />
 
       {/* Recent Activity — compact, borderless header */}
       <div className="rounded-lg overflow-hidden">

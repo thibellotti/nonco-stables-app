@@ -417,23 +417,18 @@ export default function FxBoardPage() {
           className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg"
         >
           <div className="flex flex-col items-center justify-center py-24 px-6 text-center">
-            <div className="w-12 h-12 rounded-full bg-[var(--bg-elevated)] flex items-center justify-center mb-4">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="M2 14l4-5 3 2 5-7 4 3"
-                  stroke="var(--text-4)"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none" aria-hidden="true" className="mb-4">
+              {/* 4x4 dot grid */}
+              {[0,1,2,3].map(row => [0,1,2,3].map(col => (
+                <circle key={`${row}-${col}`} cx={12 + col * 14} cy={12 + row * 14} r="1.5" fill="rgba(255,255,255,0.1)" />
+              )))}
+              {/* Connection lines between some dots */}
+              <line x1="12" y1="12" x2="26" y2="26" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+              <line x1="26" y1="26" x2="40" y2="12" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+              <line x1="40" y1="26" x2="54" y2="40" stroke="rgba(5,224,248,0.15)" strokeWidth="1" />
+              {/* Highlighted node */}
+              <circle cx="40" cy="26" r="3" fill="none" stroke="rgba(5,224,248,0.25)" strokeWidth="1" />
+            </svg>
             <p className="text-sm font-medium text-[var(--text-3)] mb-1">
               Chart view coming soon
             </p>
@@ -456,29 +451,12 @@ export default function FxBoardPage() {
           className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg"
         >
           <div className="flex flex-col items-center justify-center py-24 px-6 text-center">
-            <div className="w-12 h-12 rounded-full bg-[var(--bg-elevated)] flex items-center justify-center mb-4">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                aria-hidden="true"
-              >
-                <circle
-                  cx="10"
-                  cy="10"
-                  r="7"
-                  stroke="var(--text-4)"
-                  strokeWidth="1.5"
-                />
-                <path
-                  d="M10 6v4l3 2"
-                  stroke="var(--text-4)"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </div>
+            <svg width="64" height="32" viewBox="0 0 64 32" fill="none" aria-hidden="true" className="mb-4">
+              <line x1="4" y1="16" x2="60" y2="16" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+              <circle cx="12" cy="16" r="4" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
+              <circle cx="32" cy="16" r="4" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
+              <rect x="49" y="13" width="6" height="6" fill="rgba(255,255,255,0.1)" />
+            </svg>
             <p className="text-sm font-medium text-[var(--text-3)] mb-1">
               Trade history coming soon
             </p>

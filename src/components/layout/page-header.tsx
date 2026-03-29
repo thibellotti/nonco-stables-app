@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { NotificationCenter } from "./notification-center";
+import { PageMark } from "@/components/ui/page-mark";
 import { tickerItems } from "@/lib/mock-data";
 
 const pageTitles: Record<string, string> = {
@@ -36,6 +37,7 @@ export function PageHeader() {
         <div className="flex items-center gap-1.5 shrink-0">
           <span className="text-[13px] text-[var(--text-4)] font-sans hidden sm:inline">Nonco</span>
           <span className="text-[13px] text-[var(--text-4)] font-sans hidden sm:inline">/</span>
+          <PageMark page={segment.replace("/", "")} className="mr-1.5" />
           <span className="text-[13px] text-white font-medium font-sans">{title}</span>
         </div>
 

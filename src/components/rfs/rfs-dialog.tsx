@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn, formatMoney } from "@/lib/utils";
 import { instruments, type Instrument } from "@/lib/mock-data";
+import { CornerBrackets } from "@/components/ui/corner-brackets";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -321,6 +322,13 @@ function QuoteBox({
           : "bg-[var(--buy-dim)] border-transparent hover:border-[var(--buy)]"
       )}
     >
+      {/* Corner brackets */}
+      <CornerBrackets
+        size={14}
+        color={isSell ? "rgba(161,36,248,0.25)" : "rgba(34,197,94,0.25)"}
+        corners={["tl", "br"]}
+      />
+
       {/* Label */}
       <span
         className={cn(

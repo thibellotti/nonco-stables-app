@@ -7,6 +7,7 @@ import { balances, usdRates } from "@/lib/mock-data";
 import { formatMoney, formatCompact, cn } from "@/lib/utils";
 import { currencyColors } from "@/lib/currency-colors";
 import { BrandShapes } from "@/components/ui/brand-shapes";
+import { CornerBrackets } from "@/components/ui/corner-brackets";
 
 // ---------------------------------------------------------------------------
 // Currency metadata
@@ -95,6 +96,9 @@ export default function WalletPage() {
 
         {/* Nonco brand geometric shapes */}
         <BrandShapes />
+
+        {/* Corner brackets — geometric identity */}
+        <CornerBrackets size={18} color="rgba(255,255,255,0.08)" corners={["tl", "tr"]} />
 
         {/* Subtle radial glow */}
         <div

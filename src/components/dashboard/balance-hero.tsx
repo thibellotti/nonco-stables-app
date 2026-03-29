@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { SectionLabel } from "@/components/ui/section-label";
 import { BrandShapes } from "@/components/ui/brand-shapes";
+import { CornerBrackets } from "@/components/ui/corner-brackets";
 import { balances, usdRates } from "@/lib/mock-data";
 import { formatMoney } from "@/lib/utils";
 
@@ -199,6 +200,9 @@ export function BalanceHero() {
 
       {/* Nonco brand geometric shapes */}
       <BrandShapes />
+
+      {/* Corner brackets — geometric identity */}
+      <CornerBrackets size={20} color="rgba(255,255,255,0.1)" corners={["tl", "tr", "bl", "br"]} />
 
       {/* Header row — label + period selector */}
       <div className="flex items-center justify-between mb-6">
