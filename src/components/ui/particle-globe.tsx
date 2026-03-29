@@ -10,7 +10,7 @@ const CYAN = "#05e0f8";
 
 // ─── Config matching nonco.com/stables ───
 const CONFIG = {
-  cam: { dist: 180, rotateSpeed: 0.02, scrollInfluence: 0.8 },
+  cam: { dist: 220, rotateSpeed: 0.02, scrollInfluence: 0.8 },
   globe: { radius: 90, particles: 2000, rotSpeed: 0.08 },
   rings: [
     {
