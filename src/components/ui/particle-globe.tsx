@@ -239,12 +239,10 @@ function AmbientParticles() {
 }
 
 // ─── Camera controller — auto-orbit + scroll-driven + offset ───
-function CameraRig({ scrollProgress, offset = 0 }: { scrollProgress: number; offset?: number }) {
+function CameraRig({ scrollProgress }: { scrollProgress: number }) {
   const { camera } = useThree();
   const angle = useRef(0);
   const smoothScroll = useRef(0);
-  // Camera looks at origin, but is shifted LEFT by -offset → globe appears on the RIGHT
-  const lookTarget = useRef(new THREE.Vector3(-offset, 0, 0));
 
   useFrame((_, dt) => {
     angle.current += dt * CONFIG.cam.rotateSpeed;
@@ -254,23 +252,23 @@ function CameraRig({ scrollProgress, offset = 0 }: { scrollProgress: number; off
     const combined = angle.current + scrollAngle;
     const scrollY = Math.sin(smoothScroll.current * Math.PI * 0.5) * 60;
 
-    const tx = -offset + Math.sin(combined) * CONFIG.cam.dist;
+    const tx = Math.sin(combined) * CONFIG.cam.dist;
     const tz = Math.cos(combined) * CONFIG.cam.dist;
 
     camera.position.x += (tx - camera.position.x) * 0.04;
     camera.position.y += (scrollY - camera.position.y) * 0.04;
     camera.position.z += (tz - camera.position.z) * 0.04;
-    camera.lookAt(lookTarget.current);
+    camera.lookAt(0, 0, 0);
   });
 
   return null;
 }
 
 // ─── Scene ───
-function Scene({ scrollProgress, offset = 0 }: { scrollProgress: number; offset?: number }) {
+function Scene({ scrollProgress }: { scrollProgress: number }) {
   return (
     <>
-      <CameraRig scrollProgress={scrollProgress} offset={offset} />
+      <CameraRig scrollProgress={scrollProgress} />
       <Globe />
       {CONFIG.rings.map((ring, i) => (
         <OrbitalRing key={i} {...ring} scrollProgress={scrollProgress} isLogo={i === 0} />
@@ -318,7 +316,7 @@ export function ParticleGlobe({ size, opacity = 0.35, offset = 0, className }: P
         onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
       >
         <fog attach="fog" args={["#000000", 100, 700]} />
-        <Scene scrollProgress={scrollProgress} offset={offset} />
+        <Scene scrollProgress={scrollProgress} />
       </Canvas>
     </div>
   );
