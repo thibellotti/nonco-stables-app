@@ -236,7 +236,7 @@ interface ParticleGlobeProps {
   className?: string;
 }
 
-export function ParticleGlobe({ size = 900, opacity = 0.3, className }: ParticleGlobeProps) {
+export function ParticleGlobe({ size, opacity = 0.35, className }: ParticleGlobeProps) {
   const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
@@ -249,7 +249,16 @@ export function ParticleGlobe({ size = 900, opacity = 0.3, className }: Particle
   }, []);
 
   return (
-    <div className={className} style={{ width: size, height: size, opacity, pointerEvents: "none" }} aria-hidden="true">
+    <div
+      className={className}
+      style={{
+        width: size ?? "100%",
+        height: size ?? "100%",
+        opacity,
+        pointerEvents: "none",
+      }}
+      aria-hidden="true"
+    >
       <Canvas
         camera={{ position: [0, 0, CONFIG.cam.dist], fov: 50, near: 1, far: 1500 }}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance", outputColorSpace: THREE.SRGBColorSpace }}

@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { SectionLabel } from "@/components/ui/section-label";
 import { BrandShapes } from "@/components/ui/brand-shapes";
 import { CornerBrackets } from "@/components/ui/corner-brackets";
-import { ParticleGlobe } from "@/components/ui/particle-globe";
+
 import { balances, usdRates } from "@/lib/mock-data";
 import { formatMoney } from "@/lib/utils";
 
@@ -202,10 +202,6 @@ export function BalanceHero() {
       {/* Nonco brand geometric shapes */}
       <BrandShapes />
 
-      {/* Nonco Stables particle globe — full scene with orbital rings */}
-      <div className="absolute -right-[300px] -top-[300px] -bottom-[300px] pointer-events-none hidden lg:flex items-center justify-center">
-        <ParticleGlobe size={1100} opacity={0.28} />
-      </div>
 
       {/* Corner brackets — geometric identity */}
       <CornerBrackets size={20} color="rgba(255,255,255,0.1)" corners={["tl", "tr", "bl", "br"]} />
