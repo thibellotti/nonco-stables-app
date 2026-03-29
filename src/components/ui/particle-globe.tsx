@@ -243,7 +243,8 @@ function CameraRig({ scrollProgress, offset = 0 }: { scrollProgress: number; off
   const { camera } = useThree();
   const angle = useRef(0);
   const smoothScroll = useRef(0);
-  const target = useRef(new THREE.Vector3(offset, 0, 0));
+  // Camera looks at origin, but is shifted LEFT by -offset → globe appears on the RIGHT
+  const lookTarget = useRef(new THREE.Vector3(-offset, 0, 0));
 
   useFrame((_, dt) => {
     angle.current += dt * CONFIG.cam.rotateSpeed;
@@ -251,15 +252,15 @@ function CameraRig({ scrollProgress, offset = 0 }: { scrollProgress: number; off
 
     const scrollAngle = smoothScroll.current * Math.PI * CONFIG.cam.scrollInfluence;
     const combined = angle.current + scrollAngle;
-    const scrollY = Math.sin(smoothScroll.current * Math.PI * 0.5) * 80;
+    const scrollY = Math.sin(smoothScroll.current * Math.PI * 0.5) * 60;
 
-    const tx = offset + Math.sin(combined) * CONFIG.cam.dist;
+    const tx = -offset + Math.sin(combined) * CONFIG.cam.dist;
     const tz = Math.cos(combined) * CONFIG.cam.dist;
 
     camera.position.x += (tx - camera.position.x) * 0.04;
     camera.position.y += (scrollY - camera.position.y) * 0.04;
     camera.position.z += (tz - camera.position.z) * 0.04;
-    camera.lookAt(target.current);
+    camera.lookAt(lookTarget.current);
   });
 
   return null;
@@ -270,12 +271,10 @@ function Scene({ scrollProgress, offset = 0 }: { scrollProgress: number; offset?
   return (
     <>
       <CameraRig scrollProgress={scrollProgress} offset={offset} />
-      <group position={[offset, 0, 0]}>
-        <Globe />
-        {CONFIG.rings.map((ring, i) => (
-          <OrbitalRing key={i} {...ring} scrollProgress={scrollProgress} isLogo={i === 0} />
-        ))}
-      </group>
+      <Globe />
+      {CONFIG.rings.map((ring, i) => (
+        <OrbitalRing key={i} {...ring} scrollProgress={scrollProgress} isLogo={i === 0} />
+      ))}
       <AmbientParticles />
     </>
   );
