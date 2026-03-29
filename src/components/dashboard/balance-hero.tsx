@@ -199,9 +199,9 @@ export function BalanceHero() {
 
   return (
     <section className="card-primary relative overflow-hidden bg-[var(--bg-card)] rounded-lg p-5">
-      {/* Particle globe — right side of hero */}
-      <div className="absolute -right-[100px] -top-[100px] -bottom-[100px] pointer-events-none hidden lg:flex items-center justify-center" style={{ width: 600 }}>
-        <ParticleGlobe size={600} opacity={0.5} />
+      {/* Particle globe — LARGE, right side, overflows hero */}
+      <div className="absolute pointer-events-none hidden lg:block" style={{ right: -250, top: -300, width: 1000, height: 1000 }}>
+        <ParticleGlobe size={1000} opacity={0.55} />
       </div>
 
       {/* Header row — label + period selector */}

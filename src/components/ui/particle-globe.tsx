@@ -14,25 +14,25 @@ const CONFIG = {
   globe: { radius: 90, particles: 2000, rotSpeed: 0.08 },
   rings: [
     {
-      // Inner ring — stablecoin symbols
+      // Inner ring — stablecoin symbols (matching site: 8 items, radius 150)
       items: ["USDC", "USDT", "DAI", "TUSD", "GUSD", "PAX", "BUSD", "FRAX"],
       radius: 150,
       speed: 0.12,
       tiltX: 65,
       tiltZ: 25,
-      size: 14,
+      size: 22,
     },
     {
-      // Outer ring — fiat currency symbols (opposite tilt = crossing orbits)
-      items: ["$", "€", "£", "¥", "₹", "MX$", "R$", "A$", "C$", "₩", "CHF", "₺"],
+      // Outer ring — fiat symbols (matching site: 16 items, radius 200, opposite tilt)
+      items: ["$", "€", "£", "¥", "₹", "₩", "MX$", "R$", "A$", "C$", "S$", "CHF", "₺", "₽", "฿", "₱"],
       radius: 200,
       speed: -0.1,
       tiltX: 65,
       tiltZ: -25,
-      size: 12,
+      size: 18,
     },
   ],
-  ambient: { count: 1000, spreadMin: 200, spreadMax: 600, sizeMin: 1.5, sizeMax: 5 },
+  ambient: { count: 1500, spreadMin: 200, spreadMax: 800, sizeMin: 2, sizeMax: 6 },
 };
 
 // ─── Fibonacci sphere ───
@@ -49,21 +49,21 @@ function fibSphere(n: number, r: number): Float32Array {
   return pos;
 }
 
-// ─── Text → CanvasTexture ───
+// ─── Text → CanvasTexture (matching nonco.com/stables canvas rendering) ───
 const texCache = new Map<string, THREE.CanvasTexture>();
-function textTexture(text: string, sz = 128): THREE.CanvasTexture {
+function textTexture(text: string, sz = 256): THREE.CanvasTexture {
   if (texCache.has(text)) return texCache.get(text)!;
   const c = document.createElement("canvas");
-  c.width = sz * 2;
-  c.height = sz * 2;
+  c.width = sz;
+  c.height = sz;
   const ctx = c.getContext("2d")!;
-  ctx.clearRect(0, 0, c.width, c.height);
+  ctx.clearRect(0, 0, sz, sz);
   ctx.fillStyle = CYAN;
-  const fs = text.length > 2 ? sz * 0.6 : text.length > 1 ? sz * 0.8 : sz * 1.1;
+  const fs = text.length > 3 ? sz * 0.28 : text.length > 2 ? sz * 0.35 : text.length > 1 ? sz * 0.45 : sz * 0.55;
   ctx.font = `700 ${fs}px -apple-system, "Space Grotesk", sans-serif`;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText(text, c.width / 2, c.height / 2);
+  ctx.fillText(text, sz / 2, sz / 2);
   const tex = new THREE.CanvasTexture(c);
   tex.minFilter = THREE.LinearFilter;
   tex.magFilter = THREE.LinearFilter;
