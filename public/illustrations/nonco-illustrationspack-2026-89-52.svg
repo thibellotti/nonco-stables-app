@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 800 800">
+  <!-- Generator: Adobe Illustrator 30.1.0, SVG Export Plug-In . SVG Version: 2.1.1 Build 136)  -->
+  <defs>
+    <style>
+      .st0, .st1, .st2 {
+        stroke: #fff;
+        stroke-miterlimit: 10;
+      }
+
+      .st0, .st2 {
+        fill: none;
+      }
+
+      .st3, .st1 {
+        fill: #fff;
+      }
+
+      .st4 {
+        fill: #05e0f8;
+      }
+
+      .st5 {
+        fill: #d1d1d1;
+      }
+
+      .st2 {
+        stroke-dasharray: 2 8;
+        stroke-width: 2px;
+      }
+    </style>
+  </defs>
+  <path class="st4" d="M0,74.63c29.49,0,53.4,23.91,53.4,53.4,0,29.49-23.91,53.4-53.4,53.4"/>
+  <g>
+    <line class="st0" x1="465.45" y1="598.87" x2="800" y2="598.87"/>
+    <rect class="st3" x="465.45" y="597.46" width="157.87" height="8.32"/>
+    <rect class="st4" x="389.61" y="550.42" width="94.1" height="8.32"/>
+    <circle class="st4" cx="712.04" cy="562.67" r="10.44"/>
+    <circle class="st4" cx="746.29" cy="562.67" r="10.44"/>
+  </g>
+  <g>
+    <path class="st0" d="M119.13,800c0-103.96,84.28-188.24,188.24-188.24s188.24,84.28,188.24,188.24"/>
+    <path class="st0" d="M743.72,129.68c0,74.15-60.11,134.26-134.26,134.26s-134.26-60.11-134.26-134.26"/>
+    <rect class="st4" x="570.89" y="704.16" width="42.25" height="8.32"/>
+    <rect class="st3" x="30.89" y="281.85" width="9.61" height="8.32"/>
+    <rect class="st3" x="30.89" y="300.44" width="9.61" height="8.32"/>
+    <rect class="st3" x="30.89" y="319.03" width="9.61" height="8.32"/>
+    <rect class="st0" x="81.56" y="571.91" width="141.87" height="141.87"/>
+    <path class="st4" d="M223.43,713.78v-80.88c-35.18,17.56-63.98,45.98-81.99,80.88h81.99Z"/>
+  </g>
+  <path class="st2" d="M0,130.22c44.57,56.58,113.7,92.9,191.31,92.9,127.62,0,232.31-98.22,242.59-223.19"/>
+  <rect class="st5" x="117.08" y="282.39" width="95.57" height="8.32"/>
+  <rect class="st4" x="593.93" y="71.67" width="31.07" height="31.07" transform="translate(116.85 456.5) rotate(-45)"/>
+  <circle class="st1" cx="340.58" cy="172" r="22.31"/>
+</svg>

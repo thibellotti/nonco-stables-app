@@ -26,13 +26,13 @@ export function ProgressRing({
   return (
     <div className={`flex flex-col items-center gap-1.5 ${className ?? ""}`}>
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} aria-hidden="true">
-        {/* Track */}
+        {/* Track — visible even at 0% */}
         <circle
           cx={size / 2}
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="var(--bg-elevated)"
+          stroke="rgba(255,255,255,0.08)"
           strokeWidth={strokeWidth}
         />
         {/* Progress */}

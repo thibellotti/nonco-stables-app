@@ -15,7 +15,7 @@ import {
 import Link from "next/link";
 import { RfsDialog } from "@/components/rfs/rfs-dialog";
 import { GeoDivider } from "@/components/ui/geo-divider";
-import { GeoShape } from "@/components/ui/geo-shape";
+
 
 // ---------------------------------------------------------------------------
 // Types
@@ -276,7 +276,7 @@ export default function FxBoardPage() {
         </Button>
       </div>
 
-      <GeoDivider variant="line-dot" className="my-4" />
+      <GeoDivider variant="line-dot" className="my-8" />
 
       {/* ── Rate Board ── */}
       {activeTab === "board" && (
@@ -286,14 +286,6 @@ export default function FxBoardPage() {
           transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
           className="relative bg-[var(--bg-card)] rounded-lg overflow-hidden"
         >
-          {/* Geo shapes — "Exchange" theme */}
-          <GeoShape variant="diamond" size={24} className="absolute" style={{ top: '6px', right: '48px', opacity: 0.2 }} />
-          <GeoShape variant="diamond" size={18} className="absolute" style={{ top: '14px', right: '120px', opacity: 0.3 }} />
-          <GeoShape variant="diamond" size={20} className="absolute" style={{ top: '10px', left: '240px', opacity: 0.22 }} />
-          <GeoShape variant="grid-4" size={28} className="absolute" style={{ top: '8px', left: '52%', opacity: 0.2 }} />
-          <GeoShape variant="bracket-tr" size={18} className="absolute" style={{ top: '4px', right: '4px', opacity: 0.15 }} />
-          <GeoShape variant="bracket-bl" size={18} className="absolute" style={{ bottom: '4px', left: '4px', opacity: 0.15 }} />
-
           {/* Header row */}
           <div className="flex items-center gap-0 bg-[rgba(255,255,255,0.02)] px-4 py-3">
             {COLUMNS.map((col) => (

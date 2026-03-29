@@ -10,7 +10,7 @@ import type { RecentTrade } from "@/lib/mock-data";
 import { formatMoney, timeAgo } from "@/lib/utils";
 import { currencyColors } from "@/lib/currency-colors";
 import { GeoDivider } from "@/components/ui/geo-divider";
-import { GeoShape } from "@/components/ui/geo-shape";
+
 
 // ---------------------------------------------------------------------------
 // Filter types
@@ -195,17 +195,16 @@ export default function TradesPage() {
             {sortedPairs.map(([pair, volume], index) => {
               const pct = (volume / totalVolume) * 100;
               const barPct = (volume / maxVolume) * 100;
-              // White at decreasing opacity: 80%, 60%, 45%, 30%, 15%
-              const opacity = [0.8, 0.6, 0.45, 0.3, 0.15][index] ?? 0.15;
+              const opacity = [0.9, 0.7, 0.5, 0.35, 0.2][index] ?? 0.2;
               return (
                 <div key={pair} className="flex items-center gap-3">
                   <span className="text-xs font-mono font-bold text-white w-20 shrink-0">{pair}</span>
-                  <div className="flex-1 h-3.5 bg-[rgba(255,255,255,0.03)] rounded-full overflow-hidden">
+                  <div className="flex-1 h-3.5 bg-[rgba(255,255,255,0.04)] rounded-full overflow-hidden">
                     <div
                       className="h-full rounded-full"
                       style={{
                         width: `${barPct}%`,
-                        background: `linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,${opacity}))`,
+                        background: `linear-gradient(90deg, rgba(5,224,248,0.15), rgba(5,224,248,${opacity}))`,
                       }}
                     />
                   </div>
@@ -243,7 +242,7 @@ export default function TradesPage() {
                 className="h-full rounded-full"
                 style={{
                   width: `${buyPct}%`,
-                  background: "linear-gradient(90deg, rgba(34,197,94,0.25), rgba(34,197,94,0.8))",
+                  background: "linear-gradient(90deg, rgba(5,224,248,0.2), rgba(5,224,248,0.7))",
                 }}
               />
             </div>
@@ -261,7 +260,7 @@ export default function TradesPage() {
         </div>
       </div>
 
-      <GeoDivider variant="squares" className="my-6" />
+      <GeoDivider variant="squares" className="my-8" />
 
       {/* Filter Bar */}
       <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-3 sm:gap-4">
@@ -308,10 +307,7 @@ export default function TradesPage() {
       </div>
 
       {/* Trade Table */}
-      <div className="relative bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden overflow-x-auto table-scroll-mask">
-        <GeoShape variant="target" size={60} className="absolute" style={{ top: '-10px', right: '-10px', opacity: 0.12 }} />
-        <GeoShape variant="plus" size={16} className="absolute" style={{ top: '48px', right: '64px', opacity: 0.15 }} />
-        <GeoShape variant="plus" size={16} className="absolute" style={{ bottom: '32px', left: '24px', opacity: 0.15 }} />
+      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden overflow-x-auto table-scroll-mask">
         {filteredTrades.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
             <div className="w-12 h-12 rounded-full bg-[var(--bg-elevated)] flex items-center justify-center mb-4">

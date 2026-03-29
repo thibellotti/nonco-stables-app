@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 800 800">
+  <!-- Generator: Adobe Illustrator 30.1.0, SVG Export Plug-In . SVG Version: 2.1.1 Build 136)  -->
+  <defs>
+    <style>
+      .st0 {
+        stroke: #d1d1d1;
+      }
+
+      .st0, .st1, .st2 {
+        fill: none;
+        stroke-miterlimit: 10;
+      }
+
+      .st1, .st2 {
+        stroke: #fff;
+      }
+
+      .st3 {
+        fill: #05e0f8;
+      }
+
+      .st4 {
+        fill: #d1d1d1;
+      }
+
+      .st2 {
+        stroke-dasharray: 2.23 5.94;
+        stroke-width: 2px;
+      }
+    </style>
+  </defs>
+  <g>
+    <path class="st0" d="M344.36,212.85c0,30.73,24.91,55.64,55.64,55.64,30.73,0,55.64-24.91,55.64-55.64h-111.28Z"/>
+    <path class="st1" d="M473.15,800c0-40.4-32.75-73.15-73.15-73.15-40.4,0-73.15,32.75-73.15,73.15h146.3Z"/>
+    <rect class="st3" x="383.98" y="317.95" width="32.03" height="32.03" transform="translate(-118.99 380.66) rotate(-45)"/>
+    <polygon class="st4" points="459.16 0 400 59.16 340.84 0 459.16 0"/>
+    <polyline class="st1" points="280.59 212.85 400 93.44 519.41 212.85"/>
+    <circle class="st2" cx="400" cy="520.29" r="117.03" transform="translate(-250.75 435.23) rotate(-45)"/>
+  </g>
+  <circle class="st1" cx="400" cy="638.61" r="41.59"/>
+  <path class="st3" d="M400,638.61c14.39,0,28.19-2.57,40.95-7.28-3.44-19.5-20.46-34.31-40.95-34.31-20.49,0-37.5,14.82-40.95,34.31,12.76,4.71,26.55,7.28,40.95,7.28Z"/>
+  <g>
+    <polyline class="st1" points="417.7 520.29 400 520.29 400 502.6"/>
+    <polyline class="st1" points="382.3 520.29 400 520.29 400 537.99"/>
+  </g>
+</svg>

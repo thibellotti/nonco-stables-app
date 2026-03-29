@@ -12,28 +12,30 @@ interface BarChartProps {
   className?: string;
 }
 
-export function BarChart({ bars, height = 100, className }: BarChartProps) {
+export function BarChart({ bars, height = 160, className }: BarChartProps) {
   const max = Math.max(...bars.map((b) => b.value));
 
   return (
     <div className={className}>
-      <div className="flex items-end gap-2" style={{ height }}>
+      <div className="flex items-end gap-3" style={{ height }}>
         {bars.map((bar) => {
-          const pct = (bar.value / max) * 100;
+          const pct = max > 0 ? (bar.value / max) * 100 : 0;
+          const barHeight = (pct / 100) * height;
           return (
-            <div key={bar.label} className="flex-1 flex flex-col items-center gap-2">
+            <div key={bar.label} className="flex-1 relative" style={{ height }}>
               <div
-                className="w-full rounded-t-md transition-all duration-500"
+                className="absolute bottom-0 left-0 right-0 rounded-t"
                 style={{
-                  height: `${pct}%`,
-                  background: `linear-gradient(to top, color-mix(in srgb, ${bar.color} 35%, transparent), color-mix(in srgb, ${bar.color} 10%, transparent))`,
+                  height: barHeight,
+                  backgroundColor: bar.color,
+                  opacity: 0.75,
                 }}
               />
             </div>
           );
         })}
       </div>
-      <div className="flex gap-2 mt-3">
+      <div className="flex gap-3 mt-3">
         {bars.map((bar) => (
           <div key={bar.label} className="flex-1 text-center">
             <div className="text-[9px] font-bold" style={{ color: bar.color }}>

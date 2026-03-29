@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { apiKeys } from "@/lib/mock-data";
 import { CornerBrackets } from "@/components/ui/corner-brackets";
-import { GeoShape } from "@/components/ui/geo-shape";
+
 
 // ---------------------------------------------------------------------------
 // Permission scopes
@@ -86,11 +86,6 @@ export default function ApiKeysPage() {
         transition={{ duration: 0.4, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
         className="relative bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden"
       >
-        {/* Grafismo — Technical theme */}
-        <GeoShape variant="square-dots" size={36} className="absolute" style={{ top: 12, right: 16, opacity: 0.2 }} />
-        <GeoShape variant="bracket-tl" size={20} className="absolute" style={{ top: 8, left: 8, opacity: 0.15 }} />
-        <GeoShape variant="hex" size={30} className="absolute" style={{ bottom: 14, right: 18, opacity: 0.12 }} />
-
         <div className="px-6 py-3 border-b border-[var(--border)] bg-[var(--bg-elevated)]">
           <span className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)]">
             Active keys

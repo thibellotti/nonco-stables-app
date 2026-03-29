@@ -6,7 +6,6 @@ import { PageTransition } from "@/components/ui/page-transition";
 import { balances, usdRates } from "@/lib/mock-data";
 import { formatMoney, formatCompact, cn } from "@/lib/utils";
 import { currencyColors } from "@/lib/currency-colors";
-import { BrandShapes } from "@/components/ui/brand-shapes";
 import { CornerBrackets } from "@/components/ui/corner-brackets";
 
 
@@ -95,12 +94,17 @@ export default function WalletPage() {
           style={{ background: 'linear-gradient(135deg, rgba(5,224,248,0.06), transparent 60%)' }}
         />
 
-        {/* Nonco brand geometric shapes */}
-        <BrandShapes />
+        {/* Right-side illustration */}
+        <div className="absolute top-0 bottom-0 hidden lg:flex items-center justify-center pointer-events-none overflow-hidden" style={{ right: '-10%', width: '50%' }} aria-hidden="true">
+          <img
+            src="/illustrations/nonco-illustrationspack-2026-89-57.svg"
+            alt=""
+            style={{ width: '160%', minWidth: 750, opacity: 0.5 }}
+          />
+        </div>
 
         {/* Corner brackets — geometric identity */}
         <CornerBrackets size={18} color="rgba(255,255,255,0.08)" corners={["tl", "tr"]} />
-
 
         {/* Subtle radial glow */}
         <div
@@ -110,7 +114,7 @@ export default function WalletPage() {
           }}
         />
 
-        <div className="relative">
+        <div className="relative z-10 lg:max-w-[60%]">
           {/* Label */}
           <div className="text-[11px] uppercase tracking-[.15em] text-[var(--text-4)] font-sans">
             Total Balance
@@ -162,13 +166,13 @@ export default function WalletPage() {
             {heroActions.map((action) => {
               const inner = (
                 <>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="opacity-40">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="opacity-70">
                     <path d={action.path} stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                   <span className="text-[11px] sm:text-xs font-sans font-medium whitespace-nowrap">{action.label}</span>
                 </>
               );
-              const cls = "inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.08)] text-[var(--text-3)] hover:text-[var(--text)] transition-all duration-150 shrink-0 cursor-pointer";
+              const cls = "inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.1)] hover:border-[rgba(255,255,255,0.25)] text-[var(--text-2)] hover:text-white transition-all duration-150 shrink-0 cursor-pointer";
               if (action.href) return <Link key={action.label} href={action.href} className={cls}>{inner}</Link>;
               return <button key={action.label} type="button" className={cls}>{inner}</button>;
             })}

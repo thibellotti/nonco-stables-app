@@ -7,7 +7,7 @@ import { reportCorridors, yieldVaults } from "@/lib/mock-data";
 import { BarChart } from "@/components/viz/bar-chart";
 import { formatMoney, formatCompact } from "@/lib/utils";
 import { GeoDivider } from "@/components/ui/geo-divider";
-import { GeoShape } from "@/components/ui/geo-shape";
+
 
 // ---------------------------------------------------------------------------
 // Metric data
@@ -92,7 +92,7 @@ export default function ReportsPage() {
         ))}
       </div>
 
-      <GeoDivider variant="line-dot" className="my-6" />
+      <GeoDivider variant="line-dot" className="my-8" />
 
       {/* Full-width: Volume by corridor chart */}
       <motion.div
@@ -101,8 +101,6 @@ export default function ReportsPage() {
         transition={{ duration: 0.4, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
         className="relative bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden"
       >
-        <GeoShape variant="grid-4" size={24} className="absolute" style={{ top: '12px', right: '14px', opacity: 0.2 }} />
-        <GeoShape variant="three-dots" size={36} className="absolute" style={{ bottom: '14px', left: '16px', opacity: 0.15 }} />
         <div className="px-6 py-3 border-b border-[var(--border)]">
           <span className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)]">
             Volume by Corridor
@@ -110,9 +108,9 @@ export default function ReportsPage() {
         </div>
         <BarChart
           bars={[
-            { label: "MXN", value: 60.9, color: "rgba(255,255,255,0.7)" },
+            { label: "MXN", value: 60.9, color: "var(--cyan)" },
             { label: "BRL", value: 20.7, color: "var(--purple)" },
-            { label: "EUR", value: 13.0, color: "#38bdf8" },
+            { label: "EUR", value: 13.0, color: "var(--cyan)" },
             { label: "GBP", value: 5.4, color: "var(--amber)" },
           ]}
           height={140}
@@ -120,7 +118,7 @@ export default function ReportsPage() {
         />
       </motion.div>
 
-      <GeoDivider variant="squares" className="my-6" />
+      <GeoDivider variant="squares" className="my-8" />
 
       {/* Two-column: Corridor Details + Yield */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -131,7 +129,6 @@ export default function ReportsPage() {
           transition={{ duration: 0.4, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
           className="relative bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden"
         >
-          <GeoShape variant="square-dots" size={40} className="absolute" style={{ top: '-8px', left: '-6px', opacity: 0.12 }} />
           <div className="px-6 py-3 border-b border-[var(--border)]">
             <span className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)]">
               Corridor Details
@@ -186,7 +183,7 @@ export default function ReportsPage() {
                       <div className="flex items-center justify-end gap-2">
                         <div className="w-16 h-1.5 bg-[rgba(255,255,255,0.03)] rounded-full overflow-hidden hidden sm:block">
                           <div
-                            className="h-full rounded-full bg-white"
+                            className="h-full rounded-full bg-[var(--cyan)]"
                             style={{ width: `${c.share}%`, opacity: 1 - i * 0.2 }}
                           />
                         </div>

@@ -156,7 +156,7 @@ export function NotificationCenter() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="absolute right-0 top-[calc(100%+8px)] w-[calc(100vw-2rem)] max-w-[380px] glass-panel border border-[var(--border)] rounded-xl shadow-2xl overflow-hidden z-50"
+            className="absolute right-0 top-[calc(100%+8px)] w-[calc(100vw-2rem)] max-w-[380px] bg-[#141414] border border-[var(--border)] rounded-xl shadow-2xl overflow-hidden z-50"
             variants={dropdownVariants}
             initial="hidden"
             animate="visible"

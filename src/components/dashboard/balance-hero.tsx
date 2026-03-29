@@ -190,6 +190,9 @@ export function BalanceHero() {
 
   return (
     <section className="card-primary relative overflow-hidden bg-[var(--bg-card)] rounded-lg p-5">
+      {/* Cyan gradient overlay — brand accent */}
+      <div className="absolute inset-0 pointer-events-none rounded-lg" style={{ background: 'linear-gradient(135deg, rgba(5,224,248,0.06), transparent 60%)' }} />
+
       {/* Particle globe — large background, positioned right */}
       <div className="absolute top-0 bottom-0 pointer-events-none hidden lg:block" style={{ left: '55%', right: '-40%', zIndex: 0 }}>
         <ParticleGlobe opacity={0.4} />

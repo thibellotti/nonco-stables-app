@@ -6,7 +6,6 @@ import { SectionLabel } from "@/components/ui/section-label";
 import { Badge } from "@/components/ui/badge";
 import { CornerBrackets } from "@/components/ui/corner-brackets";
 import { GeoDivider } from "@/components/ui/geo-divider";
-import { GeoShape } from "@/components/ui/geo-shape";
 import { yieldVaults } from "@/lib/mock-data";
 import { MiniAreaChart } from "@/components/viz/mini-area-chart";
 import { cn } from "@/lib/utils";
@@ -48,7 +47,7 @@ const metrics: Metric[] = [
     value: "$7,240",
     sub: "+21% vs Feb",
     trend: "up",
-    color: "#38bdf8",
+    color: "var(--cyan)",
   },
   {
     label: "Earned YTD",
@@ -96,7 +95,7 @@ const yieldHistory = [
     apy: "2.65%",
     earned: "$590",
     status: "accruing" as const,
-    color: "#38bdf8",
+    color: "var(--cyan)",
   },
   {
     period: "Feb 2026",
@@ -172,12 +171,14 @@ export default function YieldPage() {
         animate="show"
         className="card-primary relative flex flex-col md:flex-row gap-[1px] bg-[var(--bg-highest)] rounded-xl overflow-hidden"
       >
-        {/* Geo shapes — "Growth" theme */}
-        <GeoShape variant="ring-square" size={100} className="absolute" style={{ top: '-20px', right: '-18px', opacity: 0.2 }} />
-        <GeoShape variant="node" size={28} className="absolute" style={{ top: '18%', left: '12%', opacity: 0.3 }} />
-        <GeoShape variant="node" size={22} className="absolute" style={{ bottom: '20%', right: '38%', opacity: 0.25 }} />
-        <GeoShape variant="three-dots" size={40} className="absolute" style={{ bottom: '10%', left: '30%', opacity: 0.2 }} />
-        <GeoShape variant="hex" size={45} className="absolute" style={{ top: '40%', left: '55%', opacity: 0.12 }} />
+        {/* Right-side illustration — semicircle path motif */}
+        <div className="absolute top-0 bottom-0 hidden lg:flex items-center justify-center pointer-events-none overflow-hidden" style={{ right: '-8%', width: '35%' }} aria-hidden="true">
+          <img
+            src="/illustrations/nonco-illustrationspack-2026-89-57.svg"
+            alt=""
+            style={{ width: '140%', minWidth: 400, opacity: 0.25, transform: 'translateY(-50%) translateY(50%)' }}
+          />
+        </div>
 
         {metrics.map((m, idx) => (
           <motion.div
@@ -227,7 +228,7 @@ export default function YieldPage() {
       </motion.div>
 
       {/* Brand separator */}
-      <GeoDivider variant="squares" className="my-2" />
+      <GeoDivider variant="squares" className="my-8" />
 
       {/* ── Vault cards ── */}
       <div>

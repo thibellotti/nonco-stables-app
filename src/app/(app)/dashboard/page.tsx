@@ -9,7 +9,7 @@ import { TransactionList } from "@/components/dashboard/transaction-list";
 import { MarketWatch } from "@/components/dashboard/market-watch";
 import { RfsDialog } from "@/components/rfs/rfs-dialog";
 import { GeoDivider } from "@/components/ui/geo-divider";
-import { GeoShape } from "@/components/ui/geo-shape";
+
 
 // ---------------------------------------------------------------------------
 // Inline quick actions — no separate component
@@ -42,8 +42,8 @@ export default function DashboardPage() {
         <div className="flex items-center gap-2 mt-3 overflow-x-auto scrollbar-none pb-1">
           {actions.map((a) => {
             const inner = (
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.08)] text-[12px] font-sans font-medium text-[var(--text-3)] hover:text-[var(--text)] transition-all whitespace-nowrap cursor-pointer">
-                <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="opacity-50">{a.icon}</svg>
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.12)] hover:bg-[rgba(255,255,255,0.1)] hover:border-[rgba(255,255,255,0.25)] text-[12px] font-sans font-medium text-[var(--text-2)] hover:text-[var(--text)] transition-all whitespace-nowrap cursor-pointer">
+                <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="opacity-70">{a.icon}</svg>
                 {a.label}
               </span>
             );
@@ -54,29 +54,23 @@ export default function DashboardPage() {
       </div>
 
       {/* Geometric divider */}
-      <GeoDivider variant="squares" className="my-1" />
+      <GeoDivider variant="squares" className="my-8" />
 
       {/* Bento middle row — Stable Assets (3col) + Market Watch (2col), equal height */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-stretch">
         <div className="lg:col-span-3 flex flex-col">
           <CurrencyBreakdown />
         </div>
-        <div className="lg:col-span-2 flex flex-col [&>*]:flex-1 relative overflow-hidden">
-          {/* Grafismo — Overview / Market Watch */}
-          <GeoShape variant="target" size={50} className="absolute" style={{ bottom: -12, right: -10, opacity: 0.1 }} />
-          <GeoShape variant="diamond" size={14} className="absolute" style={{ top: 12, left: 12, opacity: 0.18 }} />
+        <div className="lg:col-span-2 flex flex-col [&>*]:flex-1">
           <MarketWatch onRequestRfs={handleRequestRfs} />
         </div>
       </div>
 
       {/* Geometric divider */}
-      <GeoDivider variant="dots" className="my-1" />
+      <GeoDivider variant="dots" className="my-8" />
 
       {/* Recent Activity — compact, borderless header */}
-      <div className="relative rounded-lg overflow-hidden">
-        {/* Grafismo — Recent Activity */}
-        <GeoShape variant="three-dots" size={32} className="absolute" style={{ top: 4, right: 8, opacity: 0.15 }} />
-
+      <div>
         <div className="flex items-center justify-between px-1 mb-3">
           <span className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)]">
             Recent Activity

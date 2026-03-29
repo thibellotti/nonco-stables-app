@@ -4,14 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { PageTransition } from "@/components/ui/page-transition";
 import { Button } from "@/components/ui/button";
-import { BrandShapes } from "@/components/ui/brand-shapes";
-import { CornerBrackets } from "@/components/ui/corner-brackets";
-import { GeoShape } from "@/components/ui/geo-shape";
 import { formatMoney } from "@/lib/utils";
-
-// ---------------------------------------------------------------------------
-// Chain options
-// ---------------------------------------------------------------------------
 
 const chains = [
   { id: "ethereum", name: "Ethereum", icon: "ETH" },
@@ -23,10 +16,6 @@ const chains = [
 ];
 
 const tokens = ["USDT", "USDC", "DAI", "WETH"];
-
-// ---------------------------------------------------------------------------
-// Bridge page
-// ---------------------------------------------------------------------------
 
 export default function BridgePage() {
   const [fromChain, setFromChain] = useState("ethereum");
@@ -44,12 +33,13 @@ export default function BridgePage() {
   }
 
   return (
-    <PageTransition className="px-4 sm:px-6 md:px-8 w-full space-y-6">
+    <PageTransition className="px-4 sm:px-6 md:px-8 w-full">
+      <div className="space-y-6">
       {/* Page context header */}
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-lg bg-[rgba(56,189,248,0.08)] border border-[rgba(56,189,248,0.12)] flex items-center justify-center">
+        <div className="w-10 h-10 rounded-lg bg-[rgba(5,224,248,0.08)] border border-[rgba(5,224,248,0.12)] flex items-center justify-center">
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-            <path d="M3 7h12M15 7l-3-3M15 11H3M3 11l3 3" stroke="#38bdf8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M3 7h12M15 7l-3-3M15 11H3M3 11l3 3" stroke="#05E0F8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
         <div>
@@ -58,25 +48,24 @@ export default function BridgePage() {
         </div>
       </div>
 
-      {/* Bridge form card — full-width */}
+      {/* Bridge form card — full-width, two zones */}
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
         className="relative w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden"
       >
-        {/* Brand grafismos */}
-        <BrandShapes />
-        <CornerBrackets corners={["tl", "br"]} size={16} color="rgba(255,255,255,0.06)" />
+        {/* Right-side illustration zone — visible behind content on lg */}
+        <div className="absolute top-0 bottom-0 hidden lg:flex items-center justify-center pointer-events-none overflow-hidden" style={{ right: '-8%', width: '45%' }} aria-hidden="true">
+          <img
+            src="/illustrations/nonco-illustrationspack-2026-89-05.svg"
+            alt=""
+            style={{ width: '140%', minWidth: 700, opacity: 0.5, transform: 'rotate(90deg)' }}
+          />
+        </div>
 
-        {/* Geo shapes — "Connection" theme (nodes forming a triangle) */}
-        <GeoShape variant="node" size={32} className="absolute" style={{ top: '12%', left: '8%', opacity: 0.25 }} />
-        <GeoShape variant="node" size={32} className="absolute" style={{ top: '14%', right: '15%', opacity: 0.25 }} />
-        <GeoShape variant="node" size={32} className="absolute" style={{ bottom: '18%', left: '45%', opacity: 0.25 }} />
-        <GeoShape variant="dash-h" size={60} className="absolute" style={{ top: '13%', left: '22%', opacity: 0.15 }} />
-        <GeoShape variant="square-circles" size={44} className="absolute" style={{ bottom: '-8px', right: '-6px', opacity: 0.2 }} />
-
-        <div className="p-6 space-y-5">
+        {/* Content — constrained to left on lg */}
+        <div className="relative z-10 lg:max-w-[60%] p-6 space-y-5">
           {/* From chain */}
           <div className="space-y-1.5">
             <label className="text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--text-4)]">
@@ -88,15 +77,13 @@ export default function BridgePage() {
               className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-sans text-[var(--text)] outline-none focus:border-white transition-colors"
             >
               {chains.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
+                <option key={c.id} value={c.id}>{c.name}</option>
               ))}
             </select>
           </div>
 
           {/* Swap direction button */}
-          <div className="flex justify-center">
+          <div className="flex justify-center lg:justify-start lg:pl-8">
             <button
               onClick={swapChains}
               className="w-10 h-10 rounded-full bg-[var(--bg-elevated)] border border-[var(--border)] flex items-center justify-center hover:border-white transition-colors cursor-pointer"
@@ -119,9 +106,7 @@ export default function BridgePage() {
               className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-sans text-[var(--text)] outline-none focus:border-white transition-colors"
             >
               {chains.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
+                <option key={c.id} value={c.id}>{c.name}</option>
               ))}
             </select>
           </div>
@@ -138,9 +123,7 @@ export default function BridgePage() {
                 className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-sans text-[var(--text)] outline-none focus:border-white transition-colors"
               >
                 {tokens.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
+                  <option key={t} value={t}>{t}</option>
                 ))}
               </select>
             </div>
@@ -207,6 +190,7 @@ export default function BridgePage() {
           <div className="text-lg font-mono font-bold text-white mt-1">$2.4M</div>
         </div>
       </motion.div>
+      </div>
     </PageTransition>
   );
 }

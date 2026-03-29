@@ -9,7 +9,7 @@ import { payments } from "@/lib/mock-data";
 import { FlowDiagram } from "@/components/viz/flow-diagram";
 import { formatMoney, timeAgo } from "@/lib/utils";
 import { GeoDivider } from "@/components/ui/geo-divider";
-import { GeoShape } from "@/components/ui/geo-shape";
+
 
 // ---------------------------------------------------------------------------
 // Static options for form selects
@@ -67,9 +67,6 @@ export default function PaymentsPage() {
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
           className="relative bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden"
         >
-          <GeoShape variant="node" size={28} className="absolute" style={{ top: '10px', right: '12px', opacity: 0.25 }} />
-          <GeoShape variant="dash-h" size={50} className="absolute" style={{ top: '50%', right: '-10px', opacity: 0.12 }} />
-          <GeoShape variant="diamond" size={18} className="absolute" style={{ bottom: '16px', left: '14px', opacity: 0.2 }} />
           <div className="px-6 py-3 border-b border-[var(--border)] bg-[var(--bg-elevated)] flex items-center justify-between">
             <span className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)]">
               New payment

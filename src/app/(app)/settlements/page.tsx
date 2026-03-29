@@ -10,7 +10,7 @@ import { CompletedTable } from "@/components/settlements/completed-table";
 import { ProgressRing } from "@/components/viz/progress-ring";
 import { currencyColors } from "@/lib/currency-colors";
 import { CornerBrackets } from "@/components/ui/corner-brackets";
-import { GeoShape } from "@/components/ui/geo-shape";
+
 
 // ---------------------------------------------------------------------------
 // Mock data — expanded for richer display
@@ -182,9 +182,6 @@ export default function SettlementsPage() {
             className="relative bg-[var(--bg-elevated)] rounded-lg p-5"
           >
             <CornerBrackets size={14} color="rgba(255,255,255,0.06)" corners={["tl","tr"]} />
-            <GeoShape variant="ring-square" size={70} className="absolute" style={{ bottom: '-14px', right: '-14px', opacity: 0.15 }} />
-            <GeoShape variant="diamond" size={16} className="absolute" style={{ top: '14px', left: '48px', opacity: 0.2 }} />
-            <GeoShape variant="node" size={20} className="absolute" style={{ top: '50%', right: '16px', opacity: 0.18 }} />
             <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] mb-4">
               Settlement Pipeline
             </div>
@@ -202,7 +199,7 @@ export default function SettlementsPage() {
                     duration: 0.6,
                     ease: [0.16, 1, 0.3, 1],
                   }}
-                  className="h-full bg-white"
+                  className="h-full bg-[var(--cyan)]"
                 />
                 <motion.div
                   initial={{ width: 0 }}
@@ -223,7 +220,7 @@ export default function SettlementsPage() {
             {/* Legend */}
             <div className="flex items-center gap-6 mb-6">
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-sm bg-white" />
+                <span className="w-2.5 h-2.5 rounded-sm bg-[var(--cyan)]" />
                 <span className="text-[11px] font-sans text-[var(--text-3)]">
                   Processing
                 </span>
@@ -270,7 +267,7 @@ export default function SettlementsPage() {
                         }}
                         className="h-full rounded-full"
                         style={{
-                          background: `linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,${opacity}))`,
+                          background: `linear-gradient(90deg, rgba(5,224,248,0.15), rgba(5,224,248,${opacity}))`,
                         }}
                       />
                     </div>
@@ -301,44 +298,59 @@ export default function SettlementsPage() {
               Overview
             </div>
 
-            <div className="flex items-center gap-6 justify-center py-4">
-              <div className="text-center">
-                <ProgressRing value={58} color="var(--amber)" size={64} strokeWidth={6} label="T+1" sublabel="$108K" />
-                <div className="text-[10px] font-mono text-[var(--text-4)] mt-1.5 tabular-nums">$108K &middot; 0h left</div>
-              </div>
-              <div className="text-center">
-                <ProgressRing value={18} color="rgba(255,255,255,0.5)" size={64} strokeWidth={6} label="T+2" sublabel="$172K" />
-                <div className="text-[10px] font-mono text-[var(--text-4)] mt-1.5 tabular-nums">$172K &middot; 48h left</div>
-              </div>
-              <div className="text-center">
-                <ProgressRing value={0} color="var(--text-4)" size={64} strokeWidth={6} label="T+10" sublabel="—" />
-                <div className="text-[10px] font-mono text-[var(--text-4)] mt-1.5 tabular-nums">$0K &middot; 192h left</div>
-              </div>
-            </div>
-
-            <div>
+            {/* Total exposure — hero number */}
+            <div className="pb-4 border-b border-[var(--border)]">
               <p className="text-3xl font-mono font-bold text-white tabular-nums">
                 ${formatMoney(totalPendingAmount)}
               </p>
-              <p className="text-xs text-[var(--text-4)] font-sans">
+              <p className="text-[11px] text-[var(--text-4)] font-sans mt-0.5">
                 total exposure
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            {/* Settlement terms — horizontal strip */}
+            <div className="grid grid-cols-3 gap-4 py-3">
+              <div className="text-center space-y-2">
+                <ProgressRing value={58} color="var(--cyan)" size={72} strokeWidth={5} />
+                <div>
+                  <div className="text-xs font-mono font-bold text-white">T+1</div>
+                  <div className="text-[10px] font-mono text-[var(--cyan)] tabular-nums">$108K</div>
+                  <div className="text-[9px] text-[var(--text-4)] mt-0.5">0h left</div>
+                </div>
+              </div>
+              <div className="text-center space-y-2">
+                <ProgressRing value={18} color="var(--cyan)" size={72} strokeWidth={5} />
+                <div>
+                  <div className="text-xs font-mono font-bold text-white">T+2</div>
+                  <div className="text-[10px] font-mono text-[var(--cyan)] tabular-nums">$172K</div>
+                  <div className="text-[9px] text-[var(--text-4)] mt-0.5">48h left</div>
+                </div>
+              </div>
+              <div className="text-center space-y-2">
+                <ProgressRing value={0} color="var(--text-3)" size={72} strokeWidth={5} />
+                <div>
+                  <div className="text-xs font-mono font-bold text-white">T+10</div>
+                  <div className="text-[10px] font-mono text-[var(--text-4)] tabular-nums">—</div>
+                  <div className="text-[9px] text-[var(--text-4)] mt-0.5">192h left</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Processing / Awaiting counts */}
+            <div className="grid grid-cols-2 gap-4 pt-3 border-t border-[var(--border)]">
               <div>
-                <p className="text-lg font-mono font-medium text-white tabular-nums">
+                <p className="text-2xl font-mono font-bold text-white tabular-nums">
                   {processingCount}
                 </p>
-                <p className="text-xs text-[var(--text-4)] font-sans">
+                <p className="text-[11px] text-[var(--text-4)] font-sans">
                   processing
                 </p>
               </div>
               <div>
-                <p className="text-lg font-mono font-medium text-[var(--amber)] tabular-nums">
+                <p className="text-2xl font-mono font-bold text-[var(--cyan)] tabular-nums">
                   {awaitingCount}
                 </p>
-                <p className="text-xs text-[var(--text-4)] font-sans">
+                <p className="text-[11px] text-[var(--text-4)] font-sans">
                   awaiting
                 </p>
               </div>
@@ -366,7 +378,7 @@ export default function SettlementsPage() {
                   className="h-full rounded-full"
                   style={{
                     background:
-                      "linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.5))",
+                      "linear-gradient(90deg, rgba(5,224,248,0.2), rgba(5,224,248,0.6))",
                   }}
                 />
               </div>
@@ -413,7 +425,7 @@ export default function SettlementsPage() {
             }`}
           >
             Pending{" "}
-            <span className="ml-1 text-[var(--amber)]">
+            <span className="ml-1 text-[var(--cyan)]">
               {pendingSettlements.length}
             </span>
           </button>
@@ -552,8 +564,8 @@ export default function SettlementsPage() {
                       const baseColor =
                         currencyColors[baseCurrency]?.border ?? "rgba(255,255,255,0.5)";
                       const progressGradient = isProcessing
-                        ? "linear-gradient(90deg, rgba(255,255,255,0.3), rgba(255,255,255,0.7))"
-                        : "linear-gradient(90deg, #d97706, var(--amber))";
+                        ? "linear-gradient(90deg, rgba(5,224,248,0.3), rgba(5,224,248,0.7))"
+                        : "linear-gradient(90deg, #04b0c4, var(--cyan))";
 
                       return (
                         <motion.tr
@@ -666,8 +678,8 @@ export default function SettlementsPage() {
                                 Processing
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1.5 text-[11px] font-bold font-sans uppercase tracking-[.1em] text-[var(--amber)]">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[var(--amber)]" />
+                              <span className="inline-flex items-center gap-1.5 text-[11px] font-bold font-sans uppercase tracking-[.1em] text-[var(--cyan)]">
+                                <span className="w-1.5 h-1.5 rounded-full bg-[var(--cyan)]" />
                                 Awaiting
                               </span>
                             )}
@@ -721,11 +733,11 @@ export default function SettlementsPage() {
               const baseColor =
                 currencyColors[baseCurrency]?.border ?? "#ffffff";
               const progressGradient = isProcessing
-                ? "linear-gradient(90deg, rgba(255,255,255,0.4), rgba(255,255,255,0.8))"
-                : "linear-gradient(90deg, #d97706, var(--amber))";
+                ? "linear-gradient(90deg, rgba(5,224,248,0.4), rgba(5,224,248,0.8))"
+                : "linear-gradient(90deg, #04b0c4, var(--cyan))";
 
               return (
-                <div className="bg-[var(--bg-card)] border border-[var(--border)] border-t-2 border-t-white rounded-lg p-5">
+                <div className="bg-[var(--bg-card)] border border-[var(--border)] border-t-2 border-t-[var(--cyan)] rounded-lg p-5">
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-[11px] uppercase tracking-[.12em] font-sans font-medium text-[var(--text-4)]">
                       Next Due
@@ -804,8 +816,8 @@ export default function SettlementsPage() {
                         Processing
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1.5 text-[11px] font-bold font-sans uppercase tracking-[.1em] text-[var(--amber)]">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--amber)]" />
+                      <span className="inline-flex items-center gap-1.5 text-[11px] font-bold font-sans uppercase tracking-[.1em] text-[var(--cyan)]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--cyan)]" />
                         Awaiting
                       </span>
                     )}
@@ -853,7 +865,7 @@ export default function SettlementsPage() {
                           }}
                           className="h-full rounded-full"
                           style={{
-                            background: `linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,${opacity}))`,
+                            background: `linear-gradient(90deg, rgba(5,224,248,0.15), rgba(5,224,248,${opacity}))`,
                           }}
                         />
                       </div>
@@ -889,7 +901,7 @@ export default function SettlementsPage() {
                         <div
                           className={`w-2 h-2 rounded-full shrink-0 mt-1.5 ${
                             isProcessing
-                              ? "bg-white"
+                              ? "bg-[var(--cyan)]"
                               : "bg-[var(--bg-bright)]"
                           }`}
                         />
