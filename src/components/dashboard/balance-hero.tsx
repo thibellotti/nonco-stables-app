@@ -201,7 +201,7 @@ export function BalanceHero() {
     <section className="card-primary relative overflow-hidden bg-[var(--bg-card)] rounded-lg p-5">
       {/* Particle globe — right half visible inside card */}
       <div className="absolute inset-0 pointer-events-none hidden lg:block" style={{ zIndex: 0 }}>
-        <ParticleGlobe opacity={0.4} offset={120} />
+        <ParticleGlobe opacity={0.4} offset={250} />
       </div>
 
       {/* Header */}
