@@ -11,7 +11,7 @@ interface ParticleGlobeProps {
 
 export function ParticleGlobe({
   size = 500,
-  particleCount = 2000,
+  particleCount = 2500,
   opacity = 0.35,
   className,
 }: ParticleGlobeProps) {
@@ -21,7 +21,6 @@ export function ParticleGlobe({
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches) return;
 
     const ctx = canvas.getContext("2d");
@@ -34,16 +33,26 @@ export function ParticleGlobe({
 
     const cx = size / 2;
     const cy = size / 2;
-    const radius = size * 0.42;
 
-    // Fibonacci sphere distribution — uniform point spread
-    const phi = (1 + Math.sqrt(5)) / 2;
-    const points: { theta: number; phi: number }[] = [];
+    // Grid-based ripple formation — matches nonco.com/stables Three.js
+    const gridSize = Math.ceil(Math.sqrt(particleCount));
+    const gridSpread = size * 0.8;
+    const spacing = gridSpread / gridSize;
+    const offset = gridSpread / 2;
 
-    for (let i = 0; i < particleCount; i++) {
-      const y = 1 - (i / (particleCount - 1)) * 2;
-      const angle = ((2 * Math.PI * i) / phi) % (2 * Math.PI);
-      points.push({ theta: angle, phi: Math.acos(y) });
+    // Wave params from Nonco preset: waveAmplitude 73, waveFrequency 3.0, waveSpeed 0.1
+    const waveAmplitude = size * 0.08;
+    const waveFrequency = 3.0;
+
+    // Pre-compute grid positions
+    const particles: { gx: number; gy: number }[] = [];
+    for (let i = 0; i < gridSize * gridSize && particles.length < particleCount; i++) {
+      const ix = i % gridSize;
+      const iy = Math.floor(i / gridSize);
+      particles.push({
+        gx: ix * spacing - offset,
+        gy: iy * spacing - offset,
+      });
     }
 
     const animate = (time: number) => {
@@ -51,70 +60,61 @@ export function ParticleGlobe({
       ctx.clearRect(0, 0, size, size);
 
       const t = time / 1000;
-      const rotY = t * 0.12;   // slow Y rotation
-      const rotX = t * 0.04;   // very slow X tilt — adds 3D depth
 
-      const cosRY = Math.cos(rotY);
-      const sinRY = Math.sin(rotY);
-      const cosRX = Math.cos(rotX * 0.3); // subtle tilt
-      const sinRX = Math.sin(rotX * 0.3);
+      // Auto-rotation — matches autoRotate: 20 from Nonco preset
+      const rotY = t * 0.3;
+      const cosR = Math.cos(rotY);
+      const sinR = Math.sin(rotY);
 
-      const projected: { x: number; y: number; z: number; norm: number }[] = [];
+      const projected: { sx: number; sy: number; z: number; norm: number }[] = [];
+      const fov = size * 1.2;
 
-      for (let i = 0; i < points.length; i++) {
-        const p = points[i];
-        const sp = Math.sin(p.phi);
-        const cp = Math.cos(p.phi);
-        const st = Math.sin(p.theta);
-        const ct = Math.cos(p.theta);
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
 
-        // Base sphere position
-        let x = radius * sp * ct;
-        let y = radius * cp;
-        let z = radius * sp * st;
+        // Grid X/Z plane positions
+        const x = p.gx;
+        const z = p.gy;
 
-        // Ripple wave deformation — Nonco Stables signature
-        const dist = Math.sqrt(x * x + z * z);
-        y += Math.sin(dist * 0.035 - t * 1.2) * 12;
+        // Ripple wave: height based on distance from center
+        const centerDx = (i % gridSize) - gridSize / 2;
+        const centerDy = Math.floor(i / gridSize) - gridSize / 2;
+        const dist = Math.sqrt(centerDx * centerDx + centerDy * centerDy);
+        const y = Math.sin(dist * waveFrequency * 0.15 - t * 2) * waveAmplitude;
 
-        // Rotation Y (main spin)
-        const x1 = x * cosRY - z * sinRY;
-        const z1 = x * sinRY + z * cosRY;
-
-        // Rotation X (subtle tilt for depth)
-        const y1 = y * cosRX - z1 * sinRX;
-        const z2 = y * sinRX + z1 * cosRX;
+        // Rotate around Y axis (the main spin)
+        const rx = x * cosR - z * sinR;
+        const rz = x * sinR + z * cosR;
 
         // Perspective projection
-        const fov = 500;
-        const scale = fov / (fov + z2);
-        const sx = cx + x1 * scale;
-        const sy = cy + y1 * scale;
-        const norm = (z2 + radius) / (radius * 2); // 0=back, 1=front
+        const scale = fov / (fov + rz);
+        const sx = cx + rx * scale;
+        const sy = cy + y * scale;
 
-        projected.push({ x: sx, y: sy, z: z2, norm });
+        // Depth normalization: -offset..+offset → 0..1
+        const norm = (rz + offset) / (offset * 2);
+
+        projected.push({ sx, sy, z: rz, norm });
       }
 
-      // Sort back-to-front
+      // Sort back to front
       projected.sort((a, b) => a.z - b.z);
 
+      // Draw
       for (const p of projected) {
-        // Size: back=1px, front=2.8px
-        const sz = 0.8 + p.norm * 2;
-        // Alpha: back=0.04, front=0.5
-        const alpha = 0.04 + p.norm * 0.46;
+        const sz = 0.6 + p.norm * 1.8;
+        const alpha = 0.02 + p.norm * 0.4;
 
-        // Color layers: cyan front, blue-gray mid, dim back
         if (p.norm > 0.55) {
           ctx.fillStyle = `rgba(5, 224, 248, ${alpha})`;
-        } else if (p.norm > 0.25) {
-          ctx.fillStyle = `rgba(140, 190, 210, ${alpha * 0.5})`;
+        } else if (p.norm > 0.3) {
+          ctx.fillStyle = `rgba(150, 200, 220, ${alpha * 0.4})`;
         } else {
-          ctx.fillStyle = `rgba(80, 100, 120, ${alpha * 0.2})`;
+          ctx.fillStyle = `rgba(80, 110, 130, ${alpha * 0.15})`;
         }
 
-        // Square particles — Nonco signature
-        ctx.fillRect(p.x - sz / 2, p.y - sz / 2, sz, sz);
+        // Square particles — Nonco particleShape: 'square'
+        ctx.fillRect(p.sx - sz / 2, p.sy - sz / 2, sz, sz);
       }
     };
 
@@ -126,12 +126,7 @@ export function ParticleGlobe({
     <canvas
       ref={canvasRef}
       className={className}
-      style={{
-        width: size,
-        height: size,
-        opacity,
-        pointerEvents: "none",
-      }}
+      style={{ width: size, height: size, opacity, pointerEvents: "none" }}
       aria-hidden="true"
     />
   );
