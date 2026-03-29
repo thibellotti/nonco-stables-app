@@ -238,11 +238,12 @@ function AmbientParticles() {
   );
 }
 
-// ─── Camera controller — auto-orbit + scroll-driven ───
-function CameraRig({ scrollProgress }: { scrollProgress: number }) {
+// ─── Camera controller — auto-orbit + scroll-driven + offset ───
+function CameraRig({ scrollProgress, offset = 0 }: { scrollProgress: number; offset?: number }) {
   const { camera } = useThree();
   const angle = useRef(0);
   const smoothScroll = useRef(0);
+  const target = useRef(new THREE.Vector3(offset, 0, 0));
 
   useFrame((_, dt) => {
     angle.current += dt * CONFIG.cam.rotateSpeed;
@@ -252,27 +253,29 @@ function CameraRig({ scrollProgress }: { scrollProgress: number }) {
     const combined = angle.current + scrollAngle;
     const scrollY = Math.sin(smoothScroll.current * Math.PI * 0.5) * 80;
 
-    const tx = Math.sin(combined) * CONFIG.cam.dist;
+    const tx = offset + Math.sin(combined) * CONFIG.cam.dist;
     const tz = Math.cos(combined) * CONFIG.cam.dist;
 
     camera.position.x += (tx - camera.position.x) * 0.04;
     camera.position.y += (scrollY - camera.position.y) * 0.04;
     camera.position.z += (tz - camera.position.z) * 0.04;
-    camera.lookAt(0, 0, 0);
+    camera.lookAt(target.current);
   });
 
   return null;
 }
 
 // ─── Scene ───
-function Scene({ scrollProgress }: { scrollProgress: number }) {
+function Scene({ scrollProgress, offset = 0 }: { scrollProgress: number; offset?: number }) {
   return (
     <>
-      <CameraRig scrollProgress={scrollProgress} />
-      <Globe />
-      {CONFIG.rings.map((ring, i) => (
-        <OrbitalRing key={i} {...ring} scrollProgress={scrollProgress} isLogo={i === 0} />
-      ))}
+      <CameraRig scrollProgress={scrollProgress} offset={offset} />
+      <group position={[offset, 0, 0]}>
+        <Globe />
+        {CONFIG.rings.map((ring, i) => (
+          <OrbitalRing key={i} {...ring} scrollProgress={scrollProgress} isLogo={i === 0} />
+        ))}
+      </group>
       <AmbientParticles />
     </>
   );
@@ -282,10 +285,11 @@ function Scene({ scrollProgress }: { scrollProgress: number }) {
 interface ParticleGlobeProps {
   size?: number;
   opacity?: number;
+  offset?: number; // shift globe to the right in 3D space
   className?: string;
 }
 
-export function ParticleGlobe({ size, opacity = 0.35, className }: ParticleGlobeProps) {
+export function ParticleGlobe({ size, opacity = 0.35, offset = 0, className }: ParticleGlobeProps) {
   const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
@@ -315,7 +319,7 @@ export function ParticleGlobe({ size, opacity = 0.35, className }: ParticleGlobe
         onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
       >
         <fog attach="fog" args={["#000000", 100, 700]} />
-        <Scene scrollProgress={scrollProgress} />
+        <Scene scrollProgress={scrollProgress} offset={offset} />
       </Canvas>
     </div>
   );
