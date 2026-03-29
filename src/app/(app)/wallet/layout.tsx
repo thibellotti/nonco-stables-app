@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Wallet — Nonco Stables",
+  title: "Wallet",
   description: "Digital asset management",
 };
 

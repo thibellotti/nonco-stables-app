@@ -7,8 +7,11 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Nonco Stables",
-  description: "Institutional stablecoin settlement platform",
+  title: {
+    default: "Nonco Stables",
+    template: "%s — Nonco Stables",
+  },
+  description: "Institutional stablecoin settlement platform — FX, bridge, yield, and payments across 6 chains.",
   icons: {
     icon: [
       { url: "/icon.svg", type: "image/svg+xml" },
@@ -17,7 +20,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Nonco Stables",
-    description: "Institutional stablecoin settlement platform",
+    description: "Institutional stablecoin settlement platform — FX, bridge, yield, and payments across 6 chains.",
     type: "website",
     siteName: "Nonco Stables",
   },
@@ -29,7 +32,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#ffffff",
+  themeColor: "#05E0F8",
   width: "device-width",
   initialScale: 1,
 };

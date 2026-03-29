@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Trades — Nonco Stables",
+  title: "Trades",
   description: "Execution history and trade records",
 };
 

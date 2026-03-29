@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "RFQ — Nonco Stables",
+  title: "RFQ",
   description: "Request for quote and pricing",
 };
 

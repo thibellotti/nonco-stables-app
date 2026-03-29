@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Dashboard — Nonco Stables",
+  title: "Dashboard",
   description: "Portfolio overview and recent transactions",
 };
 
