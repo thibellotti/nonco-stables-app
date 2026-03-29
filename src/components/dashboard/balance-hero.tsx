@@ -204,33 +204,9 @@ export function BalanceHero() {
         <ParticleGlobe size={1000} opacity={0.55} />
       </div>
 
-      {/* Header row — label + period selector */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <SectionLabel>Portfolio</SectionLabel>
-          <p className="text-[11px] font-sans text-[var(--text-4)] mt-1.5 ml-[14px]">
-            Portfolio value — last 30 days
-          </p>
-        </div>
-
-        {/* Period selector */}
-        <div className="flex flex-wrap gap-1">
-          {periodOptions.map((p) => (
-            <button
-              key={p}
-              type="button"
-              aria-pressed={activePeriod === p}
-              onClick={() => setActivePeriod(p)}
-              className={
-                activePeriod === p
-                  ? "font-sans text-[11px] uppercase tracking-[.1em] px-3 py-1 rounded-full bg-[rgba(255,255,255,0.08)] text-white border border-[rgba(255,255,255,0.12)] cursor-default"
-                  : "font-sans text-[11px] uppercase tracking-[.1em] px-3 py-1 rounded-full bg-[rgba(255,255,255,0.03)] text-[var(--text-4)] cursor-pointer hover:bg-[rgba(255,255,255,0.06)] transition-colors"
-              }
-            >
-              {p}
-            </button>
-          ))}
-        </div>
+      {/* Header */}
+      <div className="mb-4 relative z-10">
+        <SectionLabel>Portfolio</SectionLabel>
       </div>
 
       {/* Balance row — number + change badge */}
@@ -273,6 +249,25 @@ export function BalanceHero() {
             </span>
           </div>
           <span className="text-[var(--text-4)] text-[11px] font-mono">24h</span>
+
+          {/* Period selector — inline with change badge */}
+          <div className="flex gap-1 ml-auto">
+            {periodOptions.map((p) => (
+              <button
+                key={p}
+                type="button"
+                aria-pressed={activePeriod === p}
+                onClick={() => setActivePeriod(p)}
+                className={
+                  activePeriod === p
+                    ? "font-sans text-[11px] uppercase tracking-[.08em] px-3 py-1 rounded-full bg-[rgba(255,255,255,0.1)] text-white cursor-default"
+                    : "font-sans text-[11px] uppercase tracking-[.08em] px-3 py-1 rounded-full text-[var(--text-4)] cursor-pointer hover:bg-[rgba(255,255,255,0.06)] transition-colors"
+                }
+              >
+                {p}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 

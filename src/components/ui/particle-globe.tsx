@@ -49,17 +49,55 @@ function fibSphere(n: number, r: number): Float32Array {
   return pos;
 }
 
-// ─── Text → CanvasTexture (matching nonco.com/stables canvas rendering) ───
+// ─── Stablecoin logo texture: circle container + abbreviation inside ───
 const texCache = new Map<string, THREE.CanvasTexture>();
-function textTexture(text: string, sz = 256): THREE.CanvasTexture {
-  if (texCache.has(text)) return texCache.get(text)!;
+
+function logoTexture(text: string, sz = 256): THREE.CanvasTexture {
+  const key = `logo-${text}`;
+  if (texCache.has(key)) return texCache.get(key)!;
   const c = document.createElement("canvas");
-  c.width = sz;
-  c.height = sz;
+  c.width = sz; c.height = sz;
+  const ctx = c.getContext("2d")!;
+  const cx = sz / 2;
+
+  // Circle background
+  ctx.beginPath();
+  ctx.arc(cx, cx, cx * 0.85, 0, Math.PI * 2);
+  ctx.fillStyle = "rgba(5, 224, 248, 0.12)";
+  ctx.fill();
+
+  // Circle border
+  ctx.beginPath();
+  ctx.arc(cx, cx, cx * 0.85, 0, Math.PI * 2);
+  ctx.strokeStyle = "rgba(5, 224, 248, 0.5)";
+  ctx.lineWidth = sz * 0.02;
+  ctx.stroke();
+
+  // Abbreviation text (first letter large, or symbol)
+  ctx.fillStyle = CYAN;
+  const symbol = text === "USDC" ? "$" : text === "USDT" ? "₮" : text === "DAI" ? "◆" : text === "TUSD" ? "$" : text === "GUSD" ? "$" : text === "PAX" ? "₱" : text === "BUSD" ? "B" : text === "FRAX" ? "F" : text[0];
+  ctx.font = `700 ${sz * 0.45}px -apple-system, "Space Grotesk", sans-serif`;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(symbol, cx, cx);
+
+  const tex = new THREE.CanvasTexture(c);
+  tex.minFilter = THREE.LinearFilter;
+  tex.magFilter = THREE.LinearFilter;
+  texCache.set(key, tex);
+  return tex;
+}
+
+// ─── Fiat currency text: large bold symbol ───
+function currencyTexture(text: string, sz = 256): THREE.CanvasTexture {
+  const key = `fiat-${text}`;
+  if (texCache.has(key)) return texCache.get(key)!;
+  const c = document.createElement("canvas");
+  c.width = sz; c.height = sz;
   const ctx = c.getContext("2d")!;
   ctx.clearRect(0, 0, sz, sz);
   ctx.fillStyle = CYAN;
-  const fs = text.length > 3 ? sz * 0.28 : text.length > 2 ? sz * 0.35 : text.length > 1 ? sz * 0.45 : sz * 0.55;
+  const fs = text.length > 2 ? sz * 0.32 : text.length > 1 ? sz * 0.45 : sz * 0.6;
   ctx.font = `700 ${fs}px -apple-system, "Space Grotesk", sans-serif`;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
@@ -67,7 +105,7 @@ function textTexture(text: string, sz = 256): THREE.CanvasTexture {
   const tex = new THREE.CanvasTexture(c);
   tex.minFilter = THREE.LinearFilter;
   tex.magFilter = THREE.LinearFilter;
-  texCache.set(text, tex);
+  texCache.set(key, tex);
   return tex;
 }
 
@@ -93,9 +131,9 @@ function Globe() {
 
 // ─── Orbital ring with currency sprites ───
 function OrbitalRing({
-  items, radius, speed, tiltX, tiltZ, size, scrollProgress,
+  items, radius, speed, tiltX, tiltZ, size, scrollProgress, isLogo,
 }: {
-  items: string[]; radius: number; speed: number; tiltX: number; tiltZ: number; size: number; scrollProgress: number;
+  items: string[]; radius: number; speed: number; tiltX: number; tiltZ: number; size: number; scrollProgress: number; isLogo?: boolean;
 }) {
   const groupRef = useRef<THREE.Group>(null);
   const baseRot = useRef(0);
@@ -109,7 +147,7 @@ function OrbitalRing({
     [items, radius]
   );
 
-  const textures = useMemo(() => items.map((t) => textTexture(t)), [items]);
+  const textures = useMemo(() => items.map((t) => isLogo ? logoTexture(t) : currencyTexture(t)), [items, isLogo]);
 
   useFrame((_, dt) => {
     if (!groupRef.current) return;
@@ -222,7 +260,7 @@ function Scene({ scrollProgress }: { scrollProgress: number }) {
       <CameraRig scrollProgress={scrollProgress} />
       <Globe />
       {CONFIG.rings.map((ring, i) => (
-        <OrbitalRing key={i} {...ring} scrollProgress={scrollProgress} />
+        <OrbitalRing key={i} {...ring} scrollProgress={scrollProgress} isLogo={i === 0} />
       ))}
       <AmbientParticles />
     </>
