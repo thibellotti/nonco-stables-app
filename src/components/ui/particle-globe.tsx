@@ -135,7 +135,7 @@ function Globe() {
 
   return (
     <points ref={ref} geometry={geo}>
-      <pointsMaterial color={CYAN} size={1.8} sizeAttenuation transparent opacity={0.75} depthWrite={false} />
+      <pointsMaterial color={CYAN} size={1.0} sizeAttenuation transparent opacity={0.7} depthWrite={false} />
     </points>
   );
 }
