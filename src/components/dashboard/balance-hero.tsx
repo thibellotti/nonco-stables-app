@@ -198,10 +198,14 @@ export function BalanceHero() {
   };
 
   return (
-    <section className="card-primary relative bg-[var(--bg-card)] rounded-lg p-5" style={{ overflow: "visible" }}>
-      {/* Particle globe — RIGHT side, vertically centered, overflows card without clipping */}
-      <div className="absolute pointer-events-none hidden lg:block" style={{ right: -300, top: "50%", transform: "translateY(-50%)", width: 1400, height: 1400, zIndex: 0 }}>
-        <ParticleGlobe size={1400} opacity={0.45} />
+    <section
+      className="card-primary relative bg-[var(--bg-card)] rounded-lg p-5"
+      style={{ clipPath: "inset(-100px 0px -100px -600px round 8px)" }}
+    >
+      {/* Particle globe — RIGHT side, vertically centered */}
+      {/* Card clips right/top/bottom but allows left overflow for orbital rings */}
+      <div className="absolute pointer-events-none hidden lg:block" style={{ right: -200, top: "50%", transform: "translateY(-50%)", width: 1400, height: 1400, zIndex: 0 }}>
+        <ParticleGlobe size={1400} opacity={0.5} />
       </div>
 
       {/* Header */}
