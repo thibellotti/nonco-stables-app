@@ -1,15 +1,12 @@
-import { cn } from "@/lib/utils";
+import { Diamond } from "@/components/ui/diamond";
 
-interface SectionLabelProps {
-  children: React.ReactNode;
-  color?: string;
-  className?: string;
-}
-
-export function SectionLabel({ children, className }: SectionLabelProps) {
+export function SectionLabel({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <span className={cn("font-sans text-[11px] font-medium uppercase tracking-[.15em] text-[var(--text-3)]", className)}>
-      {children}
-    </span>
+    <div className={`flex items-center gap-2 ${className ?? ""}`}>
+      <Diamond size={6} color="var(--cyan)" />
+      <span className="font-sans text-[11px] font-medium uppercase tracking-[.15em] text-[var(--text-3)]">
+        {children}
+      </span>
+    </div>
   );
 }

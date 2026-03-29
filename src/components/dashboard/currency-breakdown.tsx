@@ -3,6 +3,7 @@ import { cn, formatCompact, formatMoney } from "@/lib/utils";
 import { balances, usdRates } from "@/lib/mock-data";
 import { SectionLabel } from "@/components/ui/section-label";
 import { Sparkline } from "@/components/ui/sparkline";
+import { Diamond } from "@/components/ui/diamond";
 
 // Hardcoded sparkline data (12 points each, normalized 0-1)
 const sparklineData: Record<string, number[]> = {
@@ -81,10 +82,7 @@ export function CurrencyBreakdown() {
             >
               {/* Currency name + dot */}
               <div className="flex items-center gap-3">
-                <div
-                  className="w-2 h-2 rounded-full shrink-0"
-                  style={{ backgroundColor: tier.dot }}
-                />
+                <Diamond size={7} color={tier.dot} />
                 <div>
                   <span className="text-sm font-semibold font-sans text-[var(--text)]">
                     {balance.currency}

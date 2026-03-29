@@ -6,6 +6,8 @@ import { PageTransition } from "@/components/ui/page-transition";
 import { balances, usdRates } from "@/lib/mock-data";
 import { formatMoney, formatCompact, cn } from "@/lib/utils";
 import { currencyColors } from "@/lib/currency-colors";
+import { Diamond } from "@/components/ui/diamond";
+import { BrandShapes } from "@/components/ui/brand-shapes";
 
 // ---------------------------------------------------------------------------
 // Currency metadata
@@ -92,6 +94,9 @@ export default function WalletPage() {
           style={{ background: 'linear-gradient(135deg, rgba(5,224,248,0.06), transparent 60%)' }}
         />
 
+        {/* Nonco brand geometric shapes */}
+        <BrandShapes />
+
         {/* Subtle radial glow */}
         <div
           className="pointer-events-none absolute -top-20 -right-20 w-60 h-60 rounded-full"
@@ -141,10 +146,7 @@ export default function WalletPage() {
                 key={a.currency}
                 className="inline-flex items-center gap-1.5 text-[11px] text-[var(--text-4)] font-sans"
               >
-                <span
-                  className="w-2 h-2 rounded-full shrink-0"
-                  style={{ backgroundColor: a.color }}
-                />
+                <Diamond size={6} color={a.color} />
                 {a.currency} {Math.round(a.pct)}%
               </span>
             ))}

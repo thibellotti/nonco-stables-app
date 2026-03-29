@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { SectionLabel } from "@/components/ui/section-label";
+import { BrandShapes } from "@/components/ui/brand-shapes";
 import { balances, usdRates } from "@/lib/mock-data";
 import { formatMoney } from "@/lib/utils";
 
@@ -195,6 +196,9 @@ export function BalanceHero() {
     <section className="card-primary relative overflow-hidden bg-[var(--bg-card)] rounded-lg p-5">
       {/* Stables gradient overlay */}
       <div className="absolute inset-0 pointer-events-none rounded-lg" style={{ background: 'linear-gradient(135deg, rgba(5,224,248,0.06), transparent 60%)' }} />
+
+      {/* Nonco brand geometric shapes */}
+      <BrandShapes />
 
       {/* Header row — label + period selector */}
       <div className="flex items-center justify-between mb-6">
@@ -416,11 +420,14 @@ export function BalanceHero() {
             <animate attributeName="r" values="8;12;8" dur="2s" repeatCount="indefinite" />
             <animate attributeName="opacity" values={hoverIdx !== null ? "0.05;0.02;0.05" : "0.3;0.1;0.3"} dur="2s" repeatCount="indefinite" />
           </circle>
-          {/* Endpoint — solid center */}
-          <circle
-            cx={lastPt.x}
-            cy={lastPt.y}
-            r="3.5"
+          {/* Endpoint — diamond center (Nonco brand shape) */}
+          <rect
+            x={lastPt.x}
+            y={lastPt.y}
+            width="7"
+            height="7"
+            rx="1"
+            transform={`rotate(45 ${lastPt.x} ${lastPt.y})`}
             fill="#05E0F8"
             opacity={hoverIdx !== null ? "0.2" : "1"}
           />
@@ -448,13 +455,15 @@ export function BalanceHero() {
               }}
             />
 
-            {/* Hover dot — positioned via percentage, with glow */}
+            {/* Hover point — diamond (Nonco brand shape) */}
             <div
-              className="absolute w-2 h-2 rounded-full pointer-events-none"
+              className="absolute w-2.5 h-2.5 pointer-events-none"
               style={{
-                left: hoverX - 4,
-                top: `${(chartY(hoverIdx) / CHART_H) * 100}%`,
+                left: hoverX - 5,
+                top: `calc(${(chartY(hoverIdx) / CHART_H) * 100}% - 5px)`,
                 background: "#05E0F8",
+                transform: "rotate(45deg)",
+                borderRadius: "1px",
                 boxShadow: "0 0 12px rgba(5,224,248,0.5)",
               }}
             />
