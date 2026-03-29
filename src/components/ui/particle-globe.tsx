@@ -244,22 +244,25 @@ function CameraRig({ scrollProgress, offset = 0 }: { scrollProgress: number; off
   const angle = useRef(0);
   const smoothScroll = useRef(0);
 
+  // Camera orbits around a point to the LEFT of the globe.
+  // Globe stays at origin. Camera looks LEFT → globe appears RIGHT in frame.
+  const orbitCenter = -offset;
+
   useFrame((_, dt) => {
     angle.current += dt * CONFIG.cam.rotateSpeed;
     smoothScroll.current += (scrollProgress - smoothScroll.current) * 0.06;
 
     const scrollAngle = smoothScroll.current * Math.PI * CONFIG.cam.scrollInfluence;
     const combined = angle.current + scrollAngle;
-    const scrollY = Math.sin(smoothScroll.current * Math.PI * 0.5) * 60;
+    const scrollY = Math.sin(smoothScroll.current * Math.PI * 0.5) * 40;
 
-    // Camera orbits around the globe (at offset), keeping rings concentric
-    const tx = offset + Math.sin(combined) * CONFIG.cam.dist;
+    const tx = orbitCenter + Math.sin(combined) * CONFIG.cam.dist;
     const tz = Math.cos(combined) * CONFIG.cam.dist;
 
     camera.position.x += (tx - camera.position.x) * 0.04;
     camera.position.y += (scrollY - camera.position.y) * 0.04;
     camera.position.z += (tz - camera.position.z) * 0.04;
-    camera.lookAt(offset, 0, 0);
+    camera.lookAt(orbitCenter, 0, 0);
   });
 
   return null;
@@ -270,13 +273,11 @@ function Scene({ scrollProgress, offset = 0 }: { scrollProgress: number; offset?
   return (
     <>
       <CameraRig scrollProgress={scrollProgress} offset={offset} />
-      {/* Globe + rings shifted right in 3D space via offset */}
-      <group position={[offset, 0, 0]}>
-        <Globe />
-        {CONFIG.rings.map((ring, i) => (
-          <OrbitalRing key={i} {...ring} scrollProgress={scrollProgress} isLogo={i === 0} />
-        ))}
-      </group>
+      {/* Globe + rings at origin — camera offset makes them appear right */}
+      <Globe />
+      {CONFIG.rings.map((ring, i) => (
+        <OrbitalRing key={i} {...ring} scrollProgress={scrollProgress} isLogo={i === 0} />
+      ))}
       <AmbientParticles />
     </>
   );
@@ -314,7 +315,7 @@ export function ParticleGlobe({ size, opacity = 0.35, offset = 0, className }: P
       aria-hidden="true"
     >
       <Canvas
-        camera={{ position: [offset, 0, CONFIG.cam.dist], fov: 50, near: 1, far: 1500 }}
+        camera={{ position: [-offset, 0, CONFIG.cam.dist], fov: 50, near: 1, far: 1500 }}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance", outputColorSpace: THREE.SRGBColorSpace }}
         style={{ background: "transparent" }}
         onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
