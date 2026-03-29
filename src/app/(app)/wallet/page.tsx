@@ -8,6 +8,7 @@ import { formatMoney, formatCompact, cn } from "@/lib/utils";
 import { currencyColors } from "@/lib/currency-colors";
 import { BrandShapes } from "@/components/ui/brand-shapes";
 import { CornerBrackets } from "@/components/ui/corner-brackets";
+import { ParticleGlobe } from "@/components/ui/particle-globe";
 
 // ---------------------------------------------------------------------------
 // Currency metadata
@@ -99,6 +100,11 @@ export default function WalletPage() {
 
         {/* Corner brackets — geometric identity */}
         <CornerBrackets size={18} color="rgba(255,255,255,0.08)" corners={["tl", "tr"]} />
+
+        {/* Particle globe */}
+        <div className="absolute -right-12 top-1/2 -translate-y-1/2 pointer-events-none hidden lg:block">
+          <ParticleGlobe size={280} particleCount={1000} opacity={0.20} />
+        </div>
 
         {/* Subtle radial glow */}
         <div

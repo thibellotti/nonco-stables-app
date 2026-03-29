@@ -36,11 +36,11 @@ function seeded(seed: number): number {
 
 // Positions: right-side biased, edge-clipped, center exclusion
 const CONFIGS: ShapeConfig[] = [
-  { index: 0, x: 82, y: 8,  size: 110, opacity: 0.10, phaseOffset: 0,    speedX: 0.18, speedY: 0.14, ampX: 8,  ampY: 6 },
-  { index: 1, x: 92, y: 55, size: 50,  opacity: 0.08, phaseOffset: 1.2,  speedX: 0.22, speedY: 0.16, ampX: 5,  ampY: 4 },
-  { index: 2, x: 75, y: 80, size: 64,  opacity: 0.07, phaseOffset: 2.8,  speedX: 0.15, speedY: 0.12, ampX: 6,  ampY: 5 },
-  { index: 3, x: 95, y: 28, size: 32,  opacity: 0.10, phaseOffset: 4.1,  speedX: 0.25, speedY: 0.20, ampX: 4,  ampY: 3 },
-  { index: 4, x: 68, y: 40, size: 80,  opacity: 0.06, phaseOffset: 5.5,  speedX: 0.12, speedY: 0.10, ampX: 7,  ampY: 5 },
+  { index: 0, x: 82, y: 8,  size: 120, opacity: 0.18, phaseOffset: 0,    speedX: 0.18, speedY: 0.14, ampX: 8,  ampY: 6 },
+  { index: 1, x: 92, y: 55, size: 56,  opacity: 0.14, phaseOffset: 1.2,  speedX: 0.22, speedY: 0.16, ampX: 5,  ampY: 4 },
+  { index: 2, x: 75, y: 80, size: 72,  opacity: 0.12, phaseOffset: 2.8,  speedX: 0.15, speedY: 0.12, ampX: 6,  ampY: 5 },
+  { index: 3, x: 95, y: 28, size: 36,  opacity: 0.16, phaseOffset: 4.1,  speedX: 0.25, speedY: 0.20, ampX: 4,  ampY: 3 },
+  { index: 4, x: 68, y: 40, size: 88,  opacity: 0.10, phaseOffset: 5.5,  speedX: 0.12, speedY: 0.10, ampX: 7,  ampY: 5 },
 ];
 
 export function BrandShapes() {
