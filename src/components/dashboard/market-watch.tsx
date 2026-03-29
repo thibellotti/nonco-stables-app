@@ -26,7 +26,7 @@ const pairs = [
 
 export function MarketWatch({ onRequestRfs }: MarketWatchProps) {
   return (
-    <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg">
+    <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg flex flex-col h-full">
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-3">
         <span className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)]">
@@ -45,7 +45,7 @@ export function MarketWatch({ onRequestRfs }: MarketWatchProps) {
       </div>
 
       {/* Pair grid — single horizontal row on desktop */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 p-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-2 p-4 flex-1 content-start">
         {pairs.map((p) => (
           <button
             key={p.pair}

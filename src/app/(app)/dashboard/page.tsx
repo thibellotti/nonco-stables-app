@@ -51,12 +51,12 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Bento middle row — Stable Assets (3col) + Market Watch (2col) */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
-        <div className="lg:col-span-3">
+      {/* Bento middle row — Stable Assets (3col) + Market Watch (2col), equal height */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-stretch">
+        <div className="lg:col-span-3 flex flex-col">
           <CurrencyBreakdown />
         </div>
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 flex flex-col [&>*]:flex-1">
           <MarketWatch onRequestRfs={handleRequestRfs} />
         </div>
       </div>
