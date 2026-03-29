@@ -102,8 +102,8 @@ export default function WalletPage() {
         <CornerBrackets size={18} color="rgba(255,255,255,0.08)" corners={["tl", "tr"]} />
 
         {/* Particle globe */}
-        <div className="absolute -right-12 top-1/2 -translate-y-1/2 pointer-events-none hidden lg:block">
-          <ParticleGlobe size={280} particleCount={1000} opacity={0.20} />
+        <div className="absolute -right-20 -top-12 -bottom-12 pointer-events-none hidden lg:flex items-center justify-center">
+          <ParticleGlobe size={420} particleCount={1800} opacity={0.25} />
         </div>
 
         {/* Subtle radial glow */}

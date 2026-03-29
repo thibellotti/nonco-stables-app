@@ -10,9 +10,9 @@ interface ParticleGlobeProps {
 }
 
 export function ParticleGlobe({
-  size = 320,
-  particleCount = 1200,
-  opacity = 0.12,
+  size = 500,
+  particleCount = 2000,
+  opacity = 0.35,
   className,
 }: ParticleGlobeProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -34,106 +34,97 @@ export function ParticleGlobe({
 
     const cx = size / 2;
     const cy = size / 2;
-    const radius = size * 0.38;
+    const radius = size * 0.42;
 
-    // Generate points on a sphere using fibonacci distribution
-    const phi = (1 + Math.sqrt(5)) / 2; // golden ratio
-    const points: { theta: number; phi: number; r: number }[] = [];
+    // Fibonacci sphere distribution — uniform point spread
+    const phi = (1 + Math.sqrt(5)) / 2;
+    const points: { theta: number; phi: number }[] = [];
 
     for (let i = 0; i < particleCount; i++) {
-      const y = 1 - (i / (particleCount - 1)) * 2; // -1 to 1
-      const radiusAtY = Math.sqrt(1 - y * y);
+      const y = 1 - (i / (particleCount - 1)) * 2;
       const angle = ((2 * Math.PI * i) / phi) % (2 * Math.PI);
-
-      points.push({
-        theta: angle,
-        phi: Math.acos(y),
-        r: radius,
-      });
+      points.push({ theta: angle, phi: Math.acos(y) });
     }
-
-    let rotationY = 0;
 
     const animate = (time: number) => {
       rafRef.current = requestAnimationFrame(animate);
-
       ctx.clearRect(0, 0, size, size);
 
       const t = time / 1000;
-      rotationY = t * 0.15; // slow auto-rotation
+      const rotY = t * 0.12;   // slow Y rotation
+      const rotX = t * 0.04;   // very slow X tilt — adds 3D depth
 
-      // Sort by z-depth for proper layering
-      const projected: { x: number; y: number; z: number; depth: number }[] = [];
+      const cosRY = Math.cos(rotY);
+      const sinRY = Math.sin(rotY);
+      const cosRX = Math.cos(rotX * 0.3); // subtle tilt
+      const sinRX = Math.sin(rotX * 0.3);
+
+      const projected: { x: number; y: number; z: number; norm: number }[] = [];
 
       for (let i = 0; i < points.length; i++) {
         const p = points[i];
-        const sinPhi = Math.sin(p.phi);
-        const cosPhi = Math.cos(p.phi);
-        const sinTheta = Math.sin(p.theta + rotationY);
-        const cosTheta = Math.cos(p.theta + rotationY);
+        const sp = Math.sin(p.phi);
+        const cp = Math.cos(p.phi);
+        const st = Math.sin(p.theta);
+        const ct = Math.cos(p.theta);
 
-        // Sphere coordinates
-        let x3d = p.r * sinPhi * cosTheta;
-        let y3d = p.r * cosPhi;
-        let z3d = p.r * sinPhi * sinTheta;
+        // Base sphere position
+        let x = radius * sp * ct;
+        let y = radius * cp;
+        let z = radius * sp * st;
 
-        // Ripple wave deformation (Nonco Stables signature)
-        const dist = Math.sqrt(x3d * x3d + y3d * y3d);
-        const wave = Math.sin(dist * 0.04 - t * 1.5) * 8;
-        y3d += wave;
+        // Ripple wave deformation — Nonco Stables signature
+        const dist = Math.sqrt(x * x + z * z);
+        y += Math.sin(dist * 0.035 - t * 1.2) * 12;
 
-        // Project to 2D
-        const perspective = 600;
-        const scale = perspective / (perspective + z3d);
-        const x2d = cx + x3d * scale;
-        const y2d = cy + y3d * scale;
+        // Rotation Y (main spin)
+        const x1 = x * cosRY - z * sinRY;
+        const z1 = x * sinRY + z * cosRY;
 
-        // Depth-based properties
-        const normalizedZ = (z3d + p.r) / (p.r * 2); // 0 (back) to 1 (front)
+        // Rotation X (subtle tilt for depth)
+        const y1 = y * cosRX - z1 * sinRX;
+        const z2 = y * sinRX + z1 * cosRX;
 
-        projected.push({ x: x2d, y: y2d, z: z3d, depth: normalizedZ });
+        // Perspective projection
+        const fov = 500;
+        const scale = fov / (fov + z2);
+        const sx = cx + x1 * scale;
+        const sy = cy + y1 * scale;
+        const norm = (z2 + radius) / (radius * 2); // 0=back, 1=front
+
+        projected.push({ x: sx, y: sy, z: z2, norm });
       }
 
-      // Sort back to front
+      // Sort back-to-front
       projected.sort((a, b) => a.z - b.z);
 
-      // Draw particles as squares (Nonco particleShape: 'square')
       for (const p of projected) {
-        const particleSize = 1 + p.depth * 1.2;
-        const alpha = 0.05 + p.depth * 0.35;
+        // Size: back=1px, front=2.8px
+        const sz = 0.8 + p.norm * 2;
+        // Alpha: back=0.04, front=0.5
+        const alpha = 0.04 + p.norm * 0.46;
 
-        // Color: mix of cyan and white/gray based on depth
-        if (p.depth > 0.6) {
-          // Front particles: cyan
+        // Color layers: cyan front, blue-gray mid, dim back
+        if (p.norm > 0.55) {
           ctx.fillStyle = `rgba(5, 224, 248, ${alpha})`;
-        } else if (p.depth > 0.3) {
-          // Mid particles: lighter gray
-          ctx.fillStyle = `rgba(180, 200, 210, ${alpha * 0.6})`;
+        } else if (p.norm > 0.25) {
+          ctx.fillStyle = `rgba(140, 190, 210, ${alpha * 0.5})`;
         } else {
-          // Back particles: dim gray
-          ctx.fillStyle = `rgba(120, 130, 140, ${alpha * 0.3})`;
+          ctx.fillStyle = `rgba(80, 100, 120, ${alpha * 0.2})`;
         }
 
-        // Square particles (Nonco signature)
-        ctx.fillRect(
-          p.x - particleSize / 2,
-          p.y - particleSize / 2,
-          particleSize,
-          particleSize
-        );
+        // Square particles — Nonco signature
+        ctx.fillRect(p.x - sz / 2, p.y - sz / 2, sz, sz);
       }
     };
 
     rafRef.current = requestAnimationFrame(animate);
-
     return () => cancelAnimationFrame(rafRef.current);
   }, [size, particleCount]);
 
   return (
     <canvas
       ref={canvasRef}
-      width={size}
-      height={size}
       className={className}
       style={{
         width: size,
