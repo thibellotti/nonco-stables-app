@@ -10,7 +10,7 @@ const CYAN = "#05e0f8";
 
 // ─── Config matching nonco.com/stables ───
 const CONFIG = {
-  cam: { dist: 140, rotateSpeed: 0.02, scrollInfluence: 0.8 },
+  cam: { dist: 160, rotateSpeed: 0.02, scrollInfluence: 0.8 },
   globe: { radius: 90, particles: 2000, rotSpeed: 0.08 },
   rings: [
     {
@@ -315,7 +315,7 @@ export function ParticleGlobe({ size, opacity = 0.35, offset = 0, className }: P
       aria-hidden="true"
     >
       <Canvas
-        camera={{ position: [-offset, 0, CONFIG.cam.dist], fov: 50, near: 1, far: 1500 }}
+        camera={{ position: [-offset, 0, CONFIG.cam.dist], fov: 35, near: 1, far: 1500 }}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance", outputColorSpace: THREE.SRGBColorSpace }}
         style={{ background: "transparent" }}
         onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
