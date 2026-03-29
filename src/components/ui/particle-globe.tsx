@@ -252,15 +252,13 @@ function CameraRig({ scrollProgress }: { scrollProgress: number }) {
     const combined = angle.current + scrollAngle;
     const scrollY = Math.sin(smoothScroll.current * Math.PI * 0.5) * 60;
 
-    // Orbit offset left so globe appears on right side of canvas
-    const orbitOffset = -80;
-    const tx = orbitOffset + Math.sin(combined) * CONFIG.cam.dist;
+    const tx = Math.sin(combined) * CONFIG.cam.dist;
     const tz = Math.cos(combined) * CONFIG.cam.dist;
 
     camera.position.x += (tx - camera.position.x) * 0.04;
     camera.position.y += (scrollY - camera.position.y) * 0.04;
     camera.position.z += (tz - camera.position.z) * 0.04;
-    camera.lookAt(orbitOffset, 0, 0);
+    camera.lookAt(0, 0, 0);
   });
 
   return null;
@@ -312,7 +310,7 @@ export function ParticleGlobe({ size, opacity = 0.35, offset = 0, className }: P
       aria-hidden="true"
     >
       <Canvas
-        camera={{ position: [-80, 0, CONFIG.cam.dist], fov: 50, near: 1, far: 1500 }}
+        camera={{ position: [0, 0, CONFIG.cam.dist], fov: 50, near: 1, far: 1500 }}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance", outputColorSpace: THREE.SRGBColorSpace }}
         style={{ background: "transparent" }}
         onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
