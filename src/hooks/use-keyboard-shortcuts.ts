@@ -9,7 +9,7 @@ const SHORTCUTS: Record<string, string> = {
   b: "/bank",
   t: "/trades",
   s: "/settlements",
-  w: "/wallet",
+  p: "/payments",
 };
 
 export function useKeyboardShortcuts() {

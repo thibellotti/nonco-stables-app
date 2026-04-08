@@ -47,7 +47,7 @@ export function CurrencyBreakdown() {
       <div className="flex items-center justify-between px-6 py-3 border-b border-[var(--border)]">
         <SectionLabel>Stable Assets</SectionLabel>
         <Link
-          href="/wallet"
+          href="/dashboard"
           className="font-sans text-[11px] text-white uppercase tracking-[.1em] hover:opacity-70 transition-opacity"
         >
           View wallet &rarr;

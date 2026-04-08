@@ -1,27 +1,26 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { motion } from "framer-motion";
 import { PageTransition } from "@/components/ui/page-transition";
-import { TabGroup } from "@/components/ui/tab-group";
 import { Button } from "@/components/ui/button";
-import { SectionLabel } from "@/components/ui/section-label";
 import { cn } from "@/lib/utils";
 import {
   boardInstruments,
   boardSections,
+  recentTrades,
   type BoardInstrument,
+  type RecentTrade,
 } from "@/lib/mock-data";
-import Link from "next/link";
 import { RfsDialog } from "@/components/rfs/rfs-dialog";
 import { GeoDivider } from "@/components/ui/geo-divider";
+import { formatMoney, timeAgo } from "@/lib/utils";
+import { currencyColors } from "@/lib/currency-colors";
 
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
-
-type FxTab = "board" | "chart" | "history";
 
 interface LiveInstrument extends BoardInstrument {
   flashSell: boolean;
@@ -36,30 +35,6 @@ function formatPrice(value: number): string {
   return value > 100 ? value.toFixed(2) : value.toFixed(4);
 }
 
-function formatQty(qty: number): string {
-  return qty.toLocaleString("en-US");
-}
-
-// Group instruments by section, preserving order
-function groupBySection(instruments: LiveInstrument[]) {
-  const sectionOrder: Array<"latam" | "brl" | "eur" | "gbp"> = [
-    "latam",
-    "brl",
-    "eur",
-    "gbp",
-  ];
-  return sectionOrder
-    .filter((s) => instruments.some((i) => i.section === s))
-    .map((sectionId) => ({
-      section: boardSections[sectionId],
-      instruments: instruments.filter((i) => i.section === sectionId),
-    }));
-}
-
-// ---------------------------------------------------------------------------
-// Sub-components (all self-contained in this file)
-// ---------------------------------------------------------------------------
-
 function LiveDot() {
   return (
     <span className="relative flex h-2 w-2">
@@ -69,114 +44,94 @@ function LiveDot() {
   );
 }
 
-function ChangeCell({ value }: { value: number }) {
-  const isPositive = value >= 0;
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-1 font-mono text-xs tabular-nums",
-        isPositive ? "text-[var(--status-positive)]" : "text-[var(--red)]"
-      )}
-    >
-      <svg
-        width="10"
-        height="10"
-        viewBox="0 0 10 10"
-        fill="currentColor"
-        aria-hidden="true"
-        className={cn(!isPositive && "rotate-180")}
-      >
-        <path d="M5 2L8.5 7H1.5L5 2Z" />
-      </svg>
-      {Math.abs(value).toFixed(2)}%
-    </span>
-  );
-}
+// ---------------------------------------------------------------------------
+// Extra trades for display
+// ---------------------------------------------------------------------------
 
-function PriceCell({
-  value,
-  side,
-  flash,
+const extraTrades: RecentTrade[] = [
+  { id: "trade-009", pair: "EUR/USDC", side: "buy", quantity: 120_000, price: 1.0841, settlement: "T+1", timestamp: new Date(Date.now() - 6 * 86400000) },
+  { id: "trade-010", pair: "MXN/USDT", side: "sell", quantity: 250_000, price: 17.438, settlement: "Spot", timestamp: new Date(Date.now() - 6 * 86400000 - 5 * 3600000) },
+  { id: "trade-011", pair: "USD/USDT", side: "buy", quantity: 750_000, price: 1.0001, settlement: "Spot", timestamp: new Date(Date.now() - 7 * 86400000) },
+];
+
+const allTrades = [...recentTrades, ...extraTrades];
+
+// ---------------------------------------------------------------------------
+// Market Card
+// ---------------------------------------------------------------------------
+
+function MarketCard({
+  instrument,
   onClick,
 }: {
-  value: number;
-  side: "sell" | "buy";
-  flash: boolean;
-  onClick?: () => void;
+  instrument: LiveInstrument;
+  onClick: () => void;
 }) {
-  const isSell = side === "sell";
+  const isPositive = instrument.change24h >= 0;
+  const sectionColor = boardSections[instrument.section]?.color ?? "#fff";
+
   return (
     <button
       onClick={onClick}
-      className={cn(
-        "px-4 py-2 rounded-md font-mono text-sm font-bold tabular-nums transition-colors duration-150 cursor-pointer",
-        isSell
-          ? "bg-[var(--purple-dim)] text-[var(--purple)] hover:bg-[rgba(161,36,248,0.18)]"
-          : "bg-[var(--status-positive-dim)] text-[var(--status-positive)] hover:bg-[rgba(34,197,94,0.18)]",
-        flash && (isSell ? "flash-sell" : "flash-buy")
-      )}
-      aria-label={`${side} at ${formatPrice(value)}`}
+      type="button"
+      className="group relative bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-4 text-left hover:border-[var(--border-outline)] hover:bg-[rgba(255,255,255,0.02)] transition-all cursor-pointer"
     >
-      {formatPrice(value)}
+      {/* Section color accent */}
+      <div className="absolute top-0 left-4 right-4 h-px" style={{ background: `linear-gradient(90deg, transparent, ${sectionColor}40, transparent)` }} />
+
+      {/* Pair name */}
+      <div className="flex items-center gap-2 mb-3">
+        <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: sectionColor }} />
+        <span className="font-mono text-sm font-bold text-white">{instrument.pair}</span>
+      </div>
+
+      {/* Bid / Ask */}
+      <div className="grid grid-cols-2 gap-2 mb-3">
+        <div>
+          <div className="text-[9px] uppercase tracking-[.1em] text-[var(--text-4)] font-sans mb-0.5">Bid</div>
+          <div className={cn(
+            "font-mono text-sm font-bold tabular-nums transition-colors duration-150",
+            instrument.flashBuy ? "text-[var(--status-positive)]" : "text-[var(--text)]"
+          )}>
+            {formatPrice(instrument.buy)}
+          </div>
+        </div>
+        <div>
+          <div className="text-[9px] uppercase tracking-[.1em] text-[var(--text-4)] font-sans mb-0.5">Ask</div>
+          <div className={cn(
+            "font-mono text-sm font-bold tabular-nums transition-colors duration-150",
+            instrument.flashSell ? "text-[var(--purple)]" : "text-[var(--text)]"
+          )}>
+            {formatPrice(instrument.sell)}
+          </div>
+        </div>
+      </div>
+
+      {/* 24h Change */}
+      <div className="flex items-center justify-between">
+        <span className="text-[10px] font-sans text-[var(--text-4)]">24h</span>
+        <span
+          className={cn(
+            "inline-flex items-center gap-1 font-mono text-xs font-semibold tabular-nums",
+            isPositive ? "text-[var(--status-positive)]" : "text-[var(--red)]"
+          )}
+        >
+          <svg width="8" height="8" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true" className={cn(!isPositive && "rotate-180")}>
+            <path d="M5 2L8.5 7H1.5L5 2Z" />
+          </svg>
+          {Math.abs(instrument.change24h).toFixed(2)}%
+        </span>
+      </div>
     </button>
   );
 }
-
-function SectionSeparator({
-  label,
-  color,
-}: {
-  label: string;
-  color: string;
-}) {
-  return (
-    <div
-      className="col-span-full flex items-center gap-2.5 px-4 py-2 border-l-2"
-      style={{
-        borderLeftColor: color,
-        background: `linear-gradient(90deg, color-mix(in srgb, ${color} 6%, transparent), transparent)`,
-      }}
-    >
-      <span className="w-2 h-2 rounded-full shrink-0" style={{ background: color }} />
-      <span className="font-sans text-[11px] font-bold uppercase tracking-[.15em] text-[var(--text-4)]">
-        {label}
-      </span>
-    </div>
-  );
-}
-
-function StatusDot({ active }: { active?: boolean }) {
-  return (
-    <span
-      className={cn(
-        "w-1.5 h-1.5 rounded-full shrink-0",
-        active ? "bg-[var(--status-positive)]" : "bg-[var(--text-4)]"
-      )}
-    />
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Column header labels
-// ---------------------------------------------------------------------------
-
-const COLUMNS = [
-  { key: "status", label: "", width: "w-8" },
-  { key: "instrument", label: "Instrument", width: "flex-1 min-w-[160px]" },
-  { key: "sellQty", label: "Sell qty", width: "w-20 hidden xl:flex", align: "text-right" },
-  { key: "sell", label: "Sell price", width: "w-28", align: "text-center" },
-  { key: "buy", label: "Buy price", width: "w-28", align: "text-center" },
-  { key: "buyQty", label: "Buy qty", width: "w-20", align: "text-right" },
-  { key: "change", label: "24h chg", width: "w-24", align: "text-right" },
-  { key: "prevClose", label: "Prev close", width: "w-28 hidden xl:flex", align: "text-right" },
-] as const;
 
 // ---------------------------------------------------------------------------
 // Main Page
 // ---------------------------------------------------------------------------
 
 export default function FxBoardPage() {
-  const [activeTab, setActiveTab] = useState<FxTab>("board");
+  const [search, setSearch] = useState("");
   const [rfsOpen, setRfsOpen] = useState(false);
   const [rfsInstrument, setRfsInstrument] = useState<string | undefined>();
   const [instruments, setInstruments] = useState<LiveInstrument[]>(() =>
@@ -192,21 +147,10 @@ export default function FxBoardPage() {
   // ── Price flicker simulation ──
   const tickPrice = useCallback(() => {
     setInstruments((prev) => {
-      // Clear all flashes first
-      const cleared = prev.map((i) => ({
-        ...i,
-        flashSell: false,
-        flashBuy: false,
-      }));
-
-      // Pick a random instrument
+      const cleared = prev.map((i) => ({ ...i, flashSell: false, flashBuy: false }));
       const idx = Math.floor(Math.random() * cleared.length);
       const inst = { ...cleared[idx] };
-
-      // Random side
       const side = Math.random() > 0.5 ? "sell" : "buy";
-
-      // Small delta: +-0.01% to 0.05% of the price
       const pct = (Math.random() * 0.0004 + 0.0001) * (Math.random() > 0.5 ? 1 : -1);
 
       if (side === "sell") {
@@ -216,7 +160,6 @@ export default function FxBoardPage() {
         inst.buy = +(inst.buy * (1 + pct)).toFixed(inst.buy > 100 ? 2 : 4);
         inst.flashBuy = true;
       }
-
       cleared[idx] = inst;
       return cleared;
     });
@@ -224,255 +167,166 @@ export default function FxBoardPage() {
 
   useEffect(() => {
     intervalRef.current = setInterval(tickPrice, 700);
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
   }, [tickPrice]);
 
-  const grouped = groupBySection(instruments);
+  // Filter instruments by search
+  const filtered = useMemo(() => {
+    if (!search.trim()) return instruments;
+    const q = search.toLowerCase();
+    return instruments.filter(
+      (i) =>
+        i.pair.toLowerCase().includes(q) ||
+        i.baseCurrency.toLowerCase().includes(q) ||
+        i.quoteCurrency.toLowerCase().includes(q)
+    );
+  }, [instruments, search]);
 
   return (
     <PageTransition className="px-4 sm:px-6 md:px-8 w-full space-y-4">
-      {/* ── Top bar: Tabs + Live indicator + RFS button ── */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-        <TabGroup
-          tabs={[
-            { value: "board" as FxTab, label: "Rate board" },
-            { value: "chart" as FxTab, label: "Chart" },
-            { value: "history" as FxTab, label: "History" },
-          ]}
-          active={activeTab}
-          onChange={setActiveTab}
-        />
+      {/* ── Top bar: Search + Live indicator + RFS button ── */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+        {/* Search */}
+        <div className="relative flex-1 w-full sm:max-w-sm">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-4)]" aria-hidden="true">
+            <circle cx="6" cy="6" r="4.5" stroke="currentColor" strokeWidth="1.2" />
+            <path d="M9.5 9.5L12.5 12.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+          </svg>
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search pairs..."
+            className="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-lg pl-9 pr-4 py-2.5 text-xs font-sans text-[var(--text)] outline-none focus:border-[var(--border-outline)] transition-colors placeholder:text-[var(--text-4)]"
+          />
+        </div>
 
         {/* Live indicator */}
         <div className="flex items-center gap-2 sm:ml-auto">
           <LiveDot />
           <span className="font-sans text-[11px] text-[var(--text-4)]">
-            Live prices{" "}
-            <span className="text-[var(--text-4)]/60">
-              · qty in USD thousands
-            </span>
+            Live prices
           </span>
         </div>
 
         {/* RFS button */}
         <Button variant="cyan" size="sm" onClick={() => openRfs()}>
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 12 12"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            aria-hidden="true"
-          >
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
             <path d="M6 1v10M1 6h10" />
           </svg>
-          <span className="font-sans text-[11px] font-bold uppercase tracking-[.1em]">
-            RFS
-          </span>
+          <span className="font-sans text-[11px] font-bold uppercase tracking-[.1em]">RFS</span>
         </Button>
       </div>
 
-      <GeoDivider variant="line-dot" className="my-8" />
+      {/* ── Market Cards Grid ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3"
+      >
+        {filtered.map((inst) => (
+          <MarketCard
+            key={inst.id}
+            instrument={inst}
+            onClick={() => openRfs(inst.pair)}
+          />
+        ))}
+      </motion.div>
 
-      {/* ── Rate Board ── */}
-      {activeTab === "board" && (
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          className="relative bg-[var(--bg-card)] rounded-lg overflow-hidden"
-        >
-          {/* Header row */}
-          <div className="flex items-center gap-0 bg-[rgba(255,255,255,0.02)] px-4 py-3">
-            {COLUMNS.map((col) => (
-              <div
-                key={col.key}
-                className={cn(
-                  "text-[10px] font-sans font-medium uppercase tracking-[.15em] text-[var(--text-4)] select-none",
-                  col.width,
-                  "align" in col ? col.align : ""
-                )}
-              >
-                {col.label}
-              </div>
-            ))}
-          </div>
+      {filtered.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <p className="text-sm font-medium text-[var(--text-3)] mb-1">No pairs match &quot;{search}&quot;</p>
+          <p className="text-xs text-[var(--text-4)]">Try a different search term</p>
+        </div>
+      )}
 
-          {/* Body: grouped sections */}
-          <div>
-            {grouped.map(({ section, instruments: sectionInstruments }) => (
-              <div key={section.id}>
-                {/* Section separator */}
-                <SectionSeparator
-                  label={section.label}
-                  color={section.color}
-                />
+      {/* Footer info */}
+      <div className="flex items-center justify-between px-1">
+        <span className="text-[10px] font-sans text-[var(--text-4)]">
+          <span className="font-mono">{filtered.length}</span> of <span className="font-mono">{instruments.length}</span> instruments
+        </span>
+        <span className="text-[10px] font-sans text-[var(--text-4)]/60">
+          Prices update every 700ms · indicative only
+        </span>
+      </div>
 
-                {/* Instrument rows */}
-                {sectionInstruments.map((inst, idx) => (
-                  <motion.div
-                    key={inst.id}
-                    initial={{ opacity: 0, y: 4 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{
-                      duration: 0.3,
-                      delay: idx * 0.03,
-                      ease: [0.16, 1, 0.3, 1],
-                    }}
-                    className="flex items-center gap-0 px-4 py-2.5 border-b border-[rgba(255,255,255,0.03)] hover:bg-[rgba(255,255,255,0.03)] hover:shadow-[inset_2px_0_0_rgba(255,255,255,0.15)] transition-all duration-100 cursor-pointer"
-                    role="button"
-                    tabIndex={0}
-                    onClick={() => openRfs(inst.pair)}
+      <GeoDivider variant="line-dot" className="my-6" />
+
+      {/* ── Recent Trading Activity (lower grid) ── */}
+      <div>
+        <div className="flex items-center justify-between px-1 mb-3">
+          <span className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)]">
+            Recent Trading Activity
+          </span>
+          <a
+            href="/trades"
+            className="text-[11px] font-sans text-white hover:opacity-70 transition-colors"
+          >
+            View all &rarr;
+          </a>
+        </div>
+        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="border-b border-[var(--border)]">
+                <th className="px-4 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-medium text-[var(--text-4)]">Pair</th>
+                <th className="px-4 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-medium text-[var(--text-4)]">Side</th>
+                <th className="px-4 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-medium text-[var(--text-4)] text-right">Quantity</th>
+                <th className="px-4 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-medium text-[var(--text-4)] text-right">Price</th>
+                <th className="px-4 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-medium text-[var(--text-4)] hidden sm:table-cell">Settlement</th>
+                <th className="px-4 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-medium text-[var(--text-4)] text-right hidden sm:table-cell">When</th>
+              </tr>
+            </thead>
+            <tbody>
+              {allTrades.slice(0, 8).map((trade) => {
+                const baseCurrency = trade.pair.split("/")[0];
+                const baseColor = currencyColors[baseCurrency]?.border ?? "rgba(255,255,255,0.5)";
+                return (
+                  <tr
+                    key={trade.id}
+                    className="border-b border-[rgba(255,255,255,0.03)] hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-150"
                   >
-                    {/* Row index */}
-                    <div className="w-8 flex items-center justify-center">
-                      <span className="text-[10px] font-mono text-[var(--text-4)] tabular-nums">{idx + 1}</span>
-                    </div>
-
-                    {/* Instrument name */}
-                    <div className="flex-1 min-w-[160px]">
-                      <div className="flex items-center gap-1.5">
-                        <StatusDot active />
-                        <span className="font-mono text-sm font-bold text-white">
-                          {inst.pair}
-                        </span>
+                    <td className="px-4 sm:px-6 py-3">
+                      <div className="flex items-center gap-2">
+                        <div
+                          className="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
+                          style={{ backgroundColor: `${baseColor}15`, border: `1px solid ${baseColor}30` }}
+                        >
+                          <span className="font-mono text-[10px] font-bold" style={{ color: baseColor }}>
+                            {baseCurrency.slice(0, 2)}
+                          </span>
+                        </div>
+                        <span className="font-mono text-xs font-bold text-white">{trade.pair}</span>
                       </div>
-                      <span className="block font-sans text-[10px] text-[var(--text-4)] mt-0.5 ml-[14px]">
-                        {inst.baseCurrency} → {inst.quoteCurrency}
-                      </span>
-                    </div>
+                    </td>
+                    <td className="px-4 sm:px-6 py-3">
+                      {trade.side === "buy" ? (
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold font-sans uppercase tracking-[.1em] bg-[var(--buy-dim)] text-[var(--buy)]">Buy</span>
+                      ) : (
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold font-sans uppercase tracking-[.1em] bg-[var(--sell-dim)] text-[var(--sell)]">Sell</span>
+                      )}
+                    </td>
+                    <td className="px-4 sm:px-6 py-3 text-right">
+                      <span className="font-mono text-xs text-white tabular-nums">{formatMoney(trade.quantity)}</span>
+                    </td>
+                    <td className="px-4 sm:px-6 py-3 text-right">
+                      <span className="font-mono text-xs text-white tabular-nums">{trade.price.toFixed(4)}</span>
+                    </td>
+                    <td className="px-4 sm:px-6 py-3 hidden sm:table-cell">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded bg-[rgba(255,255,255,0.06)] text-[10px] font-mono text-[var(--text-3)]">{trade.settlement}</span>
+                    </td>
+                    <td className="px-4 sm:px-6 py-3 text-right hidden sm:table-cell">
+                      <span className="font-mono text-xs text-[var(--text-3)] tabular-nums">{timeAgo(trade.timestamp)}</span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-                    {/* Sell qty */}
-                    <div className="w-20 text-right hidden xl:flex xl:justify-end">
-                      <span className="font-mono text-xs text-[var(--text-3)] tabular-nums">
-                        {formatQty(inst.sellQty)}
-                      </span>
-                    </div>
-
-                    {/* Sell price */}
-                    <div className="w-28 flex justify-center">
-                      <PriceCell
-                        value={inst.sell}
-                        side="sell"
-                        flash={inst.flashSell}
-                      />
-                    </div>
-
-                    {/* Buy price */}
-                    <div className="w-28 flex justify-center">
-                      <PriceCell
-                        value={inst.buy}
-                        side="buy"
-                        flash={inst.flashBuy}
-                      />
-                    </div>
-
-                    {/* Buy qty */}
-                    <div className="w-20 text-right">
-                      <span className="font-mono text-xs text-[var(--text-3)] tabular-nums">
-                        {formatQty(inst.buyQty)}
-                      </span>
-                    </div>
-
-                    {/* 24h change */}
-                    <div className="w-24 flex justify-end">
-                      <ChangeCell value={inst.change24h} />
-                    </div>
-
-                    {/* Prev close */}
-                    <div className="w-28 text-right hidden xl:flex xl:justify-end">
-                      <span className="font-mono text-xs text-[var(--text-3)] tabular-nums">
-                        {formatPrice(inst.prevClose)}
-                      </span>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            ))}
-          </div>
-
-          {/* Footer */}
-          <div className="px-4 py-2 border-t border-[var(--border)] flex items-center justify-between">
-            <span className="text-[10px] font-sans text-[var(--text-4)] tracking-[.06em]">
-              <span className="font-mono">{instruments.length}</span> instruments
-              across{" "}
-              <span className="font-mono">
-                {Object.keys(boardSections).length}
-              </span>{" "}
-              corridors
-            </span>
-            <span className="text-[10px] font-sans text-[var(--text-4)]/60">
-              Prices update every 700ms · indicative only
-            </span>
-          </div>
-        </motion.div>
-      )}
-
-      {/* ── Chart tab (placeholder) ── */}
-      {activeTab === "chart" && (
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg"
-        >
-          <div className="flex flex-col items-center justify-center py-24 px-6 text-center">
-            <svg width="64" height="64" viewBox="0 0 64 64" fill="none" aria-hidden="true" className="mb-4">
-              {/* 4x4 dot grid */}
-              {[0,1,2,3].map(row => [0,1,2,3].map(col => (
-                <circle key={`${row}-${col}`} cx={12 + col * 14} cy={12 + row * 14} r="1.5" fill="rgba(255,255,255,0.1)" />
-              )))}
-              {/* Connection lines between some dots */}
-              <line x1="12" y1="12" x2="26" y2="26" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-              <line x1="26" y1="26" x2="40" y2="12" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-              <line x1="40" y1="26" x2="54" y2="40" stroke="rgba(5,224,248,0.15)" strokeWidth="1" />
-              {/* Highlighted node */}
-              <circle cx="40" cy="26" r="3" fill="none" stroke="rgba(5,224,248,0.25)" strokeWidth="1" />
-            </svg>
-            <p className="text-sm font-medium text-[var(--text-3)] mb-1">
-              Chart view coming soon
-            </p>
-            <p className="text-xs text-[var(--text-4)]">
-              Candlestick and depth charts for all corridors
-            </p>
-            <button className="mt-4 text-[11px] font-sans font-medium text-white hover:opacity-70 underline-offset-2 transition-colors cursor-pointer">
-              Notify me when available
-            </button>
-          </div>
-        </motion.div>
-      )}
-
-      {/* ── History tab (placeholder) ── */}
-      {activeTab === "history" && (
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg"
-        >
-          <div className="flex flex-col items-center justify-center py-24 px-6 text-center">
-            <svg width="64" height="32" viewBox="0 0 64 32" fill="none" aria-hidden="true" className="mb-4">
-              <line x1="4" y1="16" x2="60" y2="16" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-              <circle cx="12" cy="16" r="4" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
-              <circle cx="32" cy="16" r="4" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
-              <rect x="49" y="13" width="6" height="6" fill="rgba(255,255,255,0.1)" />
-            </svg>
-            <p className="text-sm font-medium text-[var(--text-3)] mb-1">
-              Trade history coming soon
-            </p>
-            <p className="text-xs text-[var(--text-4)]">
-              Full execution history with export options
-            </p>
-            <Link href="/trades" className="mt-4 inline-flex items-center gap-1 text-[11px] font-sans font-medium text-white hover:opacity-70 underline-offset-2 transition-colors">
-              View recent trades <span aria-hidden="true">&rarr;</span>
-            </Link>
-          </div>
-        </motion.div>
-      )}
       {/* RFS Dialog */}
       <RfsDialog
         open={rfsOpen}

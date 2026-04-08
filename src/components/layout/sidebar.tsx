@@ -3,7 +3,36 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { navGroups } from "@/lib/nav-items";
+import { navGroups, type NavItem } from "@/lib/nav-items";
+
+function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
+  const isActive =
+    pathname === item.href || pathname.startsWith(item.href + "/");
+
+  return (
+    <Link
+      href={item.href}
+      aria-current={isActive ? "page" : undefined}
+      className={cn(
+        "relative flex items-center px-5 py-2 transition-all duration-200",
+        isActive
+          ? "text-[var(--cyan)] bg-[rgba(5,224,248,0.06)]"
+          : "text-[var(--text-4)] hover:text-[var(--text)] hover:bg-[var(--bg-elevated)]"
+      )}
+    >
+      {isActive && (
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 rounded-r-full bg-[var(--cyan)]" />
+      )}
+      <span className="mr-3 shrink-0">{item.icon}</span>
+      <span className="text-[12.5px] tracking-normal font-sans">{item.label}</span>
+      {item.badge && (
+        <span className="ml-auto text-[10px] font-bold bg-[var(--red-dim)] text-[var(--red)] px-1.5 py-0.5 rounded-full">
+          {item.badge}
+        </span>
+      )}
+    </Link>
+  );
+}
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -49,35 +78,25 @@ export function Sidebar() {
                 {group.label}
               </span>
             </div>
-            {group.items.map((item) => {
-              const isActive =
-                pathname === item.href || pathname.startsWith(item.href + "/");
 
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  aria-current={isActive ? "page" : undefined}
-                  className={cn(
-                    "relative flex items-center px-5 py-2 transition-all duration-200",
-                    isActive
-                      ? "text-[var(--cyan)] bg-[rgba(5,224,248,0.06)]"
-                      : "text-[var(--text-4)] hover:text-[var(--text)] hover:bg-[var(--bg-elevated)]"
-                  )}
-                >
-                  {isActive && (
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 rounded-r-full bg-[var(--cyan)]" />
-                  )}
-                  <span className="mr-3 shrink-0">{item.icon}</span>
-                  <span className="text-[12.5px] tracking-normal font-sans">{item.label}</span>
-                  {item.badge && (
-                    <span className="ml-auto text-[10px] font-bold bg-[var(--red-dim)] text-[var(--red)] px-1.5 py-0.5 rounded-full">
-                      {item.badge}
-                    </span>
-                  )}
-                </Link>
-              );
-            })}
+            {/* Direct items */}
+            {group.items?.map((item) => (
+              <NavLink key={item.href} item={item} pathname={pathname} />
+            ))}
+
+            {/* Sub-groups (e.g. Products → Trading, DeFi & On-Chain) */}
+            {group.subGroups?.map((subGroup) => (
+              <div key={subGroup.label} className="mt-1">
+                <div className="px-5 pt-2 pb-1">
+                  <span className="text-[10px] font-medium uppercase tracking-[0.08em] text-[var(--text-4)]/60">
+                    {subGroup.label}
+                  </span>
+                </div>
+                {subGroup.items.map((item) => (
+                  <NavLink key={item.href} item={item} pathname={pathname} />
+                ))}
+              </div>
+            ))}
           </div>
         ))}
       </nav>
