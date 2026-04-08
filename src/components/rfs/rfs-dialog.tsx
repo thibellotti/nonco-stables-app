@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { cn, formatMoney } from "@/lib/utils";
 import { instruments, type Instrument } from "@/lib/mock-data";
 import { CornerBrackets } from "@/components/ui/corner-brackets";
@@ -385,7 +385,7 @@ function SummaryGrid({
   const tenorLabel = settlementType === "forward" ? `Fwd · ${tenor}` : settlement;
 
   return (
-    <div className="grid grid-cols-4 gap-px bg-[var(--border)] rounded-lg overflow-hidden">
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-[var(--border)] rounded-lg overflow-hidden">
       {[
         { label: "Notional", value: `$${formatMoney(notional)}`, mono: true },
         { label: "Settlement", value: tenorLabel, mono: false },
@@ -422,6 +422,8 @@ function SummaryGrid({
 // ---------------------------------------------------------------------------
 
 export function RfsDialog({ open, onClose, defaultInstrument }: RfsDialogProps) {
+  const shouldReduceMotion = useReducedMotion();
+
   // ── Body scroll lock ──────────────────────────────────────────────────
   useEffect(() => {
     if (open) {
@@ -455,10 +457,10 @@ export function RfsDialog({ open, onClose, defaultInstrument }: RfsDialogProps) 
         >
           {/* Overlay */}
           <motion.div
-            initial={{ opacity: 0 }}
+            initial={shouldReduceMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={onClose}
           />
@@ -467,6 +469,7 @@ export function RfsDialog({ open, onClose, defaultInstrument }: RfsDialogProps) 
           <RfsDialogContent
             defaultInstrument={defaultInstrument}
             onClose={onClose}
+            shouldReduceMotion={!!shouldReduceMotion}
           />
         </div>
       )}
@@ -481,9 +484,11 @@ export function RfsDialog({ open, onClose, defaultInstrument }: RfsDialogProps) 
 function RfsDialogContent({
   defaultInstrument,
   onClose,
+  shouldReduceMotion,
 }: {
   defaultInstrument?: string;
   onClose: () => void;
+  shouldReduceMotion: boolean;
 }) {
   const initialPair = defaultInstrument ?? instruments[0].pair;
 
@@ -593,7 +598,6 @@ function RfsDialogContent({
     (side: "sell" | "buy") => {
       if (expired) return;
       // TODO: wire to confirmation dialog / real trading API
-      console.log(`[RFS] ${side} trade executed for ${selectedPair}`);
       onClose();
     },
     [expired, onClose, selectedPair]
@@ -615,11 +619,11 @@ function RfsDialogContent({
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.97 }}
+      initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.97 }}
       animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.97 }}
+      exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.97 }}
       transition={{
-        duration: 0.35,
+        duration: shouldReduceMotion ? 0 : 0.35,
         ease: [0.16, 1, 0.3, 1],
       }}
       className="relative w-full max-w-lg bg-[var(--bg-card)] border border-[var(--border)] rounded-xl overflow-hidden"
@@ -658,11 +662,12 @@ function RfsDialogContent({
         <div className="grid grid-cols-2 gap-3">
           {/* Instrument select */}
           <div className="space-y-1.5">
-            <label className="text-[11px] font-sans font-medium text-[var(--text-4)] uppercase tracking-[.1em]">
+            <label htmlFor="rfs-instrument" className="text-[11px] font-sans font-medium text-[var(--text-4)] uppercase tracking-[.1em]">
               Instrument
             </label>
             <div className="relative">
               <select
+                id="rfs-instrument"
                 value={selectedPair}
                 onChange={(e) => handlePairChange(e.target.value)}
                 className="w-full appearance-none bg-[var(--bg)] border border-[var(--border)] rounded-lg px-3 py-2.5 text-sm font-sans text-[var(--text)] focus:border-white focus:outline-none transition-colors cursor-pointer"
@@ -687,11 +692,12 @@ function RfsDialogContent({
 
           {/* Notional input */}
           <div className="space-y-1.5">
-            <label className="text-[11px] font-sans font-medium text-[var(--text-4)] uppercase tracking-[.1em]">
+            <label htmlFor="rfs-notional" className="text-[11px] font-sans font-medium text-[var(--text-4)] uppercase tracking-[.1em]">
               Notional
             </label>
             <div className="relative">
               <input
+                id="rfs-notional"
                 type="text"
                 inputMode="numeric"
                 value={notionalInput}

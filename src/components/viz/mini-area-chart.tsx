@@ -1,5 +1,3 @@
-"use client";
-
 interface MiniAreaChartProps {
   data: number[];
   color: string;

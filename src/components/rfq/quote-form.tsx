@@ -28,6 +28,7 @@ export function QuoteForm({ onQuote }: QuoteFormProps) {
         <select
           value={selectedPair}
           onChange={(e) => setSelectedPair(e.target.value)}
+          aria-label="Instrument"
           className="w-full appearance-none bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm font-mono text-[var(--text)] focus:border-white focus:outline-none focus:ring-1 focus:ring-white/20 transition-colors cursor-pointer"
         >
           {instruments.map((inst) => (
@@ -54,6 +55,7 @@ export function QuoteForm({ onQuote }: QuoteFormProps) {
           type="text"
           inputMode="numeric"
           placeholder="Quantity"
+          aria-label="Quantity"
           value={quantity}
           onChange={(e) => setQuantity(e.target.value)}
           className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-3 pr-14 text-sm font-mono text-[var(--text)] placeholder:text-[var(--text-4)] focus:border-white focus:outline-none focus:ring-1 focus:ring-white/20 transition-colors"

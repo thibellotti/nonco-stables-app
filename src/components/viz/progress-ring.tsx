@@ -1,5 +1,3 @@
-"use client";
-
 interface ProgressRingProps {
   value: number; // 0-100
   color: string;

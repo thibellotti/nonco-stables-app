@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { notFound } from "next/navigation";
 
 const illustrations = [
   "nonco-illustrationspack-2026-89-01.svg",
@@ -17,6 +18,10 @@ const illustrations = [
 ];
 
 export default function IllustrationPreview() {
+  if (process.env.NODE_ENV === 'production') {
+    notFound()
+  }
+
   return (
     <div className="min-h-screen bg-black p-8 lg:p-16">
       <div className="max-w-6xl mx-auto">

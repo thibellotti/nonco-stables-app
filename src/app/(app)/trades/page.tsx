@@ -7,7 +7,7 @@ import { TabGroup } from "@/components/ui/tab-group";
 import { Button } from "@/components/ui/button";
 import { recentTrades } from "@/lib/mock-data";
 import type { RecentTrade } from "@/lib/mock-data";
-import { formatMoney, timeAgo } from "@/lib/utils";
+import { formatMoney, timeAgo, getDateGroup } from "@/lib/utils";
 import { currencyColors } from "@/lib/currency-colors";
 import { GeoDivider } from "@/components/ui/geo-divider";
 
@@ -116,19 +116,6 @@ function formatCompactVolume(value: number) {
 // ---------------------------------------------------------------------------
 // Date grouping helpers
 // ---------------------------------------------------------------------------
-
-function getDateGroup(date: Date): string {
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const yesterday = new Date(today.getTime() - 86400000);
-  const weekAgo = new Date(today.getTime() - 7 * 86400000);
-  const txDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-
-  if (txDate.getTime() >= today.getTime()) return "Today";
-  if (txDate.getTime() >= yesterday.getTime()) return "Yesterday";
-  if (txDate.getTime() >= weekAgo.getTime()) return "This Week";
-  return "Earlier";
-}
 
 function groupTradesByDate(
   trades: RecentTrade[]

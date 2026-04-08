@@ -1,5 +1,3 @@
-"use client";
-
 interface DonutSegment {
   value: number;
   color: string;

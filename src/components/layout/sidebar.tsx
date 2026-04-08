@@ -51,14 +51,15 @@ export function Sidebar() {
 
       {/* Account selector */}
       <div className="mx-3 mt-3">
-        <div className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] cursor-pointer hover:border-[var(--border-outline)] transition-colors">
-          <span className="w-1.5 h-1.5 rounded-full bg-[var(--status-positive)] shrink-0" />
+        <button aria-label="Switch account" className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] cursor-pointer hover:border-[var(--border-outline)] transition-colors w-full text-left">
+          <span className="w-1.5 h-1.5 rounded-full bg-[var(--status-positive)] shrink-0" aria-hidden="true" />
+          <span className="sr-only">Online</span>
           <span className="text-[12px] font-medium text-[var(--text)] flex-1">Treasury 01</span>
           <span className="text-[10px] font-bold text-[var(--text-2)] bg-[rgba(255,255,255,0.08)] px-1.5 py-0.5 rounded">Verified</span>
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" className="shrink-0 text-[var(--text-4)]">
             <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-        </div>
+        </button>
       </div>
 
       {/* Navigation */}
@@ -111,7 +112,8 @@ export function Sidebar() {
             <span className="text-[12px] font-medium text-[var(--text)] truncate">Fernando M.</span>
             <span className="text-[10px] text-[var(--text-4)]">Admin</span>
           </div>
-          <span className="w-1.5 h-1.5 rounded-full bg-[var(--status-positive)] ml-auto" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[var(--status-positive)] ml-auto" aria-hidden="true" />
+          <span className="sr-only">Online</span>
         </div>
       </div>
     </aside>

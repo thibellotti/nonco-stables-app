@@ -25,3 +25,16 @@ export function timeAgo(date: Date): string {
   if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
   return `${Math.floor(seconds / 86400)}d ago`;
 }
+
+export function getDateGroup(date: Date): string {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const yesterday = new Date(today.getTime() - 86400000);
+  const weekAgo = new Date(today.getTime() - 7 * 86400000);
+  const txDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+  if (txDate.getTime() >= today.getTime()) return "Today";
+  if (txDate.getTime() >= yesterday.getTime()) return "Yesterday";
+  if (txDate.getTime() >= weekAgo.getTime()) return "This Week";
+  return "Earlier";
+}

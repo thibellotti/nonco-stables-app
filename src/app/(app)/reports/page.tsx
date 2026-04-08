@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { PageTransition } from "@/components/ui/page-transition";
 import { Button } from "@/components/ui/button";
 import { reportCorridors, yieldVaults } from "@/lib/mock-data";
@@ -25,6 +25,7 @@ const metrics = [
 // ---------------------------------------------------------------------------
 
 export default function ReportsPage() {
+  const shouldReduceMotion = useReducedMotion();
   return (
     <PageTransition className="px-4 sm:px-6 md:px-8 w-full space-y-6">
       {/* Top row: Period label + Export */}
@@ -56,7 +57,7 @@ export default function ReportsPage() {
         {metrics.map((m, i) => (
           <motion.div
             key={m.label}
-            initial={{ opacity: 0, y: 8 }}
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.06, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="bg-[var(--bg-elevated)] rounded-lg p-5"
@@ -96,7 +97,7 @@ export default function ReportsPage() {
 
       {/* Full-width: Volume by corridor chart */}
       <motion.div
-        initial={{ opacity: 0, y: 8 }}
+        initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
         className="relative bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden"
@@ -124,7 +125,7 @@ export default function ReportsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* LEFT: Corridor details */}
         <motion.div
-          initial={{ opacity: 0, y: 8 }}
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
           className="relative bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden"
@@ -159,7 +160,7 @@ export default function ReportsPage() {
                 {reportCorridors.map((c, i) => (
                   <motion.tr
                     key={c.corridor}
-                    initial={{ opacity: 0 }}
+                    initial={shouldReduceMotion ? false : { opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: i * 0.05, duration: 0.3 }}
                     className="border-b border-[var(--border-row)] hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-150"
@@ -206,7 +207,7 @@ export default function ReportsPage() {
 
         {/* RIGHT: Yield breakdown */}
         <motion.div
-          initial={{ opacity: 0, y: 8 }}
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
           className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden"
@@ -240,7 +241,7 @@ export default function ReportsPage() {
                   .map((v, i) => (
                     <motion.tr
                       key={v.id}
-                      initial={{ opacity: 0 }}
+                      initial={shouldReduceMotion ? false : { opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: i * 0.05, duration: 0.3 }}
                       className="border-b border-[var(--border-row)] hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-150"

@@ -1,5 +1,9 @@
 import { cn } from "@/lib/utils";
 
+export function SkeletonPulse({ className = '' }: { className?: string }) {
+  return <div className={`animate-pulse rounded-lg bg-[var(--bg-highest)] ${className}`} />;
+}
+
 export function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div

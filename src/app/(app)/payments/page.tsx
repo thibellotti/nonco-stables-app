@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { PageTransition } from "@/components/ui/page-transition";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -37,6 +37,7 @@ const statusBadge: Record<string, { variant: "green" | "amber" | "red" | "defaul
 // ---------------------------------------------------------------------------
 
 export default function PaymentsPage() {
+  const shouldReduceMotion = useReducedMotion();
   const [sendFrom, setSendFrom] = useState(sendFromOptions[0].currency);
   const [recipient, setRecipient] = useState("Grupo Burs\u00e1til Mexicano");
   const [clabe, setClabe] = useState("646180157000000001");
@@ -62,7 +63,7 @@ export default function PaymentsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* LEFT: New payment form */}
         <motion.div
-          initial={{ opacity: 0, y: 8 }}
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
           className="relative bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden"
@@ -76,13 +77,14 @@ export default function PaymentsPage() {
           <div className="p-6 space-y-5">
             {/* Send from */}
             <div className="space-y-1.5">
-              <label className="text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--text-4)]">
+              <label htmlFor="payment-from" className="text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--text-4)]">
                 Send from
               </label>
               <select
+                id="payment-from"
                 value={sendFrom}
                 onChange={(e) => setSendFrom(e.target.value)}
-                className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-sans text-[var(--text)] outline-none focus:border-white/30 transition-colors"
+                className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-sans text-[var(--text)] outline-none focus:border-white/60 transition-colors"
               >
                 {sendFromOptions.map((opt) => (
                   <option key={opt.currency} value={opt.currency}>
@@ -97,52 +99,56 @@ export default function PaymentsPage() {
 
             {/* Recipient name */}
             <div className="space-y-1.5">
-              <label className="text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--text-4)]">
+              <label htmlFor="payment-recipient" className="text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--text-4)]">
                 Recipient name
               </label>
               <input
+                id="payment-recipient"
                 type="text"
                 value={recipient}
                 onChange={(e) => setRecipient(e.target.value)}
-                className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-sans text-[var(--text)] outline-none focus:border-white/30 transition-colors placeholder:text-[var(--text-4)]"
+                className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-sans text-[var(--text)] outline-none focus:border-white/60 transition-colors placeholder:text-[var(--text-4)]"
               />
             </div>
 
             {/* CLABE / Account number */}
             <div className="space-y-1.5">
-              <label className="text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--text-4)]">
+              <label htmlFor="payment-clabe" className="text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--text-4)]">
                 CLABE / Account number
               </label>
               <input
+                id="payment-clabe"
                 type="text"
                 value={clabe}
                 onChange={(e) => setClabe(e.target.value)}
-                className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-mono text-[var(--text)] outline-none focus:border-white/30 transition-colors placeholder:text-[var(--text-4)]"
+                className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-mono text-[var(--text)] outline-none focus:border-white/60 transition-colors placeholder:text-[var(--text-4)]"
               />
             </div>
 
             {/* Amount + Deliver in */}
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <label className="text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--text-4)]">
+                <label htmlFor="payment-amount" className="text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--text-4)]">
                   Amount
                 </label>
                 <input
+                  id="payment-amount"
                   type="number"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-mono text-[var(--text)] outline-none focus:border-white/30 transition-colors placeholder:text-[var(--text-4)]"
+                  className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-mono text-[var(--text)] outline-none focus:border-white/60 transition-colors placeholder:text-[var(--text-4)]"
                   placeholder="0.00"
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--text-4)]">
+                <label htmlFor="payment-currency" className="text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--text-4)]">
                   Deliver in
                 </label>
                 <select
+                  id="payment-currency"
                   value={deliverIn}
                   onChange={(e) => setDeliverIn(e.target.value)}
-                  className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-sans text-[var(--text)] outline-none focus:border-white/30 transition-colors"
+                  className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-sans text-[var(--text)] outline-none focus:border-white/60 transition-colors"
                 >
                   {deliverCurrencies.map((c) => (
                     <option key={c} value={c}>
@@ -155,14 +161,15 @@ export default function PaymentsPage() {
 
             {/* Reference */}
             <div className="space-y-1.5">
-              <label className="text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--text-4)]">
+              <label htmlFor="payment-reference" className="text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--text-4)]">
                 Reference
               </label>
               <input
+                id="payment-reference"
                 type="text"
                 value={reference}
                 onChange={(e) => setReference(e.target.value)}
-                className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-mono text-[var(--text)] outline-none focus:border-white/30 transition-colors placeholder:text-[var(--text-4)]"
+                className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-mono text-[var(--text)] outline-none focus:border-white/60 transition-colors placeholder:text-[var(--text-4)]"
               />
             </div>
 
@@ -215,7 +222,7 @@ export default function PaymentsPage() {
 
         {/* RIGHT: Payment history */}
         <motion.div
-          initial={{ opacity: 0, y: 8 }}
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden"
@@ -233,12 +240,14 @@ export default function PaymentsPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search payee or reference..."
-              className="flex-1 bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-3 py-2 text-xs font-sans text-[var(--text)] outline-none focus:border-white/30 transition-colors placeholder:text-[var(--text-4)] w-full sm:w-auto"
+              aria-label="Search payment history"
+              className="flex-1 bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-3 py-2 text-xs font-sans text-[var(--text)] outline-none focus:border-white/60 transition-colors placeholder:text-[var(--text-4)] w-full sm:w-auto"
             />
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
-              className="bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-3 py-2 text-xs font-sans text-[var(--text)] outline-none focus:border-white/30 transition-colors"
+              aria-label="Filter by status"
+              className="bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-3 py-2 text-xs font-sans text-[var(--text)] outline-none focus:border-white/60 transition-colors"
             >
               {statusFilters.map((s) => (
                 <option key={s} value={s}>
@@ -273,7 +282,7 @@ export default function PaymentsPage() {
                   return (
                     <motion.tr
                       key={p.id}
-                      initial={{ opacity: 0 }}
+                      initial={shouldReduceMotion ? false : { opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: i * 0.05, duration: 0.3 }}
                       className="border-b border-[var(--border-row)] hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-150"

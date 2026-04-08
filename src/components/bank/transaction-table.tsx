@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { type Transaction, type TransactionType } from "@/lib/mock-data";
-import { cn, formatCompact, timeAgo } from "@/lib/utils";
+import { cn, formatCompact, timeAgo, getDateGroup } from "@/lib/utils";
 import { currencyColors } from "@/lib/currency-colors";
 
 // ---------------------------------------------------------------------------
@@ -12,21 +12,8 @@ import { currencyColors } from "@/lib/currency-colors";
 const PAGE_SIZE = 10;
 
 // ---------------------------------------------------------------------------
-// Date grouping helpers (same pattern as Trades page)
+// Date grouping helpers
 // ---------------------------------------------------------------------------
-
-function getDateGroup(date: Date): string {
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const yesterday = new Date(today.getTime() - 86400000);
-  const weekAgo = new Date(today.getTime() - 7 * 86400000);
-  const txDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-
-  if (txDate.getTime() >= today.getTime()) return "Today";
-  if (txDate.getTime() >= yesterday.getTime()) return "Yesterday";
-  if (txDate.getTime() >= weekAgo.getTime()) return "This Week";
-  return "Earlier";
-}
 
 function groupTransactionsByDate(
   txs: Transaction[]
@@ -186,7 +173,7 @@ function TransactionRow({
   };
 
   return (
-    <tr className={`group cursor-pointer transition-colors duration-150 hover:bg-[rgba(255,255,255,0.03)] border-b border-[rgba(255,255,255,0.03)] ${index % 2 === 1 ? "bg-[rgba(255,255,255,0.02)]" : ""}`}>
+    <tr className={`group transition-colors duration-150 hover:bg-[rgba(255,255,255,0.03)] border-b border-[rgba(255,255,255,0.03)] ${index % 2 === 1 ? "bg-[rgba(255,255,255,0.02)]" : ""}`}>
       {/* Transaction: icon + name + ref + mobile status dot */}
       <td className="px-3 sm:px-6 py-3 sm:py-4">
         <div className="flex items-center gap-2 sm:gap-3">
@@ -335,7 +322,7 @@ export function BankTransactionTable({ transactions }: BankTransactionTableProps
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page <= 1}
-            className="px-3 py-1.5 text-[11px] font-sans font-bold uppercase rounded border border-[var(--border)] text-[var(--text-4)] hover:text-white hover:border-[var(--text-4)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+            className="px-3 py-1.5 min-h-[44px] text-[11px] font-sans font-bold uppercase rounded border border-[var(--border)] text-[var(--text-4)] hover:text-white hover:border-[var(--text-4)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
           >
             Prev
           </button>
@@ -356,7 +343,7 @@ export function BankTransactionTable({ transactions }: BankTransactionTableProps
           <button
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             disabled={page >= totalPages}
-            className="px-3 py-1.5 text-[11px] font-sans font-bold uppercase rounded border border-[var(--border)] text-[var(--text-4)] hover:text-white hover:border-[var(--text-4)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+            className="px-3 py-1.5 min-h-[44px] text-[11px] font-sans font-bold uppercase rounded border border-[var(--border)] text-[var(--text-4)] hover:text-white hover:border-[var(--text-4)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
           >
             Next
           </button>

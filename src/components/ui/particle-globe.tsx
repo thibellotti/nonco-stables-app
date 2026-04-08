@@ -1,10 +1,19 @@
 "use client";
 
-import { useRef, useMemo, useEffect, useState } from "react";
+import { useRef, useMemo, useEffect, type MutableRefObject } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import * as THREE from "three";
+import {
+  BufferGeometry,
+  BufferAttribute,
+  CanvasTexture,
+  ColorManagement,
+  LinearFilter,
+  SRGBColorSpace,
+  Vector3,
+} from "three";
+import type { Points, Group } from "three";
 
-THREE.ColorManagement.enabled = true;
+ColorManagement.enabled = true;
 
 const CYAN = "#05e0f8";
 
@@ -50,9 +59,9 @@ function fibSphere(n: number, r: number): Float32Array {
 }
 
 // ─── Stablecoin logo texture: circle container + abbreviation inside ───
-const texCache = new Map<string, THREE.CanvasTexture>();
+const texCache = new Map<string, CanvasTexture>();
 
-function logoTexture(text: string, sz = 512): THREE.CanvasTexture {
+function logoTexture(text: string, sz = 512): CanvasTexture {
   const key = `logo-${text}-v2`;
   if (texCache.has(key)) return texCache.get(key)!;
   const c = document.createElement("canvas");
@@ -92,15 +101,15 @@ function logoTexture(text: string, sz = 512): THREE.CanvasTexture {
   ctx.textBaseline = "middle";
   ctx.fillText(sym, cx, cx);
 
-  const tex = new THREE.CanvasTexture(c);
-  tex.minFilter = THREE.LinearFilter;
-  tex.magFilter = THREE.LinearFilter;
+  const tex = new CanvasTexture(c);
+  tex.minFilter = LinearFilter;
+  tex.magFilter = LinearFilter;
   texCache.set(key, tex);
   return tex;
 }
 
 // ─── Fiat currency text: large bold symbol ───
-function currencyTexture(text: string, sz = 512): THREE.CanvasTexture {
+function currencyTexture(text: string, sz = 512): CanvasTexture {
   const key = `fiat-${text}`;
   if (texCache.has(key)) return texCache.get(key)!;
   const c = document.createElement("canvas");
@@ -113,21 +122,27 @@ function currencyTexture(text: string, sz = 512): THREE.CanvasTexture {
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.fillText(text, sz / 2, sz / 2);
-  const tex = new THREE.CanvasTexture(c);
-  tex.minFilter = THREE.LinearFilter;
-  tex.magFilter = THREE.LinearFilter;
+  const tex = new CanvasTexture(c);
+  tex.minFilter = LinearFilter;
+  tex.magFilter = LinearFilter;
   texCache.set(key, tex);
   return tex;
 }
 
 // ─── Central globe ───
 function Globe() {
-  const ref = useRef<THREE.Points>(null);
+  const ref = useRef<Points>(null);
   const geo = useMemo(() => {
-    const g = new THREE.BufferGeometry();
-    g.setAttribute("position", new THREE.BufferAttribute(fibSphere(CONFIG.globe.particles, CONFIG.globe.radius), 3));
+    const g = new BufferGeometry();
+    g.setAttribute("position", new BufferAttribute(fibSphere(CONFIG.globe.particles, CONFIG.globe.radius), 3));
     return g;
   }, []);
+
+  useEffect(() => {
+    return () => {
+      geo.dispose();
+    };
+  }, [geo]);
 
   useFrame((_, dt) => {
     if (ref.current) ref.current.rotation.y += dt * CONFIG.globe.rotSpeed;
@@ -142,11 +157,11 @@ function Globe() {
 
 // ─── Orbital ring with currency sprites ───
 function OrbitalRing({
-  items, radius, speed, tiltX, tiltZ, size, scrollProgress, isLogo,
+  items, radius, speed, tiltX, tiltZ, size, scrollProgressRef, isLogo,
 }: {
-  items: string[]; radius: number; speed: number; tiltX: number; tiltZ: number; size: number; scrollProgress: number; isLogo?: boolean;
+  items: string[]; radius: number; speed: number; tiltX: number; tiltZ: number; size: number; scrollProgressRef: MutableRefObject<number>; isLogo?: boolean;
 }) {
-  const groupRef = useRef<THREE.Group>(null);
+  const groupRef = useRef<Group>(null);
   const baseRot = useRef(0);
   const smoothScroll = useRef(0);
 
@@ -163,7 +178,7 @@ function OrbitalRing({
   useFrame((_, dt) => {
     if (!groupRef.current) return;
     baseRot.current += dt * speed;
-    smoothScroll.current += (scrollProgress - smoothScroll.current) * 0.03;
+    smoothScroll.current += (scrollProgressRef.current - smoothScroll.current) * 0.03;
     groupRef.current.rotation.y = baseRot.current + smoothScroll.current * Math.PI * 0.4 * Math.sign(speed);
   });
 
@@ -182,7 +197,9 @@ function OrbitalRing({
 
 // ─── Ambient particles ───
 function AmbientParticles() {
-  const ref = useRef<THREE.Points>(null);
+  const ref = useRef<Points>(null);
+  const geoRef = useRef<BufferGeometry>(null);
+
   const { positions, sizes } = useMemo(() => {
     const c = CONFIG.ambient.count;
     const p = new Float32Array(c * 3);
@@ -199,7 +216,13 @@ function AmbientParticles() {
     return { positions: p, sizes: s };
   }, []);
 
-  const uColor = useMemo(() => new THREE.Vector3(0.02, 0.878, 0.973), []);
+  useEffect(() => {
+    return () => {
+      geoRef.current?.dispose();
+    };
+  }, []);
+
+  const uColor = useMemo(() => new Vector3(0.02, 0.878, 0.973), []);
 
   useFrame((_, dt) => {
     if (ref.current) {
@@ -210,7 +233,7 @@ function AmbientParticles() {
 
   return (
     <points ref={ref}>
-      <bufferGeometry>
+      <bufferGeometry ref={geoRef}>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
         <bufferAttribute attach="attributes-size" args={[sizes, 1]} />
       </bufferGeometry>
@@ -251,13 +274,13 @@ function CameraRig() {
 }
 
 // ─── Scene ───
-function Scene({ scrollProgress, offset = 0 }: { scrollProgress: number; offset?: number }) {
+function Scene({ scrollProgressRef }: { scrollProgressRef: MutableRefObject<number> }) {
   return (
     <>
       <CameraRig />
       <Globe />
       {CONFIG.rings.map((ring, i) => (
-        <OrbitalRing key={i} {...ring} scrollProgress={scrollProgress} isLogo={i === 0} />
+        <OrbitalRing key={i} {...ring} scrollProgressRef={scrollProgressRef} isLogo={i === 0} />
       ))}
       <AmbientParticles />
     </>
@@ -268,20 +291,24 @@ function Scene({ scrollProgress, offset = 0 }: { scrollProgress: number; offset?
 interface ParticleGlobeProps {
   size?: number;
   opacity?: number;
-  offset?: number; // shift globe to the right in 3D space
   className?: string;
 }
 
-export function ParticleGlobe({ size, opacity = 0.35, offset = 0, className }: ParticleGlobeProps) {
-  const [scrollProgress, setScrollProgress] = useState(0);
+export function ParticleGlobe({ size, opacity = 0.35, className }: ParticleGlobeProps) {
+  const scrollProgressRef = useRef(0);
 
   useEffect(() => {
     const onScroll = () => {
-      setScrollProgress(Math.min(window.scrollY / window.innerHeight, 1));
+      scrollProgressRef.current = Math.min(window.scrollY / window.innerHeight, 1);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      // Dispose all cached textures on unmount
+      texCache.forEach((tex) => tex.dispose());
+      texCache.clear();
+    };
   }, []);
 
   return (
@@ -297,12 +324,13 @@ export function ParticleGlobe({ size, opacity = 0.35, offset = 0, className }: P
     >
       <Canvas
         camera={{ position: [0, 0, CONFIG.cam.dist], fov: 50, near: 1, far: 1500 }}
-        gl={{ antialias: true, alpha: true, powerPreference: "high-performance", outputColorSpace: THREE.SRGBColorSpace }}
+        dpr={[1, 2]}
+        gl={{ antialias: true, alpha: true, powerPreference: "high-performance", outputColorSpace: SRGBColorSpace }}
         style={{ background: "transparent" }}
         onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
       >
         <fog attach="fog" args={["#000000", 100, 700]} />
-        <Scene scrollProgress={scrollProgress} offset={offset} />
+        <Scene scrollProgressRef={scrollProgressRef} />
       </Canvas>
     </div>
   );

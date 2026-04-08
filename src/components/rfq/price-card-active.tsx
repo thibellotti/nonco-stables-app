@@ -208,8 +208,8 @@ export function PriceCardActive({
   const { bid, ask } = getPrices(quote, settlement);
   const premium = forwardPremium(quote, settlement);
 
-  const baseColor = currencyColors[base]?.border ?? "#ffffff";
-  const quoteColor = currencyColors[quoteCcy]?.border ?? "#6366f1";
+  const baseColor = currencyColors[base]?.border ?? "var(--text)";
+  const quoteColor = currencyColors[quoteCcy]?.border ?? "var(--cyan)";
 
   // Pending trade state for confirmation dialog
   const [pendingTrade, setPendingTrade] = useState<{

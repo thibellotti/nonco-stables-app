@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef, useMemo } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useCallback, useRef, useMemo, memo } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import Link from "next/link";
 import { PageTransition } from "@/components/ui/page-transition";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -60,7 +61,7 @@ const allTrades = [...recentTrades, ...extraTrades];
 // Market Card
 // ---------------------------------------------------------------------------
 
-function MarketCard({
+const MarketCard = memo(function MarketCard({
   instrument,
   onClick,
 }: {
@@ -124,13 +125,14 @@ function MarketCard({
       </div>
     </button>
   );
-}
+});
 
 // ---------------------------------------------------------------------------
 // Main Page
 // ---------------------------------------------------------------------------
 
 export default function FxBoardPage() {
+  const shouldReduceMotion = useReducedMotion();
   const [search, setSearch] = useState("");
   const [rfsOpen, setRfsOpen] = useState(false);
   const [rfsInstrument, setRfsInstrument] = useState<string | undefined>();
@@ -197,7 +199,8 @@ export default function FxBoardPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search pairs..."
-            className="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-lg pl-9 pr-4 py-2.5 text-xs font-sans text-[var(--text)] outline-none focus:border-[var(--border-outline)] transition-colors placeholder:text-[var(--text-4)]"
+            aria-label="Search currency pairs"
+            className="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-lg pl-9 pr-4 py-2.5 text-xs font-sans text-[var(--text)] outline-none focus:border-white focus:ring-1 focus:ring-white/20 transition-colors placeholder:text-[var(--text-4)]"
           />
         </div>
 
@@ -220,7 +223,7 @@ export default function FxBoardPage() {
 
       {/* ── Market Cards Grid ── */}
       <motion.div
-        initial={{ opacity: 0, y: 8 }}
+        initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
         className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3"
@@ -259,12 +262,12 @@ export default function FxBoardPage() {
           <span className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-4)]">
             Recent Trading Activity
           </span>
-          <a
+          <Link
             href="/trades"
             className="text-[11px] font-sans text-white hover:opacity-70 transition-colors"
           >
             View all &rarr;
-          </a>
+          </Link>
         </div>
         <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden overflow-x-auto">
           <table className="w-full text-left border-collapse">

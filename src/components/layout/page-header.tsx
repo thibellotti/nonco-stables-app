@@ -31,14 +31,14 @@ export function PageHeader() {
   const items = [...tickerItems, ...tickerItems];
 
   return (
-    <header className="fixed top-0 right-0 left-0 lg:left-[220px] h-16 z-40 bg-[rgba(10,10,10,0.75)] backdrop-blur-xl backdrop-saturate-150 border-b border-[var(--border)]">
+    <header className="fixed top-0 right-0 left-0 lg:left-[220px] h-16 z-40 bg-[rgba(10,10,10,0.75)] backdrop-blur-xl backdrop-saturate-150 border-b border-[var(--border)]" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
       <div className="flex items-center h-full px-6 lg:px-8 gap-4">
         {/* LEFT: Page title */}
         <div className="flex items-center gap-1.5 shrink-0">
           <span className="text-[13px] text-[var(--text-4)] font-sans hidden sm:inline">Nonco</span>
           <span className="text-[13px] text-[var(--text-4)] font-sans hidden sm:inline">/</span>
           <PageMark page={segment.replace("/", "")} className="mr-1.5" />
-          <span className="text-[13px] text-white font-medium font-sans">{title}</span>
+          <h1 className="text-[13px] text-white font-medium font-sans">{title}</h1>
         </div>
 
         {/* Divider between breadcrumb and ticker */}
@@ -74,9 +74,11 @@ export function PageHeader() {
         {/* RIGHT: Notifications + Avatar */}
         <div className="flex items-center gap-3 shrink-0 ml-auto">
           <NotificationCenter />
-          <div className="w-7 h-7 rounded-full bg-[rgba(255,255,255,0.08)] border border-[var(--border)] flex items-center justify-center text-[9px] font-bold text-[var(--text)]">
-            FM
-          </div>
+          <button className="p-2 -m-2 rounded-full" aria-label="User menu">
+            <div className="w-7 h-7 rounded-full bg-[rgba(255,255,255,0.08)] border border-[var(--border)] flex items-center justify-center text-[9px] font-bold text-[var(--text)]">
+              FM
+            </div>
+          </button>
         </div>
       </div>
     </header>

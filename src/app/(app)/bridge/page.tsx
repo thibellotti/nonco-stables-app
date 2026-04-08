@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { PageTransition } from "@/components/ui/page-transition";
 import { Button } from "@/components/ui/button";
 import { formatMoney } from "@/lib/utils";
@@ -18,6 +18,7 @@ const chains = [
 const tokens = ["USDT", "USDC", "DAI", "WETH"];
 
 export default function BridgePage() {
+  const shouldReduceMotion = useReducedMotion();
   const [fromChain, setFromChain] = useState("ethereum");
   const [toChain, setToChain] = useState("base");
   const [token, setToken] = useState("USDT");
@@ -38,8 +39,8 @@ export default function BridgePage() {
       {/* Page context header */}
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-lg bg-[rgba(5,224,248,0.08)] border border-[rgba(5,224,248,0.12)] flex items-center justify-center">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-            <path d="M3 7h12M15 7l-3-3M15 11H3M3 11l3 3" stroke="#05E0F8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" className="text-[var(--cyan)]">
+            <path d="M3 7h12M15 7l-3-3M15 11H3M3 11l3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
         <div>
@@ -50,7 +51,7 @@ export default function BridgePage() {
 
       {/* Bridge form card — full-width, two zones */}
       <motion.div
-        initial={{ opacity: 0, y: 8 }}
+        initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
         className="relative w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden"
@@ -68,10 +69,11 @@ export default function BridgePage() {
         <div className="relative z-10 lg:max-w-[60%] p-6 space-y-5">
           {/* From chain */}
           <div className="space-y-1.5">
-            <label className="text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--text-4)]">
+            <label htmlFor="bridge-from-chain" className="text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--text-4)]">
               From chain
             </label>
             <select
+              id="bridge-from-chain"
               value={fromChain}
               onChange={(e) => setFromChain(e.target.value)}
               className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-sans text-[var(--text)] outline-none focus:border-white transition-colors"
@@ -97,10 +99,11 @@ export default function BridgePage() {
 
           {/* To chain */}
           <div className="space-y-1.5">
-            <label className="text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--text-4)]">
+            <label htmlFor="bridge-to-chain" className="text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--text-4)]">
               To chain
             </label>
             <select
+              id="bridge-to-chain"
               value={toChain}
               onChange={(e) => setToChain(e.target.value)}
               className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-sans text-[var(--text)] outline-none focus:border-white transition-colors"
@@ -114,10 +117,11 @@ export default function BridgePage() {
           {/* Token + Amount */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <label className="text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--text-4)]">
+              <label htmlFor="bridge-token" className="text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--text-4)]">
                 Token
               </label>
               <select
+                id="bridge-token"
                 value={token}
                 onChange={(e) => setToken(e.target.value)}
                 className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm font-sans text-[var(--text)] outline-none focus:border-white transition-colors"
@@ -128,10 +132,11 @@ export default function BridgePage() {
               </select>
             </div>
             <div className="space-y-1.5">
-              <label className="text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--text-4)]">
+              <label htmlFor="bridge-amount" className="text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--text-4)]">
                 Amount
               </label>
               <input
+                id="bridge-amount"
                 type="number"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
@@ -168,7 +173,7 @@ export default function BridgePage() {
 
       {/* Stat cards */}
       <motion.div
-        initial={{ opacity: 0 }}
+        initial={shouldReduceMotion ? false : { opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
         className="grid grid-cols-2 sm:grid-cols-4 gap-3"

@@ -30,7 +30,7 @@ export function CardHeader({ children, className }: { children: React.ReactNode;
 
 export function CardTitle({ children }: { children: React.ReactNode }) {
   return (
-    <span className="font-mono text-[10px] font-medium uppercase tracking-[.15em] text-[var(--text-3)]">
+    <span className="font-sans text-[10px] font-medium uppercase tracking-[.15em] text-[var(--text-3)]">
       {children}
     </span>
   );

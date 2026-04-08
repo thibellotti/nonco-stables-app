@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { notFound } from "next/navigation";
 
 // ─── Shared data ───
 const points = [
@@ -229,6 +230,10 @@ function ChartC3() {
 
 // ─── Page ───
 export default function ChartOptionsPage() {
+  if (process.env.NODE_ENV === 'production') {
+    notFound()
+  }
+
   return (
     <div className="min-h-screen bg-black p-8 lg:p-16">
       <div className="max-w-5xl mx-auto">

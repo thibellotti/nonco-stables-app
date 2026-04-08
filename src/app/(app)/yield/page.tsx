@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { PageTransition } from "@/components/ui/page-transition";
 import { SectionLabel } from "@/components/ui/section-label";
 import { Badge } from "@/components/ui/badge";
@@ -159,6 +159,7 @@ function TrendArrow({ trend }: { trend: "up" | "down" | "neutral" }) {
 // ---------------------------------------------------------------------------
 
 export default function YieldPage() {
+  const shouldReduceMotion = useReducedMotion();
   return (
     <PageTransition className="px-4 sm:px-6 md:px-8 w-full space-y-6">
       {/* Page header */}
@@ -166,8 +167,8 @@ export default function YieldPage() {
 
       {/* ── Metrics strip ── */}
       <motion.div
-        variants={staggerContainer}
-        initial="hidden"
+        variants={shouldReduceMotion ? undefined : staggerContainer}
+        initial={shouldReduceMotion ? false : "hidden"}
         animate="show"
         className="card-primary relative flex flex-col md:flex-row gap-[1px] bg-[var(--bg-highest)] rounded-xl overflow-hidden"
       >
@@ -183,7 +184,7 @@ export default function YieldPage() {
         {metrics.map((m, idx) => (
           <motion.div
             key={m.label}
-            variants={fadeUp}
+            variants={shouldReduceMotion ? undefined : fadeUp}
             className="relative bg-[var(--bg-card)] p-5 flex-1 overflow-hidden"
           >
             {/* Stables gradient on hero metric (Total Deployed) */}
@@ -234,15 +235,15 @@ export default function YieldPage() {
       <div>
         <SectionLabel className="mb-4">Active Vaults</SectionLabel>
         <motion.div
-          variants={staggerContainer}
-          initial="hidden"
+          variants={shouldReduceMotion ? undefined : staggerContainer}
+          initial={shouldReduceMotion ? false : "hidden"}
           animate="show"
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
         >
           {yieldVaults.filter((v) => v.status !== "coming-soon").map((vault) => (
               <motion.div
                 key={vault.id}
-                variants={fadeUp}
+                variants={shouldReduceMotion ? undefined : fadeUp}
                 className="group relative bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden flex flex-col transition-all duration-200 hover:border-[var(--border-outline)] hover:translate-y-[-1px] hover:shadow-lg hover:shadow-[rgba(255,255,255,0.03)]"
               >
                 {/* Brand corner brackets */}
@@ -354,7 +355,7 @@ export default function YieldPage() {
 
       {/* ── Yield history table ── */}
       <motion.div
-        initial={{ opacity: 0, y: 8 }}
+        initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
         className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden"
@@ -365,6 +366,7 @@ export default function YieldPage() {
           </span>
         </div>
 
+        <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-[var(--border)]">
@@ -392,7 +394,7 @@ export default function YieldPage() {
             {yieldHistory.map((row, i) => (
               <motion.tr
                 key={`${row.period}-${row.vault}`}
-                initial={{ opacity: 0 }}
+                initial={shouldReduceMotion ? false : { opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.25 + i * 0.05, duration: 0.4 }}
                 className="border-b border-[var(--border-row)] hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-150"
@@ -433,6 +435,7 @@ export default function YieldPage() {
             ))}
           </tbody>
         </table>
+        </div>
 
         {/* Footer */}
         <div className="px-6 py-3 border-t border-[var(--border)] flex items-center justify-between">

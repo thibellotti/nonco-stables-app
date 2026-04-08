@@ -1,4 +1,4 @@
-import { transactions, type Transaction, type TransactionType } from "@/lib/mock-data";
+import { transactions, type Transaction } from "@/lib/mock-data";
 
 export async function getTransactions(filter?: string): Promise<Transaction[]> {
   // TODO: Replace with API call

@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { transactions, type TransactionType } from "@/lib/mock-data";
-import { cn, formatCompact, timeAgo } from "@/lib/utils";
+import { cn, formatCompact, timeAgo, getDateGroup } from "@/lib/utils";
 
 // ---------------------------------------------------------------------------
 // Icons per transaction type
@@ -186,19 +186,6 @@ function StatusDot({ status }: { status: string }) {
 // Date grouping helpers
 // ---------------------------------------------------------------------------
 
-function getDateGroup(date: Date): string {
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const yesterday = new Date(today.getTime() - 86400000);
-  const weekAgo = new Date(today.getTime() - 7 * 86400000);
-  const txDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-
-  if (txDate.getTime() >= today.getTime()) return "Today";
-  if (txDate.getTime() >= yesterday.getTime()) return "Yesterday";
-  if (txDate.getTime() >= weekAgo.getTime()) return "This Week";
-  return "Earlier";
-}
-
 function groupByDate(
   txs: typeof transactions
 ): { label: string; items: typeof transactions }[] {
@@ -232,7 +219,7 @@ function TransactionRow({ tx }: { tx: (typeof transactions)[number] }) {
           "bg-[var(--bg-elevated)] rounded-xl",
           "border border-[var(--border)]",
           "transition-colors duration-150 ease-[cubic-bezier(0.16,1,0.3,1)]",
-          "active:bg-[rgba(255,255,255,0.03)] cursor-pointer"
+          "active:bg-[rgba(255,255,255,0.03)]"
         )}
       >
         {/* Top: type label */}
@@ -274,7 +261,7 @@ function TransactionRow({ tx }: { tx: (typeof transactions)[number] }) {
         className={cn(
           "hidden sm:flex items-center gap-3.5 px-6 py-3.5",
           "transition-colors duration-150 ease-[cubic-bezier(0.16,1,0.3,1)]",
-          "hover:bg-[rgba(255,255,255,0.03)] cursor-pointer"
+          "hover:bg-[rgba(255,255,255,0.03)]"
         )}
       >
         {/* Left: icon + text */}

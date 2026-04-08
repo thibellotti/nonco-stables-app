@@ -38,7 +38,7 @@ export function BottomTabs() {
               >
                 {tab.icon}
               </span>
-              <span className="text-[9px] font-sans font-medium uppercase tracking-[0.08em]">{tab.label}</span>
+              <span className="text-[10px] font-sans font-medium uppercase tracking-[0.08em]">{tab.label}</span>
             </Link>
           );
         })}

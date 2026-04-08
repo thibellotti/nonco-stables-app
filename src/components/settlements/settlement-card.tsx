@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { formatMoney } from "@/lib/utils";
 
 // ---------------------------------------------------------------------------
@@ -32,6 +32,7 @@ export function SettlementCard({
   progress,
   index,
 }: SettlementCardProps) {
+  const shouldReduceMotion = useReducedMotion();
   const isProcessing = status === "processing";
 
   const statusBadge = isProcessing ? (
@@ -53,7 +54,7 @@ export function SettlementCard({
 
   const progressGradient = isProcessing
     ? "linear-gradient(90deg, rgba(255,255,255,0.4), rgba(255,255,255,0.8))"
-    : "linear-gradient(90deg, #d97706, var(--amber))";
+    : "linear-gradient(90deg, var(--yellow, #d97706), var(--amber))";
 
   const cardInner = (
     <div className="p-4 sm:p-6 flex flex-col justify-between min-h-48 md:min-h-64">
@@ -92,9 +93,9 @@ export function SettlementCard({
         </div>
         <div className="h-2 rounded-full bg-[rgba(255,255,255,0.06)] overflow-hidden">
           <motion.div
-            initial={{ width: 0 }}
+            initial={shouldReduceMotion ? false : { width: 0 }}
             animate={{ width: `${progress}%` }}
-            transition={{ delay: 0.3 + index * 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            transition={shouldReduceMotion ? { duration: 0 } : { delay: 0.3 + index * 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="h-full rounded-full"
             style={{ background: progressGradient }}
           />

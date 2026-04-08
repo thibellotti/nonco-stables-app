@@ -150,15 +150,15 @@ export default function OnchainPage() {
       >
         <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-3">
           <div className="text-[9px] text-[var(--text-4)] uppercase tracking-[0.1em]">Settlement</div>
-          <div className="text-lg font-mono font-bold text-white mt-1">Instant</div>
+          <div className="text-lg font-sans font-bold text-white mt-1">Instant</div>
         </div>
         <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-3">
           <div className="text-[9px] text-[var(--text-4)] uppercase tracking-[0.1em]">Custody</div>
-          <div className="text-lg font-mono font-bold text-white mt-1">Self</div>
+          <div className="text-lg font-sans font-bold text-white mt-1">Self</div>
         </div>
         <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-3">
           <div className="text-[9px] text-[var(--text-4)] uppercase tracking-[0.1em]">Chains</div>
-          <div className="text-lg font-mono font-bold text-white mt-1">Multi</div>
+          <div className="text-lg font-sans font-bold text-white mt-1">Multi</div>
         </div>
         <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-3">
           <div className="text-[9px] text-[var(--text-4)] uppercase tracking-[0.1em]">Spreads</div>

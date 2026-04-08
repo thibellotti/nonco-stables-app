@@ -92,7 +92,7 @@ export default function AppError({
           {detailsOpen && (
             <div className="mt-2 bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-3 text-left">
               <p className="font-mono text-xs text-[var(--text-4)] break-all leading-relaxed">
-                {error.message}
+                {process.env.NODE_ENV === 'development' ? error.message : 'An internal error occurred. Please contact support if this persists.'}
               </p>
               {error.digest && (
                 <p className="font-mono text-[11px] text-[var(--text-4)] mt-2 pt-2 border-t border-[var(--border)]">

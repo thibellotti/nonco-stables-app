@@ -1,8 +1,6 @@
 // Skeleton loading state for Trades page
 
-function SkeletonPulse({ className }: { className?: string }) {
-  return <div className={`bg-[var(--bg-highest)] rounded-lg animate-pulse ${className ?? ""}`} />;
-}
+import { SkeletonPulse } from "@/components/ui/skeleton";
 
 export default function TradesLoading() {
   return (

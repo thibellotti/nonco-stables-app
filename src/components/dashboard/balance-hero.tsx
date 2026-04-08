@@ -2,14 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import dynamic from "next/dynamic";
 import { SectionLabel } from "@/components/ui/section-label";
 import { balances, usdRates } from "@/lib/mock-data";
-
-const ParticleGlobe = dynamic(
-  () => import("@/components/ui/particle-globe").then((m) => ({ default: m.ParticleGlobe })),
-  { ssr: false }
-);
 import { formatMoney } from "@/lib/utils";
 
 // ---------------------------------------------------------------------------
@@ -152,13 +146,8 @@ export function BalanceHero() {
       {/* Cyan gradient overlay — brand accent */}
       <div className="absolute inset-0 pointer-events-none rounded-lg" style={{ background: 'linear-gradient(135deg, rgba(5,224,248,0.06), transparent 60%)' }} />
 
-      {/* Particle globe — large background, positioned right */}
-      <div className="absolute top-0 bottom-0 pointer-events-none hidden lg:block" style={{ left: '55%', right: '-40%', zIndex: 0 }}>
-        <ParticleGlobe opacity={0.4} />
-      </div>
-
-      {/* Content — constrained to left on lg so globe has space */}
-      <div className="relative z-10 lg:max-w-[78%]">
+      {/* Content */}
+      <div className="relative z-10">
 
       {/* Header */}
       <div className="mb-4">
@@ -301,7 +290,7 @@ export function BalanceHero() {
             width: 5,
             height: 5,
             transform: 'translate(-50%, -50%)',
-            background: '#05E0F8',
+            background: 'var(--cyan)',
             boxShadow: '0 0 6px rgba(5,224,248,0.6)',
           }}
         />

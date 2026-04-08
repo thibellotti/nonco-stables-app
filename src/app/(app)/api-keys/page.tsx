@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { PageTransition } from "@/components/ui/page-transition";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -26,6 +26,7 @@ const permissions = [
 // ---------------------------------------------------------------------------
 
 export default function ApiKeysPage() {
+  const shouldReduceMotion = useReducedMotion();
   return (
     <PageTransition className="px-4 sm:px-6 md:px-8 w-full space-y-6">
       {/* Top row */}
@@ -40,7 +41,7 @@ export default function ApiKeysPage() {
 
       {/* Warning banner */}
       <motion.div
-        initial={{ opacity: 0, y: 8 }}
+        initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
         className="relative bg-[var(--bg-card)] border border-[var(--border)] border-l-2 border-l-[var(--amber)] rounded-lg px-5 py-4 flex items-start gap-3"
@@ -81,7 +82,7 @@ export default function ApiKeysPage() {
 
       {/* Active keys */}
       <motion.div
-        initial={{ opacity: 0, y: 8 }}
+        initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
         className="relative bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden"
@@ -98,7 +99,7 @@ export default function ApiKeysPage() {
             return (
               <motion.div
                 key={key.id}
-                initial={{ opacity: 0 }}
+                initial={shouldReduceMotion ? false : { opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: i * 0.06, duration: 0.3 }}
                 className="px-6 py-4 flex flex-col sm:flex-row sm:items-center gap-3 hover:bg-[rgba(255,255,255,0.02)] transition-colors"
@@ -145,7 +146,7 @@ export default function ApiKeysPage() {
 
       {/* Permissions table */}
       <motion.div
-        initial={{ opacity: 0, y: 8 }}
+        initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
         className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden"
@@ -175,7 +176,7 @@ export default function ApiKeysPage() {
               {permissions.map((p, i) => (
                 <motion.tr
                   key={p.scope}
-                  initial={{ opacity: 0 }}
+                  initial={shouldReduceMotion ? false : { opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: i * 0.04, duration: 0.3 }}
                   className="border-b border-[var(--border-row)]"

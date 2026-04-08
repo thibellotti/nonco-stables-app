@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 // ---------------------------------------------------------------------------
 // Types & mock data
@@ -81,6 +81,7 @@ export function NotificationCenter() {
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>(initialNotifications);
   const containerRef = useRef<HTMLDivElement>(null);
+  const shouldReduceMotion = useReducedMotion();
 
   const unreadCount = notifications.filter((n) => n.unread).length;
 
@@ -124,7 +125,7 @@ export function NotificationCenter() {
     <div className="relative" ref={containerRef}>
       {/* Bell button */}
       <button
-        className="relative text-[var(--text-4)] hover:text-[var(--text)] transition-colors duration-150"
+        className="relative w-11 h-11 flex items-center justify-center text-[var(--text-4)] hover:text-[var(--text)] transition-colors duration-150"
         aria-label="Notifications"
         aria-expanded={isOpen}
         onClick={handleToggle}
@@ -156,11 +157,13 @@ export function NotificationCenter() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="absolute right-0 top-[calc(100%+8px)] w-[calc(100vw-2rem)] max-w-[380px] bg-[#141414] border border-[var(--border)] rounded-xl shadow-2xl overflow-hidden z-50"
-            variants={dropdownVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
+            role="region"
+            aria-label="Notifications"
+            className="absolute right-0 top-[calc(100%+8px)] w-[calc(100vw-2rem)] max-w-[380px] bg-[var(--bg-card)] border border-[var(--border)] rounded-xl shadow-2xl overflow-hidden z-50"
+            variants={shouldReduceMotion ? undefined : dropdownVariants}
+            initial={shouldReduceMotion ? false : "hidden"}
+            animate={shouldReduceMotion ? { opacity: 1 } : "visible"}
+            exit={shouldReduceMotion ? { opacity: 0 } : "exit"}
             transition={{ duration: 0.15, ease: easeOutExpo }}
           >
             {/* Header */}

@@ -88,11 +88,13 @@ export default function ThirdPartyPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search payee or reference..."
+            aria-label="Search third-party providers"
             className="flex-1 bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-3 py-2 text-xs font-sans text-[var(--text)] outline-none focus:border-white/30 transition-colors placeholder:text-[var(--text-4)] w-full sm:w-auto"
           />
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value as TypeFilter)}
+            aria-label="Filter by type"
             className="bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-3 py-2 text-xs font-sans text-[var(--text)] outline-none focus:border-white/30 transition-colors"
           >
             {typeFilters.map((t) => (
@@ -104,6 +106,7 @@ export default function ThirdPartyPage() {
           <select
             value={corridorFilter}
             onChange={(e) => setCorridorFilter(e.target.value as CorridorFilter)}
+            aria-label="Filter by corridor"
             className="bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-3 py-2 text-xs font-sans text-[var(--text)] outline-none focus:border-white/30 transition-colors"
           >
             {corridorFilters.map((c) => (

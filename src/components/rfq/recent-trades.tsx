@@ -20,7 +20,7 @@ export function RecentTrades({ extraTrades = [], limit }: RecentTradesProps) {
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[600px]">
+      <table className="w-full">
         <thead>
           <tr className="border-b border-[var(--border)]">
             <th className="px-3 sm:px-6 py-3 text-left text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium">
@@ -44,7 +44,7 @@ export function RecentTrades({ extraTrades = [], limit }: RecentTradesProps) {
           {all.map((trade) => (
             <tr
               key={trade.id}
-              className="hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-150 cursor-pointer"
+              className="hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-150"
             >
               {/* Pair */}
               <td className="px-3 sm:px-6 py-3 sm:py-4">

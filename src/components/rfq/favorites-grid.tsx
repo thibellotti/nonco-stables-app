@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { favorites, type Instrument } from "@/lib/mock-data";
+import { favorites, BASE_RATES, type Instrument } from "@/lib/mock-data";
 import { formatMoney } from "@/lib/utils";
 import { currencyColors } from "@/lib/currency-colors";
 import { Sparkline } from "@/components/ui/sparkline";
@@ -20,21 +20,6 @@ const currencyNames: Record<string, string> = {
   GBP: "British Pound",
   USDT: "Tether",
   USDC: "USD Coin",
-};
-
-// ---------------------------------------------------------------------------
-// Base rates (hardcoded from mock-data to avoid modifying that file)
-// ---------------------------------------------------------------------------
-
-const BASE_RATES: Record<string, number> = {
-  "MXN/USDT": 17.45,
-  "EUR/USDT": 1.0835,
-  "BRL/USDC": 5.15,
-  "USD/USDT": 1.0002,
-  "GBP/USDC": 1.265,
-  "EUR/USDC": 1.084,
-  "MXN/USDC": 17.42,
-  "BRL/USDT": 5.16,
 };
 
 // ---------------------------------------------------------------------------

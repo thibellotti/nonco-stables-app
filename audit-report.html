@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Audit Report — Nonco Stables App</title>
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface-1: #141414;
+    --surface-2: #1e1e1e;
+    --surface-3: #262626;
+    --text: #fafafa;
+    --text-2: #a0a0a0;
+    --text-3: #666;
+    --border: rgba(255,255,255,0.08);
+    --cyan: #05E0F8;
+    --red: #ef4444;
+    --orange: #f97316;
+    --yellow: #eab308;
+    --green: #22c55e;
+    --blue: #3b82f6;
+    --purple: #a855f7;
+    --font-body: 'Space Grotesk', -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 48px 24px 96px;
+  }
+
+  /* Header */
+  .header {
+    margin-bottom: 48px;
+  }
+  .header-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin-bottom: 8px;
+  }
+  .header h1 {
+    font-size: clamp(1.75rem, 1.25rem + 3vw, 2.5rem);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .header-meta {
+    font-size: 14px;
+    color: var(--text-2);
+  }
+  .header-meta span { color: var(--text-3); }
+
+  /* Score Card */
+  .score-card {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    padding: 32px;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 48px;
+  }
+  .score-ring {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    flex-shrink: 0;
+  }
+  .score-ring svg { transform: rotate(-90deg); }
+  .score-ring-bg { fill: none; stroke: var(--surface-3); stroke-width: 8; }
+  .score-ring-fill { fill: none; stroke: var(--yellow); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 1s ease; }
+  .score-value {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .score-number { font-family: var(--font-mono); font-size: 32px; font-weight: 700; letter-spacing: -0.02em; }
+  .score-grade { font-size: 14px; font-weight: 600; color: var(--yellow); letter-spacing: 0.05em; }
+  .score-details { flex: 1; }
+  .score-details p { color: var(--text-2); font-size: 14px; margin-bottom: 16px; }
+
+  .domain-scores {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .domain-score {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: var(--surface-2);
+    border-radius: 6px;
+    font-size: 12px;
+  }
+  .domain-score-label { color: var(--text-2); }
+  .domain-score-value { font-family: var(--font-mono); font-weight: 600; }
+
+  /* Stats Bar */
+  .stats-bar {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 48px;
+    flex-wrap: wrap;
+  }
+  .stat-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 13px;
+  }
+  .stat-chip .count {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 18px;
+  }
+  .stat-chip .label { color: var(--text-2); }
+  .stat-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  .stat-dot.critical { background: var(--red); }
+  .stat-dot.high { background: var(--orange); }
+  .stat-dot.medium { background: var(--yellow); }
+  .stat-dot.low { background: var(--blue); }
+
+  /* Severity Sections */
+  .severity-section {
+    margin-bottom: 32px;
+  }
+  .severity-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .severity-header:hover { background: var(--surface-2); }
+  .severity-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 700;
+    color: #000;
+  }
+  .severity-badge.critical { background: var(--red); }
+  .severity-badge.high { background: var(--orange); }
+  .severity-badge.medium { background: var(--yellow); }
+  .severity-badge.low { background: var(--blue); }
+  .severity-title { font-weight: 600; font-size: 15px; flex: 1; }
+  .severity-count { font-size: 13px; color: var(--text-3); font-family: var(--font-mono); }
+  .severity-arrow {
+    color: var(--text-3);
+    transition: transform 0.2s;
+    font-size: 12px;
+  }
+  .severity-section.open .severity-arrow { transform: rotate(90deg); }
+
+  .severity-body {
+    display: none;
+    padding: 4px 0 0 0;
+  }
+  .severity-section.open .severity-body { display: block; }
+
+  .issue-card {
+    padding: 16px 20px;
+    margin-top: 4px;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: background 0.15s;
+  }
+  .issue-card:hover { background: var(--surface-2); }
+  .issue-domain {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+  .issue-domain.perf { background: rgba(168,85,247,0.15); color: var(--purple); }
+  .issue-domain.security { background: rgba(239,68,68,0.15); color: var(--red); }
+  .issue-domain.quality { background: rgba(5,224,248,0.15); color: var(--cyan); }
+  .issue-domain.a11y { background: rgba(34,197,94,0.15); color: var(--green); }
+  .issue-domain.seo { background: rgba(249,115,22,0.15); color: var(--orange); }
+  .issue-domain.responsive { background: rgba(59,130,246,0.15); color: var(--blue); }
+  .issue-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .issue-detail { font-size: 13px; color: var(--text-2); line-height: 1.5; }
+  .issue-file { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); margin-top: 6px; }
+
+  /* Top Fixes */
+  .top-fixes {
+    margin-top: 48px;
+    padding: 32px;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .top-fixes h2 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
+  }
+  .fix-item {
+    display: grid;
+    grid-template-columns: 28px 1fr auto auto;
+    gap: 12px;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .fix-item:last-child { border-bottom: none; }
+  .fix-num {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface-3);
+    border-radius: 6px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-2);
+  }
+  .fix-desc { color: var(--text); }
+  .fix-tag {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--surface-3);
+    color: var(--text-2);
+  }
+  .fix-effort {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-3);
+    white-space: nowrap;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text-3);
+    text-align: center;
+  }
+
+  @media (max-width: 640px) {
+    .score-card { flex-direction: column; text-align: center; }
+    .domain-scores { grid-template-columns: repeat(2, 1fr); }
+    .stats-bar { gap: 8px; }
+    .fix-item { grid-template-columns: 28px 1fr; }
+    .fix-tag, .fix-effort { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-label">Codebase Audit</div>
+    <h1>Nonco Stables App</h1>
+    <div class="header-meta">
+      2026-04-08 <span>&middot;</span> 91 files scanned <span>&middot;</span> 6 domains <span>&middot;</span> Next.js 16.2 + React 19 + TailwindCSS v4 + Three.js
+    </div>
+  </div>
+
+  <!-- Score Card -->
+  <div class="score-card">
+    <div class="score-ring">
+      <svg viewBox="0 0 120 120" width="120" height="120">
+        <circle class="score-ring-bg" cx="60" cy="60" r="52"/>
+        <circle class="score-ring-fill" cx="60" cy="60" r="52"
+          stroke-dasharray="326.73"
+          stroke-dashoffset="147.03"/>
+      </svg>
+      <div class="score-value">
+        <div class="score-number">5.5</div>
+        <div class="score-grade">C+</div>
+      </div>
+    </div>
+    <div class="score-details">
+      <p>Strong TypeScript discipline and clean file structure, but critical gaps in auth, SEO, accessibility, and Three.js performance prevent institutional production quality.</p>
+      <div class="domain-scores">
+        <div class="domain-score"><span class="domain-score-label">Performance</span><span class="domain-score-value" style="color:var(--orange)">5</span></div>
+        <div class="domain-score"><span class="domain-score-label">Security</span><span class="domain-score-value" style="color:var(--red)">3</span></div>
+        <div class="domain-score"><span class="domain-score-label">Code Quality</span><span class="domain-score-value" style="color:var(--green)">8</span></div>
+        <div class="domain-score"><span class="domain-score-label">Accessibility</span><span class="domain-score-value" style="color:var(--red)">3.5</span></div>
+        <div class="domain-score"><span class="domain-score-label">SEO &amp; Meta</span><span class="domain-score-value" style="color:var(--red)">3</span></div>
+        <div class="domain-score"><span class="domain-score-label">Responsive</span><span class="domain-score-value" style="color:var(--green)">7</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="stat-chip"><span class="count">94</span><span class="label">Total Issues</span></div>
+    <div class="stat-chip"><div class="stat-dot critical"></div><span class="count">12</span><span class="label">Critical</span></div>
+    <div class="stat-chip"><div class="stat-dot high"></div><span class="count">26</span><span class="label">High</span></div>
+    <div class="stat-chip"><div class="stat-dot medium"></div><span class="count">30</span><span class="label">Medium</span></div>
+    <div class="stat-chip"><div class="stat-dot low"></div><span class="count">26</span><span class="label">Low</span></div>
+  </div>
+
+  <!-- CRITICAL -->
+  <div class="severity-section open" id="critical">
+    <div class="severity-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="severity-badge critical">C</div>
+      <div class="severity-title">Critical &mdash; Fix before launch</div>
+      <div class="severity-count">12</div>
+      <div class="severity-arrow">&#9654;</div>
+    </div>
+    <div class="severity-body">
+      <div class="issue-card">
+        <div class="issue-domain security">Security</div>
+        <div class="issue-title">No authentication &mdash; login is a UI facade</div>
+        <div class="issue-detail">handleLogin does router.push("/dashboard") with zero credential validation. No API call, no session creation. Anyone can skip login by navigating directly.</div>
+        <div class="issue-file">src/app/login/page.tsx:40</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain security">Security</div>
+        <div class="issue-title">No auth middleware &mdash; all routes public</div>
+        <div class="issue-detail">No middleware.ts exists. Every page (dashboard, bank, trades, settlements, API keys, etc.) is accessible without authentication.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain security">Security</div>
+        <div class="issue-title">No security headers configured</div>
+        <div class="issue-detail">Missing X-Frame-Options (clickjacking), Content-Security-Policy, Strict-Transport-Security, X-Content-Type-Options, Referrer-Policy, Permissions-Policy.</div>
+        <div class="issue-file">next.config.ts</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain perf">Performance</div>
+        <div class="issue-title">No dpr cap on Three.js Canvas</div>
+        <div class="issue-detail">Canvas has no dpr prop. On Retina/3x mobile, renders at unbounded native resolution. Add dpr={[1, 2]} to cap at 2x.</div>
+        <div class="issue-file">src/components/ui/particle-globe.tsx:299</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain perf">Performance</div>
+        <div class="issue-title">Three.js not in optimizePackageImports + namespace import</div>
+        <div class="issue-detail">Only framer-motion is listed. Three.js (~600KB) may ship unshaken. Also uses import * as THREE instead of named imports.</div>
+        <div class="issue-file">next.config.ts:5 &middot; particle-globe.tsx:5</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain seo">SEO</div>
+        <div class="issue-title">No sitemap.ts</div>
+        <div class="issue-detail">Search engines cannot discover pages. Create src/app/sitemap.ts.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain seo">SEO</div>
+        <div class="issue-title">No robots.ts</div>
+        <div class="issue-detail">No crawl directives. Authenticated routes may get indexed. Create src/app/robots.ts to disallow private routes.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain seo">SEO</div>
+        <div class="issue-title">No OG image &amp; no metadataBase</div>
+        <div class="issue-detail">openGraph has no images property. No metadataBase set, so all relative OG URLs are broken and no canonical URLs are generated. Social shares have no preview.</div>
+        <div class="issue-file">src/app/layout.tsx:9,21-26</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain a11y">Accessibility</div>
+        <div class="issue-title">--text-4 fails WCAG AA contrast</div>
+        <div class="issue-detail">rgba(255,255,255,0.3) on #000 = ~3.2:1 (needs 4.5:1). On #141414 cards = ~2.7:1. Used in hundreds of label, timestamp, and metadata elements across every page.</div>
+        <div class="issue-file">src/app/globals.css:34</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain a11y">Accessibility</div>
+        <div class="issue-title">No skip-to-content link</div>
+        <div class="issue-detail">Keyboard users must tab through 13+ sidebar navigation links before reaching page content. Add a visually-hidden skip link at the top of the app layout.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain a11y">Accessibility</div>
+        <div class="issue-title">Form labels not programmatically linked</div>
+        <div class="issue-detail">Labels exist visually but lack htmlFor attributes; inputs lack id attributes. Screen readers cannot associate labels with their inputs.</div>
+        <div class="issue-file">payments/page.tsx &middot; bridge/page.tsx &middot; rfs-dialog.tsx</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain responsive">Responsive</div>
+        <div class="issue-title">Missing viewportFit: "cover" for PWA</div>
+        <div class="issue-detail">Viewport export is missing viewportFit: "cover". In standalone PWA mode on notched iPhones, env(safe-area-inset-*) returns 0, making bottom-tabs safe area padding ineffective.</div>
+        <div class="issue-file">src/app/layout.tsx:34-38</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HIGH -->
+  <div class="severity-section" id="high">
+    <div class="severity-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="severity-badge high">H</div>
+      <div class="severity-title">High &mdash; Fix soon</div>
+      <div class="severity-count">26</div>
+      <div class="severity-arrow">&#9654;</div>
+    </div>
+    <div class="severity-body">
+      <div class="issue-card">
+        <div class="issue-domain perf">Performance</div>
+        <div class="issue-title">Double ParticleGlobe &mdash; two WebGL contexts</div>
+        <div class="issue-detail">globe-background.tsx and balance-hero.tsx both import ParticleGlobe. On dashboard, two WebGL contexts with 3500+ particles each run simultaneously, doubling GPU load.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain perf">Performance</div>
+        <div class="issue-title">No geometry/material disposal on unmount</div>
+        <div class="issue-detail">BufferGeometry, PointsMaterial, ShaderMaterial, CanvasTexture never call .dispose(). GPU memory leaks when navigating away from globe.</div>
+        <div class="issue-file">src/components/ui/particle-globe.tsx</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain perf">Performance</div>
+        <div class="issue-title">Scroll useState triggers full Canvas re-renders</div>
+        <div class="issue-detail">setScrollProgress in useState triggers React re-render on every scroll event. Should use useRef + read inside useFrame.</div>
+        <div class="issue-file">src/components/ui/particle-globe.tsx:279-284</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain perf">Performance</div>
+        <div class="issue-title">Fonts via CSS @font-face, not next/font/local</div>
+        <div class="issue-detail">Bypasses Next.js font optimization: no inlined CSS, no size-adjust for CLS, no preloading. Font discovery delayed until CSS parses.</div>
+        <div class="issue-file">src/app/globals.css:3-14</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain perf">Performance</div>
+        <div class="issue-title">No next/image &mdash; raw img tags</div>
+        <div class="issue-detail">All production images use raw &lt;img&gt;. Missing AVIF/WebP conversion, lazy loading, responsive sizing. Decorative SVGs lack explicit width/height (CLS risk).</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain perf">Performance</div>
+        <div class="issue-title">9 routes missing loading.tsx + zero Suspense boundaries</div>
+        <div class="issue-detail">Only 5 of 14 routes have loading skeletons. No Suspense boundaries exist anywhere in the codebase.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain perf">Performance</div>
+        <div class="issue-title">All 14 pages are "use client"</div>
+        <div class="issue-detail">Pages with minimal interactivity (yield, bridge, onchain, payments) ship full React client runtime. Push "use client" to leaf components.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain security">Security</div>
+        <div class="issue-title">No input validation on financial forms</div>
+        <div class="issue-detail">Amount fields accept negatives, wallet address has no format validation, CLABE not validated.</div>
+        <div class="issue-file">payments/page.tsx:134 &middot; bridge/page.tsx:134 &middot; onchain/page.tsx:132</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain security">Security</div>
+        <div class="issue-title">Hardcoded user identity + PWA start_url bypasses login</div>
+        <div class="issue-detail">"Fernando M." / "Admin" / "Treasury 01" hardcoded in sidebar. manifest.ts start_url is "/dashboard", opening past login in standalone mode.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain seo">SEO</div>
+        <div class="issue-title">9 pages missing dedicated metadata</div>
+        <div class="issue-detail">fx, payments, bridge, yield, onchain, onchain-activity, reports, api-keys, third-party all render as generic "Nonco Stables" in browser tabs and search.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain seo">SEO</div>
+        <div class="issue-title">Apple Touch Icon is SVG</div>
+        <div class="issue-detail">icons.apple points to /icon.svg. Safari ignores SVG apple-touch-icons &mdash; needs 180x180 PNG.</div>
+        <div class="issue-file">src/app/layout.tsx:16-19</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain a11y">Accessibility</div>
+        <div class="issue-title">No h1 heading on authenticated pages</div>
+        <div class="issue-detail">PageHeader renders title as a span, not a heading. Screen reader users have no top-level heading landmark on any page.</div>
+        <div class="issue-file">src/components/layout/page-header.tsx:41</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain a11y">Accessibility</div>
+        <div class="issue-title">Interactive divs not keyboard accessible</div>
+        <div class="issue-detail">Account selector, transaction cards, bank table rows, recent trades rows all have cursor-pointer but can't be focused or activated via keyboard.</div>
+        <div class="issue-file">sidebar.tsx:54 &middot; transaction-list.tsx:231 &middot; transaction-table.tsx:189</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain a11y">Accessibility</div>
+        <div class="issue-title">Search inputs &amp; filter selects missing aria-label</div>
+        <div class="issue-detail">FX search, payment history search, third-party search, type/corridor/status filter selects have no accessible name.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain a11y">Accessibility</div>
+        <div class="issue-title">Barely-visible focus styles on form inputs</div>
+        <div class="issue-detail">Form inputs use outline-none with focus:border-white/30 &mdash; barely visible change. Fails WCAG 2.4.7 focus visible requirement.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain a11y">Accessibility</div>
+        <div class="issue-title">Framer Motion ignores prefers-reduced-motion</div>
+        <div class="issue-detail">Only PageTransition checks useReducedMotion(). All other motion.div/motion.tr elements (bank, trades, settlements, yield, payments, FX, login, dialogs) animate regardless.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain quality">Code Quality</div>
+        <div class="issue-title">console.log in production</div>
+        <div class="issue-detail">Logs trade execution data. Remove before production.</div>
+        <div class="issue-file">src/components/rfs/rfs-dialog.tsx:596</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain quality">Code Quality</div>
+        <div class="issue-title">SkeletonPulse duplicated 5 times</div>
+        <div class="issue-detail">Identical component copy-pasted across dashboard, rfq, trades, bank, settlements loading.tsx files. Extract to shared skeleton.tsx.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain quality">Code Quality</div>
+        <div class="issue-title">6 hardcoded hex colors in production components</div>
+        <div class="issue-detail">#141414, #05E0F8, #d97706, #04b0c4 hardcoded in notification-center, bridge, balance-hero, settlement-card, settlements page. Should use CSS variables.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain quality">Code Quality</div>
+        <div class="issue-title">getDateGroup/groupByDate duplicated 3 times</div>
+        <div class="issue-detail">Identical date grouping logic in transaction-list.tsx, transaction-table.tsx, trades/page.tsx. Extract to utils.ts.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain responsive">Responsive</div>
+        <div class="issue-title">min-w-[600px] forces horizontal scroll on recent trades</div>
+        <div class="issue-detail">Table already hides columns via hidden sm:table-cell, making the min-width redundant. Causes scroll on screens narrower than 375px.</div>
+        <div class="issue-file">src/components/rfq/recent-trades.tsx:23</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain responsive">Responsive</div>
+        <div class="issue-title">RFS dialog SummaryGrid too tight on small screens</div>
+        <div class="issue-detail">grid-cols-4 on iPhone SE (320px) = ~72px per cell. Text truncates. Needs grid-cols-2 sm:grid-cols-4.</div>
+        <div class="issue-file">src/components/rfs/rfs-dialog.tsx:388</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain responsive">Responsive</div>
+        <div class="issue-title">text-[9px] used in ~15 places</div>
+        <div class="issue-detail">Bottom tab labels, stat card labels, bid/ask labels on FX cards, badge text. Below legibility threshold for most users.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain a11y">Accessibility</div>
+        <div class="issue-title">Notification dropdown missing role/aria-label</div>
+        <div class="issue-detail">Panel has no role or aria-label. Notification items are divs with no interactive role.</div>
+        <div class="issue-file">src/components/layout/notification-center.tsx:158-241</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MEDIUM -->
+  <div class="severity-section" id="medium">
+    <div class="severity-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="severity-badge medium">M</div>
+      <div class="severity-title">Medium &mdash; Improve</div>
+      <div class="severity-count">30</div>
+      <div class="severity-arrow">&#9654;</div>
+    </div>
+    <div class="severity-body">
+      <div class="issue-card">
+        <div class="issue-domain perf">Performance</div>
+        <div class="issue-title">Framer Motion imported in 21 files across every route</div>
+        <div class="issue-detail">FM runtime included in virtually every route chunk. Viz components (bar-chart, donut-chart, etc.) are "use client" but use zero hooks &mdash; could be Server Components.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain perf">Performance</div>
+        <div class="issue-title">FX Board re-renders all MarketCards every 700ms</div>
+        <div class="issue-detail">setInstruments() replaces entire array. MarketCard not wrapped in React.memo, so every card re-renders on every tick.</div>
+        <div class="issue-file">src/app/(app)/fx/page.tsx:148-170</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain perf">Performance</div>
+        <div class="issue-title">No dynamic imports for heavy dialogs</div>
+        <div class="issue-detail">RfsDialog (756 lines) and ConfirmationDialog are statically imported. Should be lazily loaded since they're below-the-fold/triggered content.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain perf">Performance</div>
+        <div class="issue-title">24 cached textures persist entire session (~6MB GPU)</div>
+        <div class="issue-detail">Module-level texCache Map holds 512x512 CanvasTextures indefinitely. Never disposed.</div>
+        <div class="issue-file">src/components/ui/particle-globe.tsx:53-121</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain security">Security</div>
+        <div class="issue-title">Error boundary exposes error.message to users</div>
+        <div class="issue-detail">Collapsible "Details" section shows raw error.message. In production, may contain stack traces, SQL errors, or internal paths.</div>
+        <div class="issue-file">src/app/(app)/error.tsx:68-105</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain security">Security</div>
+        <div class="issue-title">Dev pages publicly accessible</div>
+        <div class="issue-detail">/chart-options and /illustration-preview are outside (app) group. Should be removed before production or gated behind env check.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain security">Security</div>
+        <div class="issue-title">innerHTML for SVG injection</div>
+        <div class="issue-detail">brand-shapes.tsx:75 uses node.innerHTML with hardcoded SHAPES constants. Safe today but fragile pattern if content ever becomes dynamic.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain seo">SEO</div>
+        <div class="issue-title">Manifest theme_color mismatch</div>
+        <div class="issue-detail">manifest.ts uses #ffffff (white) but viewport themeColor is #05E0F8 (cyan). Should match for consistent status bar theming.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain seo">SEO</div>
+        <div class="issue-title">twitter.card is "summary" &mdash; should be "summary_large_image"</div>
+        <div class="issue-detail">Smaller preview card. Switch to summary_large_image once OG image exists.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain seo">SEO</div>
+        <div class="issue-title">No JSON-LD structured data</div>
+        <div class="issue-detail">Organization, WebApplication, FinancialProduct schemas would improve rich results for a financial platform.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain seo">SEO</div>
+        <div class="issue-title">Analytics commented out</div>
+        <div class="issue-detail">@vercel/analytics and @vercel/speed-insights are commented out and not installed. No production monitoring.</div>
+        <div class="issue-file">src/app/layout.tsx:1-4</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain seo">SEO</div>
+        <div class="issue-title">Root error.tsx and loading.tsx missing</div>
+        <div class="issue-detail">Errors outside (app) group (login, not-found, chart-options) show default Next.js error page. No root loading skeleton.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain a11y">Accessibility</div>
+        <div class="issue-title">Bridge/RFS form labels lack htmlFor/id linkage</div>
+        <div class="issue-detail">Labels exist visually but are not programmatically connected. Screen readers don't announce labels on focus.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain a11y">Accessibility</div>
+        <div class="issue-title">Quote form has zero labels</div>
+        <div class="issue-detail">Instrument select and quantity input have no label, no aria-label, only placeholder text.</div>
+        <div class="issue-file">src/components/rfq/quote-form.tsx:28-48</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain a11y">Accessibility</div>
+        <div class="issue-title">Broken heading hierarchy</div>
+        <div class="issue-detail">RFQ page has h2 without preceding h1. Error page uses h2 without h1. SectionLabel renders as span, not heading.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain a11y">Accessibility</div>
+        <div class="issue-title">Status dots convey state via color only</div>
+        <div class="issue-detail">Green dot for "online" status in sidebar has no text alternative.</div>
+        <div class="issue-file">src/components/layout/sidebar.tsx:55,114</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain a11y">Accessibility</div>
+        <div class="issue-title">Only 1 sr-only instance in entire codebase</div>
+        <div class="issue-detail">Visually hidden text used only once (third-party action column header). Many interactive elements lack screen reader text.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain quality">Code Quality</div>
+        <div class="issue-title">CardTitle uses font-mono for section titles</div>
+        <div class="issue-detail">CLAUDE.md says font-mono is for numbers only; section titles should use font-sans.</div>
+        <div class="issue-file">src/components/ui/card.tsx:33</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain quality">Code Quality</div>
+        <div class="issue-title">Duplicate data: extraTrades + BASE_RATES</div>
+        <div class="issue-detail">extraTrades duplicated between trades and FX pages. BASE_RATES duplicated in favorites-grid and mock-data.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain quality">Code Quality</div>
+        <div class="issue-title">Login form has no error handling</div>
+        <div class="issue-detail">No try/catch, no loading state for submit action. When real auth is added, this will need proper error UX.</div>
+        <div class="issue-file">src/app/login/page.tsx:40-43</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain responsive">Responsive</div>
+        <div class="issue-title">Touch targets below 44px on multiple elements</div>
+        <div class="issue-detail">Notification bell ~18px, avatar 28px, account selector ~36px. All below the WCAG 44px minimum for touch.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain responsive">Responsive</div>
+        <div class="issue-title">Page header missing safe-area-inset-top</div>
+        <div class="issue-detail">Fixed header overlaps with status bar in standalone PWA mode on notched iPhones.</div>
+        <div class="issue-file">src/components/layout/page-header.tsx:34</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain responsive">Responsive</div>
+        <div class="issue-title">Yield History table missing overflow-x-auto</div>
+        <div class="issue-detail">Remaining columns with px-6 padding can exceed viewport on very small screens.</div>
+        <div class="issue-file">src/app/(app)/yield/page.tsx:368-435</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain responsive">Responsive</div>
+        <div class="issue-title">Pervasive sub-14px typography</div>
+        <div class="issue-detail">text-[10px] in ~80+ places, text-[11px] in ~200+ places. Deliberate design choice for institutional density, but noted against the 14px guideline.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOW -->
+  <div class="severity-section" id="low">
+    <div class="severity-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="severity-badge low">L</div>
+      <div class="severity-title">Low &mdash; Nice to have</div>
+      <div class="severity-count">26</div>
+      <div class="severity-arrow">&#9654;</div>
+    </div>
+    <div class="severity-body">
+      <div class="issue-card">
+        <div class="issue-domain perf">Performance</div>
+        <div class="issue-title">Antialias on particle-only scene, motion.tr in tables, PageTransition without AnimatePresence, CSS-achievable fade-ins using Framer Motion</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain security">Security</div>
+        <div class="issue-title">brace-expansion moderate vulnerability (npm audit fix), no rate limiting infrastructure</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain seo">SEO</div>
+        <div class="issue-title">Manifest missing orientation/categories/scope, no maskable icon, no shared metadata in (app)/layout.tsx</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain a11y">Accessibility</div>
+        <div class="issue-title">Avatar missing aria-label, SectionLabel renders as span not heading</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain quality">Code Quality</div>
+        <div class="issue-title">8 unused components (market-watch, quick-actions, currency-breakdown, category-tabs, kpi-cards, ticker-bar, skeleton presets), dead offset prop, &lt;a&gt; vs &lt;Link&gt; in FX page, rfs/rfq folder naming</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-domain responsive">Responsive</div>
+        <div class="issue-title">Pagination/tab buttons below 44px, bottom tab labels at 9px, manifest theme_color mismatch, no display-mode:standalone media query</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Fixes -->
+  <div class="top-fixes">
+    <h2>Top 10 Highest-Impact Fixes</h2>
+    <div class="fix-item">
+      <div class="fix-num">1</div>
+      <div class="fix-desc">Add dpr={[1, 2]} + deduplicate ParticleGlobe</div>
+      <div class="fix-tag">Perf</div>
+      <div class="fix-effort">15 min</div>
+    </div>
+    <div class="fix-item">
+      <div class="fix-num">2</div>
+      <div class="fix-desc">Add three to optimizePackageImports + named imports</div>
+      <div class="fix-tag">Perf</div>
+      <div class="fix-effort">20 min</div>
+    </div>
+    <div class="fix-item">
+      <div class="fix-num">3</div>
+      <div class="fix-desc">Create robots.ts + sitemap.ts + set metadataBase</div>
+      <div class="fix-tag">SEO</div>
+      <div class="fix-effort">30 min</div>
+    </div>
+    <div class="fix-item">
+      <div class="fix-num">4</div>
+      <div class="fix-desc">Raise --text-4 to rgba(255,255,255,0.5)</div>
+      <div class="fix-tag">A11y</div>
+      <div class="fix-effort">1 min</div>
+    </div>
+    <div class="fix-item">
+      <div class="fix-num">5</div>
+      <div class="fix-desc">Add skip-to-content link in app layout</div>
+      <div class="fix-tag">A11y</div>
+      <div class="fix-effort">10 min</div>
+    </div>
+    <div class="fix-item">
+      <div class="fix-num">6</div>
+      <div class="fix-desc">Link form labels with htmlFor/id</div>
+      <div class="fix-tag">A11y</div>
+      <div class="fix-effort">30 min</div>
+    </div>
+    <div class="fix-item">
+      <div class="fix-num">7</div>
+      <div class="fix-desc">Switch to next/font/local</div>
+      <div class="fix-tag">Perf</div>
+      <div class="fix-effort">15 min</div>
+    </div>
+    <div class="fix-item">
+      <div class="fix-num">8</div>
+      <div class="fix-desc">Add security headers in next.config.ts</div>
+      <div class="fix-tag">Security</div>
+      <div class="fix-effort">20 min</div>
+    </div>
+    <div class="fix-item">
+      <div class="fix-num">9</div>
+      <div class="fix-desc">Replace scroll useState with useRef in globe</div>
+      <div class="fix-tag">Perf</div>
+      <div class="fix-effort">10 min</div>
+    </div>
+    <div class="fix-item">
+      <div class="fix-num">10</div>
+      <div class="fix-desc">Add viewportFit: "cover" to viewport export</div>
+      <div class="fix-tag">PWA</div>
+      <div class="fix-effort">1 min</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    Audit by Claude Code &middot; THXType Studio &middot; 2026-04-08
+  </div>
+
+</div>
+
+</body>
+</html>

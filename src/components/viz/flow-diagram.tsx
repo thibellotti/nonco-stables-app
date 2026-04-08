@@ -1,5 +1,3 @@
-"use client";
-
 interface FlowDiagramProps {
   from: { label: string; value: string; color: string };
   to: { label: string; value: string; color: string };

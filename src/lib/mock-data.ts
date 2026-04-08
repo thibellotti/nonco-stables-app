@@ -146,7 +146,7 @@ const hours = (h: number) => h * 60 * 60 * 1000;
 const days = (d: number) => d * 24 * 60 * 60 * 1000;
 
 // Base mid-market rates (quote currency per 1 base unit)
-const BASE_RATES: Record<string, number> = {
+export const BASE_RATES: Record<string, number> = {
   "MXN/USDT": 17.45,
   "EUR/USDT": 1.0835,
   "BRL/USDC": 5.15,

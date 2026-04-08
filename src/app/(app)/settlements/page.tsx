@@ -565,7 +565,7 @@ export default function SettlementsPage() {
                         currencyColors[baseCurrency]?.border ?? "rgba(255,255,255,0.5)";
                       const progressGradient = isProcessing
                         ? "linear-gradient(90deg, rgba(5,224,248,0.3), rgba(5,224,248,0.7))"
-                        : "linear-gradient(90deg, #04b0c4, var(--cyan))";
+                        : "linear-gradient(90deg, #04b0c4, var(--cyan))" /* #04b0c4 is a darker shade of --cyan for gradient variation */;
 
                       return (
                         <motion.tr
@@ -734,7 +734,7 @@ export default function SettlementsPage() {
                 currencyColors[baseCurrency]?.border ?? "#ffffff";
               const progressGradient = isProcessing
                 ? "linear-gradient(90deg, rgba(5,224,248,0.4), rgba(5,224,248,0.8))"
-                : "linear-gradient(90deg, #04b0c4, var(--cyan))";
+                : "linear-gradient(90deg, #04b0c4, var(--cyan))" /* #04b0c4 is a darker shade of --cyan for gradient variation */;
 
               return (
                 <div className="bg-[var(--bg-card)] border border-[var(--border)] border-t-2 border-t-[var(--cyan)] rounded-lg p-5">
