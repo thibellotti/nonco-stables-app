@@ -61,7 +61,8 @@ export default function BridgePage() {
         <div className="absolute top-0 bottom-0 hidden lg:flex items-center justify-center pointer-events-none overflow-hidden" style={{ right: '-8%', width: '45%' }} aria-hidden="true">
           <AnimatedIllustration
             src="/illustrations/nonco-illustrationspack-2026-89-05.svg"
-            style={{ width: '140%', minWidth: 700, opacity: 0.5, transform: 'rotate(90deg)' }}
+            style={{ width: '140%', minWidth: 700, opacity: 0.5 }}
+            rotate={90}
           />
         </div>
 

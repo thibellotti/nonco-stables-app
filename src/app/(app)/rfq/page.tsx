@@ -138,7 +138,8 @@ export default function RFQPage() {
               <div className="absolute top-0 bottom-0 hidden lg:flex items-center justify-center pointer-events-none overflow-hidden" style={{ right: '-5%', width: '45%' }} aria-hidden="true">
                 <AnimatedIllustration
                   src="/illustrations/nonco-illustrationspack-2026-89-19.svg"
-                  style={{ width: '140%', minWidth: 600, opacity: 0.35, transform: 'rotate(90deg)' }}
+                  style={{ width: '140%', minWidth: 600, opacity: 0.35 }}
+                  rotate={90}
                 />
               </div>
 

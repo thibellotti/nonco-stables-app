@@ -6,6 +6,8 @@ interface AnimatedIllustrationProps {
   src: string;
   style?: CSSProperties;
   className?: string;
+  /** Rotate the entire SVG (degrees). Affects drift direction automatically. */
+  rotate?: number;
 }
 
 function easeInOut(t: number): number {
@@ -17,7 +19,7 @@ function seeded(seed: number): number {
   return x - Math.floor(x);
 }
 
-export function AnimatedIllustration({ src, style, className }: AnimatedIllustrationProps) {
+export function AnimatedIllustration({ src, style, className, rotate }: AnimatedIllustrationProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number>(0);
 
@@ -37,6 +39,13 @@ export function AnimatedIllustration({ src, style, className }: AnimatedIllustra
         svg.style.width = "100%";
         svg.style.height = "100%";
         svg.style.overflow = "visible";
+
+        // Apply rotation to SVG element itself so everything inside rotates
+        if (rotate) {
+          svg.style.transform = `rotate(${rotate}deg)`;
+          svg.style.transformOrigin = "center center";
+        }
+
         if (prefersReduced) return;
 
         function getLength(el: SVGGeometryElement): number {
@@ -49,7 +58,7 @@ export function AnimatedIllustration({ src, style, className }: AnimatedIllustra
 
         const strokeInfos: StrokeInfo[] = [];
         const fillInfos: FillInfo[] = [];
-        const dotPositions: { cx: number; cy: number; el: SVGElement }[] = [];
+        const dotPositions: { cx: number; cy: number }[] = [];
 
         const allEls = svg.querySelectorAll<SVGGeometryElement>(
           "path, circle, rect, line, polyline, polygon, ellipse"
@@ -60,21 +69,14 @@ export function AnimatedIllustration({ src, style, className }: AnimatedIllustra
           const hasStroke = cs.stroke && cs.stroke !== "none";
           const hasFill = cs.fill && cs.fill !== "none";
           const isFillOnly = !hasStroke && hasFill;
-
-          // Identify dots: small circles (r < 15) with fill
-          const isDot =
-            el.tagName === "circle" &&
-            parseFloat(el.getAttribute("r") || "0") < 15 &&
-            isFillOnly;
+          const isDot = el.tagName === "circle" && parseFloat(el.getAttribute("r") || "0") < 15 && isFillOnly;
 
           if (isDot) {
-            // Hide original dot — we'll replace with animated clusters
             el.style.opacity = "0";
             el.style.transition = "none";
             dotPositions.push({
               cx: parseFloat(el.getAttribute("cx") || "0"),
               cy: parseFloat(el.getAttribute("cy") || "0"),
-              el,
             });
             return;
           }
@@ -99,36 +101,31 @@ export function AnimatedIllustration({ src, style, className }: AnimatedIllustra
           }
         });
 
-        // ── Create animated dot clusters ──
-        // For each original dot position, spawn a vertical stack of 2-3 dots
-        // Mix of filled (cyan) and stroked (white outline)
-
+        // ── Dot clusters: vertical stacks in SVG Y-axis ──
         interface DotCluster {
           dots: SVGElement[];
-          triggerTime: number;   // when in the cycle this cluster appears
-          cycleDuration: number; // how long the full cycle is
-          showDuration: number;  // how long dots stay visible
+          triggerTime: number;
+          cycleDuration: number;
+          showDuration: number;
         }
 
         const dotClusters: DotCluster[] = [];
         const DOT_R = 4;
-        const DOT_GAP = 12; // vertical gap between stacked dots
+        const DOT_GAP = 12;
 
         dotPositions.forEach((pos, pi) => {
-          const count = 2 + Math.floor(seeded(pi) * 2); // 2 or 3 dots
+          const count = 2 + Math.floor(seeded(pi) * 2);
           const dots: SVGElement[] = [];
 
           for (let d = 0; d < count; d++) {
             const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-            // Stack along X in SVG space — appears vertical after 90deg rotation
-            const cx = pos.cx + (d - (count - 1) / 2) * DOT_GAP;
-            dot.setAttribute("cx", `${cx}`);
-            dot.setAttribute("cy", `${pos.cy}`);
+            // Stack along Y in SVG space
+            const cy = pos.cy + (d - (count - 1) / 2) * DOT_GAP;
+            dot.setAttribute("cx", `${pos.cx}`);
+            dot.setAttribute("cy", `${cy}`);
             dot.setAttribute("r", `${DOT_R}`);
 
-            // Alternate: filled cyan vs white stroke
-            const isFilled = seeded(pi * 10 + d) > 0.4;
-            if (isFilled) {
+            if (seeded(pi * 10 + d) > 0.4) {
               dot.setAttribute("fill", "#05e0f8");
               dot.setAttribute("stroke", "none");
             } else {
@@ -145,13 +142,13 @@ export function AnimatedIllustration({ src, style, className }: AnimatedIllustra
 
           dotClusters.push({
             dots,
-            triggerTime: seeded(pi + 500) * 8, // random start within 0-8s
-            cycleDuration: 6 + seeded(pi + 600) * 6, // 6-12s per cycle
-            showDuration: 2.5 + seeded(pi + 700) * 2, // visible for 2.5-4.5s
+            triggerTime: seeded(pi + 500) * 8,
+            cycleDuration: 6 + seeded(pi + 600) * 6,
+            showDuration: 2.5 + seeded(pi + 700) * 2,
           });
         });
 
-        // ── Major shape grouping for drift ──
+        // ── Major shape grouping for sideways drift ──
         const mainGroup = svg.querySelector(":scope > g") || svg;
         const topLevelEls = Array.from(mainGroup.children).filter(
           (c) => c.tagName !== "defs"
@@ -208,26 +205,26 @@ export function AnimatedIllustration({ src, style, className }: AnimatedIllustra
         const CONSTRUCT = 0.22;
         const HOLD = 0.55;
         const DECONSTRUCT = 0.78;
-
         const startTime = performance.now();
 
+        // Drift axis: X in SVG space = sideways on screen (works for both rotated and non-rotated)
         const animate = (time: number) => {
           rafRef.current = requestAnimationFrame(animate);
           const t = (time - startTime) / 1000;
 
-          // Stroke construct/deconstruct
+          // Stroke loop
           strokeInfos.forEach(({ el, len }, i) => {
             const ph = (i * 1.2) % CYCLE;
             const ct = ((t + ph) % CYCLE) / CYCLE;
-            let offset: number;
-            if (ct < CONSTRUCT) offset = len * (1 - easeInOut(ct / CONSTRUCT));
-            else if (ct < HOLD) offset = 0;
-            else if (ct < DECONSTRUCT) offset = len * easeInOut((ct - HOLD) / (DECONSTRUCT - HOLD));
-            else offset = len;
-            el.style.strokeDashoffset = `${offset}`;
+            let off: number;
+            if (ct < CONSTRUCT) off = len * (1 - easeInOut(ct / CONSTRUCT));
+            else if (ct < HOLD) off = 0;
+            else if (ct < DECONSTRUCT) off = len * easeInOut((ct - HOLD) / (DECONSTRUCT - HOLD));
+            else off = len;
+            el.style.strokeDashoffset = `${off}`;
           });
 
-          // Fill opacity (non-dot)
+          // Fill opacity
           fillInfos.forEach(({ el, origOpacity }, i) => {
             const ph = (i * 1.5) % CYCLE;
             const ct = ((t + ph) % CYCLE) / CYCLE;
@@ -240,32 +237,20 @@ export function AnimatedIllustration({ src, style, className }: AnimatedIllustra
             el.style.opacity = `${op}`;
           });
 
-          // Dot clusters: appear in sequence, stacked vertically
+          // Dot clusters
           dotClusters.forEach(({ dots, triggerTime, cycleDuration, showDuration }) => {
             const ct = (t + triggerTime) % cycleDuration;
-
             dots.forEach((dot, di) => {
-              // Each dot in the stack appears with a small delay
-              const dotDelay = di * 0.3;
-              const dotT = ct - dotDelay;
-
+              const dotT = ct - di * 0.3;
               let op = 0;
-              if (dotT >= 0 && dotT < 0.4) {
-                // Pop in
-                op = easeInOut(dotT / 0.4);
-              } else if (dotT >= 0.4 && dotT < showDuration) {
-                // Hold
-                op = 1;
-              } else if (dotT >= showDuration && dotT < showDuration + 0.4) {
-                // Fade out
-                op = 1 - easeInOut((dotT - showDuration) / 0.4);
-              }
-
+              if (dotT >= 0 && dotT < 0.4) op = easeInOut(dotT / 0.4);
+              else if (dotT >= 0.4 && dotT < showDuration) op = 1;
+              else if (dotT >= showDuration && dotT < showDuration + 0.4) op = 1 - easeInOut((dotT - showDuration) / 0.4);
               dot.style.opacity = `${Math.max(0, Math.min(1, op)) * 0.8}`;
             });
           });
 
-          // Drift
+          // Sideways drift — translate along X in SVG space
           shapeGroups.forEach(({ wrapper, speed, amplitude, phase, direction }) => {
             const dx = Math.sin(t * speed + phase) * amplitude * direction;
             wrapper.setAttribute("transform", `translate(${dx}, 0)`);
@@ -279,7 +264,7 @@ export function AnimatedIllustration({ src, style, className }: AnimatedIllustra
       cancelled = true;
       cancelAnimationFrame(rafRef.current);
     };
-  }, [src]);
+  }, [src, rotate]);
 
   return <div ref={containerRef} className={className} style={style} />;
 }
