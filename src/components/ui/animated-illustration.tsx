@@ -148,19 +148,85 @@ export function AnimatedIllustration({ src, style, className, rotate }: Animated
           });
         });
 
-        // ── Major shape grouping for sideways drift ──
+        // ── Major shape grouping — match paths + circles by coordinate proximity ──
         const mainGroup = svg.querySelector(":scope > g") || svg;
-        const topLevelEls = Array.from(mainGroup.children).filter(
+        const shapeEls = Array.from(mainGroup.children).filter(
           (c) => c.tagName !== "defs"
         ) as SVGElement[];
 
+        // Also collect root-level non-dot elements
         if (mainGroup !== svg) {
           Array.from(svg.children).forEach((child) => {
             if (child !== mainGroup && child.tagName !== "defs" && child.tagName !== "circle") {
-              topLevelEls.push(child as SVGElement);
+              shapeEls.push(child as SVGElement);
             }
           });
         }
+
+        // Get start coordinate of a path (from M command)
+        function getPathStart(el: SVGElement): { x: number; y: number } | null {
+          const d = el.getAttribute("d");
+          if (!d) return null;
+          const m = d.match(/M\s*([\d.]+)\s*,\s*([\d.]+)/);
+          return m ? { x: parseFloat(m[1]), y: parseFloat(m[2]) } : null;
+        }
+
+        // Get center of a circle
+        function getCircleCenter(el: SVGElement): { x: number; y: number } | null {
+          const cx = el.getAttribute("cx");
+          const cy = el.getAttribute("cy");
+          return cx && cy ? { x: parseFloat(cx), y: parseFloat(cy) } : null;
+        }
+
+        // Match paths and circles that share a coordinate (belong to same compound shape)
+        const paths = shapeEls.filter((el) => el.tagName === "path");
+        const circles = shapeEls.filter(
+          (el) => el.tagName === "circle" && parseFloat(el.getAttribute("r") || "0") >= 15
+        );
+        const others = shapeEls.filter(
+          (el) => el.tagName !== "path" && !(el.tagName === "circle" && parseFloat(el.getAttribute("r") || "0") >= 15) && el.tagName !== "defs"
+        );
+
+        const usedCircles = new Set<SVGElement>();
+        const groups: SVGElement[][] = [];
+
+        // For each path, find matching circle (shared x or y coordinate within tolerance)
+        paths.forEach((path) => {
+          const ps = getPathStart(path);
+          if (!ps) { groups.push([path]); return; }
+
+          let bestCircle: SVGElement | null = null;
+          let bestDist = Infinity;
+
+          circles.forEach((circle) => {
+            if (usedCircles.has(circle)) return;
+            const cc = getCircleCenter(circle);
+            if (!cc) return;
+            // Check if they share X or Y within radius tolerance
+            const dx = Math.abs(ps.x - cc.x);
+            const dy = Math.abs(ps.y - cc.y);
+            const dist = Math.min(dx, dy); // One axis should be close
+            if (dist < 5 && (dx + dy) < bestDist) {
+              bestDist = dx + dy;
+              bestCircle = circle;
+            }
+          });
+
+          if (bestCircle) {
+            usedCircles.add(bestCircle);
+            groups.push([path, bestCircle]);
+          } else {
+            groups.push([path]);
+          }
+        });
+
+        // Add unmatched circles as individual groups
+        circles.forEach((c) => {
+          if (!usedCircles.has(c)) groups.push([c]);
+        });
+
+        // Add other elements
+        others.forEach((el) => groups.push([el]));
 
         interface ShapeGroup {
           wrapper: SVGGElement;
@@ -171,24 +237,12 @@ export function AnimatedIllustration({ src, style, className, rotate }: Animated
         }
 
         const shapeGroups: ShapeGroup[] = [];
-        let gi = 0;
-        let idx = 0;
 
-        while (idx < topLevelEls.length) {
-          const el = topLevelEls[idx];
-          const next = topLevelEls[idx + 1];
+        groups.forEach((els, gi) => {
           const wrapper = document.createElementNS("http://www.w3.org/2000/svg", "g");
-
-          if (el.tagName === "path" && next?.tagName === "circle") {
-            el.parentNode!.insertBefore(wrapper, el);
-            wrapper.appendChild(el);
-            wrapper.appendChild(next);
-            idx += 2;
-          } else {
-            el.parentNode!.insertBefore(wrapper, el);
-            wrapper.appendChild(el);
-            idx += 1;
-          }
+          const parent = els[0].parentNode!;
+          parent.insertBefore(wrapper, els[0]);
+          els.forEach((el) => wrapper.appendChild(el));
 
           shapeGroups.push({
             wrapper,
@@ -197,8 +251,7 @@ export function AnimatedIllustration({ src, style, className, rotate }: Animated
             phase: gi * 1.8,
             direction: gi % 2 === 0 ? 1 : -1,
           });
-          gi++;
-        }
+        });
 
         // ── Animation loop ──
         const CYCLE = 12;
