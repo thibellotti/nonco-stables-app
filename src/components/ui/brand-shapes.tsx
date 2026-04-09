@@ -147,7 +147,7 @@ export function BrandShapes() {
       });
     });
 
-    // Animation: sine/cosine orbital float
+    // Animation: slow horizontal drift (sideways shift)
     const animate = (time: number) => {
       rafRef.current = requestAnimationFrame(animate);
       const t = time / 1000;
@@ -155,10 +155,9 @@ export function BrandShapes() {
       CONFIGS.forEach((cfg, i) => {
         const node = nodes[i];
         if (!node) return;
-        const ft = t * cfg.speedX + cfg.phaseOffset;
+        const ft = t * cfg.speedX * 0.5 + cfg.phaseOffset;
         const dx = Math.sin(ft) * cfg.ampX;
-        const dy = Math.cos(ft * 0.7 + cfg.phaseOffset) * cfg.ampY;
-        node.style.transform = `translate3d(${dx}px, ${dy}px, 0)`;
+        node.style.transform = `translate3d(${dx}px, 0, 0)`;
       });
     };
 

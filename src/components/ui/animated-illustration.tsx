@@ -112,14 +112,13 @@ export function AnimatedIllustration({
           });
         });
 
-        // Gentle float animation
+        // Slow horizontal drift (sideways shift)
         const startTime = performance.now();
         const animate = (time: number) => {
           rafRef.current = requestAnimationFrame(animate);
           const t = (time - startTime) / 1000;
-          const dy = Math.sin(t * 0.4) * floatAmp;
-          const dx = Math.cos(t * 0.3 + 1.5) * (floatAmp * 0.3);
-          container.style.transform = `translate3d(${dx}px, ${dy}px, 0)`;
+          const dx = Math.sin(t * 0.15) * floatAmp;
+          container.style.transform = `translate3d(${dx}px, 0, 0)`;
         };
         rafRef.current = requestAnimationFrame(animate);
       });
