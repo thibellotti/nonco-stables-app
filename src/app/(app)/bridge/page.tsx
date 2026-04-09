@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { PageTransition } from "@/components/ui/page-transition";
 import { Button } from "@/components/ui/button";
+import { BrandShapes } from "@/components/ui/brand-shapes";
 import { formatMoney } from "@/lib/utils";
 
 const chains = [
@@ -56,13 +57,9 @@ export default function BridgePage() {
         transition={{ duration: 0.5, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
         className="relative w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden"
       >
-        {/* Right-side illustration zone — visible behind content on lg */}
-        <div className="absolute top-0 bottom-0 hidden lg:flex items-center justify-center pointer-events-none overflow-hidden" style={{ right: '-8%', width: '45%' }} aria-hidden="true">
-          <img
-            src="/illustrations/nonco-illustrationspack-2026-89-05.svg"
-            alt=""
-            style={{ width: '140%', minWidth: 700, opacity: 0.5, transform: 'rotate(90deg)' }}
-          />
+        {/* Right-side animated brand shapes — visible on lg */}
+        <div className="absolute top-0 bottom-0 right-0 hidden lg:block pointer-events-none" style={{ width: '45%' }}>
+          <BrandShapes />
         </div>
 
         {/* Content — constrained to left on lg */}

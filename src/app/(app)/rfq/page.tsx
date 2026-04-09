@@ -10,6 +10,7 @@ import { PriceCard } from "@/components/rfq/price-card";
 import { RecentTrades } from "@/components/rfq/recent-trades";
 import { useToast } from "@/components/ui/toast";
 import { CornerBrackets } from "@/components/ui/corner-brackets";
+import { BrandShapes } from "@/components/ui/brand-shapes";
 import {
   type Instrument,
   type Quote,
@@ -133,13 +134,9 @@ export default function RFQPage() {
             <div className="relative overflow-hidden bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-6 lg:p-8 flex flex-col">
               <CornerBrackets size={18} color="rgba(5,224,248,0.08)" corners={["tl", "br"]} />
 
-              {/* Right-side illustration — architecture motif */}
-              <div className="absolute top-0 bottom-0 hidden lg:flex items-center justify-center pointer-events-none overflow-hidden" style={{ right: '-5%', width: '45%' }} aria-hidden="true">
-                <img
-                  src="/illustrations/nonco-illustrationspack-2026-89-19.svg"
-                  alt=""
-                  style={{ width: '140%', minWidth: 600, opacity: 0.35, transform: 'rotate(90deg)' }}
-                />
+              {/* Right-side animated brand shapes */}
+              <div className="absolute top-0 bottom-0 right-0 hidden lg:block pointer-events-none" style={{ width: '45%' }}>
+                <BrandShapes />
               </div>
 
               {/* Decorative background */}
