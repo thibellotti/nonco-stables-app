@@ -250,10 +250,10 @@ export function AnimatedIllustration({ src, style, className, rotate }: Animated
             });
           });
 
-          // Sideways drift — translate along X in SVG space
+          // Sideways drift — translate along Y in SVG space (appears horizontal after 90deg rotation)
           shapeGroups.forEach(({ wrapper, speed, amplitude, phase, direction }) => {
-            const dx = Math.sin(t * speed + phase) * amplitude * direction;
-            wrapper.setAttribute("transform", `translate(${dx}, 0)`);
+            const dy = Math.sin(t * speed + phase) * amplitude * direction;
+            wrapper.setAttribute("transform", `translate(0, ${dy})`);
           });
         };
 
