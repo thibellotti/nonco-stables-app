@@ -139,7 +139,6 @@ export default function RFQPage() {
                 <AnimatedIllustration
                   src="/illustrations/nonco-illustrationspack-2026-89-19.svg"
                   style={{ width: '140%', minWidth: 600, opacity: 0.35 }}
-                  rotate={90}
                 />
               </div>
 

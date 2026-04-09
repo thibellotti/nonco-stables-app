@@ -119,10 +119,10 @@ export function AnimatedIllustration({ src, style, className, rotate }: Animated
 
           for (let d = 0; d < count; d++) {
             const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-            // Stack along Y in SVG space
-            const cy = pos.cy + (d - (count - 1) / 2) * DOT_GAP;
-            dot.setAttribute("cx", `${pos.cx}`);
-            dot.setAttribute("cy", `${cy}`);
+            // Stack horizontally (along X)
+            const cx = pos.cx + (d - (count - 1) / 2) * DOT_GAP;
+            dot.setAttribute("cx", `${cx}`);
+            dot.setAttribute("cy", `${pos.cy}`);
             dot.setAttribute("r", `${DOT_R}`);
 
             if (seeded(pi * 10 + d) > 0.4) {
@@ -250,10 +250,10 @@ export function AnimatedIllustration({ src, style, className, rotate }: Animated
             });
           });
 
-          // Sideways drift — translate along Y in SVG space (appears horizontal after 90deg rotation)
+          // Sideways drift — translate along X (horizontal)
           shapeGroups.forEach(({ wrapper, speed, amplitude, phase, direction }) => {
-            const dy = Math.sin(t * speed + phase) * amplitude * direction;
-            wrapper.setAttribute("transform", `translate(0, ${dy})`);
+            const dx = Math.sin(t * speed + phase) * amplitude * direction;
+            wrapper.setAttribute("transform", `translate(${dx}, 0)`);
           });
         };
 

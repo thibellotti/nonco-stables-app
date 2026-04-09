@@ -62,7 +62,6 @@ export default function BridgePage() {
           <AnimatedIllustration
             src="/illustrations/nonco-illustrationspack-2026-89-05.svg"
             style={{ width: '140%', minWidth: 700, opacity: 0.5 }}
-            rotate={90}
           />
         </div>
 
