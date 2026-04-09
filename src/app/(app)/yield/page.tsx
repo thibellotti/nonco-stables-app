@@ -6,7 +6,7 @@ import { SectionLabel } from "@/components/ui/section-label";
 import { Badge } from "@/components/ui/badge";
 import { CornerBrackets } from "@/components/ui/corner-brackets";
 import { GeoDivider } from "@/components/ui/geo-divider";
-import { BrandShapes } from "@/components/ui/brand-shapes";
+import { AnimatedIllustration } from "@/components/ui/animated-illustration";
 import { yieldVaults } from "@/lib/mock-data";
 import { MiniAreaChart } from "@/components/viz/mini-area-chart";
 import { cn } from "@/lib/utils";
@@ -173,9 +173,12 @@ export default function YieldPage() {
         animate="show"
         className="card-primary relative flex flex-col md:flex-row gap-[1px] bg-[var(--bg-highest)] rounded-xl overflow-hidden"
       >
-        {/* Right-side animated brand shapes */}
-        <div className="absolute top-0 bottom-0 right-0 hidden lg:block pointer-events-none" style={{ width: '35%' }}>
-          <BrandShapes />
+        {/* Right-side illustration — semicircle path motif */}
+        <div className="absolute top-0 bottom-0 hidden lg:flex items-center justify-center pointer-events-none overflow-hidden" style={{ right: '-8%', width: '35%' }} aria-hidden="true">
+          <AnimatedIllustration
+            src="/illustrations/nonco-illustrationspack-2026-89-57.svg"
+            style={{ width: '140%', minWidth: 400, opacity: 0.25 }}
+          />
         </div>
 
         {metrics.map((m, idx) => (
