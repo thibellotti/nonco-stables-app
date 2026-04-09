@@ -34,7 +34,7 @@ export default function IllustrationPreview() {
           {illustrations.map((file) => {
             const num = file.match(/(\d+)\.svg$/)?.[1] ?? "";
             return (
-              <div key={file} className="relative bg-[#0a0a0a] border border-[#1a1a1a] rounded-lg p-4 flex flex-col items-center gap-3">
+              <div key={file} className="relative bg-[var(--bg)] border border-[var(--border)] rounded-lg p-4 flex flex-col items-center gap-3">
                 <div className="relative w-full aspect-square">
                   <Image
                     src={`/illustrations/${file}`}

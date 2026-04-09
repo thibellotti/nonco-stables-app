@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef, useMemo, memo } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo, memo, Suspense } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { PageTransition } from "@/components/ui/page-transition";
@@ -13,8 +13,13 @@ import {
   type BoardInstrument,
   type RecentTrade,
 } from "@/lib/mock-data";
-import { RfsDialog } from "@/components/rfs/rfs-dialog";
+import dynamic from "next/dynamic";
 import { GeoDivider } from "@/components/ui/geo-divider";
+
+const RfsDialog = dynamic(
+  () => import("@/components/rfs/rfs-dialog").then((mod) => ({ default: mod.RfsDialog })),
+  { ssr: false }
+);
 import { formatMoney, timeAgo } from "@/lib/utils";
 import { currencyColors } from "@/lib/currency-colors";
 
@@ -331,11 +336,13 @@ export default function FxBoardPage() {
       </div>
 
       {/* RFS Dialog */}
-      <RfsDialog
-        open={rfsOpen}
-        onClose={() => setRfsOpen(false)}
-        defaultInstrument={rfsInstrument}
-      />
+      <Suspense fallback={null}>
+        <RfsDialog
+          open={rfsOpen}
+          onClose={() => setRfsOpen(false)}
+          defaultInstrument={rfsInstrument}
+        />
+      </Suspense>
     </PageTransition>
   );
 }

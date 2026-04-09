@@ -14,6 +14,8 @@ interface TabGroupProps<T extends string> {
   active: T;
   onChange: (value: T) => void;
   className?: string;
+  /** Optional id prefix for aria-controls linkage with a tabpanel */
+  id?: string;
 }
 
 export function TabGroup<T extends string>({
@@ -21,6 +23,7 @@ export function TabGroup<T extends string>({
   active,
   onChange,
   className,
+  id,
 }: TabGroupProps<T>) {
   return (
     <div
@@ -34,7 +37,10 @@ export function TabGroup<T extends string>({
         <button
           key={tab.value}
           role="tab"
+          id={id ? `${id}-tab-${tab.value}` : undefined}
           aria-selected={active === tab.value}
+          aria-controls={id ? `${id}-panel-${tab.value}` : undefined}
+          tabIndex={active === tab.value ? 0 : -1}
           onClick={() => onChange(tab.value)}
           className={cn(
             "px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-wider transition-all cursor-pointer",

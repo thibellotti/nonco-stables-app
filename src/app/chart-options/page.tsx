@@ -68,7 +68,7 @@ function ChartC1() {
       <p className="text-[11px] text-white/40 mb-4 font-sans max-w-[500px]">
         Linha angular pura, sem fill, sem grid. Quadradinho no hover + tooltip com brackets. O mais limpo possivel.
       </p>
-      <div className="relative h-[240px] bg-[#0a0a0a] border border-[#1a1a1a] rounded-lg overflow-hidden cursor-crosshair" {...handlers}>
+      <div className="relative h-[240px] bg-[var(--bg)] border border-[var(--border)] rounded-lg overflow-hidden cursor-crosshair" {...handlers}>
         <svg width="100%" height="100%" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="absolute inset-0">
           <path d={diagPath} stroke={CYAN} strokeWidth="1.2" fill="none" strokeOpacity="0.85" />
         </svg>
@@ -87,7 +87,7 @@ function ChartC1() {
                 transform: 'translateY(-50%)',
               }}
             >
-              <div className="relative px-2.5 py-1 bg-[#0a0a0a]">
+              <div className="relative px-2.5 py-1 bg-[var(--bg)]">
                 <div className="absolute top-0 left-0 w-1 h-1 border-t border-l" style={{ borderColor: `${CYAN}50` }} />
                 <div className="absolute top-0 right-0 w-1 h-1 border-t border-r" style={{ borderColor: `${CYAN}50` }} />
                 <div className="absolute bottom-0 left-0 w-1 h-1 border-b border-l" style={{ borderColor: `${CYAN}50` }} />
@@ -119,7 +119,7 @@ function ChartC2() {
       <p className="text-[11px] text-white/40 mb-4 font-sans max-w-[500px]">
         Igual ao C1 mas com area fill muito sutil. Da mais peso visual ao grafico sem adicionar ruido.
       </p>
-      <div className="relative h-[240px] bg-[#0a0a0a] border border-[#1a1a1a] rounded-lg overflow-hidden cursor-crosshair" {...handlers}>
+      <div className="relative h-[240px] bg-[var(--bg)] border border-[var(--border)] rounded-lg overflow-hidden cursor-crosshair" {...handlers}>
         <svg width="100%" height="100%" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="absolute inset-0">
           <defs>
             <linearGradient id="c2-fill" x1="0" y1="0" x2="0" y2="1">
@@ -145,7 +145,7 @@ function ChartC2() {
                 transform: 'translateY(-50%)',
               }}
             >
-              <div className="relative px-2.5 py-1 bg-[#0a0a0a]">
+              <div className="relative px-2.5 py-1 bg-[var(--bg)]">
                 <div className="absolute top-0 left-0 w-1 h-1 border-t border-l" style={{ borderColor: `${CYAN}50` }} />
                 <div className="absolute top-0 right-0 w-1 h-1 border-t border-r" style={{ borderColor: `${CYAN}50` }} />
                 <div className="absolute bottom-0 left-0 w-1 h-1 border-b border-l" style={{ borderColor: `${CYAN}50` }} />
@@ -177,7 +177,7 @@ function ChartC3() {
       <p className="text-[11px] text-white/40 mb-4 font-sans max-w-[500px]">
         Linha angular com glow sutil e fill. Mais atmosferico, combina bem com o globe de fundo. Endpoint com glow.
       </p>
-      <div className="relative h-[240px] bg-[#0a0a0a] border border-[#1a1a1a] rounded-lg overflow-hidden cursor-crosshair" {...handlers}>
+      <div className="relative h-[240px] bg-[var(--bg)] border border-[var(--border)] rounded-lg overflow-hidden cursor-crosshair" {...handlers}>
         <svg width="100%" height="100%" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="absolute inset-0">
           <defs>
             <linearGradient id="c3-fill" x1="0" y1="0" x2="0" y2="1">
@@ -208,7 +208,7 @@ function ChartC3() {
                 transform: 'translateY(-50%)',
               }}
             >
-              <div className="relative px-2.5 py-1 bg-[#0a0a0a]">
+              <div className="relative px-2.5 py-1 bg-[var(--bg)]">
                 <div className="absolute top-0 left-0 w-1 h-1 border-t border-l" style={{ borderColor: `${CYAN}50` }} />
                 <div className="absolute top-0 right-0 w-1 h-1 border-t border-r" style={{ borderColor: `${CYAN}50` }} />
                 <div className="absolute bottom-0 left-0 w-1 h-1 border-b border-l" style={{ borderColor: `${CYAN}50` }} />

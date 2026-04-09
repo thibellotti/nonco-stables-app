@@ -1,5 +1,3 @@
-"use client";
-
 import { PageTransition } from "@/components/ui/page-transition";
 import Link from "next/link";
 

@@ -1,8 +1,5 @@
-// TODO: Add analytics after `npm install @vercel/analytics @vercel/speed-insights`
-// import { Analytics } from "@vercel/analytics/next";
-// import { SpeedInsights } from "@vercel/speed-insights/next";
-// Then add <Analytics /> and <SpeedInsights /> inside <body>
-
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -37,7 +34,6 @@ export const metadata: Metadata = {
     description: "Institutional stablecoin settlement platform — FX, bridge, yield, and payments across 6 chains.",
     type: "website",
     siteName: "Nonco Stables",
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Nonco Stables" }],
   },
   twitter: {
     card: "summary_large_image",
@@ -56,7 +52,11 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${spaceGrotesk.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+        <SpeedInsights />
+      </body>
     </html>
   );
 }

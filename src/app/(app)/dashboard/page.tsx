@@ -1,12 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { PageTransition } from "@/components/ui/page-transition";
 import { BalanceHero } from "@/components/dashboard/balance-hero";
 import { TransactionList } from "@/components/dashboard/transaction-list";
-import { RfsDialog } from "@/components/rfs/rfs-dialog";
 import { GeoDivider } from "@/components/ui/geo-divider";
+
+const RfsDialog = dynamic(
+  () => import("@/components/rfs/rfs-dialog").then((mod) => ({ default: mod.RfsDialog })),
+  { ssr: false }
+);
 
 
 // ---------------------------------------------------------------------------
@@ -155,11 +160,13 @@ export default function DashboardPage() {
       </div>
 
       {/* RFS Dialog */}
-      <RfsDialog
-        open={rfsOpen}
-        onClose={() => setRfsOpen(false)}
-        defaultInstrument={rfsInstrument}
-      />
+      <Suspense fallback={null}>
+        <RfsDialog
+          open={rfsOpen}
+          onClose={() => setRfsOpen(false)}
+          defaultInstrument={rfsInstrument}
+        />
+      </Suspense>
     </PageTransition>
   );
 }

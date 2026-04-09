@@ -86,6 +86,7 @@ function SettlementTabs({ active, onChange }: { active: Settlement; onChange: (s
           key={key}
           role="tab"
           aria-selected={active === key}
+          tabIndex={active === key ? 0 : -1}
           onClick={() => onChange(key)}
           className={cn(
             "px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer",
