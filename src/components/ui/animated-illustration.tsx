@@ -149,12 +149,12 @@ export function AnimatedIllustration({
             i += 1;
           }
 
-          // Varied motion: alternating direction, different speeds
+          // Slow, perceptible drift — like nonco.com media page
           const r = groupIndex;
-          const speed = 0.12 + (r % 5) * 0.04;    // 0.12–0.28 rad/s
-          const amplitude = 8 + (r % 4) * 4;       // 8–20px
-          const phase = r * 1.3;                     // staggered start
-          const direction = r % 2 === 0 ? 1 : -1;  // alternating up/down
+          const speed = 0.04 + (r % 5) * 0.015;     // 0.04–0.10 rad/s (very slow)
+          const amplitude = 20 + (r % 4) * 10;      // 20–50px (wide, visible)
+          const phase = r * 1.8;                      // well-staggered
+          const direction = r % 2 === 0 ? 1 : -1;   // alternating up/down
 
           shapeGroups.push({ wrapper, speed, amplitude, phase, direction });
           groupIndex++;
