@@ -37,11 +37,11 @@ function seeded(seed: number): number {
 // Positions: right-side biased, edge-clipped, center exclusion
 const CONFIGS: ShapeConfig[] = [
   // Spread: top-right hero, mid-right accent, bottom-right anchor. Avoid balance/bar zone.
-  { index: 0, x: 88, y: 5,   size: 130, opacity: 0.40, phaseOffset: 0,    speedX: 0.15, speedY: 0.12, ampX: 6,  ampY: 4 },
-  { index: 3, x: 97, y: 45,  size: 32,  opacity: 0.35, phaseOffset: 1.8,  speedX: 0.20, speedY: 0.18, ampX: 3,  ampY: 2 },
-  { index: 1, x: 82, y: 88,  size: 60,  opacity: 0.30, phaseOffset: 3.2,  speedX: 0.18, speedY: 0.14, ampX: 4,  ampY: 3 },
-  { index: 2, x: 96, y: 80,  size: 52,  opacity: 0.25, phaseOffset: 4.5,  speedX: 0.12, speedY: 0.10, ampX: 3,  ampY: 2 },
-  { index: 4, x: 70, y: 5,   size: 60,  opacity: 0.20, phaseOffset: 5.8,  speedX: 0.10, speedY: 0.08, ampX: 5,  ampY: 4 },
+  { index: 0, x: 88, y: 5,   size: 130, opacity: 0.40, phaseOffset: 0,    speedX: 0.15, speedY: 0.12, ampX: 10, ampY: 12 },
+  { index: 3, x: 97, y: 45,  size: 32,  opacity: 0.35, phaseOffset: 1.8,  speedX: 0.20, speedY: 0.18, ampX: 5,  ampY: 8 },
+  { index: 1, x: 82, y: 88,  size: 60,  opacity: 0.30, phaseOffset: 3.2,  speedX: 0.18, speedY: 0.14, ampX: 7,  ampY: 10 },
+  { index: 2, x: 96, y: 80,  size: 52,  opacity: 0.25, phaseOffset: 4.5,  speedX: 0.12, speedY: 0.10, ampX: 6,  ampY: 9 },
+  { index: 4, x: 70, y: 5,   size: 60,  opacity: 0.20, phaseOffset: 5.8,  speedX: 0.10, speedY: 0.08, ampX: 8,  ampY: 11 },
 ];
 
 export function BrandShapes() {
@@ -56,9 +56,35 @@ export function BrandShapes() {
     // Respect reduced motion
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches) return;
 
+    // Stroke length calculator for draw-on animation
+    function getStrokeLength(el: SVGElement): number {
+      const tag = el.tagName.toLowerCase();
+      if (tag === "circle") {
+        const r = parseFloat(el.getAttribute("r") || "0");
+        return 2 * Math.PI * r;
+      }
+      if (tag === "rect") {
+        const w = parseFloat(el.getAttribute("width") || "0");
+        const h = parseFloat(el.getAttribute("height") || "0");
+        const rx = parseFloat(el.getAttribute("rx") || "0");
+        if (rx > 0) {
+          return 2 * (w + h) - 8 * rx + 2 * Math.PI * rx;
+        }
+        return 2 * (w + h);
+      }
+      if (tag === "line") {
+        const x1 = parseFloat(el.getAttribute("x1") || "0");
+        const y1 = parseFloat(el.getAttribute("y1") || "0");
+        const x2 = parseFloat(el.getAttribute("x2") || "0");
+        const y2 = parseFloat(el.getAttribute("y2") || "0");
+        return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+      }
+      return 200;
+    }
+
     // Create shape nodes
     const nodes: HTMLDivElement[] = [];
-    CONFIGS.forEach((cfg) => {
+    CONFIGS.forEach((cfg, shapeIdx) => {
       const node = document.createElement("div");
       node.style.cssText = `
         position:absolute;
@@ -68,19 +94,60 @@ export function BrandShapes() {
         height:${cfg.size}px;
         margin-left:${-cfg.size / 2}px;
         margin-top:${-cfg.size / 2}px;
-        opacity:${cfg.opacity};
+        opacity:0;
         pointer-events:none;
-        will-change:transform;
+        will-change:transform,opacity;
+        transition:opacity 0.8s ease;
       `;
       node.innerHTML = SHAPES[cfg.index];
       const svg = node.querySelector("svg");
-      if (svg) { svg.style.width = "100%"; svg.style.height = "100%"; }
+      if (svg) { svg.style.width = "100%"; svg.style.height = "100%"; svg.style.overflow = "visible"; }
+
+      // Set up stroke draw-on animation
+      const strokedEls = node.querySelectorAll<SVGElement>("circle[stroke], rect[stroke], line[stroke]");
+      strokedEls.forEach((el, elIdx) => {
+        const stroke = el.getAttribute("stroke");
+        if (!stroke || stroke === "none") return;
+        const len = getStrokeLength(el);
+        el.style.strokeDasharray = `${len}`;
+        el.style.strokeDashoffset = `${len}`;
+        el.style.transition = `stroke-dashoffset ${1.2 + elIdx * 0.3}s cubic-bezier(0.16, 1, 0.3, 1) ${shapeIdx * 0.4 + elIdx * 0.15}s`;
+      });
+
+      // Fade in filled elements too
+      const filledEls = node.querySelectorAll<SVGElement>("rect[fill]:not([fill='none']), circle[fill]:not([fill='none'])");
+      filledEls.forEach((el, elIdx) => {
+        const origOpacity = el.getAttribute("opacity") || "1";
+        el.setAttribute("opacity", "0");
+        el.style.transition = `opacity 0.8s ease ${shapeIdx * 0.4 + 0.6 + elIdx * 0.1}s`;
+        el.dataset.targetOpacity = origOpacity;
+      });
+
       container.appendChild(node);
       nodes.push(node);
     });
     nodesRef.current = nodes;
 
-    // Animation: gentle sine/cosine orbital float — NO rotation, NO tilt
+    // Trigger draw-on after a frame
+    requestAnimationFrame(() => {
+      nodes.forEach((node) => {
+        node.style.opacity = String(CONFIGS[nodes.indexOf(node)]?.opacity ?? 0.3);
+
+        // Animate stroke draw-on
+        const strokedEls = node.querySelectorAll<SVGElement>("circle[stroke], rect[stroke], line[stroke]");
+        strokedEls.forEach((el) => {
+          el.style.strokeDashoffset = "0";
+        });
+
+        // Fade in fills
+        const filledEls = node.querySelectorAll<SVGElement>("[data-target-opacity]");
+        filledEls.forEach((el) => {
+          el.setAttribute("opacity", el.dataset.targetOpacity || "1");
+        });
+      });
+    });
+
+    // Animation: sine/cosine orbital float
     const animate = (time: number) => {
       rafRef.current = requestAnimationFrame(animate);
       const t = time / 1000;
