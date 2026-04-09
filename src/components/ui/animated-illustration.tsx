@@ -101,7 +101,7 @@ export function AnimatedIllustration({ src, style, className, rotate }: Animated
           }
         });
 
-        // ── Dot clusters: vertical stacks in SVG Y-axis ──
+        // ── Dot sequences — positioned in open spaces, avoiding big shapes ──
         interface DotCluster {
           dots: SVGElement[];
           triggerTime: number;
@@ -110,27 +110,95 @@ export function AnimatedIllustration({ src, style, className, rotate }: Animated
         }
 
         const dotClusters: DotCluster[] = [];
-        const DOT_R = 4;
-        const DOT_GAP = 12;
+        const DOT_R = 3.5;
+        const DOT_GAP = 11;
 
-        dotPositions.forEach((pos, pi) => {
-          const count = 2 + Math.floor(seeded(pi) * 2);
+        // Get SVG viewBox dimensions
+        const vb = svg.getAttribute("viewBox")?.split(" ").map(Number) || [0, 0, 800, 800];
+        const vbW = vb[2] || 800;
+        const vbH = vb[3] || 800;
+
+        // Pre-defined safe zones (away from big shapes) + original positions
+        // Spread across the illustration for dynamic feel
+        const dotSlots: { cx: number; cy: number; count: number }[] = [];
+
+        // Use original positions but shift slightly to avoid overlap
+        dotPositions.forEach((pos, i) => {
+          dotSlots.push({
+            cx: pos.cx + (seeded(i + 80) - 0.5) * 40,
+            cy: pos.cy + (seeded(i + 90) - 0.5) * 40,
+            count: 2 + Math.floor(seeded(i) * 2), // 2-3
+          });
+        });
+
+        // Add extra dot sequences in empty zones for better distribution
+        const extraSlots = [
+          { cx: vbW * 0.15, cy: vbH * 0.10 },
+          { cx: vbW * 0.85, cy: vbH * 0.15 },
+          { cx: vbW * 0.10, cy: vbH * 0.42 },
+          { cx: vbW * 0.75, cy: vbH * 0.50 },
+          { cx: vbW * 0.50, cy: vbH * 0.85 },
+          { cx: vbW * 0.90, cy: vbH * 0.75 },
+          { cx: vbW * 0.35, cy: vbH * 0.08 },
+          { cx: vbW * 0.60, cy: vbH * 0.95 },
+        ];
+
+        // Only add extras that don't overlap with existing dot positions (>80px away)
+        extraSlots.forEach((slot, i) => {
+          const tooClose = dotSlots.some(
+            (d) => Math.hypot(d.cx - slot.cx, d.cy - slot.cy) < 80
+          );
+          if (!tooClose) {
+            dotSlots.push({
+              cx: slot.cx,
+              cy: slot.cy,
+              count: 2 + Math.floor(seeded(i + 200) * 2),
+            });
+          }
+        });
+
+        dotSlots.forEach((slot, pi) => {
           const dots: SVGElement[] = [];
 
-          for (let d = 0; d < count; d++) {
-            const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-            // Stack horizontally (along X)
-            const cx = pos.cx + (d - (count - 1) / 2) * DOT_GAP;
-            dot.setAttribute("cx", `${cx}`);
-            dot.setAttribute("cy", `${pos.cy}`);
-            dot.setAttribute("r", `${DOT_R}`);
+          // Vary orientation: some horizontal rows, some vertical, some diagonal
+          const orientation = seeded(pi + 300);
+          let dxStep: number, dyStep: number;
+          if (orientation < 0.5) {
+            // Horizontal row
+            dxStep = DOT_GAP;
+            dyStep = 0;
+          } else if (orientation < 0.75) {
+            // Vertical column
+            dxStep = 0;
+            dyStep = DOT_GAP;
+          } else {
+            // Diagonal
+            dxStep = DOT_GAP * 0.7;
+            dyStep = DOT_GAP * 0.7;
+          }
 
-            if (seeded(pi * 10 + d) > 0.4) {
+          for (let d = 0; d < slot.count; d++) {
+            const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            const cx = slot.cx + (d - (slot.count - 1) / 2) * dxStep;
+            const cy = slot.cy + (d - (slot.count - 1) / 2) * dyStep;
+            dot.setAttribute("cx", `${cx}`);
+            dot.setAttribute("cy", `${cy}`);
+
+            // Vary dot sizes slightly
+            const r = DOT_R + seeded(pi * 10 + d + 50) * 1.5;
+            dot.setAttribute("r", `${r}`);
+
+            // Mix: ~50% filled cyan, ~25% filled white, ~25% stroked
+            const style = seeded(pi * 10 + d);
+            if (style < 0.5) {
               dot.setAttribute("fill", "#05e0f8");
+              dot.setAttribute("stroke", "none");
+            } else if (style < 0.75) {
+              dot.setAttribute("fill", "rgba(255,255,255,0.5)");
               dot.setAttribute("stroke", "none");
             } else {
               dot.setAttribute("fill", "none");
-              dot.setAttribute("stroke", "rgba(255,255,255,0.6)");
+              dot.setAttribute("stroke", "rgba(255,255,255,0.45)");
               dot.setAttribute("stroke-width", "1.2");
             }
 
@@ -142,9 +210,9 @@ export function AnimatedIllustration({ src, style, className, rotate }: Animated
 
           dotClusters.push({
             dots,
-            triggerTime: seeded(pi + 500) * 8,
-            cycleDuration: 6 + seeded(pi + 600) * 6,
-            showDuration: 2.5 + seeded(pi + 700) * 2,
+            triggerTime: seeded(pi + 500) * 10,
+            cycleDuration: 5 + seeded(pi + 600) * 8, // 5-13s varied cycles
+            showDuration: 2 + seeded(pi + 700) * 3,  // 2-5s hold
           });
         });
 
