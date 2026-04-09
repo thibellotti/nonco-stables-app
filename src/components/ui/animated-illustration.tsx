@@ -120,9 +120,10 @@ export function AnimatedIllustration({ src, style, className }: AnimatedIllustra
 
           for (let d = 0; d < count; d++) {
             const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-            const cy = pos.cy + (d - (count - 1) / 2) * DOT_GAP; // vertical stack centered
-            dot.setAttribute("cx", `${pos.cx}`);
-            dot.setAttribute("cy", `${cy}`);
+            // Stack along X in SVG space — appears vertical after 90deg rotation
+            const cx = pos.cx + (d - (count - 1) / 2) * DOT_GAP;
+            dot.setAttribute("cx", `${cx}`);
+            dot.setAttribute("cy", `${pos.cy}`);
             dot.setAttribute("r", `${DOT_R}`);
 
             // Alternate: filled cyan vs white stroke
