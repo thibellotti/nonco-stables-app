@@ -152,8 +152,8 @@ export function BalanceHero() {
       {/* Cyan gradient overlay — brand accent */}
       <div className="absolute inset-0 pointer-events-none rounded-lg" style={{ background: 'linear-gradient(135deg, rgba(5,224,248,0.06), transparent 60%)' }} />
 
-      {/* Particle globe — large background, positioned right */}
-      <div className="absolute top-0 bottom-0 pointer-events-none hidden lg:block" style={{ left: '55%', right: '-40%', zIndex: 0 }}>
+      {/* Particle globe — large background, positioned right, masked left edge */}
+      <div className="absolute top-0 bottom-0 pointer-events-none hidden lg:block" style={{ left: '45%', right: '-40%', zIndex: 0, maskImage: 'linear-gradient(to right, transparent 0%, black 20%)', WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 20%)' }}>
         <ParticleGlobe opacity={0.4} />
       </div>
 
