@@ -5,7 +5,8 @@
   --font-mono: 'JetBrains Mono', monospace;
 }
 
-:root {
+:root,
+:root[data-theme="dark"] {
   /* Surface hierarchy — aligned with nonco.com brand tokens */
   --bg: #000000;
   --bg-card: #141414;
@@ -66,6 +67,98 @@
   --gradient-stables: linear-gradient(135deg, rgba(5,224,248,0.12), rgba(5,224,248,0.03));
 }
 
+/* ─── Light-mode compatibility layer for hardcoded white/black utilities ───
+   The codebase uses Tailwind's text-white / bg-white / text-black extensively.
+   Without these overrides, text-white stays as #fff and disappears on white
+   surfaces in light mode. We remap the most common ones to theme tokens so
+   the toggle actually produces a usable light theme without rewriting every
+   component. */
+:root[data-theme="light"] .text-white,
+:root[data-theme="light"] .text-black {
+  color: var(--text);
+}
+:root[data-theme="light"] .bg-white {
+  background-color: var(--bg-card);
+}
+/* Hover/focus rings on white-with-alpha — invisible on light surfaces.
+   Map them to dark-with-alpha via a generic selector. */
+:root[data-theme="light"] [class*="bg-[rgba(255,255,255"] {
+  background-color: rgba(20, 24, 26, 0.04);
+}
+:root[data-theme="light"] [class*="hover:bg-[rgba(255,255,255"]:hover {
+  background-color: rgba(20, 24, 26, 0.06);
+}
+:root[data-theme="light"] [class*="border-[rgba(255,255,255"] {
+  border-color: var(--border);
+}
+:root[data-theme="light"] .border-white\/10,
+:root[data-theme="light"] .border-white\/20 {
+  border-color: var(--border);
+}
+:root[data-theme="light"] ::selection {
+  background: rgba(20, 24, 26, 0.12);
+  color: var(--text);
+}
+/* Logo image — invert filter in light mode so the white SVG becomes dark */
+:root[data-theme="light"] img[alt="Nonco Stables"] {
+  filter: invert(1);
+}
+
+/* ─── Light theme — curated palette, NOT a mechanical invert.
+   Surfaces: warm off-whites for hierarchy. Text: deep neutrals (no pure black).
+   Cyan stays as the brand accent but darker so it reads on white. ─── */
+:root[data-theme="light"] {
+  --bg: #f7f7f5;
+  --bg-card: #ffffff;
+  --bg-elevated: #f1f1ee;
+  --bg-muted: #ebebe7;
+  --bg-highest: #e2e2dd;
+  --bg-bright: #d8d8d2;
+
+  --text: #14181a;
+  --text-2: rgba(20,24,26,0.7);
+  --text-3: rgba(20,24,26,0.5);
+  --text-4: rgba(20,24,26,0.42);
+
+  /* Cyan darkened so it has contrast on white surfaces */
+  --cyan: #00a6bd;
+  --cyan-dark: #007a8a;
+  --cyan-light: #05E0F8;
+  --cyan-dim: rgba(0,166,189,0.1);
+  --cyan-wash: rgba(0,166,189,0.05);
+
+  --purple: #8b1fd9;
+  --purple-dim: rgba(139,31,217,0.1);
+  --amber: #b58a00;
+  --amber-dim: rgba(181,138,0,0.12);
+  --green: #4fa800;
+  --green-dim: rgba(79,168,0,0.1);
+  --red: #d93838;
+  --red-dim: rgba(217,56,56,0.08);
+
+  --buy: #16a34a;
+  --buy-dim: rgba(22,163,74,0.1);
+  --sell: var(--purple);
+  --sell-dim: var(--purple-dim);
+
+  --status-positive: #16a34a;
+  --status-positive-dim: rgba(22,163,74,0.1);
+  --status-negative: var(--red);
+  --status-negative-dim: var(--red-dim);
+  --status-pending: var(--amber);
+  --status-pending-dim: var(--amber-dim);
+  --status-processing: #14181a;
+  --status-processing-dim: rgba(20,24,26,0.06);
+  --status-neutral: var(--text-4);
+
+  --border: #e5e5e0;
+  --border-subtle: rgba(20,24,26,0.06);
+  --border-outline: #b8b8b0;
+  --border-row: rgba(20,24,26,0.05);
+
+  --gradient-stables: linear-gradient(135deg, rgba(0,166,189,0.12), rgba(0,166,189,0.03));
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -81,6 +174,7 @@ body {
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* ─── Card hover lift — reusable utility ─── */

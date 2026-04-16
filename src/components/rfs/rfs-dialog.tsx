@@ -36,9 +36,9 @@ const SETTLEMENT_OPTIONS: { key: SettlementType; label: string }[] = [
 const FORWARD_TENORS: ForwardTenor[] = ["1W", "2W", "1M", "2M", "3M", "6M"];
 
 const SETTLEMENT_DISPLAY: Record<SettlementType, string> = {
-  spot: "Spot · T+2",
-  tod: "TOD · T+0",
-  tom: "TOM · T+1",
+  spot: "Spot (T+2)",
+  tod: "Today (TOD)",
+  tom: "Tomorrow (TOM)",
   forward: "Forward",
 };
 
@@ -642,8 +642,8 @@ function RfsDialogContent({
             <h2 className="text-base font-bold text-white font-sans">
               Request for Stream
             </h2>
-            <p className="text-xs font-sans text-[var(--text-3)] mt-0.5">
-              {selectedPair} · {SETTLEMENT_DISPLAY[settlement]}
+            <p className="text-xs font-sans text-[var(--text-3)] mt-0.5 tabular-nums">
+              {selectedPair.replace("/", " / ")} — {SETTLEMENT_DISPLAY[settlement]}
               {settlement === "forward" && ` · ${tenor}`}
             </p>
           </div>

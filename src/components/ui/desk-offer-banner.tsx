@@ -3,7 +3,11 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 
-export function DeskOfferBanner() {
+interface DeskOfferBannerProps {
+  onGetRfs?: () => void;
+}
+
+export function DeskOfferBanner({ onGetRfs }: DeskOfferBannerProps = {}) {
   const TOTAL_SECONDS = 272;
 
   const startTimeRef = useRef<number | null>(null);
@@ -91,8 +95,13 @@ export function DeskOfferBanner() {
       </div>
 
       {/* Actions */}
-      <Button variant="cyan" size="sm" className={`relative shrink-0 ${countdown < 60 ? "animate-pulse" : ""}`}>
-        View
+      <Button
+        variant="cyan"
+        size="sm"
+        onClick={onGetRfs}
+        className={`relative shrink-0 ${countdown < 60 ? "animate-pulse" : ""}`}
+      >
+        Get RFS &rarr;
       </Button>
 
       {/* Dismiss */}

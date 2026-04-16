@@ -163,3 +163,32 @@ export const sortedExposure = Object.entries(exposureByCounterparty).sort(
 );
 
 export const nextDue = pendingSettlements[0];
+
+// Per-term breakdown — used by the Overview rings so the numbers actually
+// reconcile with the rest of the page (each ring shows that term's volume share).
+export interface TermBreakdown {
+  term: string;
+  amount: number;
+  share: number; // % of totalPendingAmount
+  count: number;
+  avgProgress: number;
+  nextDueShort: string | null;
+}
+
+export const termBreakdowns: TermBreakdown[] = (["T+1", "T+2", "T+10"] as const).map((term) => {
+  const items = pendingSettlements.filter((s) => s.settlement === term);
+  const amount = items.reduce((sum, s) => sum + s.amount, 0);
+  const avgProgress = items.length
+    ? Math.round(items.reduce((sum, s) => sum + s.progress, 0) / items.length)
+    : 0;
+  const next = items.sort((a, b) => a.daysRemaining - b.daysRemaining)[0];
+  return {
+    term,
+    amount,
+    share: totalPendingAmount > 0 ? Math.round((amount / totalPendingAmount) * 100) : 0,
+    count: items.length,
+    avgProgress,
+    nextDueShort: next?.dueDateShort ?? null,
+  };
+});
+

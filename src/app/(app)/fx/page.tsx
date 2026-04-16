@@ -13,6 +13,8 @@ import {
   type BoardInstrument,
   type RecentTrade,
 } from "@/lib/mock-data";
+
+// boardSections is already imported above and re-used inside RowView
 import dynamic from "next/dynamic";
 import { GeoDivider } from "@/components/ui/geo-divider";
 
@@ -32,6 +34,28 @@ interface LiveInstrument extends BoardInstrument {
   flashSell: boolean;
   flashBuy: boolean;
 }
+
+type ViewMode = "widgets" | "rows";
+
+// User pair-usage rank — drives ordering (most-used first).
+// Mock for now; in production this comes from the user's trading history.
+const USAGE_RANK: Record<string, number> = {
+  "MXN/USDT": 100,
+  "MXN/USDC": 92,
+  "BRL/USDT": 81,
+  "BRL/USDC": 74,
+  "EUR/USDT": 65,
+  "EUR/USDC": 58,
+  "GBP/USDC": 42,
+  "GBP/USDT": 38,
+  "MXN/USD": 30,
+  "MXN/USD1": 22,
+  "MXN/AUSD": 18,
+  "COP/USDT": 14,
+  "CLP/USDT": 9,
+};
+
+const VIEW_STORAGE_KEY = "nonco-fx-view-mode";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -85,27 +109,27 @@ const MarketCard = memo(function MarketCard({
       {/* Section color accent */}
       <div className="absolute top-0 left-4 right-4 h-px" style={{ background: `linear-gradient(90deg, transparent, ${sectionColor}40, transparent)` }} />
 
-      {/* Pair name */}
+      {/* Pair name — medium weight, not bold */}
       <div className="flex items-center gap-2 mb-3">
         <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: sectionColor }} />
-        <span className="font-mono text-sm font-bold text-white">{instrument.pair}</span>
+        <span className="font-mono text-sm font-medium text-white">{instrument.pair}</span>
       </div>
 
-      {/* Bid / Ask */}
+      {/* Bid / Ask — regular weight on numbers, lighter labels */}
       <div className="grid grid-cols-2 gap-2 mb-3">
         <div>
-          <div className="text-[9px] uppercase tracking-[.1em] text-[var(--text-4)] font-sans mb-0.5">Bid</div>
+          <div className="text-[9px] uppercase tracking-[.1em] text-[var(--text-4)] font-sans font-normal mb-0.5">Bid</div>
           <div className={cn(
-            "font-mono text-sm font-bold tabular-nums transition-colors duration-150",
+            "font-mono text-sm font-normal tabular-nums transition-colors duration-150",
             instrument.flashBuy ? "text-[var(--status-positive)]" : "text-[var(--text)]"
           )}>
             {formatPrice(instrument.buy)}
           </div>
         </div>
         <div>
-          <div className="text-[9px] uppercase tracking-[.1em] text-[var(--text-4)] font-sans mb-0.5">Ask</div>
+          <div className="text-[9px] uppercase tracking-[.1em] text-[var(--text-4)] font-sans font-normal mb-0.5">Ask</div>
           <div className={cn(
-            "font-mono text-sm font-bold tabular-nums transition-colors duration-150",
+            "font-mono text-sm font-normal tabular-nums transition-colors duration-150",
             instrument.flashSell ? "text-[var(--purple)]" : "text-[var(--text)]"
           )}>
             {formatPrice(instrument.sell)}
@@ -113,12 +137,12 @@ const MarketCard = memo(function MarketCard({
         </div>
       </div>
 
-      {/* 24h Change */}
+      {/* 24h Change — medium not semibold */}
       <div className="flex items-center justify-between">
         <span className="text-[10px] font-sans text-[var(--text-4)]">24h</span>
         <span
           className={cn(
-            "inline-flex items-center gap-1 font-mono text-xs font-semibold tabular-nums",
+            "inline-flex items-center gap-1 font-mono text-xs font-medium tabular-nums",
             isPositive ? "text-[var(--status-positive)]" : "text-[var(--red)]"
           )}
         >
@@ -133,6 +157,125 @@ const MarketCard = memo(function MarketCard({
 });
 
 // ---------------------------------------------------------------------------
+// Row View — dense table layout for FX pairs
+// ---------------------------------------------------------------------------
+
+const RowView = memo(function RowView({
+  instruments,
+  onRowClick,
+}: {
+  instruments: LiveInstrument[];
+  onRowClick: (pair: string) => void;
+}) {
+  return (
+    <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden overflow-x-auto">
+      <table className="w-full text-left border-collapse text-sm">
+        <thead>
+          <tr className="border-b border-[var(--border)]">
+            <th className="px-4 sm:px-6 py-3 text-[10px] tracking-[.15em] uppercase font-medium text-[var(--text-4)]">Instrument</th>
+            <th className="px-4 sm:px-6 py-3 text-[10px] tracking-[.15em] uppercase font-medium text-[var(--text-4)] text-right">Sell qty</th>
+            <th className="px-4 sm:px-6 py-3 text-[10px] tracking-[.15em] uppercase font-medium text-[var(--text-4)] text-right">Sell price</th>
+            <th className="px-4 sm:px-6 py-3 text-[10px] tracking-[.15em] uppercase font-medium text-[var(--text-4)] text-right">Buy price</th>
+            <th className="px-4 sm:px-6 py-3 text-[10px] tracking-[.15em] uppercase font-medium text-[var(--text-4)] text-right">Buy qty</th>
+            <th className="px-4 sm:px-6 py-3 text-[10px] tracking-[.15em] uppercase font-medium text-[var(--text-4)] text-right hidden sm:table-cell">24h change</th>
+            <th className="px-4 sm:px-6 py-3 text-[10px] tracking-[.15em] uppercase font-medium text-[var(--text-4)] text-right hidden md:table-cell">Prev. close</th>
+          </tr>
+        </thead>
+        <tbody>
+          {instruments.map((inst) => {
+            const isPositive = inst.change24h >= 0;
+            return (
+              <tr
+                key={inst.id}
+                onClick={() => onRowClick(inst.pair)}
+                className="border-b border-[var(--border-row)] hover:bg-[rgba(255,255,255,0.02)] transition-colors duration-150 cursor-pointer"
+              >
+                <td className="px-4 sm:px-6 py-3">
+                  <div className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full" style={{ background: boardSections[inst.section]?.color ?? "#fff" }} />
+                    <div className="flex flex-col">
+                      <span className="font-mono text-xs font-medium text-white">{inst.pair}</span>
+                      <span className="text-[10px] font-sans text-[var(--text-4)]">{inst.baseCurrency} → {inst.quoteCurrency} · Spot</span>
+                    </div>
+                  </div>
+                </td>
+                <td className="px-4 sm:px-6 py-3 text-right">
+                  <span className="font-mono text-xs text-[var(--text-3)] tabular-nums">{formatMoney(inst.sellQty)}</span>
+                </td>
+                <td className={cn("px-4 sm:px-6 py-3 text-right font-mono text-sm tabular-nums transition-colors duration-150", inst.flashSell ? "text-[var(--purple)]" : "text-[var(--text)]")}>
+                  {formatPrice(inst.sell)}
+                </td>
+                <td className={cn("px-4 sm:px-6 py-3 text-right font-mono text-sm tabular-nums transition-colors duration-150", inst.flashBuy ? "text-[var(--status-positive)]" : "text-[var(--text)]")}>
+                  {formatPrice(inst.buy)}
+                </td>
+                <td className="px-4 sm:px-6 py-3 text-right">
+                  <span className="font-mono text-xs text-[var(--text-3)] tabular-nums">{formatMoney(inst.buyQty)}</span>
+                </td>
+                <td className="px-4 sm:px-6 py-3 text-right hidden sm:table-cell">
+                  <span className={cn("inline-flex items-center gap-1 font-mono text-xs tabular-nums", isPositive ? "text-[var(--status-positive)]" : "text-[var(--red)]")}>
+                    <svg width="7" height="7" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true" className={cn(!isPositive && "rotate-180")}>
+                      <path d="M5 2L8.5 7H1.5L5 2Z" />
+                    </svg>
+                    {isPositive ? "+" : "-"}{Math.abs(inst.change24h).toFixed(2)}%
+                  </span>
+                </td>
+                <td className="px-4 sm:px-6 py-3 text-right hidden md:table-cell">
+                  <span className="font-mono text-xs text-[var(--text-4)] tabular-nums">{formatPrice(inst.prevClose)}</span>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+});
+
+// ---------------------------------------------------------------------------
+// View toggle — widgets vs rows
+// ---------------------------------------------------------------------------
+
+function ViewToggle({ value, onChange }: { value: ViewMode; onChange: (v: ViewMode) => void }) {
+  return (
+    <div role="tablist" aria-label="View mode" className="inline-flex p-0.5 bg-[var(--bg-card)] border border-[var(--border)] rounded-lg">
+      <button
+        role="tab"
+        aria-selected={value === "widgets"}
+        onClick={() => onChange("widgets")}
+        className={cn(
+          "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[10px] font-sans font-medium uppercase tracking-[.1em] transition-colors cursor-pointer",
+          value === "widgets" ? "bg-[var(--bg-elevated)] text-white" : "text-[var(--text-4)] hover:text-[var(--text-2)]"
+        )}
+      >
+        <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+          <rect x="1.5" y="1.5" width="4.5" height="4.5" rx="1" />
+          <rect x="8" y="1.5" width="4.5" height="4.5" rx="1" />
+          <rect x="1.5" y="8" width="4.5" height="4.5" rx="1" />
+          <rect x="8" y="8" width="4.5" height="4.5" rx="1" />
+        </svg>
+        Widgets
+      </button>
+      <button
+        role="tab"
+        aria-selected={value === "rows"}
+        onClick={() => onChange("rows")}
+        className={cn(
+          "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[10px] font-sans font-medium uppercase tracking-[.1em] transition-colors cursor-pointer",
+          value === "rows" ? "bg-[var(--bg-elevated)] text-white" : "text-[var(--text-4)] hover:text-[var(--text-2)]"
+        )}
+      >
+        <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+          <line x1="2" y1="3.5" x2="12" y2="3.5" />
+          <line x1="2" y1="7" x2="12" y2="7" />
+          <line x1="2" y1="10.5" x2="12" y2="10.5" />
+        </svg>
+        Rows
+      </button>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Main Page
 // ---------------------------------------------------------------------------
 
@@ -141,10 +284,33 @@ export default function FxBoardPage() {
   const [search, setSearch] = useState("");
   const [rfsOpen, setRfsOpen] = useState(false);
   const [rfsInstrument, setRfsInstrument] = useState<string | undefined>();
-  const [instruments, setInstruments] = useState<LiveInstrument[]>(() =>
-    boardInstruments.map((i) => ({ ...i, flashSell: false, flashBuy: false }))
-  );
+  const [viewMode, setViewMode] = useState<ViewMode>("widgets");
+  const [instruments, setInstruments] = useState<LiveInstrument[]>(() => {
+    const ranked = [...boardInstruments].sort(
+      (a, b) => (USAGE_RANK[b.pair] ?? 0) - (USAGE_RANK[a.pair] ?? 0)
+    );
+    return ranked.map((i) => ({ ...i, flashSell: false, flashBuy: false }));
+  });
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Persist view preference
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(VIEW_STORAGE_KEY);
+      if (stored === "rows" || stored === "widgets") setViewMode(stored);
+    } catch {
+      /* localStorage unavailable */
+    }
+  }, []);
+
+  const handleViewChange = useCallback((v: ViewMode) => {
+    setViewMode(v);
+    try {
+      localStorage.setItem(VIEW_STORAGE_KEY, v);
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
   const openRfs = useCallback((pair?: string) => {
     setRfsInstrument(pair);
@@ -217,6 +383,9 @@ export default function FxBoardPage() {
           </span>
         </div>
 
+        {/* View toggle */}
+        <ViewToggle value={viewMode} onChange={handleViewChange} />
+
         {/* RFS button */}
         <Button variant="cyan" size="sm" onClick={() => openRfs()}>
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
@@ -226,20 +395,26 @@ export default function FxBoardPage() {
         </Button>
       </div>
 
-      {/* ── Market Cards Grid ── */}
+      {/* ── Market View — Widgets or Rows ── */}
       <motion.div
+        key={viewMode}
         initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3"
       >
-        {filtered.map((inst) => (
-          <MarketCard
-            key={inst.id}
-            instrument={inst}
-            onClick={() => openRfs(inst.pair)}
-          />
-        ))}
+        {viewMode === "widgets" ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+            {filtered.map((inst) => (
+              <MarketCard
+                key={inst.id}
+                instrument={inst}
+                onClick={() => openRfs(inst.pair)}
+              />
+            ))}
+          </div>
+        ) : (
+          <RowView instruments={filtered} onRowClick={openRfs} />
+        )}
       </motion.div>
 
       {filtered.length === 0 && (

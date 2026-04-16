@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { formatMoney, formatCompact } from "@/lib/utils";
+import { formatMoney, formatCompact, cn } from "@/lib/utils";
 import { ProgressRing } from "@/components/viz/progress-ring";
 import { CornerBrackets } from "@/components/ui/corner-brackets";
 import {
@@ -14,6 +14,7 @@ import {
   sortedTerms,
   maxTermVolume,
   nextDue,
+  termBreakdowns,
 } from "./settlements-data";
 
 // ---------------------------------------------------------------------------
@@ -23,7 +24,8 @@ import {
 export function SettlementsStats() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      {/* Left: Settlement Pipeline */}
+      {/* Left: Settlement Pipeline — single-segment bar (was dual processing+awaiting,
+          per client feedback "Fer didn't have processing and awaiting, do we need both?") */}
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
@@ -31,64 +33,45 @@ export function SettlementsStats() {
         className="relative bg-[var(--bg-elevated)] rounded-lg p-5"
       >
         <CornerBrackets size={14} color="rgba(255,255,255,0.06)" corners={["tl","tr"]} />
-        <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] mb-4">
-          Settlement Pipeline
+        <div className="flex items-baseline justify-between mb-4">
+          <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)]">
+            Settlement Pipeline
+          </div>
+          <div className="text-[11px] font-mono text-[var(--text-4)] tabular-nums">
+            ${formatCompact(totalPendingAmount)} pending
+          </div>
         </div>
 
-        {/* Stacked pipeline bar */}
-        <div className="mb-4">
-          <div className="h-3 rounded-full bg-[rgba(255,255,255,0.03)] overflow-hidden flex">
+        {/* Single-segment progress bar — total pending volume */}
+        <div className="mb-3">
+          <div className="h-3 rounded-full bg-[rgba(255,255,255,0.03)] overflow-hidden">
             <motion.div
               initial={{ width: 0 }}
-              animate={{
-                width: `${(processingAmount / totalPendingAmount) * 100}%`,
-              }}
+              animate={{ width: "100%" }}
               transition={{
                 delay: 0.2,
                 duration: 0.6,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="h-full bg-[var(--cyan)]"
-            />
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{
-                width: `${(awaitingAmount / totalPendingAmount) * 100}%`,
-              }}
-              transition={{
-                delay: 0.3,
-                duration: 0.6,
-                ease: [0.16, 1, 0.3, 1],
-              }}
               className="h-full"
-              style={{ backgroundColor: "rgba(249, 226, 32, 0.7)" }}
+              style={{
+                background:
+                  "linear-gradient(90deg, var(--cyan), rgba(5,224,248,0.45))",
+              }}
             />
           </div>
         </div>
 
-        {/* Legend */}
-        <div className="flex items-center gap-6 mb-6">
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-sm bg-[var(--cyan)]" />
-            <span className="text-[11px] font-sans text-[var(--text-3)]">
-              Processing
-            </span>
-            <span className="text-[11px] font-mono font-bold text-white tabular-nums">
-              {formatCompact(processingAmount)}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span
-              className="w-2.5 h-2.5 rounded-sm"
-              style={{ backgroundColor: "rgba(249, 226, 32, 0.7)" }}
-            />
-            <span className="text-[11px] font-sans text-[var(--text-3)]">
-              Awaiting
-            </span>
-            <span className="text-[11px] font-mono font-bold text-white tabular-nums">
-              {formatCompact(awaitingAmount)}
-            </span>
-          </div>
+        {/* Compact summary — processing vs awaiting as supporting metrics, not a stacked bar */}
+        <div className="flex items-center gap-6 mb-6 text-[11px] font-sans text-[var(--text-4)]">
+          <span>
+            <span className="font-mono font-medium text-[var(--text-2)] tabular-nums">{processingCount}</span> processing
+            <span className="ml-1.5 font-mono text-[var(--text-4)] tabular-nums">({formatCompact(processingAmount)})</span>
+          </span>
+          <span>
+            <span className="font-mono font-medium text-[var(--text-2)] tabular-nums">{awaitingCount}</span> awaiting
+            <span className="ml-1.5 font-mono text-[var(--text-4)] tabular-nums">({formatCompact(awaitingAmount)})</span>
+          </span>
         </div>
 
         {/* Volume by terms */}
@@ -157,50 +140,49 @@ export function SettlementsStats() {
           </p>
         </div>
 
-        {/* Settlement terms — horizontal strip */}
+        {/* Settlement terms — rings now show each term's share of total exposure
+            (matches the volume column on the right & the by-terms breakdown on the left) */}
         <div className="grid grid-cols-3 gap-4 py-3">
-          <div className="text-center space-y-2">
-            <ProgressRing value={58} color="var(--cyan)" size={72} strokeWidth={5} />
-            <div>
-              <div className="text-xs font-mono font-bold text-white">T+1</div>
-              <div className="text-[10px] font-mono text-[var(--cyan)] tabular-nums">$108K</div>
-              <div className="text-[9px] text-[var(--text-4)] mt-0.5">0h left</div>
-            </div>
-          </div>
-          <div className="text-center space-y-2">
-            <ProgressRing value={18} color="var(--cyan)" size={72} strokeWidth={5} />
-            <div>
-              <div className="text-xs font-mono font-bold text-white">T+2</div>
-              <div className="text-[10px] font-mono text-[var(--cyan)] tabular-nums">$172K</div>
-              <div className="text-[9px] text-[var(--text-4)] mt-0.5">48h left</div>
-            </div>
-          </div>
-          <div className="text-center space-y-2">
-            <ProgressRing value={0} color="var(--text-3)" size={72} strokeWidth={5} />
-            <div>
-              <div className="text-xs font-mono font-bold text-white">T+10</div>
-              <div className="text-[10px] font-mono text-[var(--text-4)] tabular-nums">—</div>
-              <div className="text-[9px] text-[var(--text-4)] mt-0.5">192h left</div>
-            </div>
-          </div>
+          {termBreakdowns.map((t) => {
+            const hasVolume = t.amount > 0;
+            return (
+              <div key={t.term} className="text-center space-y-2">
+                <ProgressRing
+                  value={t.share}
+                  color={hasVolume ? "var(--cyan)" : "var(--text-3)"}
+                  size={72}
+                  strokeWidth={5}
+                />
+                <div>
+                  <div className="text-xs font-mono font-medium text-white">{t.term}</div>
+                  <div className={cn("text-[10px] font-mono tabular-nums", hasVolume ? "text-[var(--cyan)]" : "text-[var(--text-4)]")}>
+                    {hasVolume ? `$${formatCompact(t.amount)}` : "—"}
+                  </div>
+                  <div className="text-[9px] text-[var(--text-4)] mt-0.5">
+                    {t.count} {t.count === 1 ? "settlement" : "settlements"}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
-        {/* Processing / Awaiting counts */}
+        {/* Processing / Awaiting counts — totals match the totalPendingAmount above */}
         <div className="grid grid-cols-2 gap-4 pt-3 border-t border-[var(--border)]">
           <div>
-            <p className="text-2xl font-mono font-bold text-white tabular-nums">
+            <p className="text-2xl font-mono font-medium text-white tabular-nums">
               {processingCount}
             </p>
             <p className="text-[11px] text-[var(--text-4)] font-sans">
-              processing
+              processing · <span className="font-mono tabular-nums">{formatCompact(processingAmount)}</span>
             </p>
           </div>
           <div>
-            <p className="text-2xl font-mono font-bold text-[var(--cyan)] tabular-nums">
+            <p className="text-2xl font-mono font-medium text-[var(--cyan)] tabular-nums">
               {awaitingCount}
             </p>
             <p className="text-[11px] text-[var(--text-4)] font-sans">
-              awaiting
+              awaiting · <span className="font-mono tabular-nums">{formatCompact(awaitingAmount)}</span>
             </p>
           </div>
         </div>
