@@ -43,8 +43,8 @@ const ASSET_META: Record<string, { name: string; issuer: string; change24h: numb
 
 export function StableAssetsList() {
   return (
-    <section className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden">
-      <header className="flex items-center justify-between px-5 pt-4 pb-2.5">
+    <section className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg overflow-hidden flex flex-col h-full min-h-[360px]">
+      <header className="flex items-center justify-between px-5 pt-5 pb-3">
         <SectionLabel>Stable Assets</SectionLabel>
         <Link
           href="/fx"
@@ -54,7 +54,7 @@ export function StableAssetsList() {
         </Link>
       </header>
 
-      <ul className="divide-y divide-[var(--border-row)]">
+      <ul className="divide-y divide-[var(--border-row)] flex-1 flex flex-col">
         {balances.map((b) => {
           const meta = ASSET_META[b.currency];
           if (!meta) return null;
@@ -63,7 +63,7 @@ export function StableAssetsList() {
           const isPositive = meta.change24h >= 0;
 
           return (
-            <li key={b.currency}>
+            <li key={b.currency} className="flex-1 flex">
               <button
                 type="button"
                 className="w-full flex items-center gap-3 px-5 py-3 hover:bg-[rgba(255,255,255,0.02)] transition-colors text-left cursor-pointer"

@@ -42,7 +42,7 @@ export default function DashboardPage() {
       <DeskOfferBanner onGetRfs={() => openRfs()} />
 
       {/* ── Top row: Portfolio (left) + Stable assets list (right) ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-4 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-4 items-stretch">
         <BalanceHero />
         <StableAssetsList />
       </div>
