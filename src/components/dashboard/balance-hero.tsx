@@ -104,13 +104,28 @@ export function BalanceHero() {
   return (
     <section className="card-primary relative overflow-hidden bg-[var(--bg-card)] rounded-lg min-h-[360px]">
       {/* Cyan gradient overlay — brand accent */}
-      <div className="absolute inset-0 pointer-events-none rounded-lg" style={{ background: 'linear-gradient(135deg, rgba(5,224,248,0.06), transparent 60%)' }} />
+      <div className="absolute inset-0 pointer-events-none rounded-lg z-0" style={{ background: 'linear-gradient(135deg, rgba(5,224,248,0.06), transparent 60%)' }} />
 
-      {/* Two-column grid: portfolio data (left) | globe (right) */}
-      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[1fr_minmax(280px,380px)] gap-4 h-full min-h-[360px]">
+      {/* ── ParticleGlobe — background layer, right-weighted ── */}
+      {/* Canvas covers the full card + 160px right bleed so orbital rings (radius 200) */}
+      {/* fit the camera frustum. The dark-to-transparent overlay below covers the text */}
+      {/* area, so the globe only becomes visible on the right half of the card. */}
+      <div className="hidden lg:block absolute inset-y-0 left-0 right-[-160px] z-0 pointer-events-none">
+        <ParticleGlobe opacity={0.85} />
+      </div>
 
-        {/* ── LEFT: Portfolio data ── */}
-        <div className="flex flex-col justify-between p-5">
+      {/* Dark overlay over the data column — solid on the left, fades to transparent */}
+      {/* over the globe so there's no hard boundary. */}
+      <div
+        className="hidden lg:block absolute inset-0 z-[1] pointer-events-none"
+        style={{ background: 'linear-gradient(to right, var(--bg-card) 0%, var(--bg-card) 42%, transparent 72%)' }}
+      />
+
+      {/* Single-column layout: data on the left, globe bleeds in from the right */}
+      <div className="relative z-10 flex flex-col h-full min-h-[360px]">
+
+        {/* ── Portfolio data — constrained to left ~55% on lg so globe has space ── */}
+        <div className="flex flex-col justify-between h-full min-h-[360px] p-5 lg:max-w-[58%]">
 
           <div>
             {/* Header */}
@@ -226,22 +241,6 @@ export function BalanceHero() {
               </div>
             </div>
           </div>
-        </div>
-
-        {/* ── RIGHT: ParticleGlobe — Nonco Stables signature visual ── */}
-        {/* Hidden on mobile (< lg) to keep the card compact. Canvas is left-aligned */}
-        {/* to this column so it NEVER bleeds into the data column; extends right past */}
-        {/* the card edge where section's overflow-hidden clips it. That gives the */}
-        {/* orbital rings enough width to fit the camera frustum. */}
-        <div className="hidden lg:block relative overflow-hidden">
-          <div className="absolute inset-y-0 left-0 w-[560px]">
-            <ParticleGlobe opacity={0.8} />
-          </div>
-          {/* Soft fade at the column's left edge — blends globe into data column */}
-          <div
-            className="pointer-events-none absolute inset-y-0 left-0 w-20 z-10"
-            style={{ background: 'linear-gradient(to right, var(--bg-card), transparent)' }}
-          />
         </div>
 
       </div>
