@@ -5,31 +5,32 @@ import { motion } from "framer-motion";
 import { PageTransition } from "@/components/ui/page-transition";
 import { Button } from "@/components/ui/button";
 import { CornerBrackets } from "@/components/ui/corner-brackets";
+import { walletColors } from "@/lib/wallet-colors";
 
 // ---------------------------------------------------------------------------
-// Wallet options
+// Wallet options — colors sourced from `@/lib/wallet-colors`
 // ---------------------------------------------------------------------------
 
 const wallets = [
   {
     id: "metamask",
+    slug: "metamask",
     name: "MetaMask",
     subtitle: "Browser extension",
-    color: "#F6851B",
     disabled: false,
   },
   {
     id: "walletconnect",
+    slug: "walletconnect",
     name: "WalletConnect",
     subtitle: "Mobile & desktop",
-    color: "#3B99FC",
     disabled: false,
   },
   {
     id: "coinbase",
+    slug: "coinbase",
     name: "Coinbase Wallet",
     subtitle: "Coming soon",
-    color: "#0052FF",
     disabled: true,
   },
 ];
@@ -44,6 +45,7 @@ export default function OnchainPage() {
 
   return (
     <PageTransition className="px-4 sm:px-6 md:px-8 w-full space-y-6">
+      <h1 className="sr-only">On-chain</h1>
       {/* Page context header */}
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-lg bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.08)] flex items-center justify-center">
@@ -68,7 +70,10 @@ export default function OnchainPage() {
         <CornerBrackets size={14} color="rgba(255,255,255,0.06)" corners={["tr","bl"]} />
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {wallets.map((w) => (
+        {wallets.map((w) => {
+          // Resolve brand color from the central map — keeps hex out of the component.
+          const color = walletColors[w.slug] ?? "#ffffff";
+          return (
           <button
             key={w.id}
             disabled={w.disabled}
@@ -85,9 +90,9 @@ export default function OnchainPage() {
             <div
               className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold"
               style={{
-                backgroundColor: `${w.color}15`,
-                color: w.color,
-                border: `1px solid ${w.color}30`,
+                backgroundColor: `${color}15`,
+                color: color,
+                border: `1px solid ${color}30`,
               }}
             >
               {w.name.slice(0, 2).toUpperCase()}
@@ -104,7 +109,8 @@ export default function OnchainPage() {
               </span>
             )}
           </button>
-        ))}
+          );
+        })}
         </div>
       </motion.div>
 

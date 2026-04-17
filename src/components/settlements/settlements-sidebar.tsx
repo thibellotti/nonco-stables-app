@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { formatMoney, formatCompact } from "@/lib/utils";
 import { currencyColors } from "@/lib/currency-colors";
+import { StatusDot } from "@/components/ui/status-dot";
 import type { PendingSettlement } from "./settlements-data";
 import {
   totalPendingAmount,
@@ -117,7 +118,14 @@ function NextDueCard({
 
       {/* Progress bar */}
       <div className="mt-3 flex items-center gap-3">
-        <div className="flex-1 h-2 rounded-full bg-[rgba(255,255,255,0.06)] overflow-hidden">
+        <div
+          role="progressbar"
+          aria-valuenow={next.progress}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label={`Next settlement progress for ${next.pair}`}
+          className="flex-1 h-2 rounded-full bg-[rgba(255,255,255,0.06)] overflow-hidden"
+        >
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${next.progress}%` }}
@@ -136,20 +144,11 @@ function NextDueCard({
       </div>
 
       <div className="mt-3">
-        {isProcessing ? (
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold font-sans uppercase tracking-[.1em] text-white">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white" />
-            </span>
-            Processing
-          </span>
-        ) : (
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold font-sans uppercase tracking-[.1em] text-[var(--cyan)]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[var(--cyan)]" />
-            Awaiting
-          </span>
-        )}
+        <span
+          aria-label={`${isProcessing ? "Processing" : "Awaiting"}, ${next.progress}% complete`}
+        >
+          <StatusDot status={next.status} />
+        </span>
       </div>
     </div>
   );
@@ -186,7 +185,14 @@ function CounterpartyExposureCard() {
                   </span>
                 </div>
               </div>
-              <div className="h-1.5 rounded-full bg-[rgba(255,255,255,0.06)] overflow-hidden">
+              <div
+                role="progressbar"
+                aria-valuenow={Math.round(proportion * 100)}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-label={`${name} exposure share`}
+                className="h-1.5 rounded-full bg-[rgba(255,255,255,0.06)] overflow-hidden"
+              >
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{

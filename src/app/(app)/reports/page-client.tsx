@@ -28,6 +28,7 @@ export default function ReportsPageClient() {
   const shouldReduceMotion = useReducedMotion();
   return (
     <PageTransition className="px-4 sm:px-6 md:px-8 w-full space-y-6">
+      <h1 className="sr-only">Reports</h1>
       {/* Top row: Period label + Export */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
         <span className="text-[11px] uppercase tracking-[.15em] font-sans font-medium text-[var(--text-4)]">

@@ -34,6 +34,7 @@ function BuyIcon() {
         viewBox="0 0 24 24"
         stroke="currentColor"
         strokeWidth={2}
+        aria-hidden="true"
       >
         <path
           strokeLinecap="round"
@@ -55,6 +56,7 @@ function SellIcon() {
         viewBox="0 0 24 24"
         stroke="currentColor"
         strokeWidth={2}
+        aria-hidden="true"
       >
         <path
           strokeLinecap="round"
@@ -168,13 +170,17 @@ export function ConfirmationDialog({
   const isBuy = side === "buy";
   const estimatedValue = quantity * price;
 
+  const titleId = "confirmation-dialog-title";
+  const descriptionId = "confirmation-dialog-description";
+
   return (
     <AnimatePresence>
       {open && (
         <div
           role="dialog"
           aria-modal="true"
-          aria-label={`Confirm ${isBuy ? "Buy" : "Sell"}`}
+          aria-labelledby={titleId}
+          aria-describedby={descriptionId}
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
         >
           {/* Backdrop */}
@@ -202,12 +208,12 @@ export function ConfirmationDialog({
             </div>
 
             {/* Title */}
-            <h2 className="text-xl font-bold text-white text-center mb-6 font-sans">
+            <h2 id={titleId} className="text-xl font-bold text-white text-center mb-6 font-sans">
               Confirm {isBuy ? "Buy" : "Sell"}
             </h2>
 
             {/* Details grid */}
-            <div className="mb-8">
+            <div id={descriptionId} className="mb-8">
               <DetailRow label="Pair" value={pair} />
               <DetailRow label="Price" value={price.toFixed(4)} mono />
               <DetailRow label="Settlement" value={settlement} />
@@ -223,7 +229,7 @@ export function ConfirmationDialog({
             </div>
 
             {/* Buttons */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <Button variant="ghost" onClick={onCancel} className="py-3">
                 Cancel
               </Button>

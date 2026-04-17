@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -19,10 +20,12 @@ export default function NotFound() {
       {/* Content */}
       <div className="relative flex flex-col items-center text-center max-w-md px-6">
         {/* Logo */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src="/nonco-stables-logo.svg"
           alt="Nonco Stables"
+          width={140}
+          height={28}
+          priority
           className="h-7 w-auto mb-12"
         />
 

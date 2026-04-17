@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -24,9 +25,9 @@ function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 rounded-r-full bg-[var(--cyan)]" />
       )}
       <span className="mr-3 shrink-0">{item.icon}</span>
-      <span className="text-[12.5px] tracking-normal font-sans">{item.label}</span>
+      <span className="text-sm tracking-normal font-sans">{item.label}</span>
       {item.badge && (
-        <span className="ml-auto text-[10px] font-bold bg-[var(--red-dim)] text-[var(--red)] px-1.5 py-0.5 rounded-full">
+        <span className="ml-auto text-[11px] font-bold bg-[var(--red-dim)] text-[var(--red)] px-1.5 py-0.5 rounded-full">
           {item.badge}
         </span>
       )}
@@ -41,10 +42,12 @@ export function Sidebar() {
     <aside className="hidden lg:flex flex-col fixed left-0 top-0 w-[220px] h-dvh bg-[var(--bg-card)] border-r border-[var(--border)] z-50">
       {/* Logo — aligned with header height (h-16 = 64px) */}
       <div className="h-16 flex items-center px-6 shrink-0 border-b border-[var(--border)]">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src="/nonco-stables-logo.svg"
           alt="Nonco Stables"
+          width={120}
+          height={14}
+          priority
           className="h-[14px] w-auto"
         />
       </div>

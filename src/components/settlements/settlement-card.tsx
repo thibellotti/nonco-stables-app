@@ -91,7 +91,14 @@ export function SettlementCard({
           <span className="text-[11px] font-sans text-[var(--text-3)]">Progress</span>
           <span className="text-[11px] font-mono font-bold text-white">{progress}%</span>
         </div>
-        <div className="h-2 rounded-full bg-[rgba(255,255,255,0.06)] overflow-hidden">
+        <div
+          role="progressbar"
+          aria-valuenow={progress}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label={`Settlement progress for ${pair}`}
+          className="h-2 rounded-full bg-[rgba(255,255,255,0.06)] overflow-hidden"
+        >
           <motion.div
             initial={shouldReduceMotion ? false : { width: 0 }}
             animate={{ width: `${progress}%` }}

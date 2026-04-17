@@ -12,7 +12,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <Sidebar />
       <PageHeader />
       <main id="main-content" className="lg:pl-[220px] pt-20 pb-28 lg:pb-8 min-h-screen">
-        {children}
+        <div className="max-w-[1600px] mx-auto">
+          {children}
+        </div>
       </main>
       <BottomTabs />
     </AppProviders>

@@ -163,6 +163,7 @@ export default function YieldPage() {
   const shouldReduceMotion = useReducedMotion();
   return (
     <PageTransition className="px-4 sm:px-6 md:px-8 w-full space-y-6">
+      <h1 className="sr-only">Yield</h1>
       {/* Page header */}
       <SectionLabel>Yield Vaults</SectionLabel>
 

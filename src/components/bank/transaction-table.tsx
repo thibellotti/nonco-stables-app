@@ -4,6 +4,7 @@ import { useState } from "react";
 import { type Transaction, type TransactionType } from "@/lib/mock-data";
 import { cn, formatCompact, timeAgo, getDateGroup } from "@/lib/utils";
 import { currencyColors } from "@/lib/currency-colors";
+import { StatusDot } from "@/components/ui/status-dot";
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -32,73 +33,8 @@ function groupTransactionsByDate(
     .map((label) => ({ label, items: groups[label] }));
 }
 
-// ---------------------------------------------------------------------------
-// Status dot indicators
-// ---------------------------------------------------------------------------
-
-function StatusDot({ status }: { status: Transaction["status"] }) {
-  if (status === "completed") {
-    return (
-      <span className="relative flex h-1.5 w-1.5 shrink-0">
-        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[var(--status-positive)]" />
-      </span>
-    );
-  }
-
-  if (status === "pending") {
-    return (
-      <span className="relative flex h-1.5 w-1.5 shrink-0">
-        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--status-pending)] opacity-75" />
-        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[var(--status-pending)]" />
-      </span>
-    );
-  }
-
-  if (status === "failed") {
-    return (
-      <span className="relative flex h-1.5 w-1.5 shrink-0">
-        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[var(--status-negative)]" />
-      </span>
-    );
-  }
-
-  return null;
-}
-
-// ---------------------------------------------------------------------------
-// Status badge (desktop — full badge with dot + text)
-// ---------------------------------------------------------------------------
-
-function StatusBadge({ status }: { status: Transaction["status"] }) {
-  if (status === "completed") {
-    return (
-      <span className="inline-flex items-center gap-1.5 text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--status-positive)]">
-        <StatusDot status="completed" />
-        Completed
-      </span>
-    );
-  }
-
-  if (status === "pending") {
-    return (
-      <span className="inline-flex items-center gap-1.5 text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--status-pending)]">
-        <StatusDot status="pending" />
-        Pending
-      </span>
-    );
-  }
-
-  if (status === "failed") {
-    return (
-      <span className="inline-flex items-center gap-1.5 text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--status-negative)]">
-        <StatusDot status="failed" />
-        Failed
-      </span>
-    );
-  }
-
-  return null;
-}
+// Status indicators (both compact dot and full badge) now come from the
+// shared `@/components/ui/status-dot` — `showLabel` toggles between them.
 
 // ---------------------------------------------------------------------------
 // Transaction icons
@@ -183,7 +119,7 @@ function TransactionRow({
               <p className="text-xs sm:text-sm text-[var(--text)] font-medium truncate">{tx.description}</p>
               {/* Mobile-only status dot — visible when Status column is hidden */}
               <span className="sm:hidden">
-                <StatusDot status={tx.status} />
+                <StatusDot status={tx.status} showLabel={false} />
               </span>
             </div>
             <p className="text-[11px] text-[var(--text-4)] font-mono mt-0.5 truncate">
@@ -225,7 +161,7 @@ function TransactionRow({
 
       {/* Status — desktop only, enhanced badges */}
       <td className="px-3 sm:px-6 py-3 sm:py-4 hidden sm:table-cell">
-        <StatusBadge status={tx.status} />
+        <StatusDot status={tx.status} />
       </td>
 
       {/* Time */}
@@ -271,22 +207,22 @@ export function BankTransactionTable({ transactions }: BankTransactionTableProps
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-[var(--border)]">
-                <th className="px-3 sm:px-6 py-3 text-left text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium">
+                <th scope="col" className="px-3 sm:px-6 py-3 text-left text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium">
                   Transaction
                 </th>
-                <th className="px-3 sm:px-6 py-3 text-left text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium hidden md:table-cell">
+                <th scope="col" className="px-3 sm:px-6 py-3 text-left text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium hidden md:table-cell">
                   Counterparty
                 </th>
-                <th className="px-3 sm:px-6 py-3 text-left text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium hidden sm:table-cell">
+                <th scope="col" className="px-3 sm:px-6 py-3 text-left text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium hidden sm:table-cell">
                   Asset
                 </th>
-                <th className="px-3 sm:px-6 py-3 text-right text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium">
+                <th scope="col" className="px-3 sm:px-6 py-3 text-right text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium">
                   Amount
                 </th>
-                <th className="px-3 sm:px-6 py-3 text-left text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium hidden sm:table-cell">
+                <th scope="col" className="px-3 sm:px-6 py-3 text-left text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium hidden sm:table-cell">
                   Status
                 </th>
-                <th className="px-3 sm:px-6 py-3 text-right text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium">
+                <th scope="col" className="px-3 sm:px-6 py-3 text-right text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] font-medium">
                   Time
                 </th>
               </tr>

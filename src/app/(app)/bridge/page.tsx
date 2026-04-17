@@ -36,6 +36,7 @@ export default function BridgePage() {
 
   return (
     <PageTransition className="px-4 sm:px-6 md:px-8 w-full">
+      <h1 className="sr-only">Bridge</h1>
       <div className="space-y-6">
       {/* Page context header */}
       <div className="flex items-center gap-3">
@@ -115,7 +116,7 @@ export default function BridgePage() {
           </div>
 
           {/* Token + Amount */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <label htmlFor="bridge-token" className="text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--text-4)]">
                 Token

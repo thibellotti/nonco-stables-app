@@ -33,7 +33,12 @@ export function AnimatedIllustration({ src, style, className, rotate }: Animated
       .then((r) => r.text())
       .then((svgText) => {
         if (cancelled || !container) return;
-        container.innerHTML = svgText;
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(svgText, "image/svg+xml");
+        const parsedSvg = doc.querySelector("svg");
+        // Parse errors land in a <parsererror> element; bail if parsing failed.
+        if (!parsedSvg || doc.querySelector("parsererror")) return;
+        container.replaceChildren(parsedSvg);
         const svg = container.querySelector("svg");
         if (!svg) return;
         svg.style.width = "100%";

@@ -8,37 +8,59 @@ const spaceGrotesk = localFont({
   src: "../../public/fonts/SpaceGrotesk-Variable.woff2",
   variable: "--font-sans",
   display: "swap",
+  preload: true,
 });
 
 const jetbrainsMono = localFont({
   src: "../../public/fonts/JetBrainsMono-Variable.woff2",
   variable: "--font-mono",
   display: "swap",
+  preload: true,
 });
 
+const SITE_URL = "https://stables.nonco.com";
+const OG_IMAGE = `${SITE_URL}/opengraph-image`;
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://stables.nonco.com"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Nonco Stables",
     template: "%s — Nonco Stables",
   },
-  description: "Institutional stablecoin settlement platform — FX, bridge, yield, and payments across 6 chains.",
+  description:
+    "Institutional stablecoin settlement platform — FX, bridge, yield, and payments across 6 chains.",
+  alternates: {
+    canonical: "/",
+  },
   icons: {
-    icon: [
-      { url: "/icon.svg", type: "image/svg+xml" },
-    ],
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
     apple: "/icon-192.png",
   },
   openGraph: {
     title: "Nonco Stables",
-    description: "Institutional stablecoin settlement platform — FX, bridge, yield, and payments across 6 chains.",
+    description:
+      "Institutional stablecoin settlement platform — FX, bridge, yield, and payments across 6 chains.",
     type: "website",
     siteName: "Nonco Stables",
+    url: SITE_URL,
+    images: [
+      {
+        url: OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: "Nonco Stables — institutional stablecoin settlement",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Nonco Stables",
     description: "Institutional stablecoin settlement platform",
+    images: [OG_IMAGE],
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 

@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { formatMoney, formatCompact } from "@/lib/utils";
 import { currencyColors } from "@/lib/currency-colors";
+import { StatusDot } from "@/components/ui/status-dot";
 import type { PendingSettlement } from "./settlements-data";
 import { pendingSettlements } from "./settlements-data";
 
@@ -77,25 +78,25 @@ export function PendingSettlementsTable({
       <table className="w-full text-left border-collapse">
         <thead>
           <tr className="border-b border-[var(--border)]">
-            <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)]">
+            <th scope="col" className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)]">
               Pair
             </th>
-            <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)] hidden md:table-cell">
+            <th scope="col" className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)] hidden md:table-cell">
               Counterparty
             </th>
-            <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)] text-right">
+            <th scope="col" className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)] text-right">
               Amount
             </th>
-            <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)] hidden sm:table-cell">
+            <th scope="col" className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)] hidden sm:table-cell">
               Terms
             </th>
-            <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)] hidden sm:table-cell">
+            <th scope="col" className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)] hidden sm:table-cell">
               Due
             </th>
-            <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)] hidden lg:table-cell w-48">
+            <th scope="col" className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)] hidden lg:table-cell w-48">
               Progress
             </th>
-            <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)]">
+            <th scope="col" className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-4)]">
               Status
             </th>
           </tr>
@@ -191,7 +192,14 @@ export function PendingSettlementsTable({
                 {/* Progress bar */}
                 <td className="px-3 sm:px-6 py-3 sm:py-4 hidden lg:table-cell">
                   <div className="flex items-center gap-3">
-                    <div className="flex-1 h-2 rounded-full bg-[rgba(255,255,255,0.06)] overflow-hidden">
+                    <div
+                      role="progressbar"
+                      aria-valuenow={s.progress}
+                      aria-valuemin={0}
+                      aria-valuemax={100}
+                      aria-label={`Settlement progress for ${s.pair}`}
+                      className="flex-1 h-2 rounded-full bg-[rgba(255,255,255,0.06)] overflow-hidden"
+                    >
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${s.progress}%` }}
@@ -212,20 +220,11 @@ export function PendingSettlementsTable({
 
                 {/* Status */}
                 <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                  {isProcessing ? (
-                    <span className="inline-flex items-center gap-1.5 text-[11px] font-bold font-sans uppercase tracking-[.1em] text-white whitespace-nowrap">
-                      <span className="relative flex h-1.5 w-1.5">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
-                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white" />
-                      </span>
-                      Processing
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center gap-1.5 text-[11px] font-bold font-sans uppercase tracking-[.1em] text-[var(--cyan)] whitespace-nowrap">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--cyan)]" />
-                      Awaiting
-                    </span>
-                  )}
+                  <span
+                    aria-label={`${isProcessing ? "Processing" : "Awaiting"}, ${s.progress}% complete`}
+                  >
+                    <StatusDot status={s.status} />
+                  </span>
                 </td>
               </motion.tr>
             );

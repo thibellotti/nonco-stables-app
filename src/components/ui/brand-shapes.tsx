@@ -99,7 +99,10 @@ export function BrandShapes() {
         will-change:transform,opacity;
         transition:opacity 0.8s ease;
       `;
-      node.innerHTML = SHAPES[cfg.index];
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(SHAPES[cfg.index], "image/svg+xml");
+      const parsedSvg = doc.querySelector("svg");
+      if (parsedSvg) node.replaceChildren(parsedSvg);
       const svg = node.querySelector("svg");
       if (svg) { svg.style.width = "100%"; svg.style.height = "100%"; svg.style.overflow = "visible"; }
 

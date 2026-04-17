@@ -128,7 +128,7 @@ function parseNotional(value: string): number {
 
 function CloseIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
     </svg>
   );
@@ -136,7 +136,7 @@ function CloseIcon() {
 
 function TimerIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
       <circle cx="12" cy="12" r="10" />
       <polyline points="12 6 12 12 16 14" />
     </svg>
@@ -145,7 +145,7 @@ function TimerIcon() {
 
 function RefreshIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
     </svg>
   );
@@ -153,7 +153,7 @@ function RefreshIcon() {
 
 function StreamIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-1.5L12 12m0 0l3-1.5M12 12V9" />
     </svg>
   );
@@ -261,6 +261,7 @@ function PriceTimer({
         {expired ? (
           <button
             onClick={onRefresh}
+            aria-label="Refresh quote"
             className="flex items-center gap-1.5 text-xs font-sans font-medium text-white hover:text-[var(--text-2)] transition-colors cursor-pointer"
           >
             <RefreshIcon />
@@ -660,7 +661,7 @@ function RfsDialogContent({
       {/* ── Body ───────────────────────────────────────── */}
       <div className="px-6 py-5 space-y-5">
         {/* Row 1: Instrument + Notional */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {/* Instrument select */}
           <div className="space-y-1.5">
             <label htmlFor="rfs-instrument" className="text-[11px] font-sans font-medium text-[var(--text-4)] uppercase tracking-[.1em]">
@@ -685,6 +686,7 @@ function RfsDialogContent({
                 viewBox="0 0 24 24"
                 stroke="currentColor"
                 strokeWidth={2}
+                aria-hidden="true"
               >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
               </svg>
@@ -730,7 +732,7 @@ function RfsDialogContent({
         />
 
         {/* Row 4: Quote boxes */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <QuoteBox
             side="sell"
             price={prices.sell}

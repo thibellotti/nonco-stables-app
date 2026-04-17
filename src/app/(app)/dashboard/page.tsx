@@ -38,6 +38,7 @@ export default function DashboardPage() {
 
   return (
     <PageTransition className="px-4 sm:px-6 md:px-8 w-full space-y-4">
+      <h1 className="sr-only">Dashboard</h1>
       {/* ── Top desk-offer banner (RFS entry point) ── */}
       <DeskOfferBanner onGetRfs={() => openRfs()} />
 
@@ -111,7 +112,7 @@ export default function DashboardPage() {
       </div>
 
       {/* RFS Dialog */}
-      <Suspense fallback={null}>
+      <Suspense fallback={<div className="fixed inset-0 pointer-events-none" aria-hidden="true" />}>
         <RfsDialog
           open={rfsOpen}
           onClose={() => setRfsOpen(false)}

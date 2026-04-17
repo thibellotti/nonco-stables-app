@@ -45,7 +45,7 @@ export function SettlementsStats() {
         </div>
 
         {/* Supporting KPIs */}
-        <div className="grid grid-cols-3 divide-x divide-[var(--border)]">
+        <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[var(--border)]">
           <Kpi
             label="Processing"
             value={String(processingCount)}
@@ -64,7 +64,14 @@ export function SettlementsStats() {
             label="Avg Completion"
             value={`${avgProgress}%`}
             caption={
-              <div className="h-1.5 w-full max-w-[140px] rounded-full bg-[rgba(255,255,255,0.05)] overflow-hidden mt-1">
+              <div
+                role="progressbar"
+                aria-valuenow={avgProgress}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-label="Average settlement completion"
+                className="h-1.5 w-full max-w-[140px] rounded-full bg-[rgba(255,255,255,0.05)] overflow-hidden mt-1"
+              >
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${avgProgress}%` }}
@@ -102,7 +109,14 @@ export function SettlementsStats() {
                 <span className="text-xs font-mono font-bold text-white w-10 shrink-0">
                   {term}
                 </span>
-                <div className="flex-1 h-2 bg-[rgba(255,255,255,0.04)] rounded-full overflow-hidden">
+                <div
+                  role="progressbar"
+                  aria-valuenow={Math.round(barPct)}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-label={`${term} volume share`}
+                  className="flex-1 h-2 bg-[rgba(255,255,255,0.04)] rounded-full overflow-hidden"
+                >
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${barPct}%` }}

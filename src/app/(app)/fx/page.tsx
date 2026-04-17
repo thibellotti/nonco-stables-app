@@ -116,7 +116,7 @@ const MarketCard = memo(function MarketCard({
       </div>
 
       {/* Bid / Ask — regular weight on numbers, lighter labels */}
-      <div className="grid grid-cols-2 gap-2 mb-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
         <div>
           <div className="text-[9px] uppercase tracking-[.1em] text-[var(--text-4)] font-sans font-normal mb-0.5">Bid</div>
           <div className={cn(
@@ -299,7 +299,7 @@ export default function FxBoardPage() {
       const stored = localStorage.getItem(VIEW_STORAGE_KEY);
       if (stored === "rows" || stored === "widgets") setViewMode(stored);
     } catch {
-      /* localStorage unavailable */
+      /* localStorage unavailable (private mode/cookies blocked) — degrade silently */
     }
   }, []);
 
@@ -308,7 +308,7 @@ export default function FxBoardPage() {
     try {
       localStorage.setItem(VIEW_STORAGE_KEY, v);
     } catch {
-      /* ignore */
+      /* localStorage unavailable (private mode/cookies blocked) — degrade silently */
     }
   }, []);
 
@@ -357,6 +357,7 @@ export default function FxBoardPage() {
 
   return (
     <PageTransition className="px-4 sm:px-6 md:px-8 w-full space-y-4">
+      <h1 className="sr-only">FX & Pricing</h1>
       {/* ── Top bar: Search + Live indicator + RFS button ── */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
         {/* Search */}
@@ -511,7 +512,7 @@ export default function FxBoardPage() {
       </div>
 
       {/* RFS Dialog */}
-      <Suspense fallback={null}>
+      <Suspense fallback={<div className="fixed inset-0 pointer-events-none" aria-hidden="true" />}>
         <RfsDialog
           open={rfsOpen}
           onClose={() => setRfsOpen(false)}

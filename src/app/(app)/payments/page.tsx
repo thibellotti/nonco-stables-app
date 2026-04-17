@@ -60,6 +60,7 @@ export default function PaymentsPage() {
 
   return (
     <PageTransition className="px-4 sm:px-6 md:px-8 w-full space-y-6">
+      <h1 className="sr-only">Payments</h1>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* LEFT: New payment form */}
         <motion.div
@@ -126,7 +127,7 @@ export default function PaymentsPage() {
             </div>
 
             {/* Amount + Deliver in */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <label htmlFor="payment-amount" className="text-[11px] font-sans font-medium uppercase tracking-[.1em] text-[var(--text-4)]">
                   Amount

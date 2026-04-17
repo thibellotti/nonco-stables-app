@@ -41,11 +41,11 @@ export function CompletedTable({ settlements }: CompletedTableProps) {
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-[var(--border)]">
-              <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-3)]">Description</th>
-              <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-3)] text-right">Amount</th>
-              <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-3)]">Currency</th>
-              <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-3)] hidden sm:table-cell">Counterparty</th>
-              <th className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-3)] text-right hidden sm:table-cell">Date</th>
+              <th scope="col" className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-3)]">Description</th>
+              <th scope="col" className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-3)] text-right">Amount</th>
+              <th scope="col" className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-3)]">Currency</th>
+              <th scope="col" className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-3)] hidden sm:table-cell">Counterparty</th>
+              <th scope="col" className="px-3 sm:px-6 py-3 text-[11px] tracking-[.15em] uppercase font-sans font-medium text-[var(--text-3)] text-right hidden sm:table-cell">Date</th>
             </tr>
           </thead>
           <tbody>

@@ -147,7 +147,7 @@ export function NotificationCenter() {
 
         {/* Unread count badge — red */}
         {unreadCount > 0 && (
-          <span className="min-w-4 h-4 text-[10px] font-bold bg-[var(--red)] text-white rounded-full flex items-center justify-center absolute -top-1.5 -right-2 px-1">
+          <span className="min-w-4 h-4 text-[11px] font-bold bg-[var(--red)] text-white rounded-full flex items-center justify-center absolute -top-1.5 -right-2 px-1">
             {unreadCount}
           </span>
         )}

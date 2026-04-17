@@ -75,7 +75,7 @@ export function DeskOfferBanner({ onGetRfs }: DeskOfferBannerProps = {}) {
           <span className="text-[10px] text-[var(--text-4)]">&middot;</span>
           <span className="inline-flex items-center gap-1.5">
             {/* Mini countdown ring */}
-            <svg width="20" height="20" viewBox="0 0 20 20" className="shrink-0">
+            <svg width="20" height="20" viewBox="0 0 20 20" className="shrink-0" aria-hidden="true">
               <circle cx="10" cy="10" r="8" fill="none" stroke="var(--bg-elevated)" strokeWidth="2" />
               <circle
                 cx="10" cy="10" r="8" fill="none"
@@ -118,6 +118,7 @@ export function DeskOfferBanner({ onGetRfs }: DeskOfferBannerProps = {}) {
           stroke="currentColor"
           strokeWidth="1.5"
           strokeLinecap="round"
+          aria-hidden="true"
         >
           <path d="M3 3l8 8M11 3l-8 8" />
         </svg>

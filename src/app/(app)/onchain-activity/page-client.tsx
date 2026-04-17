@@ -113,6 +113,7 @@ export default function OnchainActivityClient() {
 
   return (
     <PageTransition className="px-4 sm:px-6 md:px-8 w-full space-y-6">
+      <h1 className="sr-only">On-chain Activity</h1>
       {/* Stats row */}
       <motion.div
         initial={shouldReduceMotion ? false : { opacity: 0 }}

@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import { StatusDot as SharedStatusDot } from "@/components/ui/status-dot";
 import { transactions, type TransactionType } from "@/lib/mock-data";
 import { cn, formatCompact, timeAgo, getDateGroup } from "@/lib/utils";
 
@@ -164,14 +165,7 @@ function TxIconLarge({ type }: { type: TransactionType }) {
 
 function StatusDot({ status }: { status: string }) {
   if (status === "completed") {
-    return (
-      <div className="flex items-center gap-1.5">
-        <span className="w-1.5 h-1.5 rounded-full bg-white" />
-        <span className="text-[11px] font-sans text-[var(--text-3)]">
-          Completed
-        </span>
-      </div>
-    );
+    return <SharedStatusDot status="completed" />;
   }
   if (status === "pending") {
     return <Badge variant="amber">Pending</Badge>;

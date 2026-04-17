@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useMemo, useEffect, type MutableRefObject } from "react";
+import { useRef, useMemo, useEffect, useState, type MutableRefObject } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
   BufferGeometry,
@@ -295,7 +295,20 @@ interface ParticleGlobeProps {
 }
 
 export function ParticleGlobe({ size, opacity = 0.35, className }: ParticleGlobeProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
   const scrollProgressRef = useRef(0);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => setVisible(entry.isIntersecting),
+      { rootMargin: "100px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   useEffect(() => {
     const onScroll = () => {
@@ -313,6 +326,7 @@ export function ParticleGlobe({ size, opacity = 0.35, className }: ParticleGlobe
 
   return (
     <div
+      ref={containerRef}
       className={className}
       style={{
         width: size ?? "100%",
@@ -322,16 +336,18 @@ export function ParticleGlobe({ size, opacity = 0.35, className }: ParticleGlobe
       }}
       aria-hidden="true"
     >
-      <Canvas
-        camera={{ position: [0, 0, CONFIG.cam.dist], fov: 50, near: 1, far: 1500 }}
-        dpr={[1, 2]}
-        gl={{ antialias: true, alpha: true, powerPreference: "high-performance", outputColorSpace: SRGBColorSpace }}
-        style={{ background: "transparent" }}
-        onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
-      >
-        <fog attach="fog" args={["#000000", 100, 700]} />
-        <Scene scrollProgressRef={scrollProgressRef} />
-      </Canvas>
+      {visible && (
+        <Canvas
+          camera={{ position: [0, 0, CONFIG.cam.dist], fov: 50, near: 1, far: 1500 }}
+          dpr={typeof window !== "undefined" ? [1, Math.min(window.devicePixelRatio, 2)] : [1, 2]}
+          gl={{ antialias: true, alpha: true, powerPreference: "high-performance", outputColorSpace: SRGBColorSpace }}
+          style={{ background: "transparent" }}
+          onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
+        >
+          <fog attach="fog" args={["#000000", 100, 700]} />
+          <Scene scrollProgressRef={scrollProgressRef} />
+        </Canvas>
+      )}
     </div>
   );
 }

@@ -1,191 +1,151 @@
 # Audit Report — Nonco Stables App
-Date: 2026-04-08
+Date: 2026-04-17
 
-## Score: 5.5/10 (C+)
+## Score: 6.5/10 (C+)
 
-Comprehensive 6-domain audit (Performance, Security, Code Quality, Accessibility, SEO, Responsive) across 91 source files. The codebase has strong TypeScript discipline (strict mode, zero `any`), clean file structure, and good responsive grid foundations. However, critical gaps in authentication, SEO infrastructure, accessibility, and Three.js performance prevent it from reaching institutional production quality.
+Pre-launch state. Core UX solid but blockers in accessibility, SEO metadata, and responsive layouts will hurt on first client review.
 
-**Domain Scores:**
-| Domain | Score | Key Gap |
-|--------|-------|---------|
-| Performance | 5/10 | Two WebGL contexts, no dpr cap, all pages client-side |
-| Security | 3/10 | No auth, no headers, no input validation (expected pre-API) |
-| Code Quality | 8/10 | Only 1 console.log, strict TS, clean structure |
-| Accessibility | 3.5/10 | No skip link, broken form labels, contrast failures |
-| SEO & Meta | 3/10 | No sitemap, no robots, no OG image, 9 pages missing metadata |
-| Responsive | 7/10 | Good foundations, PWA safe-area gap, some touch targets small |
-
----
-
-## Critical (12 — fix before launch)
-
-### Security
-- [ ] **No authentication** — `login/page.tsx:40` does `router.push("/dashboard")` with zero validation. Login is a UI facade.
-- [ ] **No auth middleware** — No `middleware.ts` exists. All routes (`/dashboard`, `/bank`, `/trades`, `/api-keys`, etc.) are publicly accessible.
-- [ ] **No security headers** — `next.config.ts` is missing `X-Frame-Options`, `X-Content-Type-Options`, `Content-Security-Policy`, `Strict-Transport-Security`, `Referrer-Policy`, `Permissions-Policy`.
-
-### Performance
-- [ ] **No `dpr` cap on Canvas** — `particle-globe.tsx:299` has no `dpr` prop. On Retina/3x mobile devices, renders at unbounded native resolution. Add `dpr={[1, 2]}`.
-- [ ] **`three` not in `optimizePackageImports`** — `next.config.ts:5` only lists `framer-motion`. Three.js (~600KB) may not be tree-shaken. Also `particle-globe.tsx:5` uses `import * as THREE`.
-
-### SEO & Meta
-- [ ] **No `sitemap.ts`** — Search engines cannot discover pages.
-- [ ] **No `robots.ts`** — No crawl directives. Authenticated routes may get indexed.
-- [ ] **No OG image** — `layout.tsx:21-26` `openGraph` has no `images` property. Social shares have no preview.
-- [ ] **No `metadataBase`** — `layout.tsx:9` missing. All relative OG URLs are broken and no canonical URLs generated.
-
-### Accessibility
-- [ ] **`--text-4` fails WCAG AA** — `globals.css:34` `rgba(255,255,255,0.3)` on `#000` = ~3.2:1 (needs 4.5:1). On `#141414` cards = ~2.7:1. Used in hundreds of text elements.
-- [ ] **No skip-to-content link** — Keyboard users must tab through 13+ sidebar links to reach content.
-- [ ] **Form labels not programmatically linked** — `payments/page.tsx`, `bridge/page.tsx`, `rfs-dialog.tsx`: `<label>` elements lack `htmlFor`, inputs lack `id`. Screen readers can't associate them.
-
-### Responsive / PWA
-- [ ] **Missing `viewportFit: "cover"`** — `layout.tsx:34-38` Viewport export missing it. PWA safe areas (`env(safe-area-inset-*)`) return 0, making `bottom-tabs.tsx:15` padding ineffective on notched devices.
+| Domain | Score | Grade |
+|---|---|---|
+| Performance | 6.0 | C+ |
+| Security | 8.0 | A- |
+| Code Quality | 7.5 | B+ |
+| Accessibility | 5.5 | C |
+| SEO & Meta | 6.5 | C+ |
+| Responsive | 6.0 | C+ |
 
 ---
 
-## High (26 — fix soon)
+## Critical (fix before launch)
 
 ### Performance
-- [ ] **Double ParticleGlobe** — `globe-background.tsx:6` and `balance-hero.tsx:9` both dynamically import ParticleGlobe. On dashboard, two WebGL contexts with 3500+ particles each run simultaneously.
-- [ ] **No geometry/material disposal** — `particle-globe.tsx` creates BufferGeometry, PointsMaterial, ShaderMaterial, CanvasTexture without `.dispose()` on unmount. GPU memory leaks.
-- [ ] **Scroll `useState` triggers re-renders** — `particle-globe.tsx:279-284` uses `setScrollProgress` on every scroll event, re-rendering the entire Canvas tree. Should use `useRef` + `useFrame`.
-- [ ] **Fonts via CSS `@font-face`** — `globals.css:3-14` loads fonts without `next/font/local`. No preloading, no `size-adjust` for CLS prevention.
-- [ ] **No `next/image`** — Raw `<img>` tags for logos and decorative SVGs. Missing AVIF/WebP, lazy loading, responsive sizing.
-- [ ] **9 routes missing `loading.tsx`** — `fx/`, `yield/`, `bridge/`, `payments/`, `onchain/`, `onchain-activity/`, `third-party/`, `reports/`, `api-keys/`.
-- [ ] **Zero `<Suspense>` boundaries** — No Suspense anywhere in the codebase.
-- [ ] **All 14 pages are `"use client"`** — Pages with minimal interactivity (yield, bridge, onchain, payments) ship full React client runtime. Push `"use client"` to leaf components.
-
-### Security
-- [ ] **No input validation on financial forms** — `payments/page.tsx:134` amount accepts negatives; `bridge/page.tsx:134` same; `onchain/page.tsx:132` wallet address has no format validation.
-- [ ] **Hardcoded user identity** — `sidebar.tsx:108-112` "Fernando M." / "Admin" / "Treasury 01" hardcoded. Must come from session when auth is added.
-- [ ] **PWA `start_url` bypasses login** — `manifest.ts:9` set to `/dashboard`, opens directly past login in standalone mode.
-
-### SEO & Meta
-- [ ] **9 pages missing metadata** — `fx/`, `payments/`, `bridge/`, `yield/`, `onchain/`, `onchain-activity/`, `reports/`, `api-keys/`, `third-party/` all render as generic "Nonco Stables" in browser tabs.
-- [ ] **Apple Touch Icon is SVG** — `layout.tsx:16-19` `icons.apple` points to `/icon.svg`. Safari ignores SVG apple-touch-icons — needs 180x180 PNG.
+- [ ] **Bare `<img>` tags instead of `next/image`** — `src/components/layout/sidebar.tsx:45`, `src/app/login/page.tsx:82,173`, `src/app/not-found.tsx:23`. Replace with next/image + explicit dims.
+- [ ] **Missing `images` config in next.config.ts** — no AVIF/WebP, remotePatterns, deviceSizes. Add images block.
 
 ### Accessibility
-- [ ] **No `<h1>` on authenticated pages** — `page-header.tsx:41` renders title as `<span>`, not heading. Screen readers have no page landmark.
-- [ ] **Interactive `<div>`s not keyboard accessible** — `sidebar.tsx:54` account selector, `transaction-list.tsx:231` cards, `transaction-table.tsx:189` rows, `recent-trades.tsx:47` rows — all have `cursor-pointer` but can't be focused or activated via keyboard.
-- [ ] **Search inputs missing `aria-label`** — `fx/page.tsx:195`, `payments/page.tsx:231`, `third-party/page.tsx:87`.
-- [ ] **Filter selects missing `aria-label`** — `third-party/page.tsx:93,104`, `payments/page.tsx:238`.
-- [ ] **Form inputs use barely-visible focus** — `focus:border-white/30` across payments, third-party pages. Fails WCAG 2.4.7.
-- [ ] **Framer Motion ignores `prefers-reduced-motion`** — Only `PageTransition` checks `useReducedMotion()`. All other motion.div/motion.tr elements animate regardless of user preference.
-- [ ] **Notification dropdown missing role** — `notification-center.tsx:158-241` panel has no `role` or `aria-label`.
+- [ ] **Progress bars missing `role="progressbar"` + `aria-valuenow`/`aria-valuemax`** — `src/components/settlements/pending-settlements-table.tsx:194-210`, `settlement-card.tsx`. Screen readers can't announce completion.
+- [ ] **AnimatedNumber has no `aria-live`** — `src/components/dashboard/balance-hero.tsx:20-70`. Counter animates 0 → final; AT users only hear initial state.
+- [ ] **Decorative SVGs inconsistently hidden** — some have `aria-hidden="true"`, others don't. Sweep all `<svg>` and add `aria-hidden` where decorative.
 
-### Code Quality
-- [ ] **Console.log in production** — `rfs-dialog.tsx:596` logs trade execution data.
-- [ ] **SkeletonPulse duplicated 5x** — Identical component in `dashboard/loading.tsx`, `rfq/loading.tsx`, `trades/loading.tsx`, `bank/loading.tsx`, `settlements/loading.tsx`. Extract to `skeleton.tsx`.
-- [ ] **6 hardcoded hex colors** — `notification-center.tsx:159` `#141414`, `bridge/page.tsx:42` `#05E0F8`, `balance-hero.tsx:304` `#05E0F8`, `settlement-card.tsx:56` `#d97706`, `settlements/page.tsx:568,737` `#04b0c4`. Should use CSS variables.
-- [ ] **`getDateGroup`/`groupByDate` duplicated 3x** — `transaction-list.tsx`, `transaction-table.tsx`, `trades/page.tsx`. Extract to `utils.ts`.
+### SEO & Meta
+- [ ] **Missing `og:image` in root metadata** — `src/app/layout.tsx`. `opengraph-image.tsx` exists but isn't referenced.
+- [ ] **Missing `twitter:image`** — `src/app/layout.tsx`. Twitter cards fall back but explicit is safer.
 
 ### Responsive
-- [ ] **`min-w-[600px]` on recent trades table** — `recent-trades.tsx:23` forces horizontal scroll on narrow screens. Already hides columns responsively, so min-width is redundant.
-- [ ] **RFS dialog SummaryGrid too tight** — `rfs-dialog.tsx:388` `grid-cols-4` on iPhone SE (320px) = ~72px per cell. Needs `grid-cols-2 sm:grid-cols-4`.
+- [ ] **Fixed decorative `w-[500px]`/`w-[400px]` gradients on login** — `src/app/login/page.tsx:57,68,153`. Wasteful on mobile.
 
 ---
 
-## Medium (30 — improve)
+## High (fix soon)
 
 ### Performance
-- [ ] All 14 pages import Framer Motion — runtime in every route chunk
-- [ ] Viz components (`bar-chart`, `donut-chart`, `flow-diagram`, `mini-area-chart`, `progress-ring`, `sparkline`) are `"use client"` but have zero hooks — could be Server Components
-- [ ] No dynamic imports for heavy dialogs (RfsDialog 756 lines, ConfirmationDialog)
-- [ ] `FX Board` re-renders all MarketCards every 700ms tick — `MarketCard` not wrapped in `React.memo`
-- [ ] 24 cached textures (512x512 each, ~6MB GPU) persist entire session in module-level Map
-- [ ] No mobile particle count reduction — 3500 particles fixed regardless of device capability
+- [ ] **`next/image` with `fill` but no guaranteed container size** — `src/app/illustration-preview/page.tsx:29-35`. CLS risk.
+- [ ] **ParticleGlobe initializes WebGL even when `hidden lg:block`** — `src/components/dashboard/balance-hero.tsx`, `layout/globe-background.tsx`. Gate Canvas on `clientWidth > 0` or use `IntersectionObserver`.
+- [ ] **Duplicate Canvas instances** — both balance-hero and globe-background instantiate ParticleGlobe. Consolidate to one.
+- [ ] **Suspense `fallback={null}`** — `src/app/(app)/dashboard/page.tsx:114`, `fx/page.tsx`. Add skeleton to prevent layout shift on RfsDialog hydration.
 
 ### Security
-- [ ] Error boundary shows `error.message` to users — `(app)/error.tsx:68-105` could expose stack traces in production
-- [ ] Dev pages publicly accessible — `/chart-options`, `/illustration-preview` outside `(app)` group
-- [ ] `innerHTML` for SVG injection — `brand-shapes.tsx:75` using `node.innerHTML = SHAPES[cfg.index]`. Constants-only today but fragile pattern.
-
-### SEO & Meta
-- [ ] `manifest.ts:11` `theme_color: "#ffffff"` vs `layout.tsx:35` `themeColor: "#05E0F8"` — mismatch
-- [ ] `twitter.card` is `"summary"` — should be `"summary_large_image"` for better visual impact
-- [ ] No JSON-LD structured data — `Organization`, `WebApplication`, `FinancialProduct` schemas would help
-- [ ] `@vercel/analytics` and `@vercel/speed-insights` commented out in `layout.tsx:1-4`
-- [ ] Root-level `error.tsx` missing — errors outside `(app)` group show default Next.js page
-- [ ] No `loading.tsx` at root or `(app)` level — no skeleton during layout-level navigation
-
-### Accessibility
-- [ ] Form labels in `bridge/page.tsx`, `rfs-dialog.tsx` exist visually but lack `htmlFor`/`id`
-- [ ] `quote-form.tsx:28-48` has zero labels for instrument select and quantity input
-- [ ] RFQ page `<h2>` without preceding `<h1>` — broken heading hierarchy
-- [ ] Status dots in sidebar convey state via color only — no text alternative
-- [ ] Only 1 instance of `sr-only` in entire codebase (`third-party/page.tsx:141`)
+- [ ] **`innerHTML` for fetched SVG** — `src/components/ui/animated-illustration.tsx:36`. Use `DOMParser` + `appendChild` instead.
+- [ ] **`innerHTML` for hardcoded SVG strings** — `src/components/ui/brand-shapes.tsx:102`. Prevents strict CSP. Use DOM methods.
 
 ### Code Quality
-- [ ] `CardTitle` uses `font-mono` for section titles — `card.tsx:33` should be `font-sans`
-- [ ] `extraTrades` array duplicated between `trades/page.tsx` and `fx/page.tsx`
-- [ ] `BASE_RATES` duplicated in `favorites-grid.tsx:29-38` and `mock-data.ts:149-158`
-- [ ] No root-level `error.tsx` — pages outside `(app)` have no error boundary
-- [ ] Login `handleLogin` has no error handling — no try/catch, no loading state
+- [ ] **Hardcoded hex colors** — `src/app/(app)/onchain/page.tsx:18-32` (`#F6851B`, `#3B99FC`, `#0052FF`). CLAUDE.md forbids. Move to CSS vars or config.
+- [ ] **Dynamic colors via inline `style={{}}`** — `src/app/(app)/fx/page.tsx:101,110,114,195,477-479`, `trades/page.tsx:354-356`. Scattered palettes; should use CSS vars.
+- [ ] **Duplicate StatusDot logic** — `src/components/bank/transaction-table.tsx:39`, `dashboard/transaction-list.tsx:165`. Extract to `src/components/ui/status-dot.tsx`.
+
+### Accessibility
+- [ ] **Status animations not announced** — `pending-settlements-table.tsx:217-219`. Pulsing dot has no aria-label beyond visible "Processing" text.
+- [ ] **Dialog focus management partial** — `src/components/ui/confirmation-dialog.tsx:173-177`. Focus trap exists but initial focus/`aria-describedby` incomplete.
+- [ ] **Icon button in RFS dialog** — `src/components/rfs/rfs-dialog.tsx` refresh button lacks aria-label review.
+
+### SEO & Meta
+- [ ] **No canonical URLs** — `alternates.canonical` absent everywhere. Add to root metadata.
+- [ ] **Segment layouts missing OG/Twitter** — 10+ `src/app/(app)/**/layout.tsx` only export title+description, no openGraph/twitter blocks.
 
 ### Responsive
-- [ ] Notification bell touch target ~18px — `notification-center.tsx:126`
-- [ ] Avatar touch target 28px — `page-header.tsx:77`
-- [ ] Account selector touch target ~36px — `sidebar.tsx:54`
-- [ ] Page header missing `safe-area-inset-top` — `page-header.tsx:34`
-- [ ] Yield History table missing `overflow-x-auto` wrapper — `yield/page.tsx:368`
-- [ ] `text-[9px]` in ~15 places, `text-[10px]` in ~80+ places — below 14px threshold
+- [ ] **333+ micro-font instances** (`text-[11px]`, `text-[10px]`, `text-[9px]`). Sweep sidebar nav labels, badges. WCAG fails below 14px for primary content.
+- [ ] **Fixed grids without responsive variants** — `payments/page.tsx:129`, `fx/page.tsx:119`, `bridge/page.tsx:118`, `rfs-dialog.tsx:663,733`, `confirmation-dialog.tsx:226`. On 375px → 160px columns, crowded.
+- [ ] **`grid-cols-3` without mobile variant** — `settlements-stats.tsx:48` — impossible to read under 768px. Add `grid-cols-1 md:grid-cols-3`.
 
 ---
 
-## Low (26 — nice to have)
+## Medium (improve)
 
 ### Performance
-- [ ] `antialias: true` on particle-only scene — minimal benefit, GPU overhead
-- [ ] `motion.div` for simple fade-ins where CSS `@starting-style` would suffice
-- [ ] `motion.tr` in yield/payments tables can cause layout thrashing
-- [ ] `PageTransition` has no `AnimatePresence` — enter animation is pure overhead
+- [ ] DPR `[1, 2]` hard-cap — consider `Math.min(window.devicePixelRatio, 2)` for 4K/3x displays.
+- [ ] Inline GLSL shaders in `particle-globe.tsx:244-259` — extract to `.glsl` files.
+- [ ] `texCache` map in particle-globe never cleared between route changes — memory leak if globe remounts.
 
 ### Security
-- [ ] `brace-expansion <1.1.13` moderate vulnerability — fixable via `npm audit fix`
-- [ ] No rate limiting infrastructure for future API endpoints
-
-### SEO & Meta
-- [ ] Manifest missing `orientation`, `categories`, `scope` properties
-- [ ] No maskable icon for Android adaptive icons
-- [ ] `(app)/layout.tsx` has no shared metadata for authenticated pages
-
-### Accessibility
-- [ ] `page-header.tsx:77` avatar has no `aria-label`
-- [ ] `SectionLabel` renders as `<span>`, not heading — no structure for screen readers
+- [ ] Add `Strict-Transport-Security: max-age=31536000; includeSubDomains; preload` in `next.config.ts`.
+- [ ] Add `Content-Security-Policy` header after innerHTML cleanup.
 
 ### Code Quality
-- [ ] 8 unused components: `market-watch.tsx`, `quick-actions.tsx`, `currency-breakdown.tsx`, `category-tabs.tsx`, `kpi-cards.tsx`, `ticker-bar.tsx`, skeleton presets
-- [ ] `services/transactions.ts:1` imports unused `TransactionType`
-- [ ] `particle-globe.tsx:267` dead `offset` prop never used by `CameraRig`
-- [ ] `fx/page.tsx:262` uses `<a>` instead of `<Link>` — bypasses client-side navigation
-- [ ] `rfs/` vs `rfq/` folder naming potentially confusing
+- [ ] `rfs-dialog.tsx` at 762 lines — split into sub-components (quote display, settlement select, summary).
+- [ ] `animated-illustration.tsx` 391 lines, `price-card-active.tsx` 383 lines — review for extraction.
+- [ ] Service stubs return mock data (`src/services/quotes.ts:4`, `balances.ts:4`, `transactions.ts:4`) — flagged as TODO, OK for MVP but track for backend wiring.
+
+### Accessibility
+- [ ] `var(--text-4)` = `rgba(255,255,255,0.5)` — passes AA on `#141414` but edges fail on lighter `#1c1b1b`. Audit per-background.
+- [ ] No explicit `<h1>` per page — add `<h1 className="sr-only">Dashboard</h1>` etc.
+- [ ] Table `<th>` missing `scope="col"` — `pending-settlements-table.tsx:77-101`.
+
+### SEO & Meta
+- [ ] Login page layout has title+description but no OG/Twitter.
+- [ ] Sitemap only lists 3 routes (`/`, `/dashboard`, `/login`) — missing 12+ app routes. Should mirror `robots.ts` disallow list (as allowed for internal).
 
 ### Responsive
-- [ ] Pagination buttons below 44px — `transaction-table.tsx:336`
-- [ ] Settlement tab buttons below 44px — `settlements/page.tsx:417`
-- [ ] Bottom tab labels at 9px — `bottom-tabs.tsx:41`
-- [ ] Manifest `theme_color` mismatch (white vs cyan)
-- [ ] No `display-mode: standalone` CSS media query handling
+- [ ] Avatar button `w-7 h-7` (28px) — below 44×44 touch threshold. Bump to `w-10 h-10` or wrap with padding.
+- [ ] No `max-w-*` constraint on main content — on 1920px+ layouts stretch edge-to-edge. Add `max-w-[1400px] mx-auto`.
+- [ ] Sidebar nav `text-[12.5px]` hard to read at natural zoom — bump to `text-sm`.
+
+---
+
+## Low (nice to have)
+
+### Performance
+- [ ] Add `preload: true` to SpaceGrotesk/JetBrainsMono in `next/font/local`.
+- [ ] Run svgo on `public/illustrations/*.svg` during build.
+
+### Security
+- [ ] Add `.env.example` with `NEXT_PUBLIC_SUPABASE_URL=` / `NEXT_PUBLIC_SUPABASE_ANON_KEY=` placeholders.
+- [ ] Remove dev routes (`/chart-options`, `/illustration-preview`) before shipping, or gate with role.
+
+### Code Quality
+- [ ] Silent catch pattern `} catch { /* ignore */ }` for localStorage — fine but document or log in prod.
+- [ ] ✅ No `console.log/warn/error` in src/.
+- [ ] ✅ No `any` types.
+- [ ] ✅ No unused imports in src/.
+
+### Accessibility
+- [ ] ✅ Focus-visible styles present and consistent (`button.tsx:15`).
+- [ ] ✅ Skip link implemented (`(app)/layout.tsx:9-11`).
+- [ ] ✅ `PageTransition` respects `prefers-reduced-motion`.
+
+### Responsive
+- [ ] Notification dropdown uses `w-[calc(100vw-2rem)]` — works but older browsers may cause horizontal scroll.
+- [ ] ✅ Standard Tailwind breakpoints, no weird customs.
+- [ ] ✅ Dashboard hero + login branding panel responsive.
 
 ---
 
 ## Stats
-- Files scanned: 91
-- Issues found: 94 (C: 12, H: 26, M: 30, L: 26)
-- Domains: Performance, Security, Code Quality, Accessibility, SEO & Meta, Responsive
 
-## Top 10 Highest-Impact Fixes
+- **Files scanned:** ~180 TSX/TS files
+- **Issues found:** 50
+  - Critical: 8
+  - High: 17
+  - Medium: 16
+  - Low: 9
 
-| # | Fix | Domain | Impact | Effort |
-|---|-----|--------|--------|--------|
-| 1 | Add `dpr={[1, 2]}` + deduplicate ParticleGlobe | Perf | Halves GPU load | 15 min |
-| 2 | Add `three` to `optimizePackageImports` + named imports | Perf | ~300KB bundle reduction | 20 min |
-| 3 | Create `robots.ts` + `sitemap.ts` + set `metadataBase` | SEO | Enables search indexing | 30 min |
-| 4 | Raise `--text-4` to `rgba(255,255,255,0.5)` | A11y | Fixes contrast app-wide | 1 min |
-| 5 | Add skip-to-content link in app layout | A11y | Keyboard nav usable | 10 min |
-| 6 | Link form labels with `htmlFor`/`id` | A11y | Screen readers work | 30 min |
-| 7 | Switch to `next/font/local` | Perf | Eliminates font FOUT/CLS | 15 min |
-| 8 | Add security headers in `next.config.ts` | Security | Blocks clickjacking, MIME sniff | 20 min |
-| 9 | Replace scroll `useState` with `useRef` in globe | Perf | Eliminates scroll re-renders | 10 min |
-| 10 | Add `viewportFit: "cover"` to viewport export | PWA | Safe areas work on notch devices | 1 min |
+## Recommended Fix Order
+
+1. **Accessibility Critical** (progress bars, AnimatedNumber aria-live, SVG alt sweep) — ~2h
+2. **SEO metadata** (og:image, twitter:image, canonical, segment OG blocks) — ~1h
+3. **Performance image pipeline** (next.config.ts images block, replace bare `<img>`) — ~1.5h
+4. **Responsive grids** (replace `grid-cols-2`/`grid-cols-3` with responsive variants) — ~1h
+5. **innerHTML XSS cleanup** (DOMParser migration) — ~1h
+6. **Code quality** (extract StatusDot, move hardcoded hex to config) — ~1h
+7. **Headers** (HSTS, CSP once innerHTML clean) — ~30min
+
+**Total to ship-ready (A-/B+ grade):** ~8h focused work.

@@ -77,7 +77,7 @@ export function PageHeader() {
           <ThemeToggle />
           <NotificationCenter />
           <button className="p-2 -m-2 rounded-full" aria-label="User menu">
-            <div className="w-7 h-7 rounded-full bg-[var(--bg-elevated)] border border-[var(--border)] flex items-center justify-center text-[9px] font-bold text-[var(--text)]">
+            <div className="w-10 h-10 rounded-full bg-[var(--bg-elevated)] border border-[var(--border)] flex items-center justify-center text-[11px] font-bold text-[var(--text)]">
               FM
             </div>
           </button>

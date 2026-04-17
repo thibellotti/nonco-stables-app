@@ -171,6 +171,7 @@ export default function TradesPage() {
 
   return (
     <PageTransition className="px-4 sm:px-6 md:px-8 w-full space-y-6">
+      <h1 className="sr-only">Trades</h1>
       {/* Analytics: Volume by Pair + Summary */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Volume by Pair */}

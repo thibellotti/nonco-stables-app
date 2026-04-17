@@ -59,12 +59,22 @@ function AnimatedNumber({
   }, [value]);
 
   const formatted = formatter ? formatter(display) : formatMoney(display);
+  const finalFormatted = formatter ? formatter(value) : formatMoney(value);
 
   return (
     <span className={className} style={style}>
-      {prefix}
-      {formatted}
-      {suffix}
+      {/* Visible animated value — hidden from screen readers to avoid noisy count-up announcements */}
+      <span aria-hidden="true">
+        {prefix}
+        {formatted}
+        {suffix}
+      </span>
+      {/* Screen-reader only — announces the final value once, politely */}
+      <span className="sr-only" aria-live="polite" aria-atomic="true">
+        {typeof prefix === "string" ? prefix : ""}
+        {finalFormatted}
+        {suffix}
+      </span>
     </span>
   );
 }
@@ -160,6 +170,7 @@ export function BalanceHero() {
                     height="14"
                     viewBox="0 0 14 14"
                     fill="none"
+                    aria-hidden="true"
                     className={`transition-transform duration-200 ${expanded ? "rotate-180" : ""}`}
                   >
                     <path d="M3 5.5L7 9.5L11 5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />

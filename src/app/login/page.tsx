@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -54,7 +55,7 @@ export default function LoginPage() {
           initial={{ opacity: 0, scale: 0.7 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.4, ease: "easeOut" }}
-          className="pointer-events-none absolute -top-32 -right-32 w-[500px] h-[500px]"
+          className="pointer-events-none absolute -top-32 -right-32 w-[60vw] h-[60vw] max-w-[500px] max-h-[500px]"
           style={{
             background: "radial-gradient(circle, rgba(5,224,248,0.06) 0%, transparent 70%)",
           }}
@@ -65,7 +66,7 @@ export default function LoginPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1.8, delay: 0.3 }}
-          className="pointer-events-none absolute -bottom-48 -left-24 w-[400px] h-[400px]"
+          className="pointer-events-none absolute -bottom-48 -left-24 w-[50vw] h-[50vw] max-w-[400px] max-h-[400px]"
           style={{
             background: "radial-gradient(circle, rgba(5,224,248,0.04) 0%, transparent 70%)",
           }}
@@ -78,10 +79,12 @@ export default function LoginPage() {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="relative z-10"
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src="/nonco-stables-logo.svg"
             alt="Nonco Stables"
+            width={120}
+            height={24}
+            priority
             className="h-6 w-auto"
           />
         </motion.div>
@@ -150,7 +153,7 @@ export default function LoginPage() {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.2, ease: "easeOut" }}
-          className="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] lg:hidden"
+          className="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 w-[90vw] max-w-[600px] h-[40vw] max-h-[300px] lg:hidden"
           style={{
             background: "rgba(255,255,255,0.03)",
             filter: "blur(120px)",
@@ -169,10 +172,12 @@ export default function LoginPage() {
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="flex flex-col items-center mb-12"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src="/nonco-stables-logo.svg"
               alt="Nonco Stables"
+              width={140}
+              height={28}
+              priority
               className="h-7 w-auto lg:hidden"
             />
             <div className="w-12 h-[2px] bg-white mt-5 lg:hidden" />
