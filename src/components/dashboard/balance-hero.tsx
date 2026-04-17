@@ -147,8 +147,11 @@ export function BalanceHero() {
             <div className="flex items-start justify-between flex-wrap gap-4 mb-2">
               <div className="flex items-center gap-3">
                 <p
-                  className="font-mono text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tighter leading-none text-white"
-                  style={{ fontVariantNumeric: "tabular-nums slashed-zero" }}
+                  className="font-mono font-bold tracking-tighter leading-none text-white"
+                  style={{
+                    fontSize: "clamp(1.875rem, 1.25rem + 1.25vw, 2.75rem)",
+                    fontVariantNumeric: "tabular-nums slashed-zero",
+                  }}
                 >
                   <AnimatedNumber
                     value={totalBalance}

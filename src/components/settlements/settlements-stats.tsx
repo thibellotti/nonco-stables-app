@@ -35,7 +35,7 @@ export function SettlementsStats() {
           </div>
           <div
             className="font-mono font-bold text-white tabular-nums leading-none"
-            style={{ fontSize: "clamp(2.25rem, 1.5rem + 2vw, 3.5rem)" }}
+            style={{ fontSize: "clamp(1.875rem, 1.25rem + 1.25vw, 2.75rem)" }}
           >
             ${formatMoney(totalPendingAmount)}
           </div>
