@@ -47,7 +47,7 @@ export default function SettlementsPageClient() {
 
       {/* Pending: Table + Sidebar */}
       {activeTab === "pending" && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.65fr_1fr] gap-6 items-stretch">
           <PendingSettlementsTable
             settlements={filteredSettlements}
             filteredTotal={filteredTotal}

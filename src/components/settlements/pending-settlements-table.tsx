@@ -171,17 +171,17 @@ export function PendingSettlementsTable({
                 </td>
 
                 {/* Due date */}
-                <td className="px-3 sm:px-6 py-3 sm:py-4 hidden sm:table-cell">
+                <td className="px-3 sm:px-6 py-3 sm:py-4 hidden sm:table-cell whitespace-nowrap">
                   <div className="flex flex-col">
-                    <span className="font-mono text-xs sm:text-sm text-[var(--text-3)] tabular-nums">
+                    <span className="font-mono text-xs sm:text-sm text-[var(--text-3)] tabular-nums whitespace-nowrap">
                       {s.dueDate.replace(", 2026", "")}
                     </span>
                     {s.daysRemaining === 0 ? (
-                      <span className="text-[10px] font-sans text-white">
+                      <span className="text-[10px] font-sans text-white whitespace-nowrap">
                         Due today
                       </span>
                     ) : (
-                      <span className="text-[10px] font-sans text-[var(--text-4)]">
+                      <span className="text-[10px] font-sans text-[var(--text-4)] whitespace-nowrap">
                         {s.daysRemaining}d remaining
                       </span>
                     )}
@@ -211,9 +211,9 @@ export function PendingSettlementsTable({
                 </td>
 
                 {/* Status */}
-                <td className="px-3 sm:px-6 py-3 sm:py-4">
+                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                   {isProcessing ? (
-                    <span className="inline-flex items-center gap-1.5 text-[11px] font-bold font-sans uppercase tracking-[.1em] text-white">
+                    <span className="inline-flex items-center gap-1.5 text-[11px] font-bold font-sans uppercase tracking-[.1em] text-white whitespace-nowrap">
                       <span className="relative flex h-1.5 w-1.5">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
                         <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white" />
@@ -221,7 +221,7 @@ export function PendingSettlementsTable({
                       Processing
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1.5 text-[11px] font-bold font-sans uppercase tracking-[.1em] text-[var(--cyan)]">
+                    <span className="inline-flex items-center gap-1.5 text-[11px] font-bold font-sans uppercase tracking-[.1em] text-[var(--cyan)] whitespace-nowrap">
                       <span className="w-1.5 h-1.5 rounded-full bg-[var(--cyan)]" />
                       Awaiting
                     </span>

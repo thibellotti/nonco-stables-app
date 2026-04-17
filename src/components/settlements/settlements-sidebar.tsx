@@ -5,7 +5,6 @@ import { formatMoney, formatCompact } from "@/lib/utils";
 import { currencyColors } from "@/lib/currency-colors";
 import type { PendingSettlement } from "./settlements-data";
 import {
-  pendingSettlements,
   totalPendingAmount,
   sortedExposure,
   nextDue,
@@ -35,16 +34,15 @@ export function SettlementsSidebar({
         delay: 0.1,
         ease: [0.16, 1, 0.3, 1],
       }}
-      className="space-y-4"
+      className="flex flex-col gap-4 h-full"
     >
       {/* Card: Next Settlement Due */}
       <NextDueCard filteredSettlements={filteredSettlements} />
 
-      {/* Card: Counterparty Exposure */}
-      <CounterpartyExposureCard />
-
-      {/* Card: Upcoming Schedule */}
-      <ScheduleCard />
+      {/* Card: Counterparty Exposure — grows to fill remaining height */}
+      <div className="flex-1 min-h-0">
+        <CounterpartyExposureCard />
+      </div>
     </motion.div>
   );
 }
@@ -163,12 +161,12 @@ function NextDueCard({
 
 function CounterpartyExposureCard() {
   return (
-    <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5">
+    <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5 flex flex-col h-full">
       <span className="text-[11px] uppercase tracking-[.12em] font-sans font-medium text-[var(--text-4)]">
         Counterparty Exposure
       </span>
 
-      <div className="mt-3 space-y-3">
+      <div className="mt-3 space-y-3 flex-1 flex flex-col justify-around">
         {sortedExposure.map(([name, amount], index) => {
           const proportion = amount / totalPendingAmount;
           const opacity =
@@ -222,71 +220,3 @@ function CounterpartyExposureCard() {
   );
 }
 
-// ---------------------------------------------------------------------------
-// Schedule Card
-// ---------------------------------------------------------------------------
-
-function ScheduleCard() {
-  return (
-    <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5">
-      <span className="text-[11px] uppercase tracking-[.12em] font-sans font-medium text-[var(--text-4)]">
-        Schedule
-      </span>
-
-      <div className="mt-3 space-y-0">
-        {pendingSettlements.map((s, i) => {
-          const isProcessing = s.status === "processing";
-          const isLast = i === pendingSettlements.length - 1;
-          return (
-            <div key={s.id} className="flex gap-3">
-              {/* Timeline connector */}
-              <div className="flex flex-col items-center">
-                <div
-                  className={`w-2 h-2 rounded-full shrink-0 mt-1.5 ${
-                    isProcessing
-                      ? "bg-[var(--cyan)]"
-                      : "bg-[var(--bg-bright)]"
-                  }`}
-                />
-                {!isLast && (
-                  <div className="w-px flex-1 bg-[var(--border)]" />
-                )}
-              </div>
-              {/* Content */}
-              <div
-                className={`flex-1 flex items-center justify-between pb-3 ${
-                  !isLast
-                    ? "border-b border-[var(--border-row)]"
-                    : ""
-                } mb-1`}
-              >
-                <div>
-                  <p
-                    className={`font-mono text-xs font-bold ${
-                      isProcessing
-                        ? "text-white"
-                        : "text-[var(--text-3)]"
-                    }`}
-                  >
-                    {s.pair}
-                  </p>
-                  <p className="text-[10px] font-sans text-[var(--text-4)]">
-                    {s.counterparty.split(" ")[0]}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="font-mono text-xs font-bold text-white tabular-nums">
-                    {formatCompact(s.amount)}
-                  </p>
-                  <p className="text-[10px] font-mono text-[var(--text-4)] tabular-nums">
-                    {s.dueDateShort}
-                  </p>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
