@@ -6,6 +6,7 @@
 
 export type TransactionType = "deposit" | "withdrawal" | "trade" | "settlement";
 export type TransactionStatus = "completed" | "pending" | "failed";
+export type SettlementType = "crypto" | "fiat";
 
 export interface Transaction {
   id: string;
@@ -16,6 +17,11 @@ export interface Transaction {
   timestamp: Date;
   status: TransactionStatus;
   counterparty?: string;
+  // Settlement-channel metadata. Only present for crypto-rail transactions
+  // (USDT/USDC/etc. on-chain transfers); fiat wires leave both undefined.
+  settlementType?: SettlementType;
+  hash?: string;
+  wallet?: string;
 }
 
 export interface Instrument {
@@ -138,6 +144,23 @@ export interface RecentTrade {
   timestamp: Date;
 }
 
+// Desk-initiated fixed-price offer. Client doesn't request a stream —
+// the desk advertises an exact price and available inventory, the client
+// picks a quantity within that inventory.
+export interface DeskOffer {
+  id: string;
+  pair: string;
+  side: "desk-offers" | "desk-buys"; // "desk-offers" = desk sells → client buys
+  price: number;
+  availableQty: number;
+  availableLabel: string; // pretty size: "2M", "500K"
+  settlement: "Spot" | "TOM" | "T+1" | "T+2";
+  // Seconds from mount until the offer expires.
+  // Stored as a duration, not an absolute timestamp, so SSR and client-first-paint
+  // don't diverge (NOW_MS would differ between render and hydration).
+  validForSeconds: number;
+}
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -145,16 +168,24 @@ export interface RecentTrade {
 const hours = (h: number) => h * 60 * 60 * 1000;
 const days = (d: number) => d * 24 * 60 * 60 * 1000;
 
+// SSR-safe NOW: a fixed module-scope constant so server and client render the
+// same transaction timestamps. Using `NOW_MS` here would differ between
+// the server's module-init time and the client's, causing React error #418
+// (hydration mismatch) and orphan DOM nodes leaking to <body>. The exact value
+// is irrelevant — relative time labels ("3h ago") still render correctly via
+// the client-only `formatRelativeTime` after mount.
+const NOW_MS = 1777564800000; // 2026-04-30 12:00 UTC — frozen reference
+
 // Base mid-market rates (quote currency per 1 base unit)
 export const BASE_RATES: Record<string, number> = {
-  "MXN/USDT": 17.45,
+  "USDT/MXN": 17.45,
   "EUR/USDT": 1.0835,
-  "BRL/USDC": 5.15,
+  "USDC/BRL": 5.15,
   "USD/USDT": 1.0002,
   "GBP/USDC": 1.265,
   "EUR/USDC": 1.084,
-  "MXN/USDC": 17.42,
-  "BRL/USDT": 5.16,
+  "USDC/MXN": 17.42,
+  "USDT/BRL": 5.16,
 };
 
 /**
@@ -195,7 +226,7 @@ export function generateQuote(instrument: Instrument): Quote {
     t2Ask,
     t10Bid,
     t10Ask,
-    expiresAt: Date.now() + 15_000, // 15 s validity
+    expiresAt: NOW_MS + 15_000, // 15 s validity
   };
 }
 
@@ -204,14 +235,14 @@ export function generateQuote(instrument: Instrument): Quote {
 // ---------------------------------------------------------------------------
 
 export const instruments: Instrument[] = [
-  { pair: "MXN/USDT", baseCurrency: "MXN", quoteCurrency: "USDT" },
+  { pair: "USDT/MXN", baseCurrency: "USDT", quoteCurrency: "MXN" },
   { pair: "EUR/USDT", baseCurrency: "EUR", quoteCurrency: "USDT" },
-  { pair: "BRL/USDC", baseCurrency: "BRL", quoteCurrency: "USDC" },
+  { pair: "USDC/BRL", baseCurrency: "USDC", quoteCurrency: "BRL" },
   { pair: "USD/USDT", baseCurrency: "USD", quoteCurrency: "USDT" },
   { pair: "GBP/USDC", baseCurrency: "GBP", quoteCurrency: "USDC" },
   { pair: "EUR/USDC", baseCurrency: "EUR", quoteCurrency: "USDC" },
-  { pair: "MXN/USDC", baseCurrency: "MXN", quoteCurrency: "USDC" },
-  { pair: "BRL/USDT", baseCurrency: "BRL", quoteCurrency: "USDT" },
+  { pair: "USDC/MXN", baseCurrency: "USDC", quoteCurrency: "MXN" },
+  { pair: "USDT/BRL", baseCurrency: "USDT", quoteCurrency: "BRL" },
 ];
 
 // ---------------------------------------------------------------------------
@@ -248,17 +279,17 @@ export const transactions: Transaction[] = [
     description: "Wire deposit — Citibank",
     amount: 250_000,
     currency: "USD",
-    timestamp: new Date(Date.now() - hours(3)),
+    timestamp: new Date(NOW_MS - hours(3)),
     status: "completed",
     counterparty: "Citibank N.A.",
   },
   {
     id: "txn-002",
     type: "trade",
-    description: "Buy MXN/USDT — Spot",
+    description: "Buy USDT/MXN — Spot",
     amount: 1_745_000,
     currency: "MXN",
-    timestamp: new Date(Date.now() - hours(6)),
+    timestamp: new Date(NOW_MS - hours(6)),
     status: "completed",
     counterparty: "Nonco Liquidity",
   },
@@ -268,9 +299,12 @@ export const transactions: Transaction[] = [
     description: "T+1 settlement — EUR/USDT",
     amount: 108_350,
     currency: "USDT",
-    timestamp: new Date(Date.now() - hours(14)),
+    timestamp: new Date(NOW_MS - hours(14)),
     status: "pending",
     counterparty: "Deutsche Bank AG",
+    settlementType: "crypto",
+    hash: "0x3fa2c8b7e1d94a26f0b5c81d7e3a9f12c4b8a05d6e7f2a8b9c0d1e2f3a4b5c6d",
+    wallet: "0x742d35Cc6635C0532925a3b8D4A89bC3Ec0c4f2A",
   },
   {
     id: "txn-004",
@@ -278,7 +312,7 @@ export const transactions: Transaction[] = [
     description: "USDC redemption to bank",
     amount: 150_000,
     currency: "USDC",
-    timestamp: new Date(Date.now() - days(1)),
+    timestamp: new Date(NOW_MS - days(1)),
     status: "completed",
     counterparty: "Circle Internet Financial",
   },
@@ -288,7 +322,7 @@ export const transactions: Transaction[] = [
     description: "Sell EUR/USDC — Spot",
     amount: 54_200,
     currency: "EUR",
-    timestamp: new Date(Date.now() - days(1) - hours(4)),
+    timestamp: new Date(NOW_MS - days(1) - hours(4)),
     status: "completed",
     counterparty: "Nonco Liquidity",
   },
@@ -298,17 +332,17 @@ export const transactions: Transaction[] = [
     description: "USDT deposit — Tether Treasury",
     amount: 500_000,
     currency: "USDT",
-    timestamp: new Date(Date.now() - days(1) - hours(9)),
+    timestamp: new Date(NOW_MS - days(1) - hours(9)),
     status: "completed",
     counterparty: "Tether Operations",
   },
   {
     id: "txn-007",
     type: "trade",
-    description: "Buy BRL/USDC — T+1",
+    description: "Buy USDC/BRL — T+1",
     amount: 515_000,
     currency: "BRL",
-    timestamp: new Date(Date.now() - days(2)),
+    timestamp: new Date(NOW_MS - days(2)),
     status: "completed",
     counterparty: "Nonco Liquidity",
   },
@@ -318,9 +352,12 @@ export const transactions: Transaction[] = [
     description: "T+2 settlement — GBP/USDC",
     amount: 63_250,
     currency: "USDC",
-    timestamp: new Date(Date.now() - days(2) - hours(6)),
+    timestamp: new Date(NOW_MS - days(2) - hours(6)),
     status: "completed",
     counterparty: "Barclays PLC",
+    settlementType: "crypto",
+    hash: "0x8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d",
+    wallet: "0x18a4Ec7d56F2C9B7e2d4cC8F1A9bE3D6c5fA2bC1",
   },
   {
     id: "txn-009",
@@ -328,7 +365,7 @@ export const transactions: Transaction[] = [
     description: "MXN wire to Banorte",
     amount: 875_000,
     currency: "MXN",
-    timestamp: new Date(Date.now() - days(2) - hours(12)),
+    timestamp: new Date(NOW_MS - days(2) - hours(12)),
     status: "pending",
     counterparty: "Banorte S.A.",
   },
@@ -338,7 +375,7 @@ export const transactions: Transaction[] = [
     description: "Buy USD/USDT — Spot",
     amount: 500_000,
     currency: "USD",
-    timestamp: new Date(Date.now() - days(3)),
+    timestamp: new Date(NOW_MS - days(3)),
     status: "completed",
     counterparty: "Nonco Liquidity",
   },
@@ -348,29 +385,30 @@ export const transactions: Transaction[] = [
     description: "EUR SEPA deposit",
     amount: 200_000,
     currency: "EUR",
-    timestamp: new Date(Date.now() - days(3) - hours(5)),
+    timestamp: new Date(NOW_MS - days(3) - hours(5)),
     status: "completed",
     counterparty: "BNP Paribas",
   },
   {
     id: "txn-012",
     type: "trade",
-    description: "Sell MXN/USDC — T+2",
+    description: "Sell USDC/MXN — T+2",
     amount: 2_614_500,
     currency: "MXN",
-    timestamp: new Date(Date.now() - days(4)),
+    timestamp: new Date(NOW_MS - days(4)),
     status: "completed",
     counterparty: "Nonco Liquidity",
   },
   {
     id: "txn-013",
     type: "settlement",
-    description: "Spot settlement — BRL/USDT",
+    description: "Spot settlement — USDT/BRL",
     amount: 103_200,
-    currency: "USDT",
-    timestamp: new Date(Date.now() - days(4) - hours(8)),
+    currency: "BRL",
+    timestamp: new Date(NOW_MS - days(4) - hours(8)),
     status: "completed",
     counterparty: "Banco Itau S.A.",
+    settlementType: "fiat",
   },
   {
     id: "txn-014",
@@ -378,7 +416,7 @@ export const transactions: Transaction[] = [
     description: "USDT withdrawal to wallet",
     amount: 75_000,
     currency: "USDT",
-    timestamp: new Date(Date.now() - days(5)),
+    timestamp: new Date(NOW_MS - days(5)),
     status: "completed",
     counterparty: "External Wallet",
   },
@@ -388,7 +426,7 @@ export const transactions: Transaction[] = [
     description: "Buy EUR/USDT — T+1",
     amount: 162_525,
     currency: "EUR",
-    timestamp: new Date(Date.now() - days(5) - hours(3)),
+    timestamp: new Date(NOW_MS - days(5) - hours(3)),
     status: "completed",
     counterparty: "Nonco Liquidity",
   },
@@ -398,7 +436,7 @@ export const transactions: Transaction[] = [
     description: "USDC mint — Circle",
     amount: 300_000,
     currency: "USDC",
-    timestamp: new Date(Date.now() - days(5) - hours(10)),
+    timestamp: new Date(NOW_MS - days(5) - hours(10)),
     status: "completed",
     counterparty: "Circle Internet Financial",
   },
@@ -408,19 +446,20 @@ export const transactions: Transaction[] = [
     description: "Buy GBP/USDC — Spot",
     amount: 126_500,
     currency: "GBP",
-    timestamp: new Date(Date.now() - days(6)),
+    timestamp: new Date(NOW_MS - days(6)),
     status: "failed",
     counterparty: "Nonco Liquidity",
   },
   {
     id: "txn-018",
     type: "settlement",
-    description: "T+1 settlement — MXN/USDT",
+    description: "T+1 settlement — USDT/MXN",
     amount: 87_250,
-    currency: "USDT",
-    timestamp: new Date(Date.now() - days(6) - hours(7)),
+    currency: "MXN",
+    timestamp: new Date(NOW_MS - days(6) - hours(7)),
     status: "pending",
     counterparty: "BBVA Mexico",
+    settlementType: "fiat",
   },
 ];
 
@@ -431,12 +470,12 @@ export const transactions: Transaction[] = [
 export const recentTrades: RecentTrade[] = [
   {
     id: "trade-001",
-    pair: "MXN/USDT",
+    pair: "USDT/MXN",
     side: "buy",
     quantity: 100_000,
     price: 17.452,
     settlement: "Spot",
-    timestamp: new Date(Date.now() - hours(6)),
+    timestamp: new Date(NOW_MS - hours(6)),
   },
   {
     id: "trade-002",
@@ -445,16 +484,16 @@ export const recentTrades: RecentTrade[] = [
     quantity: 50_000,
     price: 1.0838,
     settlement: "T+1",
-    timestamp: new Date(Date.now() - hours(14)),
+    timestamp: new Date(NOW_MS - hours(14)),
   },
   {
     id: "trade-003",
-    pair: "BRL/USDC",
+    pair: "USDC/BRL",
     side: "buy",
     quantity: 200_000,
     price: 5.1485,
     settlement: "T+1",
-    timestamp: new Date(Date.now() - days(1) - hours(2)),
+    timestamp: new Date(NOW_MS - days(1) - hours(2)),
   },
   {
     id: "trade-004",
@@ -463,7 +502,7 @@ export const recentTrades: RecentTrade[] = [
     quantity: 500_000,
     price: 1.0002,
     settlement: "Spot",
-    timestamp: new Date(Date.now() - days(2)),
+    timestamp: new Date(NOW_MS - days(2)),
   },
   {
     id: "trade-005",
@@ -472,16 +511,16 @@ export const recentTrades: RecentTrade[] = [
     quantity: 75_000,
     price: 1.0842,
     settlement: "Spot",
-    timestamp: new Date(Date.now() - days(2) - hours(8)),
+    timestamp: new Date(NOW_MS - days(2) - hours(8)),
   },
   {
     id: "trade-006",
-    pair: "MXN/USDC",
+    pair: "USDC/MXN",
     side: "buy",
     quantity: 150_000,
     price: 17.418,
     settlement: "T+2",
-    timestamp: new Date(Date.now() - days(3) - hours(5)),
+    timestamp: new Date(NOW_MS - days(3) - hours(5)),
   },
   {
     id: "trade-007",
@@ -490,16 +529,16 @@ export const recentTrades: RecentTrade[] = [
     quantity: 50_000,
     price: 1.2648,
     settlement: "Spot",
-    timestamp: new Date(Date.now() - days(4)),
+    timestamp: new Date(NOW_MS - days(4)),
   },
   {
     id: "trade-008",
-    pair: "BRL/USDT",
+    pair: "USDT/BRL",
     side: "buy",
     quantity: 300_000,
     price: 5.162,
     settlement: "T+1",
-    timestamp: new Date(Date.now() - days(5) - hours(3)),
+    timestamp: new Date(NOW_MS - days(5) - hours(3)),
   },
 ];
 
@@ -534,15 +573,15 @@ export const boardSections: Record<string, BoardSection> = {
 // ---------------------------------------------------------------------------
 
 export const boardInstruments: BoardInstrument[] = [
-  { id: "mxn-usdt", pair: "MXN/USDT", baseCurrency: "MXN", quoteCurrency: "USDT", sell: 17.4480, buy: 17.4560, sellQty: 1000, buyQty: 1000, change24h: 0.12, prevClose: 17.3981, section: "latam" },
-  { id: "mxn-usdc", pair: "MXN/USDC", baseCurrency: "MXN", quoteCurrency: "USDC", sell: 17.4475, buy: 17.4555, sellQty: 1000, buyQty: 1000, change24h: 0.11, prevClose: 17.3961, section: "latam" },
-  { id: "mxn-ausd", pair: "MXN/AUSD", baseCurrency: "MXN", quoteCurrency: "AUSD", sell: 17.4460, buy: 17.4540, sellQty: 500, buyQty: 500, change24h: 0.10, prevClose: 17.3948, section: "latam" },
-  { id: "mxn-usd1", pair: "MXN/USD1", baseCurrency: "MXN", quoteCurrency: "USD1", sell: 17.4462, buy: 17.4542, sellQty: 500, buyQty: 500, change24h: 0.11, prevClose: 17.3950, section: "latam" },
-  { id: "mxn-usd", pair: "MXN/USD", baseCurrency: "MXN", quoteCurrency: "USD", sell: 17.4478, buy: 17.4558, sellQty: 2000, buyQty: 2000, change24h: 0.12, prevClose: 17.3980, section: "latam" },
-  { id: "cop-usdt", pair: "COP/USDT", baseCurrency: "COP", quoteCurrency: "USDT", sell: 4116.20, buy: 4119.80, sellQty: 500, buyQty: 500, change24h: 0.21, prevClose: 4109.58, section: "latam" },
-  { id: "clp-usdt", pair: "CLP/USDT", baseCurrency: "CLP", quoteCurrency: "USDT", sell: 941.80, buy: 943.20, sellQty: 500, buyQty: 500, change24h: -0.15, prevClose: 944.30, section: "latam" },
-  { id: "brl-usdc", pair: "BRL/USDC", baseCurrency: "BRL", quoteCurrency: "USDC", sell: 5.1440, buy: 5.1530, sellQty: 1000, buyQty: 1000, change24h: 0.31, prevClose: 5.1333, section: "brl" },
-  { id: "brl-usdt", pair: "BRL/USDT", baseCurrency: "BRL", quoteCurrency: "USDT", sell: 5.1438, buy: 5.1528, sellQty: 1000, buyQty: 1000, change24h: 0.30, prevClose: 5.1338, section: "brl" },
+  { id: "mxn-usdt", pair: "USDT/MXN", baseCurrency: "USDT", quoteCurrency: "MXN", sell: 17.4480, buy: 17.4560, sellQty: 1000, buyQty: 1000, change24h: 0.12, prevClose: 17.3981, section: "latam" },
+  { id: "mxn-usdc", pair: "USDC/MXN", baseCurrency: "USDC", quoteCurrency: "MXN", sell: 17.4475, buy: 17.4555, sellQty: 1000, buyQty: 1000, change24h: 0.11, prevClose: 17.3961, section: "latam" },
+  { id: "mxn-ausd", pair: "AUSD/MXN", baseCurrency: "AUSD", quoteCurrency: "MXN", sell: 17.4460, buy: 17.4540, sellQty: 500, buyQty: 500, change24h: 0.10, prevClose: 17.3948, section: "latam" },
+  { id: "mxn-usd1", pair: "USD1/MXN", baseCurrency: "USD1", quoteCurrency: "MXN", sell: 17.4462, buy: 17.4542, sellQty: 500, buyQty: 500, change24h: 0.11, prevClose: 17.3950, section: "latam" },
+  { id: "mxn-usd", pair: "USD/MXN", baseCurrency: "USD", quoteCurrency: "MXN", sell: 17.4478, buy: 17.4558, sellQty: 2000, buyQty: 2000, change24h: 0.12, prevClose: 17.3980, section: "latam" },
+  { id: "cop-usdt", pair: "USDT/COP", baseCurrency: "USDT", quoteCurrency: "COP", sell: 4116.20, buy: 4119.80, sellQty: 500, buyQty: 500, change24h: 0.21, prevClose: 4109.58, section: "latam" },
+  { id: "clp-usdt", pair: "USDT/CLP", baseCurrency: "USDT", quoteCurrency: "CLP", sell: 941.80, buy: 943.20, sellQty: 500, buyQty: 500, change24h: -0.15, prevClose: 944.30, section: "latam" },
+  { id: "brl-usdc", pair: "USDC/BRL", baseCurrency: "USDC", quoteCurrency: "BRL", sell: 5.1440, buy: 5.1530, sellQty: 1000, buyQty: 1000, change24h: 0.31, prevClose: 5.1333, section: "brl" },
+  { id: "brl-usdt", pair: "USDT/BRL", baseCurrency: "USDT", quoteCurrency: "BRL", sell: 5.1438, buy: 5.1528, sellQty: 1000, buyQty: 1000, change24h: 0.30, prevClose: 5.1338, section: "brl" },
   { id: "eur-usdt", pair: "EUR/USDT", baseCurrency: "EUR", quoteCurrency: "USDT", sell: 1.0831, buy: 1.0839, sellQty: 2000, buyQty: 2000, change24h: -0.04, prevClose: 1.0843, section: "eur" },
   { id: "eur-usdc", pair: "EUR/USDC", baseCurrency: "EUR", quoteCurrency: "USDC", sell: 1.0830, buy: 1.0838, sellQty: 2000, buyQty: 2000, change24h: -0.04, prevClose: 1.0842, section: "eur" },
   { id: "gbp-usdc", pair: "GBP/USDC", baseCurrency: "GBP", quoteCurrency: "USDC", sell: 1.2646, buy: 1.2654, sellQty: 1000, buyQty: 1000, change24h: -0.08, prevClose: 1.2665, section: "gbp" },
@@ -554,12 +593,12 @@ export const boardInstruments: BoardInstrument[] = [
 // ---------------------------------------------------------------------------
 
 export const tickerItems: TickerItem[] = [
-  { pair: "MXN/USDT", rate: "17.4520", change: 0.12 },
-  { pair: "BRL/USDC", rate: "5.1485", change: 0.31 },
+  { pair: "USDT/MXN", rate: "17.4520", change: 0.12 },
+  { pair: "USDC/BRL", rate: "5.1485", change: 0.31 },
   { pair: "EUR/USDT", rate: "1.0835", change: -0.04 },
   { pair: "GBP/USDC", rate: "1.2650", change: -0.08 },
-  { pair: "COP/USDT", rate: "4118.00", change: 0.21 },
-  { pair: "CLP/USDT", rate: "942.50", change: -0.15 },
+  { pair: "USDT/COP", rate: "4118.00", change: 0.21 },
+  { pair: "USDT/CLP", rate: "942.50", change: -0.15 },
   { pair: "USD/USDC", rate: "1.0001", change: 0.00 },
   { pair: "USD/USDT", rate: "1.0002", change: 0.00 },
 ];
@@ -580,10 +619,10 @@ export const yieldVaults: YieldVault[] = [
 // ---------------------------------------------------------------------------
 
 export const payments: Payment[] = [
-  { id: "PAY-382", payee: "Grupo Bursátil Mexicano", reference: "INV-382", corridor: "→ MXN", amount: 240_000, status: "completed", date: new Date(Date.now() - days(1)) },
-  { id: "PAY-041", payee: "DolarApp", reference: "REF-041", corridor: "→ EUR", amount: 88_500, status: "completed", date: new Date(Date.now() - days(2)) },
-  { id: "PAY-039", payee: "Remitly BR", reference: "REF-039", corridor: "→ BRL", amount: 52_000, status: "processing", date: new Date(Date.now() - days(3)) },
-  { id: "PAY-038", payee: "Wirex EU", reference: "REF-038", corridor: "→ GBP", amount: 31_200, status: "completed", date: new Date(Date.now() - days(4)) },
+  { id: "PAY-382", payee: "Grupo Bursátil Mexicano", reference: "INV-382", corridor: "→ MXN", amount: 240_000, status: "completed", date: new Date(NOW_MS - days(1)) },
+  { id: "PAY-041", payee: "DolarApp", reference: "REF-041", corridor: "→ EUR", amount: 88_500, status: "completed", date: new Date(NOW_MS - days(2)) },
+  { id: "PAY-039", payee: "Remitly BR", reference: "REF-039", corridor: "→ BRL", amount: 52_000, status: "processing", date: new Date(NOW_MS - days(3)) },
+  { id: "PAY-038", payee: "Wirex EU", reference: "REF-038", corridor: "→ GBP", amount: 31_200, status: "completed", date: new Date(NOW_MS - days(4)) },
 ];
 
 // ---------------------------------------------------------------------------
@@ -615,4 +654,21 @@ export const reportCorridors = [
   { corridor: "USD → BRL", trades: 74, volume: 3_800_000, share: 20.7, avgSize: 51_400 },
   { corridor: "USD → EUR", trades: 42, volume: 2_400_000, share: 13.0, avgSize: 57_100 },
   { corridor: "USD → GBP", trades: 28, volume: 1_000_000, share: 5.4, avgSize: 35_700 },
+];
+
+// ---------------------------------------------------------------------------
+// Desk offers — the "trading desk has X at Y" banner
+// ---------------------------------------------------------------------------
+
+export const activeDeskOffers: DeskOffer[] = [
+  {
+    id: "offer-usdt-mxn-001",
+    pair: "USDT/MXN",
+    side: "desk-offers",
+    price: 17.42,
+    availableQty: 2_000_000,
+    availableLabel: "2M",
+    settlement: "TOM",
+    validForSeconds: 205, // 3:25
+  },
 ];

@@ -27,9 +27,9 @@ const currencyNames: Record<string, string> = {
 // ---------------------------------------------------------------------------
 
 const pairSparklines: Record<string, number[]> = {
-  "MXN/USDT": [17.3, 17.35, 17.4, 17.38, 17.42, 17.45, 17.44, 17.45],
+  "USDT/MXN": [17.3, 17.35, 17.4, 17.38, 17.42, 17.45, 17.44, 17.45],
   "EUR/USDT": [1.08, 1.082, 1.081, 1.084, 1.083, 1.085, 1.083, 1.084],
-  "BRL/USDC": [5.1, 5.12, 5.11, 5.14, 5.13, 5.15, 5.14, 5.15],
+  "USDC/BRL": [5.1, 5.12, 5.11, 5.14, 5.13, 5.15, 5.14, 5.15],
   "USD/USDT": [1.0, 1.0001, 1.0, 1.0002, 1.0001, 1.0002, 1.0001, 1.0002],
 };
 
@@ -76,7 +76,7 @@ export function FavoritesGrid({ onQuote, compact = false, cols }: FavoritesGridP
                   <p className="text-[11px] text-[var(--text-3)] font-mono uppercase tracking-wider">
                     {base}/{quote}
                   </p>
-                  <p className="text-sm font-bold tracking-tight text-white mt-0.5 truncate">
+                  <p className="text-sm font-medium tracking-tight text-white mt-0.5 truncate">
                     {baseName}
                   </p>
                 </div>
@@ -200,7 +200,7 @@ function FavoriteCard({
         <p className="text-[11px] font-mono text-[var(--text-3)] uppercase tracking-wider">
           {base}/{quote}
         </p>
-        <p className="text-sm font-bold text-[var(--text)] mt-0.5">
+        <p className="text-sm font-medium text-[var(--text)] mt-0.5">
           {baseName}
         </p>
         <p className="text-lg font-mono font-bold text-white tracking-tight mt-1">

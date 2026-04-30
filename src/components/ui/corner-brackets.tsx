@@ -12,7 +12,9 @@ interface CornerBracketsProps {
 export function CornerBrackets({
   size = 16,
   strokeWidth = 1.2,
-  color = "rgba(255,255,255,0.15)",
+  // Default to a token so corners auto-adapt to dark/light theme.
+  // Callers can still pass an explicit rgba(...) when needed.
+  color = "var(--border-outline)",
   opacity = 1,
   className,
   corners = ["tl", "tr", "bl", "br"],

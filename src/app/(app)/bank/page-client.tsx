@@ -58,7 +58,7 @@ export default function BankPageClient() {
   const withdrawalPct = 100 - depositPct;
 
   return (
-    <PageTransition className="px-4 sm:px-6 md:px-8 w-full space-y-6">
+    <PageTransition className="px-4 sm:px-6 lg:px-8 xl:px-12 w-full space-y-6">
       <h1 className="sr-only">Bank</h1>
       {/* Treasury Flow — consolidated single card */}
       <motion.div

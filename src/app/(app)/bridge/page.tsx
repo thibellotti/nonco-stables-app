@@ -35,7 +35,7 @@ export default function BridgePage() {
   }
 
   return (
-    <PageTransition className="px-4 sm:px-6 md:px-8 w-full">
+    <PageTransition className="px-4 sm:px-6 lg:px-8 xl:px-12 w-full">
       <h1 className="sr-only">Bridge</h1>
       <div className="space-y-6">
       {/* Page context header */}

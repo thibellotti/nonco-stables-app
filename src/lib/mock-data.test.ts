@@ -85,9 +85,9 @@ describe('balances', () => {
 
 describe('BASE_RATES', () => {
   it('has expected currency pairs', () => {
-    expect(BASE_RATES).toHaveProperty('MXN/USDT')
+    expect(BASE_RATES).toHaveProperty('USDT/MXN')
     expect(BASE_RATES).toHaveProperty('EUR/USDT')
-    expect(BASE_RATES).toHaveProperty('BRL/USDC')
+    expect(BASE_RATES).toHaveProperty('USDC/BRL')
     expect(BASE_RATES).toHaveProperty('GBP/USDC')
   })
 

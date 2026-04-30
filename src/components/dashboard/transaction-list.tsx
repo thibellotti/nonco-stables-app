@@ -225,7 +225,7 @@ function TransactionRow({ tx }: { tx: (typeof transactions)[number] }) {
         <div className="flex items-center justify-between">
           <span
             className={cn(
-              "font-mono text-2xl font-bold tabular-nums",
+              "font-mono text-2xl font-medium tabular-nums",
               isPositive ? "text-[var(--status-positive)]" : "text-[var(--text)]"
             )}
           >
@@ -251,9 +251,12 @@ function TransactionRow({ tx }: { tx: (typeof transactions)[number] }) {
       </div>
 
       {/* ── Desktop row — visible only on sm+ ── */}
+      {/* `w-full overflow-hidden` keeps long descriptions from pushing siblings;
+          `min-w-0` on the text column lets it truncate cleanly with ellipsis. */}
       <div
         className={cn(
-          "hidden sm:flex items-center gap-3.5 px-6 py-3.5",
+          "hidden sm:flex items-center gap-3.5 w-full",
+          "px-[var(--table-cell-px)] py-[var(--table-cell-py)]",
           "transition-colors duration-150 ease-[cubic-bezier(0.16,1,0.3,1)]",
           "hover:bg-[rgba(255,255,255,0.03)]"
         )}
@@ -261,7 +264,7 @@ function TransactionRow({ tx }: { tx: (typeof transactions)[number] }) {
         {/* Left: icon + text */}
         <TxIcon type={tx.type} />
 
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 overflow-hidden">
           <p className="text-sm text-[var(--text)] truncate font-medium font-sans">
             {tx.description}
           </p>
@@ -276,7 +279,7 @@ function TransactionRow({ tx }: { tx: (typeof transactions)[number] }) {
         <div className="flex items-center gap-3 shrink-0">
           <span
             className={cn(
-              "font-mono text-sm font-semibold tabular-nums",
+              "font-mono text-sm font-medium tabular-nums",
               isPositive ? "text-[var(--status-positive)]" : "text-[var(--text)]"
             )}
           >
@@ -327,17 +330,19 @@ export function TransactionList({ filter, limit }: TransactionListProps) {
     );
   }
 
-  const cap = limit ?? 6;
+  // When `limit` is passed (preview mode), the caller owns the "View all" link
+  // — don't render the inline footer to avoid two competing links on the page.
+  // When unlimited, this IS the full list so no footer is needed either.
+  const cap = limit ?? filtered.length;
   const limited = filtered.slice(0, cap);
-  const hasMore = filtered.length > cap;
   const groups = groupByDate(limited);
 
   return (
     <div>
-      {groups.map((group, groupIdx) => (
+      {groups.map((group) => (
         <div key={group.label}>
           {/* Date header */}
-          <div className="px-6 py-3 text-[11px] font-sans font-medium uppercase tracking-[.15em] text-[var(--text-4)] border-b border-[var(--border)] bg-[rgba(255,255,255,0.02)]">
+          <div className="px-[var(--table-cell-px)] py-[var(--table-header-py)] text-[11px] font-sans font-medium uppercase tracking-[.15em] text-[var(--text-4)] border-b border-[var(--border)] bg-[rgba(255,255,255,0.02)]">
             {group.label}
           </div>
 
@@ -349,15 +354,6 @@ export function TransactionList({ filter, limit }: TransactionListProps) {
           </div>
         </div>
       ))}
-
-      {/* Footer */}
-      {hasMore && (
-        <div className="flex justify-center py-4 border-t border-[var(--border)]">
-          <button className="text-xs font-sans text-white hover:opacity-70 transition-colors cursor-pointer">
-            View all {filtered.length} transactions
-          </button>
-        </div>
-      )}
     </div>
   );
 }

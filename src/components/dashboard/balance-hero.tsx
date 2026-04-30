@@ -112,16 +112,20 @@ export function BalanceHero() {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <section className="card-primary relative overflow-hidden bg-[var(--bg-card)] rounded-lg min-h-[360px]">
+    // De-emphasised per client feedback (Apr 17): the portfolio overview is secondary
+    // — the primary CTA (Convert) sits in the action row directly below this card.
+    // Slightly taller min-height for breathing room (Claude redesign Apr 29).
+    <section className="card-primary relative overflow-hidden bg-[var(--bg-card)] border border-[var(--border)] rounded-lg min-h-[280px]">
       {/* Cyan gradient overlay — brand accent */}
-      <div className="absolute inset-0 pointer-events-none rounded-lg z-0" style={{ background: 'linear-gradient(135deg, rgba(5,224,248,0.06), transparent 60%)' }} />
+      <div className="absolute inset-0 pointer-events-none rounded-lg z-0" style={{ background: 'linear-gradient(135deg, rgba(5,224,248,0.05), transparent 60%)' }} />
 
       {/* ── ParticleGlobe — background layer, right-weighted ── */}
       {/* Canvas covers the full card + 160px right bleed so orbital rings (radius 200) */}
       {/* fit the camera frustum. The dark-to-transparent overlay below covers the text */}
       {/* area, so the globe only becomes visible on the right half of the card. */}
+      {/* Lower opacity so the globe reads as ambient, not a hero element. */}
       <div className="hidden lg:block absolute inset-y-0 left-0 right-[-160px] z-0 pointer-events-none">
-        <ParticleGlobe opacity={0.85} />
+        <ParticleGlobe opacity={0.55} />
       </div>
 
       {/* Dark overlay over the data column — solid on the left, fades to transparent */}
@@ -132,10 +136,10 @@ export function BalanceHero() {
       />
 
       {/* Single-column layout: data on the left, globe bleeds in from the right */}
-      <div className="relative z-10 flex flex-col h-full min-h-[360px]">
+      <div className="relative z-10 flex flex-col h-full min-h-[280px]">
 
         {/* ── Portfolio data — constrained to left ~55% on lg so globe has space ── */}
-        <div className="flex flex-col justify-between h-full min-h-[360px] p-5 lg:max-w-[58%]">
+        <div className="flex flex-col justify-between h-full min-h-[280px] p-7 lg:p-8 lg:max-w-[58%]">
 
           <div>
             {/* Header */}
@@ -146,17 +150,19 @@ export function BalanceHero() {
             {/* Balance row — number + change badge + expand toggle */}
             <div className="flex items-start justify-between flex-wrap gap-4 mb-2">
               <div className="flex items-center gap-3">
+                {/* Headline number — font-medium with tight tracking. Larger on
+                    xl+ widths since the card breathes wider at full width. */}
                 <p
-                  className="font-mono font-bold tracking-tighter leading-none text-white"
+                  className="font-mono font-medium tracking-tight leading-none text-[var(--text)]"
                   style={{
-                    fontSize: "clamp(1.875rem, 1.25rem + 1.25vw, 2.75rem)",
+                    fontSize: "clamp(1.75rem, 1rem + 1.5vw, 2.5rem)",
                     fontVariantNumeric: "tabular-nums slashed-zero",
                   }}
                 >
                   <AnimatedNumber
                     value={totalBalance}
                     prefix={
-                      <span className="text-[0.65em] font-normal opacity-70">$</span>
+                      <span className="text-[0.6em] font-normal text-[var(--text-3)] mr-0.5">$</span>
                     }
                   />
                 </p>
@@ -214,7 +220,7 @@ export function BalanceHero() {
                         <div className="text-[10px] uppercase tracking-[.1em] text-[var(--text-4)] font-sans">
                           {c.currency}
                         </div>
-                        <div className="font-mono text-sm font-bold text-white tabular-nums mt-0.5">
+                        <div className="font-mono text-sm font-medium text-white tabular-nums mt-0.5">
                           {c.symbol}{formatMoney(c.available)}
                         </div>
                         <div className="font-mono text-[11px] text-[var(--text-4)] tabular-nums">
@@ -233,7 +239,7 @@ export function BalanceHero() {
             <div className="flex items-center gap-3 px-4 py-2 sm:py-0">
               <div className="flex sm:block items-center justify-between w-full sm:w-auto">
                 <div className="text-[11px] uppercase tracking-[.12em] font-sans text-[var(--text-4)]">Available</div>
-                <div className="font-mono text-sm font-bold text-[var(--text)] sm:mt-0.5 tabular-nums">
+                <div className="font-mono text-sm font-medium text-[var(--text)] sm:mt-0.5 tabular-nums">
                   <AnimatedNumber value={totalAvailable} prefix="$" suffix="M" formatter={(n) => (n / 1_000_000).toFixed(2)} />
                 </div>
               </div>
@@ -241,7 +247,7 @@ export function BalanceHero() {
             <div className="flex items-center gap-3 px-4 py-2 sm:py-0">
               <div className="flex sm:block items-center justify-between w-full sm:w-auto">
                 <div className="text-[11px] uppercase tracking-[.12em] font-sans text-[var(--text-4)]">Pending</div>
-                <div className="font-mono text-sm font-bold text-[var(--status-pending)] sm:mt-0.5 tabular-nums">
+                <div className="font-mono text-sm font-medium text-[var(--status-pending)] sm:mt-0.5 tabular-nums">
                   <AnimatedNumber value={totalPending} prefix="$" suffix="M" formatter={(n) => (n / 1_000_000).toFixed(2)} />
                 </div>
               </div>
@@ -249,7 +255,7 @@ export function BalanceHero() {
             <div className="flex items-center gap-3 px-4 py-2 sm:py-0">
               <div className="flex sm:block items-center justify-between w-full sm:w-auto">
                 <div className="text-[11px] uppercase tracking-[.12em] font-sans text-[var(--text-4)]">Currencies</div>
-                <div className="font-mono text-sm font-bold text-[var(--text)] sm:mt-0.5 tabular-nums">
+                <div className="font-mono text-sm font-medium text-[var(--text)] sm:mt-0.5 tabular-nums">
                   <AnimatedNumber value={balances.length} formatter={(n) => Math.round(n).toString()} />
                 </div>
               </div>

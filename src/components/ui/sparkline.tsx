@@ -16,7 +16,9 @@ const VB_H = 40;
 
 export function Sparkline({
   data,
-  color = "rgba(255,255,255,0.6)",
+  // Default to the primary text token so the line auto-adapts to light/dark
+  // mode. Callers can still override with brand colors.
+  color = "var(--text-2)",
   showArea = true,
   strokeWidth = 1.5,
   className,

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nonco-stables-v1'
+const CACHE_NAME = 'nonco-stables-v3-2026-04-30'
 const OFFLINE_URL = '/offline'
 
 self.addEventListener('install', (event) => {

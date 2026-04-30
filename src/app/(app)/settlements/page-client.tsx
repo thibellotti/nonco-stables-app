@@ -1,11 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { PageTransition } from "@/components/ui/page-transition";
 import { SettlementsStats } from "@/components/settlements/settlements-stats";
 import { SettlementsTabBar } from "@/components/settlements/settlements-tab-bar";
 import { PendingSettlementsTable } from "@/components/settlements/pending-settlements-table";
-import { SettlementsSidebar } from "@/components/settlements/settlements-sidebar";
 import { CompletedTable } from "@/components/settlements/completed-table";
 import {
   type Tab,
@@ -14,18 +13,29 @@ import {
   completedSettlements,
 } from "@/components/settlements/settlements-data";
 
-// ---------------------------------------------------------------------------
-// Settlements page client
-// ---------------------------------------------------------------------------
+// Settlements page — implements Fernando's Apr 2026 feedback:
+//   • Removed Next Due + Counterparty Exposure side cards.
+//   • Removed dual processing/awaiting pipeline layer.
+//   • Replaced ring-gauge overview with a compact rows breakdown that ties
+//     directly to the table totals below it.
+//   • Pending table: full-width, no bold weights, search by pair, no
+//     counterparty/progress columns.
+//   • Completed table: From/To date range, hash + wallet columns.
 
 export default function SettlementsPageClient() {
   const [activeTab, setActiveTab] = useState<Tab>("pending");
   const [termFilter, setTermFilter] = useState<TermFilter>("all");
+  const [search, setSearch] = useState("");
 
-  const filteredSettlements = pendingSettlements.filter((s) => {
-    if (termFilter !== "all" && s.settlement !== termFilter) return false;
-    return true;
-  });
+  const filteredSettlements = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return pendingSettlements.filter((s) => {
+      if (termFilter !== "all" && s.settlement !== termFilter) return false;
+      if (!q) return true;
+      // Search by pair text — feedback example: "trades that only involve MXN".
+      return s.pair.toLowerCase().includes(q);
+    });
+  }, [termFilter, search]);
 
   const filteredTotal = filteredSettlements.reduce(
     (sum, s) => sum + s.amount,
@@ -33,10 +43,11 @@ export default function SettlementsPageClient() {
   );
 
   return (
-    <PageTransition className="px-4 sm:px-6 md:px-8 w-full space-y-6">
+    <PageTransition className="px-4 sm:px-6 lg:px-8 xl:px-12 w-full space-y-5">
       <h1 className="sr-only">Settlements</h1>
-      {/* Analytics Row */}
-      {activeTab === "pending" && <SettlementsStats />}
+
+      {/* Compact overview — Total exposure + per-term rows */}
+      <SettlementsStats />
 
       {/* Tab Toggle + Filters */}
       <SettlementsTabBar
@@ -44,17 +55,16 @@ export default function SettlementsPageClient() {
         onTabChange={setActiveTab}
         termFilter={termFilter}
         onTermFilterChange={setTermFilter}
+        search={search}
+        onSearchChange={setSearch}
       />
 
-      {/* Pending: Table + Sidebar */}
+      {/* Pending: full-width table */}
       {activeTab === "pending" && (
-        <div className="grid grid-cols-1 lg:grid-cols-[1.65fr_1fr] gap-6 items-stretch">
-          <PendingSettlementsTable
-            settlements={filteredSettlements}
-            filteredTotal={filteredTotal}
-          />
-          <SettlementsSidebar filteredSettlements={filteredSettlements} />
-        </div>
+        <PendingSettlementsTable
+          settlements={filteredSettlements}
+          filteredTotal={filteredTotal}
+        />
       )}
 
       {/* Completed */}

@@ -25,7 +25,7 @@ export interface NavGroup {
 // Flip this single flag to swap the entire sidebar/nav between versions.
 //
 //   "launch" → V1 (current launch scope per client feedback, slide 3):
-//              Dashboard · Pricing · Settlements only.
+//              Dashboard · Trade · Settlements only.
 //   "full"   → V2 (post-launch, full platform):
 //              All trading, DeFi, swap & send, and settings groups visible.
 //
@@ -110,14 +110,13 @@ const ApiKeysIcon = (
     <path d="M13 3h2v2" />
   </svg>
 );
-
 // ── V1: Launch nav (client spec, slide 3) ─────────────────────────────────
 export const launchNavGroups: NavGroup[] = [
   {
     label: "Main",
     items: [
       { label: "Dashboard", href: "/dashboard", icon: DashboardIcon },
-      { label: "Pricing", href: "/fx", icon: PricingIcon },
+      { label: "Trade", href: "/fx", icon: PricingIcon },
       { label: "Settlements", href: "/settlements", badge: 2, icon: SettlementsIcon },
     ],
   },
@@ -137,7 +136,7 @@ export const fullNavGroups: NavGroup[] = [
       {
         label: "Trading",
         items: [
-          { label: "Pricing", href: "/fx", icon: PricingIcon },
+          { label: "Trade", href: "/fx", icon: PricingIcon },
           { label: "Recent Activity", href: "/trades", icon: RecentActivityIcon },
         ],
       },
@@ -177,10 +176,18 @@ export const fullNavGroups: NavGroup[] = [
 export const navGroups: NavGroup[] = NAV_VERSION === "launch" ? launchNavGroups : fullNavGroups;
 
 // Mobile bottom tabs — always launch items (mobile chrome is too tight)
+const ProfileTabIcon = (
+  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <circle cx="9" cy="6" r="3" />
+    <path d="M3 16c0-3 2.5-5 6-5s6 2 6 5" />
+  </svg>
+);
+
 export const mobileTabItems: NavItem[] = [
   { label: "Dashboard", href: "/dashboard", icon: DashboardIcon },
-  { label: "Pricing", href: "/fx", icon: PricingIcon },
+  { label: "Trade", href: "/fx", icon: PricingIcon },
   { label: "Settlements", href: "/settlements", badge: 2, icon: SettlementsIcon },
+  { label: "Profile", href: "/profile", icon: ProfileTabIcon },
 ];
 
 export const allNavItems: NavItem[] = navGroups.flatMap((g) => {

@@ -10,6 +10,7 @@ import type { RecentTrade } from "@/lib/mock-data";
 import { formatMoney, timeAgo, getDateGroup } from "@/lib/utils";
 import { currencyColors } from "@/lib/currency-colors";
 import { GeoDivider } from "@/components/ui/geo-divider";
+import { DeskOfferBanner } from "@/components/ui/desk-offer-banner";
 
 
 // ---------------------------------------------------------------------------
@@ -44,7 +45,7 @@ const extraTrades: RecentTrade[] = [
   },
   {
     id: "trade-010",
-    pair: "MXN/USDT",
+    pair: "USDT/MXN",
     side: "sell",
     quantity: 250_000,
     price: 17.438,
@@ -62,7 +63,7 @@ const extraTrades: RecentTrade[] = [
   },
   {
     id: "trade-012",
-    pair: "BRL/USDC",
+    pair: "USDC/BRL",
     side: "sell",
     quantity: 180_000,
     price: 5.152,
@@ -170,24 +171,28 @@ export default function TradesPage() {
     });
 
   return (
-    <PageTransition className="px-4 sm:px-6 md:px-8 w-full space-y-6">
+    <PageTransition className="px-4 sm:px-6 lg:px-8 xl:px-12 w-full space-y-6">
       <h1 className="sr-only">Trades</h1>
+
+      {/* ── Desk-offer banner (one-sided fixed-price offer — same flow as dashboard) ── */}
+      <DeskOfferBanner />
+
       {/* Analytics: Volume by Pair + Summary */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Volume by Pair */}
-        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5">
-          <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)] mb-4">
+        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-6 lg:p-7">
+          <div className="text-[11px] uppercase tracking-[.15em] font-sans font-medium text-[var(--text-4)] mb-5">
             Volume by Pair
           </div>
-          <div className="space-y-3">
+          <div className="space-y-3.5">
             {sortedPairs.map(([pair, volume], index) => {
               const pct = (volume / totalVolume) * 100;
               const barPct = (volume / maxVolume) * 100;
               const opacity = [0.9, 0.7, 0.5, 0.35, 0.2][index] ?? 0.2;
               return (
                 <div key={pair} className="flex items-center gap-3">
-                  <span className="text-xs font-mono font-bold text-white w-20 shrink-0">{pair}</span>
-                  <div className="flex-1 h-3.5 bg-[rgba(255,255,255,0.04)] rounded-full overflow-hidden">
+                  <span className="text-xs font-mono font-medium text-[var(--text)] tracking-tight w-20 shrink-0">{pair}</span>
+                  <div className="flex-1 h-3 bg-[rgba(255,255,255,0.04)] rounded-full overflow-hidden">
                     <div
                       className="h-full rounded-full"
                       style={{
@@ -196,7 +201,7 @@ export default function TradesPage() {
                       }}
                     />
                   </div>
-                  <span className="text-[11px] font-mono text-[var(--text-4)] w-10 text-right tabular-nums">
+                  <span className="text-[11px] font-mono text-[var(--text-3)] w-10 text-right tabular-nums">
                     {pct.toFixed(0)}%
                   </span>
                   <span className="text-[11px] font-mono text-[var(--text-4)] w-12 text-right tabular-nums">
@@ -208,24 +213,24 @@ export default function TradesPage() {
           </div>
         </div>
 
-        {/* Summary */}
-        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5 space-y-4">
-          <div className="text-[11px] uppercase tracking-[.15em] font-sans text-[var(--text-3)]">Summary</div>
+        {/* Summary — de-bolded large numbers (font-medium + tracking-tight). */}
+        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-6 lg:p-7 space-y-5">
+          <div className="text-[11px] uppercase tracking-[.15em] font-sans font-medium text-[var(--text-4)]">Summary</div>
 
           <div>
-            <p className="text-3xl font-mono font-bold text-white tabular-nums">
+            <p className="text-3xl font-mono font-medium text-[var(--text)] tabular-nums tracking-tight leading-none">
               {formatCompactVolume(totalVolume)}
             </p>
-            <p className="text-xs text-[var(--text-4)] font-sans">total volume</p>
+            <p className="text-xs text-[var(--text-4)] font-sans mt-2">total volume</p>
           </div>
 
           <div>
-            <p className="text-lg font-mono font-medium text-[var(--text-3)] tabular-nums">{totalTrades}</p>
-            <p className="text-xs text-[var(--text-4)] font-sans">total trades</p>
+            <p className="text-lg font-mono font-medium text-[var(--text-2)] tabular-nums">{totalTrades}</p>
+            <p className="text-xs text-[var(--text-4)] font-sans mt-1">total trades</p>
           </div>
 
-          <div className="flex items-center gap-2">
-            <div className="flex-1 h-2 bg-[rgba(255,255,255,0.03)] rounded-full overflow-hidden">
+          <div className="flex items-center gap-2.5">
+            <div className="flex-1 h-1.5 bg-[rgba(255,255,255,0.03)] rounded-full overflow-hidden">
               <div
                 className="h-full rounded-full"
                 style={{
@@ -235,15 +240,15 @@ export default function TradesPage() {
               />
             </div>
             <span className="text-[11px] text-[var(--text-4)]">
-              <span className="font-mono">{buyPct.toFixed(0)}%</span> <span className="font-sans">buy</span>
+              <span className="font-mono tabular-nums">{buyPct.toFixed(0)}%</span> <span className="font-sans">buy</span>
             </span>
           </div>
 
           <div>
-            <p className="text-sm font-mono text-[var(--text-3)] tabular-nums">
+            <p className="text-sm font-mono font-medium text-[var(--text-2)] tabular-nums">
               {formatCompactVolume(avgSize)}
             </p>
-            <p className="text-xs text-[var(--text-4)] font-sans">avg trade size</p>
+            <p className="text-xs text-[var(--text-4)] font-sans mt-1">avg trade size</p>
           </div>
         </div>
       </div>
@@ -354,11 +359,11 @@ export default function TradesPage() {
                                 className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0"
                                 style={{ backgroundColor: `${baseColor}15`, borderColor: `${baseColor}30`, borderWidth: 1 }}
                               >
-                                <span className="font-mono text-[11px] font-bold" style={{ color: baseColor }}>
+                                <span className="font-mono text-[11px] font-medium" style={{ color: baseColor }}>
                                   {baseCurrency.slice(0, 2)}
                                 </span>
                               </div>
-                              <span className="font-mono text-xs sm:text-sm font-bold text-white">{trade.pair}</span>
+                              <span className="font-mono text-xs sm:text-sm font-medium text-[var(--text)] tracking-tight">{trade.pair}</span>
                             </div>
                           );
                         })()}
@@ -367,11 +372,11 @@ export default function TradesPage() {
                       {/* Side pill */}
                       <td className="px-3 sm:px-6 py-3 sm:py-4">
                         {trade.side === "buy" ? (
-                          <span className="inline-flex items-center px-4 py-1.5 rounded-full text-[11px] font-bold font-sans uppercase tracking-[.1em] bg-[var(--buy-dim)] text-[var(--buy)]">
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-medium font-sans uppercase tracking-[.1em] bg-[var(--buy-dim)] text-[var(--buy)]">
                             Buy
                           </span>
                         ) : (
-                          <span className="inline-flex items-center px-4 py-1.5 rounded-full text-[11px] font-bold font-sans uppercase tracking-[.1em] bg-[var(--sell-dim)] text-[var(--sell)]">
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-medium font-sans uppercase tracking-[.1em] bg-[var(--sell-dim)] text-[var(--sell)]">
                             Sell
                           </span>
                         )}
@@ -379,14 +384,14 @@ export default function TradesPage() {
 
                       {/* Quantity */}
                       <td className="px-3 sm:px-6 py-3 sm:py-4 text-right">
-                        <span className="font-mono text-xs sm:text-sm text-white tabular-nums">
+                        <span className="font-mono text-xs sm:text-sm font-medium text-[var(--text)] tabular-nums">
                           {formatMoney(trade.quantity)}
                         </span>
                       </td>
 
                       {/* Price */}
                       <td className="px-3 sm:px-6 py-3 sm:py-4 text-right">
-                        <span className="font-mono text-xs sm:text-sm text-white tabular-nums">
+                        <span className="font-mono text-xs sm:text-sm font-medium text-[var(--text)] tabular-nums">
                           {trade.price.toFixed(4)}
                         </span>
                       </td>

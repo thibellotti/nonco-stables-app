@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-const TITLE = "FX & Pricing";
+const TITLE = "Trade";
 const DESC = "Real-time FX rates and RFS for stablecoin pairs.";
 
 export const metadata: Metadata = {

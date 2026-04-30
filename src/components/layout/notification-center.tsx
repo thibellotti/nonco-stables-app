@@ -39,7 +39,7 @@ const initialNotifications: Notification[] = [
     id: "n3",
     type: "price",
     title: "Price alert",
-    body: "MXN/USDT crossed 17.45",
+    body: "USDT/MXN crossed 17.45",
     time: "1h ago",
     unread: true,
   },

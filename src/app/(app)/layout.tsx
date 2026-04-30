@@ -11,10 +11,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       </a>
       <Sidebar />
       <PageHeader />
+      {/* Full-width: content flows edge-to-edge from the sidebar to the right
+          viewport. Per-page padding (px-4 sm:px-6 lg:px-8 xl:px-12) handles the
+          breathing room — no max-width cap so ultra-wide monitors are used in
+          full. */}
       <main id="main-content" className="lg:pl-[220px] pt-20 pb-28 lg:pb-8 min-h-screen">
-        <div className="max-w-[1600px] mx-auto">
-          {children}
-        </div>
+        {children}
       </main>
       <BottomTabs />
     </AppProviders>

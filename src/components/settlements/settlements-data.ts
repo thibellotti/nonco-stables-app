@@ -27,7 +27,7 @@ export interface PendingSettlement {
 export const pendingSettlements: PendingSettlement[] = [
   {
     id: "stl-p1",
-    pair: "MXN/USDT",
+    pair: "USDT/MXN",
     amount: 500_000,
     dueDate: "Mar 25, 2026",
     dueDateShort: "Mar 25",
@@ -75,7 +75,7 @@ export const pendingSettlements: PendingSettlement[] = [
   },
   {
     id: "stl-p3",
-    pair: "BRL/USDC",
+    pair: "USDC/BRL",
     amount: 1_030_000,
     dueDate: "Apr 3, 2026",
     dueDateShort: "Apr 3",
@@ -87,7 +87,7 @@ export const pendingSettlements: PendingSettlement[] = [
   },
   {
     id: "stl-p6",
-    pair: "MXN/USDT",
+    pair: "USDT/MXN",
     amount: 780_000,
     dueDate: "Apr 7, 2026",
     dueDateShort: "Apr 7",

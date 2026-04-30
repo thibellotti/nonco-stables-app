@@ -81,7 +81,7 @@ export default function RFQPage() {
   const hasActiveQuote = quote !== null || isLoading;
 
   return (
-    <PageTransition className="px-4 sm:px-6 md:px-8 w-full space-y-6">
+    <PageTransition className="px-4 sm:px-6 lg:px-8 xl:px-12 w-full space-y-6">
       <h1 className="sr-only">RFQ</h1>
       {hasActiveQuote ? (
         <>

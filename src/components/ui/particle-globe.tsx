@@ -15,7 +15,32 @@ import type { Points, Group } from "three";
 
 ColorManagement.enabled = true;
 
-const CYAN = "#05e0f8";
+// ─── Theme-aware accent ───────────────────────────────────────────────────
+// Strategy A (chosen): the globe lives on every theme, but the accent color
+// shifts to keep contrast against the surface. Dark mode uses the vivid Nonco
+// cyan (#05e0f8); light mode darkens it to #007a8a (matching --cyan-dark in
+// globals.css) so the particles, sprite logos, and ambient field stay
+// readable against the off-white background.
+//
+// The exported component watches `<html data-theme>` via a MutationObserver
+// and re-mounts the <Canvas> on theme flip (key={accent}). Re-mount is the
+// simplest correct path: it forces texture cache purge, fresh material
+// uniforms, and a new fog color. Perf cost is bounded — the canvas is
+// IntersectionObserver-gated and only one or two instances are ever live.
+function readThemeAccent(): { accent: string; ambientRGB: [number, number, number]; fogColor: string } {
+  if (typeof document === "undefined") {
+    return { accent: "#05e0f8", ambientRGB: [0.02, 0.878, 0.973], fogColor: "#000000" };
+  }
+  const theme = document.documentElement.dataset.theme;
+  if (theme === "light") {
+    return {
+      accent: "#007a8a",
+      ambientRGB: [0.0, 0.478, 0.541], // matches #007a8a
+      fogColor: "#f7f7f5",
+    };
+  }
+  return { accent: "#05e0f8", ambientRGB: [0.02, 0.878, 0.973], fogColor: "#000000" };
+}
 
 // ─── Config matching nonco.com/stables ───
 const CONFIG = {
@@ -59,10 +84,11 @@ function fibSphere(n: number, r: number): Float32Array {
 }
 
 // ─── Stablecoin logo texture: circle container + abbreviation inside ───
+// Cache key includes the accent color so theme switches generate a fresh atlas.
 const texCache = new Map<string, CanvasTexture>();
 
-function logoTexture(text: string, sz = 512): CanvasTexture {
-  const key = `logo-${text}-v2`;
+function logoTexture(text: string, accent: string, sz = 512): CanvasTexture {
+  const key = `logo-${text}-${accent}`;
   if (texCache.has(key)) return texCache.get(key)!;
   const c = document.createElement("canvas");
   c.width = sz; c.height = sz;
@@ -70,28 +96,34 @@ function logoTexture(text: string, sz = 512): CanvasTexture {
   const cx = sz / 2;
   const r = cx * 0.82;
 
+  // Convert hex accent to rgba helpers
+  const hex = accent.replace("#", "");
+  const rR = parseInt(hex.slice(0, 2), 16);
+  const gR = parseInt(hex.slice(2, 4), 16);
+  const bR = parseInt(hex.slice(4, 6), 16);
+
   // Solid circle fill — matching nonco.com badge style
   ctx.beginPath();
   ctx.arc(cx, cx, r, 0, Math.PI * 2);
-  ctx.fillStyle = "rgba(5, 224, 248, 0.15)";
+  ctx.fillStyle = `rgba(${rR}, ${gR}, ${bR}, 0.15)`;
   ctx.fill();
 
   // Thick circle border
   ctx.beginPath();
   ctx.arc(cx, cx, r, 0, Math.PI * 2);
-  ctx.strokeStyle = "rgba(5, 224, 248, 0.6)";
+  ctx.strokeStyle = `rgba(${rR}, ${gR}, ${bR}, 0.6)`;
   ctx.lineWidth = sz * 0.035;
   ctx.stroke();
 
   // Inner circle highlight
   ctx.beginPath();
   ctx.arc(cx, cx, r * 0.75, 0, Math.PI * 2);
-  ctx.strokeStyle = "rgba(5, 224, 248, 0.1)";
+  ctx.strokeStyle = `rgba(${rR}, ${gR}, ${bR}, 0.1)`;
   ctx.lineWidth = sz * 0.01;
   ctx.stroke();
 
   // Symbol inside — bold, centered
-  ctx.fillStyle = CYAN;
+  ctx.fillStyle = accent;
   const symbols: Record<string, string> = {
     USDC: "$", USDT: "₮", DAI: "◆", TUSD: "T", GUSD: "G", PAX: "P", BUSD: "B", FRAX: "F",
   };
@@ -109,14 +141,14 @@ function logoTexture(text: string, sz = 512): CanvasTexture {
 }
 
 // ─── Fiat currency text: large bold symbol ───
-function currencyTexture(text: string, sz = 512): CanvasTexture {
-  const key = `fiat-${text}`;
+function currencyTexture(text: string, accent: string, sz = 512): CanvasTexture {
+  const key = `fiat-${text}-${accent}`;
   if (texCache.has(key)) return texCache.get(key)!;
   const c = document.createElement("canvas");
   c.width = sz; c.height = sz;
   const ctx = c.getContext("2d")!;
   ctx.clearRect(0, 0, sz, sz);
-  ctx.fillStyle = CYAN;
+  ctx.fillStyle = accent;
   const fs = text.length > 2 ? sz * 0.32 : text.length > 1 ? sz * 0.45 : sz * 0.6;
   ctx.font = `700 ${fs}px -apple-system, "Space Grotesk", sans-serif`;
   ctx.textAlign = "center";
@@ -130,7 +162,7 @@ function currencyTexture(text: string, sz = 512): CanvasTexture {
 }
 
 // ─── Central globe ───
-function Globe() {
+function Globe({ accent }: { accent: string }) {
   const ref = useRef<Points>(null);
   const geo = useMemo(() => {
     const g = new BufferGeometry();
@@ -150,16 +182,16 @@ function Globe() {
 
   return (
     <points ref={ref} geometry={geo}>
-      <pointsMaterial color={CYAN} size={1.5} sizeAttenuation transparent opacity={0.7} depthWrite={false} />
+      <pointsMaterial color={accent} size={1.5} sizeAttenuation transparent opacity={0.7} depthWrite={false} />
     </points>
   );
 }
 
 // ─── Orbital ring with currency sprites ───
 function OrbitalRing({
-  items, radius, speed, tiltX, tiltZ, size, scrollProgressRef, isLogo,
+  items, radius, speed, tiltX, tiltZ, size, scrollProgressRef, isLogo, accent,
 }: {
-  items: string[]; radius: number; speed: number; tiltX: number; tiltZ: number; size: number; scrollProgressRef: MutableRefObject<number>; isLogo?: boolean;
+  items: string[]; radius: number; speed: number; tiltX: number; tiltZ: number; size: number; scrollProgressRef: MutableRefObject<number>; isLogo?: boolean; accent: string;
 }) {
   const groupRef = useRef<Group>(null);
   const baseRot = useRef(0);
@@ -173,7 +205,7 @@ function OrbitalRing({
     [items, radius]
   );
 
-  const textures = useMemo(() => items.map((t) => isLogo ? logoTexture(t) : currencyTexture(t)), [items, isLogo]);
+  const textures = useMemo(() => items.map((t) => isLogo ? logoTexture(t, accent) : currencyTexture(t, accent)), [items, isLogo, accent]);
 
   useFrame((_, dt) => {
     if (!groupRef.current) return;
@@ -196,7 +228,7 @@ function OrbitalRing({
 }
 
 // ─── Ambient particles ───
-function AmbientParticles() {
+function AmbientParticles({ ambientRGB }: { ambientRGB: [number, number, number] }) {
   const ref = useRef<Points>(null);
   const geoRef = useRef<BufferGeometry>(null);
 
@@ -222,7 +254,7 @@ function AmbientParticles() {
     };
   }, []);
 
-  const uColor = useMemo(() => new Vector3(0.02, 0.878, 0.973), []);
+  const uColor = useMemo(() => new Vector3(...ambientRGB), [ambientRGB]);
 
   useFrame((_, dt) => {
     if (ref.current) {
@@ -274,15 +306,23 @@ function CameraRig() {
 }
 
 // ─── Scene ───
-function Scene({ scrollProgressRef }: { scrollProgressRef: MutableRefObject<number> }) {
+function Scene({
+  scrollProgressRef,
+  accent,
+  ambientRGB,
+}: {
+  scrollProgressRef: MutableRefObject<number>;
+  accent: string;
+  ambientRGB: [number, number, number];
+}) {
   return (
     <>
       <CameraRig />
-      <Globe />
+      <Globe accent={accent} />
       {CONFIG.rings.map((ring, i) => (
-        <OrbitalRing key={i} {...ring} scrollProgressRef={scrollProgressRef} isLogo={i === 0} />
+        <OrbitalRing key={i} {...ring} scrollProgressRef={scrollProgressRef} isLogo={i === 0} accent={accent} />
       ))}
-      <AmbientParticles />
+      <AmbientParticles ambientRGB={ambientRGB} />
     </>
   );
 }
@@ -298,6 +338,19 @@ export function ParticleGlobe({ size, opacity = 0.35, className }: ParticleGlobe
   const containerRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const scrollProgressRef = useRef(0);
+
+  // Read theme on mount and react to theme changes via a MutationObserver on
+  // <html data-theme>. We rebuild textures (cache-keyed by accent) and re-pass
+  // the accent prop into the scene tree.
+  const [{ accent, ambientRGB, fogColor }, setThemeColors] = useState(() => readThemeAccent());
+
+  useEffect(() => {
+    const html = document.documentElement;
+    const update = () => setThemeColors(readThemeAccent());
+    const mo = new MutationObserver(update);
+    mo.observe(html, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => mo.disconnect();
+  }, []);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -338,14 +391,19 @@ export function ParticleGlobe({ size, opacity = 0.35, className }: ParticleGlobe
     >
       {visible && (
         <Canvas
+          // Re-mount the canvas when the theme changes so all GL resources
+          // (textures, materials, fog) regenerate with the new accent. The
+          // globe is opt-in via IntersectionObserver, so this only rebuilds
+          // when actually visible — perf hit is bounded.
+          key={accent}
           camera={{ position: [0, 0, CONFIG.cam.dist], fov: 50, near: 1, far: 1500 }}
           dpr={typeof window !== "undefined" ? [1, Math.min(window.devicePixelRatio, 2)] : [1, 2]}
           gl={{ antialias: true, alpha: true, powerPreference: "high-performance", outputColorSpace: SRGBColorSpace }}
           style={{ background: "transparent" }}
           onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
         >
-          <fog attach="fog" args={["#000000", 100, 700]} />
-          <Scene scrollProgressRef={scrollProgressRef} />
+          <fog attach="fog" args={[fogColor, 100, 700]} />
+          <Scene scrollProgressRef={scrollProgressRef} accent={accent} ambientRGB={ambientRGB} />
         </Canvas>
       )}
     </div>

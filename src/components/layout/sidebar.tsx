@@ -58,7 +58,7 @@ export function Sidebar() {
           <span className="w-1.5 h-1.5 rounded-full bg-[var(--status-positive)] shrink-0" aria-hidden="true" />
           <span className="sr-only">Online</span>
           <span className="text-[12px] font-medium text-[var(--text)] flex-1">Treasury 01</span>
-          <span className="text-[10px] font-bold text-[var(--text-2)] bg-[rgba(255,255,255,0.08)] px-1.5 py-0.5 rounded">Verified</span>
+          <span className="text-[10px] font-medium text-[var(--text-2)] bg-[rgba(255,255,255,0.06)] px-1.5 py-0.5 rounded">Verified</span>
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" className="shrink-0 text-[var(--text-4)]">
             <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
@@ -78,7 +78,10 @@ export function Sidebar() {
               </div>
             )}
             <div className="px-5 pt-3 pb-1.5">
-              <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--text-4)]">
+              {/* De-bolded: section labels in font-medium for a quieter
+                  hierarchy — the active nav indicator (cyan accent + bg)
+                  still carries focus without competing with bold labels. */}
+              <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-[var(--text-4)]">
                 {group.label}
               </span>
             </div>
@@ -105,11 +108,25 @@ export function Sidebar() {
         ))}
       </nav>
 
-      {/* User section */}
+      {/* User section — clickable, navigates to /profile */}
       <div className="px-4 pb-4 mt-auto">
-        <div className="flex items-center gap-3 py-3 border-t border-[var(--border)]">
-          <div className="w-8 h-8 rounded-full bg-[rgba(255,255,255,0.08)] flex items-center justify-center shrink-0">
-            <span className="text-[10px] font-bold text-[var(--text)]">FM</span>
+        <Link
+          href="/profile"
+          aria-label="Open profile"
+          aria-current={
+            pathname === "/profile" || pathname.startsWith("/profile/")
+              ? "page"
+              : undefined
+          }
+          className={cn(
+            "flex items-center gap-3 px-2 py-3 -mx-2 rounded-md border-t border-[var(--border)] transition-colors",
+            "hover:bg-[var(--bg-elevated)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--cyan)]",
+            (pathname === "/profile" || pathname.startsWith("/profile/")) &&
+              "bg-[var(--bg-elevated)]"
+          )}
+        >
+          <div className="w-8 h-8 rounded-full bg-[rgba(255,255,255,0.06)] flex items-center justify-center shrink-0">
+            <span className="text-[10px] font-medium text-[var(--text)]">FM</span>
           </div>
           <div className="flex flex-col min-w-0">
             <span className="text-[12px] font-medium text-[var(--text)] truncate">Fernando M.</span>
@@ -117,7 +134,7 @@ export function Sidebar() {
           </div>
           <span className="w-1.5 h-1.5 rounded-full bg-[var(--status-positive)] ml-auto" aria-hidden="true" />
           <span className="sr-only">Online</span>
-        </div>
+        </Link>
       </div>
     </aside>
   );
