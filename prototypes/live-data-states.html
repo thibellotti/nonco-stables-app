@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Nonco Stables — Live Data States (prototype)</title>
+<!-- Prototype-only: brand faces pulled from CDN to feel the motion.
+     Production self-hosts .woff2 per studio rule. -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  /* ── Nonco Stables tokens (verbatim from src/app/globals.css) ── */
+  :root{
+    --bg:#000000; --bg-card:#141414; --bg-elevated:#1c1b1b; --bg-muted:#201f1f; --bg-highest:#2a2a2a;
+    --text:rgba(255,255,255,0.88); --text-2:rgba(255,255,255,0.65); --text-3:rgba(255,255,255,0.45); --text-4:rgba(255,255,255,0.35);
+    --cyan:#05E0F8; --cyan-dark:#04b0c4; --cyan-light:#67edfb; --cyan-dim:rgba(5,224,248,0.08); --cyan-wash:rgba(5,224,248,0.04);
+    --amber:#f9e220; --red:#ef4444; --green:#22C55E;
+    --border:#1a1a1a; --border-subtle:rgba(255,255,255,0.06); --border-outline:#3b494c; --border-row:rgba(255,255,255,0.04);
+    --ease-expo:cubic-bezier(0.16,1,0.3,1);
+    --font-sans:'Space Grotesk',sans-serif; --font-mono:'JetBrains Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:var(--bg); color:var(--text); font-family:var(--font-sans);
+    -webkit-font-smoothing:antialiased; display:flex; align-items:center; justify-content:center;
+    min-height:100vh; padding:48px 32px;
+    background-image:radial-gradient(900px 500px at 78% -10%, var(--cyan-wash), transparent 60%);
+  }
+  /* faint grain for depth */
+  body::after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.025;z-index:99;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+  .stage{width:100%;max-width:1080px;display:grid;grid-template-columns:1fr;gap:40px}
+
+  /* ── header ── */
+  .head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px}
+  .eyebrow{font-size:11px;letter-spacing:.14em;color:var(--text-4);text-transform:uppercase;margin-bottom:12px}
+  .head h1{font-size:30px;font-weight:500;letter-spacing:-.02em}
+  .head p{font-size:13px;color:var(--text-3);margin-top:8px;max-width:46ch;line-height:1.5}
+
+  /* ── connection pill (the cyan-as-signal system) ── */
+  .pill{display:inline-flex;align-items:center;gap:9px;padding:7px 13px 7px 11px;border-radius:999px;
+    background:var(--bg-elevated);border:1px solid var(--border-subtle);font-size:11px;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--text-2);white-space:nowrap;transition:all .4s var(--ease-expo)}
+  .pill .sig{width:7px;height:7px;border-radius:50%;background:var(--text-4);position:relative}
+  .pill .sig::after{content:"";position:absolute;inset:-4px;border-radius:50%;background:transparent}
+  .pill[data-sig="connecting"]{border-color:rgba(5,224,248,.25)}
+  .pill[data-sig="connecting"] .sig{background:var(--cyan)}
+  .pill[data-sig="connecting"] .sig::after{box-shadow:0 0 0 0 rgba(5,224,248,.5);animation:ping 1.5s var(--ease-expo) infinite}
+  .pill[data-sig="awaiting"] .sig{background:var(--cyan);opacity:.45}
+  .pill[data-sig="live"]{border-color:rgba(5,224,248,.3);color:var(--text)}
+  .pill[data-sig="live"] .sig{background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
+  .pill[data-sig="lost"]{border-color:rgba(239,68,68,.3)}
+  .pill[data-sig="lost"] .sig{background:var(--red);box-shadow:0 0 8px rgba(239,68,68,.6)}
+  .pill .meta{font-family:var(--font-mono);font-size:10px;color:var(--text-4);letter-spacing:0}
+  @keyframes ping{70%,100%{box-shadow:0 0 0 7px rgba(5,224,248,0)}}
+
+  /* ── the market-watch surface ── */
+  .panel{position:relative;width:100%;height:480px;background:var(--bg-card);
+    border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+  .panel-head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--border-row)}
+  .panel-head .label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-4)}
+  .panel-body{flex:1;position:relative}
+
+  /* column scaffold shared by skeleton + live rows */
+  .row{display:grid;grid-template-columns:1.4fr 1fr 1fr .8fr;align-items:center;gap:16px;
+    padding:0 24px;height:64px;border-bottom:1px solid var(--border-row)}
+  .row .pair{display:flex;align-items:center;gap:12px}
+  .row .ico{width:34px;height:34px;border-radius:50%;background:var(--bg-elevated);flex:none}
+  .num{font-family:var(--font-mono);font-size:14px;font-weight:500;text-align:right;font-variant-numeric:tabular-nums}
+  .colhead{display:grid;grid-template-columns:1.4fr 1fr 1fr .8fr;gap:16px;padding:10px 24px;
+    font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-4)}
+  .colhead span:nth-child(n+2){text-align:right}
+
+  /* state layers crossfade */
+  .layer{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .5s var(--ease-expo);display:flex;flex-direction:column}
+  .layer.on{opacity:1;visibility:visible}
+
+  /* ── CONNECTING: ledger skeleton with cyan shimmer sweep ── */
+  .sk{height:11px;border-radius:3px;background:var(--bg-elevated);position:relative;overflow:hidden}
+  .sk.num{height:11px;width:64px;justify-self:end}
+  .sk.wide{width:84px}
+  .sk-pair{display:flex;align-items:center;gap:12px}
+  .sk-lines{display:flex;flex-direction:column;gap:7px}
+  .sk-name{width:72px}
+  .sk-sub{width:46px;height:8px;opacity:.6}
+  .row.skrow .ico{position:relative;overflow:hidden}
+  /* the sweep: a cyan-dim band travelling across each row, staggered = "scanning the feed" */
+  .skrow{position:relative;overflow:hidden}
+  .skrow::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(100deg,transparent 20%,var(--cyan-dim) 48%,rgba(5,224,248,.16) 50%,var(--cyan-dim) 52%,transparent 80%);
+    transform:translateX(-100%);animation:sweep 1.8s var(--ease-expo) infinite}
+  .skrow:nth-child(2)::after{animation-delay:.12s}
+  .skrow:nth-child(3)::after{animation-delay:.24s}
+  .skrow:nth-child(4)::after{animation-delay:.36s}
+  .skrow:nth-child(5)::after{animation-delay:.48s}
+  @keyframes sweep{0%{transform:translateX(-100%)}60%,100%{transform:translateX(100%)}}
+  .panel-foot{padding:14px 24px;border-top:1px solid var(--border-row);display:flex;align-items:center;gap:9px;
+    font-size:11px;color:var(--text-3)}
+  .panel-foot .sig{width:6px;height:6px;border-radius:50%;background:var(--cyan);position:relative}
+  .panel-foot .sig::after{content:"";position:absolute;inset:-4px;border-radius:50%;animation:ping 1.5s var(--ease-expo) infinite}
+
+  /* ── LIVE: rows materialize through black, staggered ── */
+  .row.live{opacity:0;transform:translateY(10px);animation:rise .55s var(--ease-expo) forwards}
+  .layer.on .row.live:nth-child(1){animation-delay:.02s}
+  .layer.on .row.live:nth-child(2){animation-delay:.08s}
+  .layer.on .row.live:nth-child(3){animation-delay:.14s}
+  .layer.on .row.live:nth-child(4){animation-delay:.20s}
+  .layer.on .row.live:nth-child(5){animation-delay:.26s}
+  @keyframes rise{to{opacity:1;transform:none}}
+  .pair .tk{font-size:14px;font-weight:500;letter-spacing:-.01em}
+  .pair .ven{font-size:10px;color:var(--text-4);letter-spacing:.08em;text-transform:uppercase}
+  .chg{font-family:var(--font-mono);font-size:13px;text-align:right;font-variant-numeric:tabular-nums}
+  .chg.up{color:var(--green)} .chg.dn{color:var(--red)}
+  .num.flash{animation:flash .6s var(--ease-expo)}
+  @keyframes flash{0%{color:var(--cyan)}100%{color:var(--text)}}
+
+  /* ── empty / lost shared: orbital mark + copy, asymmetric ── */
+  .state{flex:1;display:flex;align-items:center;gap:48px;padding:0 56px}
+  .state .copy{max-width:280px}
+  .state h3{font-size:15px;font-weight:500;color:var(--text-2);margin-bottom:8px}
+  .state p{font-size:13px;color:var(--text-4);line-height:1.55}
+  .state .act{margin-top:20px;display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:8px;
+    background:var(--bg-elevated);border:1px solid var(--border-outline);color:var(--cyan);font-size:12px;font-weight:500;
+    cursor:pointer;transition:transform .15s var(--ease-expo),border-color .2s}
+  .state .act:hover{transform:translateY(-1px);border-color:var(--cyan-dark)}
+  .state .act .dot{width:6px;height:6px;border-radius:50%;background:var(--cyan)}
+  .countdown{font-family:var(--font-mono)}
+
+  /* ── orbital mark — the globe reduced to a brand glyph ── */
+  .orbital{position:relative;width:var(--orb,168px);height:var(--orb,168px);flex:none;transform-style:preserve-3d;perspective:520px}
+  .orbital .ring{position:absolute;inset:0;border-radius:50%;border:1px solid var(--border-outline);transform-style:preserve-3d}
+  .orbital .ring.outer{transform:rotateX(62deg) rotateZ(-25deg);border-color:rgba(255,255,255,.10)}
+  .orbital .ring.inner{inset:19%;transform:rotateX(62deg) rotateZ(25deg);border-color:rgba(5,224,248,.20)}
+  .orbital .spin{position:absolute;inset:0;transform-style:preserve-3d;animation:orbit 9s linear infinite}
+  .orbital .spin.rev{animation-duration:6s;animation-direction:reverse}
+  .orbital .dot{position:absolute;top:50%;left:100%;width:7px;height:7px;margin:-3.5px;border-radius:50%;
+    background:var(--cyan);box-shadow:0 0 12px var(--cyan)}
+  .orbital .dot.sm{width:5px;height:5px;margin:-2.5px}
+  .orbital .core{position:absolute;top:50%;left:50%;width:9px;height:9px;transform:translate(-50%,-50%);border-radius:50%;
+    background:var(--cyan);box-shadow:0 0 16px 3px rgba(5,224,248,.55)}
+  .orbital .core::before,.orbital .core::after{content:"";position:absolute;border-radius:50%;background:rgba(5,224,248,.5)}
+  .orbital .core::before{width:3px;height:3px;top:-12px;left:8px}
+  .orbital .core::after{width:2px;height:2px;top:10px;left:-9px}
+  @keyframes orbit{to{transform:rotate(360deg)}}
+  /* awaiting → data isn't flowing: dim the orbiting dot, keep rings turning slowly */
+  .orbital.awaiting .dot{opacity:.25} .orbital.awaiting .core{box-shadow:0 0 8px 1px rgba(5,224,248,.25);background:var(--cyan-dark)}
+  /* lost → orbit frozen, signal goes red */
+  .orbital.lost .spin{animation-play-state:paused}
+  .orbital.lost .ring.inner{border-color:rgba(239,68,68,.28)}
+  .orbital.lost .dot{background:var(--red);box-shadow:0 0 10px rgba(239,68,68,.6)}
+  .orbital.lost .core{background:var(--red);box-shadow:0 0 12px 2px rgba(239,68,68,.4)}
+
+  /* disconnected overlay: frozen dimmed rows + scanline */
+  .freeze{opacity:.4;filter:saturate(.5);pointer-events:none}
+  .scan{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(5,224,248,.35),transparent);
+    top:0;animation:scanmove 2.6s linear infinite;mix-blend-mode:screen}
+  @keyframes scanmove{0%{top:-2%}100%{top:102%}}
+  .lost-banner{position:absolute;left:0;right:0;bottom:0;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;
+    gap:16px;background:linear-gradient(0deg,rgba(0,0,0,.92),rgba(0,0,0,.55));border-top:1px solid rgba(239,68,68,.18)}
+  .lost-banner .l{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text-2)}
+  .lost-banner .l .sig{width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 8px rgba(239,68,68,.6)}
+  .lost-banner .act{margin:0;padding:7px 14px}
+
+  /* ── controls ── */
+  .controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .controls .grp{display:inline-flex;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:10px;padding:4px;gap:4px}
+  .controls button{font-family:var(--font-sans);font-size:12px;color:var(--text-3);background:transparent;border:0;
+    padding:8px 14px;border-radius:7px;cursor:pointer;letter-spacing:.01em;transition:all .2s var(--ease-expo)}
+  .controls button:hover{color:var(--text)}
+  .controls button.active{background:var(--bg-highest);color:var(--text)}
+  .controls .auto{background:var(--cyan);color:#001014;font-weight:500;border:0;padding:9px 16px;border-radius:9px}
+  .controls .auto.running{background:var(--bg-elevated);color:var(--cyan);border:1px solid var(--cyan-dark)}
+  .seqlabel{font-size:11px;color:var(--text-4);font-family:var(--font-mono);margin-left:auto}
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <div class="head">
+    <div>
+      <div class="eyebrow">Nonco Stables · Realtime</div>
+      <h1>Live Data States</h1>
+      <p>What the desk shows while the market socket is connecting, idle, or dropped — before quotes arrive. Content materialises; the orbital mark and cyan signal carry the brand.</p>
+    </div>
+    <div class="pill" id="pill" data-sig="connecting"><span class="sig"></span><span id="pillLabel">Connecting</span><span class="meta" id="pillMeta"></span></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <span class="label">Market Watch</span>
+      <span class="label" id="panelClock" style="font-family:var(--font-mono);letter-spacing:0">—</span>
+    </div>
+    <div class="panel-body" id="body"><!-- layers injected --></div>
+  </div>
+
+  <div class="controls">
+    <div class="grp">
+      <button data-go="connecting" class="active">Connecting</button>
+      <button data-go="awaiting">Awaiting data</button>
+      <button data-go="live">Live</button>
+      <button data-go="lost">Disconnected</button>
+    </div>
+    <button class="auto" id="auto">▶ Auto sequence</button>
+    <span class="seqlabel" id="seq">manual</span>
+  </div>
+</div>
+
+<script>
+const PAIRS = [
+  {tk:"USDT/MXN", ven:"Banamex · Bitso", bid:"17.4482", ask:"17.4521", chg:"+0.42%", dir:"up"},
+  {tk:"EUR/USDT", ven:"Circle", bid:"1.08331", ask:"1.08374", chg:"-0.18%", dir:"dn"},
+  {tk:"USDC/BRL", ven:"BTG · Transfero", bid:"5.1483", ask:"5.1531", chg:"+0.91%", dir:"up"},
+  {tk:"USD/USDT", ven:"Cumberland", bid:"1.00012", ask:"1.00031", chg:"+0.02%", dir:"up"},
+  {tk:"GBP/USDC", ven:"Wintermute", bid:"1.26482", ask:"1.26537", chg:"-0.34%", dir:"dn"},
+];
+
+const body = document.getElementById('body');
+
+const skeletonRows = Array.from({length:5}).map((_,i)=>`
+  <div class="row skrow">
+    <div class="sk-pair"><div class="ico"></div>
+      <div class="sk-lines"><div class="sk sk-name"></div><div class="sk sk-sub"></div></div></div>
+    <div class="sk num wide"></div><div class="sk num wide"></div><div class="sk num"></div>
+  </div>`).join('');
+
+const liveRows = PAIRS.map(p=>`
+  <div class="row live">
+    <div class="pair"><div class="ico"></div>
+      <div><div class="tk">${p.tk}</div><div class="ven">${p.ven}</div></div></div>
+    <div class="num" data-bid>${p.bid}</div>
+    <div class="num" data-ask>${p.ask}</div>
+    <div class="chg ${p.dir}">${p.chg}</div>
+  </div>`).join('');
+
+const colhead = `<div class="colhead"><span>Pair</span><span>Bid</span><span>Ask</span><span>24h</span></div>`;
+
+const orbital = (cls="")=>`
+  <div class="orbital ${cls}">
+    <div class="ring outer"><div class="spin"><span class="dot"></span></div></div>
+    <div class="ring inner"><div class="spin rev"><span class="dot sm"></span></div></div>
+    <div class="core"></div>
+  </div>`;
+
+const LAYERS = {
+  connecting:`<div class="layer" data-l="connecting">
+      ${colhead}<div style="flex:1">${skeletonRows}</div>
+      <div class="panel-foot"><span class="sig"></span>Connecting to live feed…</div></div>`,
+  awaiting:`<div class="layer" data-l="awaiting"><div class="state">
+      ${orbital('awaiting')}
+      <div class="copy"><h3>No live data yet</h3>
+      <p>Socket is open — waiting for the market feed to publish its first quotes.</p></div>
+    </div></div>`,
+  live:`<div class="layer" data-l="live">${colhead}<div style="flex:1">${liveRows}</div></div>`,
+  lost:`<div class="layer" data-l="lost">
+      ${colhead}<div style="flex:1" class="freeze">${liveRows}</div>
+      <div class="scan"></div>
+      <div class="lost-banner">
+        <div class="l"><span class="sig"></span>Connection lost — showing last known values</div>
+        <button class="act" id="retry"><span class="dot"></span>Reconnect <span class="countdown" id="cd">3s</span></button>
+      </div></div>`,
+};
+
+body.innerHTML = Object.values(LAYERS).join('');
+
+const pill = document.getElementById('pill');
+const pillLabel = document.getElementById('pillLabel');
+const pillMeta = document.getElementById('pillMeta');
+const clock = document.getElementById('panelClock');
+
+const PILL = {
+  connecting:{sig:"connecting", label:"Connecting", meta:""},
+  awaiting:{sig:"awaiting", label:"Awaiting data", meta:"0 pairs"},
+  live:{sig:"live", label:"Live", meta:"5 pairs · 60ms"},
+  lost:{sig:"lost", label:"Disconnected", meta:""},
+};
+
+let tickTimer=null, cdTimer=null, current="connecting";
+
+function setState(s){
+  current=s;
+  document.querySelectorAll('.layer').forEach(l=>l.classList.toggle('on', l.dataset.l===s));
+  const p=PILL[s]; pill.dataset.sig=p.sig; pillLabel.textContent=p.label; pillMeta.textContent=p.meta;
+  document.querySelectorAll('.controls .grp button').forEach(b=>b.classList.toggle('active', b.dataset.go===s));
+  // re-trigger the materialise animation by reflow when entering live
+  if(s==='live'){ const layer=document.querySelector('[data-l="live"]'); layer.querySelectorAll('.row.live').forEach(r=>{r.style.animation='none'; void r.offsetWidth; r.style.animation='';}); startTicks(); }
+  else stopTicks();
+  if(s==='lost') startCountdown(); else stopCountdown();
+  clock.textContent = s==='live' ? nowStr() : (s==='lost' ? 'frozen' : '—');
+}
+function nowStr(){const d=new Date();return d.toLocaleTimeString('en-GB');}
+
+// live ticks: nudge a random bid/ask + flash cyan (simulated socket message)
+function startTicks(){ stopTicks(); tickTimer=setInterval(()=>{
+  if(current!=='live')return;
+  clock.textContent=nowStr();
+  const rows=document.querySelectorAll('[data-l="live"] .row.live');
+  const r=rows[Math.floor(Math.random()*rows.length)];
+  const cell=Math.random()<.5?r.querySelector('[data-bid]'):r.querySelector('[data-ask]');
+  const v=parseFloat(cell.textContent); const dec=cell.textContent.split('.')[1]?.length||4;
+  const nv=(v*(1+(Math.random()-.5)*0.0006)).toFixed(dec);
+  cell.textContent=nv; cell.classList.remove('flash'); void cell.offsetWidth; cell.classList.add('flash');
+},1400); }
+function stopTicks(){ if(tickTimer)clearInterval(tickTimer); tickTimer=null; }
+
+function startCountdown(){ stopCountdown(); let n=3; const cd=document.getElementById('cd'); if(cd)cd.textContent=n+'s';
+  cdTimer=setInterval(()=>{ n--; const el=document.getElementById('cd');
+    if(n<=0){ el && (el.textContent='now'); clearInterval(cdTimer);
+      if(autoOn) setTimeout(()=>step(),700); else setTimeout(()=>{ if(current==='lost'){setState('connecting'); setTimeout(()=>current==='connecting'&&setState('live'),2200);} },700);
+    } else if(el) el.textContent=n+'s';
+  },1000); }
+function stopCountdown(){ if(cdTimer)clearInterval(cdTimer); cdTimer=null; }
+
+// controls
+document.querySelectorAll('.controls .grp button').forEach(b=>b.addEventListener('click',()=>{stopAuto();setState(b.dataset.go);}));
+document.addEventListener('click',e=>{ if(e.target.closest('#retry')){ setState('connecting'); setTimeout(()=>current==='connecting'&&setState('live'),2200);} });
+
+// auto sequence: connecting → awaiting → live → (run) → lost → countdown → loop
+const SEQ=[{s:'connecting',t:2400},{s:'awaiting',t:1600},{s:'live',t:5000},{s:'lost',t:0}];
+let autoOn=false, autoIdx=0, autoTimer=null;
+function step(){ if(!autoOn)return; const {s,t}=SEQ[autoIdx]; setState(s);
+  document.getElementById('seq').textContent='auto · '+s;
+  autoIdx=(autoIdx+1)%SEQ.length;
+  if(t>0) autoTimer=setTimeout(step,t); // lost advances via its own countdown
+}
+function startAuto(){ autoOn=true; autoIdx=0; document.getElementById('auto').classList.add('running');
+  document.getElementById('auto').textContent='■ Stop'; step(); }
+function stopAuto(){ autoOn=false; if(autoTimer)clearTimeout(autoTimer); const a=document.getElementById('auto');
+  a.classList.remove('running'); a.textContent='▶ Auto sequence'; document.getElementById('seq').textContent='manual'; }
+function stopAutoSoft(){ stopAuto(); }
+document.getElementById('auto').addEventListener('click',()=>autoOn?stopAuto():startAuto());
+
+// boot
+setState('connecting');
+setTimeout(()=>{ if(!autoOn && current==='connecting') setState('live'); }, 2400);
+</script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Orbital Mark — Animated · Nonco Stables</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/@lottiefiles/lottie-player@2.0.8/dist/lottie-player.js"></script>
+<style>
+  :root{
+    --bg:#000;--bg-card:#141414;--bg-elevated:#1c1b1b;
+    --text:rgba(255,255,255,.88);--text-3:rgba(255,255,255,.45);--text-4:rgba(255,255,255,.35);
+    --cyan:#05E0F8;--border:#1a1a1a;--border-row:rgba(255,255,255,.04);
+    --ease:cubic-bezier(.16,1,.3,1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;
+    min-height:100vh;padding:64px 40px;-webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(800px 460px at 80% -8%,rgba(5,224,248,.05),transparent 60%);}
+  .wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:56px}
+  .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-4);margin-bottom:12px}
+  h1{font-size:34px;font-weight:500;letter-spacing:-.02em}
+  .sub{font-size:14px;color:var(--text-3);margin-top:10px;max-width:60ch;line-height:1.6}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .panel{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+  .panel .cap{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:1px solid var(--border-row);
+    font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-4)}
+  .pill{display:inline-flex;align-items:center;gap:9px;padding:6px 12px 6px 10px;border-radius:999px;background:var(--bg-elevated);
+    border:1px solid rgba(5,224,248,.25);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3)}
+  .pill .dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);opacity:.5}
+  .pill .m{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-4)}
+  .hero{display:flex;align-items:center;justify-content:center;padding:36px}
+  lottie-player{width:300px;height:300px}
+  .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px 24px 48px;min-height:300px}
+  .empty lottie-player{width:200px;height:200px}
+  .empty h3{font-size:15px;font-weight:500;color:rgba(255,255,255,.65)}
+  .empty p{font-size:13px;color:var(--text-4);text-align:center;max-width:280px;line-height:1.55}
+  .meta{display:flex;gap:28px;flex-wrap:wrap;font-size:12px;color:var(--text-3)}
+  .meta b{font-family:'JetBrains Mono',monospace;color:var(--cyan);font-weight:500}
+  .controls{display:flex;gap:8px;align-items:center}
+  button{font-family:'Space Grotesk';font-size:12px;color:var(--text-3);background:var(--bg-elevated);border:1px solid var(--border);
+    padding:8px 14px;border-radius:8px;cursor:pointer;transition:.2s var(--ease)}
+  button:hover{color:var(--text);border-color:var(--cyan)}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">Nonco Stables · Realtime</div>
+      <h1>Orbital Mark — Animated</h1>
+      <p class="sub">Lottie loop (3s, vector). Rings tilt around a particle-globe core; beads travel the curve; an ambient field of circles and squares twinkles. The same mark drives the awaiting / connecting data states.</p>
+    </header>
+
+    <div class="row">
+      <!-- isolated mark -->
+      <div class="panel">
+        <div class="cap"><span>Mark · Loop</span>
+          <span class="controls"><button onclick="all(.5)">0.5×</button><button onclick="all(1)">1×</button><button onclick="all(2)">2×</button></span>
+        </div>
+        <div class="hero"><lottie-player id="p1" src="orbital-mark.json" background="transparent" loop autoplay></lottie-player></div>
+      </div>
+
+      <!-- in context: empty state -->
+      <div class="panel">
+        <div class="cap"><span>Market Watch</span>
+          <span class="pill"><span class="dot"></span>Awaiting data <span class="m">0 pairs</span></span>
+        </div>
+        <div class="empty">
+          <lottie-player id="p2" src="orbital-mark.json" background="transparent" loop autoplay></lottie-player>
+          <h3>No live data yet</h3>
+          <p>Socket is open — waiting for the market feed to publish its first quotes.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="meta">
+      <span>Format <b>Lottie .json</b></span>
+      <span>Loop <b>3.0s</b></span>
+      <span>Size <b>40 KB</b></span>
+      <span>Also <b>.gif · .mp4</b></span>
+      <span>Drop-in <b>lottie-react</b></span>
+    </div>
+  </div>
+  <script>
+    function all(s){ for(const id of ['p1','p2']){ const p=document.getElementById(id); p.setSpeed(s); } }
+  </script>
+</body>
+</html>
