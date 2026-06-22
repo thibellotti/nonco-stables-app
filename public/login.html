@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Nonco Stables — Sign in</title>
+
+<style>
+  /* ─── Self-hosted fonts (no Google Fonts CDN) ─── */
+  @font-face{
+    font-family:"Space Grotesk";
+    src:url("/fonts/SpaceGrotesk-Variable.woff2") format("woff2");
+    font-weight:300 700;font-style:normal;font-display:swap;
+  }
+
+  /* ─── Design tokens — mirrored from src/app/globals.css ─── */
+  :root{
+    --bg:#000000;
+    --bg-card:#141414;
+    --text:rgba(255,255,255,0.88);
+    --text-2:rgba(255,255,255,0.65);
+    --text-3:rgba(255,255,255,0.45);
+    --text-4:rgba(255,255,255,0.5);
+    --cyan:#05E0F8;
+    --cyan-dark:#04b0c4;
+    --border:#1a1a1a;
+    --border-outline:#3b494c;
+    --font-sans:"Space Grotesk",sans-serif;
+    --ease-out-expo:cubic-bezier(0.16,1,0.3,1);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;background:var(--bg);}
+  body{
+    font-family:var(--font-sans);
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+    overflow:hidden;
+  }
+
+  /* ─── Full-screen particle canvas (background) ─── */
+  #scene{
+    position:fixed;inset:0;width:100%;height:100%;
+    z-index:0;display:block;
+  }
+  /* Radial vignette: light touch — keeps globe/coin color vivid, just adds a
+     soft pocket behind the box and a gentle edge falloff for legibility */
+  #vignette{
+    position:fixed;inset:0;z-index:1;pointer-events:none;
+    background:
+      radial-gradient(135% 105% at 50% 50%, transparent 40%, rgba(0,0,0,0.45) 100%),
+      radial-gradient(40% 36% at 50% 50%, rgba(0,0,0,0.55) 0%, transparent 72%);
+  }
+
+  /* ─── Login layer ─── */
+  #layer{
+    position:fixed;inset:0;z-index:2;
+    display:flex;align-items:center;justify-content:center;
+    padding:24px;
+  }
+
+  /* Solid black login box on top of the animation */
+  .box{
+    position:relative;width:100%;max-width:380px;
+    background:#000000;
+    border:1px solid var(--border-outline);
+    border-radius:16px;
+    padding:44px 36px 32px;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.04) inset,
+      0 40px 120px -20px rgba(0,0,0,0.9),
+      0 0 70px -42px rgba(5,224,248,0.3);
+    opacity:0;transform:translateY(16px);
+    animation:rise 0.8s var(--ease-out-expo) 0.15s forwards;
+  }
+  @keyframes rise{to{opacity:1;transform:translateY(0);}}
+
+  /* Logo */
+  .logo{display:flex;justify-content:center;margin-bottom:24px;}
+  .logo svg{height:20px;width:auto;display:block;}
+
+  /* Brand line */
+  .brandline{
+    text-align:center;font-size:12px;letter-spacing:.04em;
+    color:var(--text-3);margin-bottom:26px;
+  }
+
+  /* Login form */
+  .form{display:flex;flex-direction:column;gap:14px;margin-bottom:22px;}
+  .field{display:flex;flex-direction:column;gap:7px;}
+  .lbl-row{display:flex;align-items:center;justify-content:space-between;}
+  .lbl{
+    font-size:10px;letter-spacing:.15em;text-transform:uppercase;
+    color:var(--text-4);margin-left:2px;
+  }
+  .forgot{
+    background:none;border:0;cursor:pointer;padding:2px 4px;
+    font-family:var(--font-sans);font-size:11px;letter-spacing:.04em;
+    color:var(--text-4);transition:color .2s ease;
+  }
+  .forgot:hover{color:#fff;}
+  .input{
+    width:100%;height:46px;border-radius:10px;padding:0 14px;
+    background:var(--bg-card);color:var(--text);
+    border:1px solid var(--border-outline);
+    font-family:var(--font-sans);font-size:14px;letter-spacing:-0.005em;
+    outline:none;transition:border-color .2s ease, box-shadow .2s ease;
+  }
+  .input::placeholder{color:var(--text-4);}
+  .input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(5,224,248,0.12);}
+
+  /* Buttons */
+  .btn{
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    width:100%;height:48px;border-radius:10px;cursor:pointer;
+    font-family:var(--font-sans);font-size:14px;font-weight:500;letter-spacing:-0.01em;
+    border:1px solid transparent;
+    transition:transform .15s var(--ease-out-expo),
+               background-color .2s ease, border-color .2s ease, box-shadow .2s ease;
+  }
+  .btn svg{flex:0 0 auto;}
+  .btn:hover{transform:translateY(-1px);}
+  .btn:active{transform:scale(0.985);}
+
+  /* Primary — Continue with Google */
+  .btn-google{
+    background:#ffffff;color:#1f1f1f;font-weight:500;
+  }
+  .btn-google:hover{box-shadow:0 8px 24px -8px rgba(255,255,255,0.25);}
+  .btn-google:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;}
+
+  /* Primary — Sign in (cyan) */
+  .btn-primary{
+    background:var(--cyan);color:#001417;font-weight:600;
+  }
+  .btn-primary:hover{box-shadow:0 8px 28px -10px rgba(5,224,248,0.5);}
+  .btn-primary:focus-visible{outline:2px solid #fff;outline-offset:2px;}
+
+  /* Secondary — Connect Wallet (ghost) */
+  .btn-ghost{
+    background:transparent;color:var(--text);
+    border-color:var(--border-outline);
+    margin-top:12px;
+  }
+  .btn-ghost:hover{border-color:#ffffff;background:rgba(255,255,255,0.02);}
+  .btn-ghost:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;}
+
+  /* Divider */
+  .divider{
+    display:flex;align-items:center;gap:12px;margin:20px 0;
+  }
+  .divider .line{flex:1;height:1px;background:var(--border-outline);opacity:.5;}
+  .divider span{font-size:11px;color:var(--text-4);text-transform:uppercase;letter-spacing:.1em;}
+
+  /* Terms footer */
+  .terms{
+    font-size:11px;color:var(--text-4);text-align:center;
+    margin-top:28px;line-height:1.6;
+  }
+  .terms a{color:var(--text-3);text-decoration:underline;text-underline-offset:3px;
+    text-decoration-color:var(--border-outline);transition:color .2s ease;}
+  .terms a:hover{color:#fff;}
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion:reduce){
+    .box{animation:none;opacity:1;transform:none;}
+  }
+</style>
+</head>
+<body>
+  <canvas id="scene"></canvas>
+  <div id="vignette"></div>
+
+  <div id="layer">
+    <div class="box">
+      <!-- Logo -->
+      <div class="logo">
+        <svg viewBox="0 0 754.79 62.39" xmlns="http://www.w3.org/2000/svg" aria-label="Nonco Stables">
+          <path fill="#fff" d="M325,49.95c-10.67,0-18.76-8.08-18.76-18.76s8.08-18.86,18.76-18.86,18.86,8.08,18.86,18.86-8.08,18.76-18.86,18.76ZM260.33,62.39c9.64,0,18.14-3.73,23.84-9.95l-9.02-8.6c-3.63,3.73-8.81,6.22-14.82,6.22-10.67,0-18.76-8.08-18.76-18.86s8.08-18.86,18.76-18.86c6.01,0,11.19,2.49,14.82,6.22l9.02-8.6c-5.7-6.22-14.2-9.95-23.84-9.95-18.14,0-31.82,13.37-31.82,31.19s13.68,31.19,31.82,31.19ZM153.9,61.56h12.54V15.96h.52l22.07,45.6h23.94V.83h-12.54v54.61h-.52l-23.11-47.67c-2.38-4.97-6.84-7.46-11.61-7.46-6.84,0-11.3,4.77-11.3,11.92v49.33ZM106.43,49.95c-10.67,0-18.76-8.08-18.76-18.76s8.08-18.86,18.76-18.86,18.86,8.08,18.86,18.86-8.08,18.76-18.86,18.76ZM106.43,62.39c18.24,0,31.92-13.37,31.92-31.19S124.67,0,106.43,0s-31.82,13.37-31.82,31.19,13.68,31.19,31.82,31.19ZM0,61.56h12.54V15.96h.52l22.07,45.6h23.94V.83h-12.54v54.61h-.52L22.9,7.77C20.52,2.8,16.06.31,11.3.31,4.46.31,0,5.08,0,12.23v49.33ZM325,62.39c18.24,0,31.92-13.37,31.92-31.19S343.23,0,325,0s-31.82,13.37-31.82,31.19,13.68,31.19,31.82,31.19Z"/>
+          <path fill="#fff" d="M410.05,60.15c12.64,0,22.11-5.59,22.11-17.01,0-8.99-5.67-13.61-20.98-15.39-11.91-1.38-16.36-4.29-16.36-10.21,0-6.64,5.75-9.64,14.9-9.64,10.45,0,15.79,3.89,15.79,9.48h5.59c0-8.42-7.45-14.9-21.38-14.9-12.07,0-20.57,4.54-20.57,15.07,0,8.91,5.67,13.77,20.98,15.63,11.91,1.46,16.28,4.21,16.28,9.96,0,7.21-6.8,11.58-16.6,11.58-10.69,0-16.85-5.18-16.85-14.09h-5.59c0,12.39,8.26,19.52,22.68,19.52ZM732.68,59.91c12.64,0,22.11-5.59,22.11-17.01,0-8.99-5.67-13.61-20.98-15.39-11.91-1.38-16.36-4.29-16.36-10.21,0-6.64,5.75-9.64,14.9-9.64,10.45,0,15.79,3.89,15.79,9.48h5.59c0-8.42-7.45-14.9-21.38-14.9-12.07,0-20.57,4.54-20.57,15.07,0,8.91,5.67,13.77,20.98,15.63,11.91,1.46,16.28,4.21,16.28,9.96,0,7.21-6.8,11.58-16.6,11.58-10.69,0-16.85-5.18-16.85-14.09h-5.59c0,12.39,8.26,19.52,22.68,19.52ZM663.99,32.69h30.7v-5.35h-30.7v5.35ZM665.85,58.94h32.56v-5.35h-31.51V8.39h31.51V3.05h-37.18v51.27c0,2.92,1.7,4.62,4.62,4.62ZM617.82,58.94h32.56v-5.35h-31.59V3.05h-5.59v51.27c0,2.92,1.7,4.62,4.62,4.62ZM557.72,53.59V8.55h17.17c6.56,0,11.1,3.97,11.1,9.72s-4.05,9.4-11.1,9.4h-9.64v5.35h13.2c7.86,0,12.72,3.97,12.72,10.29s-4.62,10.29-12.72,10.29h-20.74ZM557.31,59.02l21.14-.08c11.74,0,18.47-5.75,18.47-15.63,0-7.05-4.94-12.55-12.07-13.45v-.81c3.48-1.38,6.72-5.51,6.72-10.77,0-8.91-6.8-15.07-16.69-15.07h-22.84v50.54c0,3.32,1.94,5.26,5.26,5.26ZM496.72,43.14h33.61v-5.35h-33.61v5.35ZM440.35,8.39h46.49V3.05h-46.49v5.35ZM460.76,58.94h5.67V5.88h-5.67v53.05ZM485.63,58.94h6.16l20.98-50.62h.81l20.98,50.62h6.16l-21.79-52.41c-2.35-5.59-9.15-5.59-11.5,0l-21.79,52.41Z"/>
+        </svg>
+      </div>
+
+      <!-- Brand line -->
+      <p class="brandline">Institutional stablecoin settlement</p>
+
+      <!-- Login fields -->
+      <form class="form" id="loginForm">
+        <div class="field">
+          <label class="lbl" for="email">Email</label>
+          <input id="email" class="input" type="email" placeholder="name@institution.com" autocomplete="email" required />
+        </div>
+        <div class="field">
+          <div class="lbl-row">
+            <label class="lbl" for="password">Password</label>
+            <button type="button" class="forgot">Forgot?</button>
+          </div>
+          <input id="password" class="input" type="password" placeholder="Enter password" autocomplete="current-password" required />
+        </div>
+        <button type="submit" class="btn btn-primary">Sign in</button>
+      </form>
+
+      <!-- Divider -->
+      <div class="divider"><span class="line"></span><span>or continue with</span><span class="line"></span></div>
+
+      <!-- Google -->
+      <button type="button" class="btn btn-google" id="googleBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18A11.96 11.96 0 001 12c0 1.94.46 3.77 1.18 5.41l3.66-2.84z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        Continue with Google
+      </button>
+
+      <!-- Secondary: Connect Wallet -->
+      <button type="button" class="btn btn-ghost" id="walletBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="2" y="6" width="20" height="14" rx="2"/>
+          <path d="M2 10h20"/>
+          <circle cx="16" cy="16" r="1.5"/>
+        </svg>
+        Connect Wallet
+      </button>
+
+      <!-- Terms -->
+      <p class="terms">
+        By continuing, you agree to our
+        <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.
+      </p>
+    </div>
+  </div>
+
+  <!-- ─── Three.js — vanilla port of <ParticleGlobe> ─── -->
+  <script type="importmap">
+    { "imports": { "three": "https://unpkg.com/three@0.183.0/build/three.module.js" } }
+  </script>
+  <script type="module">
+    import * as THREE from "three";
+
+    // ─── Config — copied verbatim from src/components/ui/particle-globe.tsx ───
+    const ACCENT = "#05E0F8";
+    const AMBIENT_RGB = [0.02, 0.878, 0.973];
+    // Tuned for a subtle, elegant backdrop: camera pushed back so the orbital
+    // system reads small and ambient, letting the login box hold focus.
+    const CONFIG = {
+      cam: { dist: 280 },
+      globe: { radius: 90, particles: 1600, rotSpeed: 0.06 },
+      rings: [
+        { items: ["USDC","USDT","DAI","TUSD","GUSD","PAX","BUSD","FRAX"],
+          radius: 150, speed: 0.1, tiltX: 65, tiltZ: 25, size: 18, isLogo: true },
+        { items: ["$","€","£","¥","₹","₩","MX$","R$","A$","C$","S$","CHF","₺","₽","฿","₱"],
+          radius: 200, speed: -0.08, tiltX: 65, tiltZ: -25, size: 15, isLogo: false },
+      ],
+      ambient: { count: 900, spreadMin: 260, spreadMax: 820, sizeMin: 1.5, sizeMax: 4.5 },
+    };
+
+    const DEG = Math.PI / 180;
+
+    // ─── Fibonacci sphere ───
+    function fibSphere(n, r){
+      const pos = new Float32Array(n * 3);
+      const gr = (1 + Math.sqrt(5)) / 2;
+      for (let i = 0; i < n; i++){
+        const theta = (2 * Math.PI * i) / gr;
+        const phi = Math.acos(1 - 2 * (i + 0.5) / n);
+        pos[i*3]   = r * Math.sin(phi) * Math.cos(theta);
+        pos[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+        pos[i*3+2] = r * Math.cos(phi);
+      }
+      return pos;
+    }
+
+    // ─── Canvas sprite textures (badge for stablecoins, glyph for fiat) ───
+    function makeTexture(canvas){
+      const t = new THREE.CanvasTexture(canvas);
+      t.minFilter = THREE.LinearFilter;
+      t.magFilter = THREE.LinearFilter;
+      t.colorSpace = THREE.SRGBColorSpace;
+      return t;
+    }
+    const SYMBOLS = { USDC:"$", USDT:"₮", DAI:"◆", TUSD:"T", GUSD:"G", PAX:"P", BUSD:"B", FRAX:"F" };
+
+    function logoTexture(text, accent, sz = 256){
+      const c = document.createElement("canvas"); c.width = c.height = sz;
+      const ctx = c.getContext("2d");
+      const cx = sz/2, r = cx * 0.82;
+      const h = accent.replace("#","");
+      const [rR,gR,bR] = [0,2,4].map(i => parseInt(h.slice(i,i+2),16));
+      ctx.beginPath(); ctx.arc(cx,cx,r,0,Math.PI*2);
+      ctx.fillStyle = `rgba(${rR},${gR},${bR},0.15)`; ctx.fill();
+      ctx.beginPath(); ctx.arc(cx,cx,r,0,Math.PI*2);
+      ctx.strokeStyle = `rgba(${rR},${gR},${bR},0.6)`; ctx.lineWidth = sz*0.035; ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx,cx,r*0.75,0,Math.PI*2);
+      ctx.strokeStyle = `rgba(${rR},${gR},${bR},0.1)`; ctx.lineWidth = sz*0.01; ctx.stroke();
+      ctx.fillStyle = accent;
+      ctx.font = `800 ${sz*0.4}px "Space Grotesk", -apple-system, sans-serif`;
+      ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillText(SYMBOLS[text] ?? text[0], cx, cx);
+      return makeTexture(c);
+    }
+    function currencyTexture(text, accent, sz = 256){
+      const c = document.createElement("canvas"); c.width = c.height = sz;
+      const ctx = c.getContext("2d");
+      ctx.clearRect(0,0,sz,sz);
+      ctx.fillStyle = accent;
+      const fs = text.length > 2 ? sz*0.32 : text.length > 1 ? sz*0.45 : sz*0.6;
+      ctx.font = `700 ${fs}px "Space Grotesk", -apple-system, sans-serif`;
+      ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillText(text, sz/2, sz/2);
+      return makeTexture(c);
+    }
+
+    // ─── Renderer / scene / camera ───
+    const canvas = document.getElementById("scene");
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true,
+      powerPreference: "high-performance" });
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.setClearColor(0x000000, 0);
+
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.Fog(0x000000, 100, 700);
+
+    const camera = new THREE.PerspectiveCamera(50, 1, 1, 1500);
+    camera.position.set(0, 0, CONFIG.cam.dist);
+    camera.lookAt(0, 0, 0);
+
+    // ─── Globe ───
+    const globeGeo = new THREE.BufferGeometry();
+    globeGeo.setAttribute("position",
+      new THREE.BufferAttribute(fibSphere(CONFIG.globe.particles, CONFIG.globe.radius), 3));
+    const globe = new THREE.Points(globeGeo, new THREE.PointsMaterial({
+      color: ACCENT, size: 1.4, sizeAttenuation: true, transparent: true,
+      opacity: 0.95, depthWrite: false,
+    }));
+    scene.add(globe);
+
+    // ─── Orbital rings (coin rings) ───
+    const ringSpinners = [];
+    for (const ring of CONFIG.rings){
+      const tilt = new THREE.Group();
+      tilt.rotation.set(ring.tiltX * DEG, 0, ring.tiltZ * DEG);
+      const spinner = new THREE.Group();
+      tilt.add(spinner);
+      ring.items.forEach((item, i) => {
+        const a = (i / ring.items.length) * Math.PI * 2;
+        const tex = ring.isLogo ? logoTexture(item, ACCENT) : currencyTexture(item, ACCENT);
+        const spr = new THREE.Sprite(new THREE.SpriteMaterial({
+          map: tex, transparent: true, depthWrite: false, opacity: 0.95,
+        }));
+        spr.position.set(Math.cos(a) * ring.radius, 0, Math.sin(a) * ring.radius);
+        spr.scale.set(ring.size, ring.size, 1);
+        spinner.add(spr);
+      });
+      scene.add(tilt);
+      ringSpinners.push({ spinner, speed: ring.speed });
+    }
+
+    // ─── Ambient particles (custom shader, size-attenuated) ───
+    const ac = CONFIG.ambient.count;
+    const aPos = new Float32Array(ac * 3), aSize = new Float32Array(ac);
+    for (let i = 0; i < ac; i++){
+      const th = Math.random() * Math.PI * 2;
+      const ph = Math.acos(2 * Math.random() - 1);
+      const r = CONFIG.ambient.spreadMin + Math.random() * (CONFIG.ambient.spreadMax - CONFIG.ambient.spreadMin);
+      aPos[i*3]   = r * Math.sin(ph) * Math.cos(th);
+      aPos[i*3+1] = r * Math.sin(ph) * Math.sin(th);
+      aPos[i*3+2] = r * Math.cos(ph);
+      aSize[i] = CONFIG.ambient.sizeMin + Math.random() * (CONFIG.ambient.sizeMax - CONFIG.ambient.sizeMin);
+    }
+    const aGeo = new THREE.BufferGeometry();
+    aGeo.setAttribute("position", new THREE.BufferAttribute(aPos, 3));
+    aGeo.setAttribute("size", new THREE.BufferAttribute(aSize, 1));
+    const ambient = new THREE.Points(aGeo, new THREE.ShaderMaterial({
+      transparent: true, depthWrite: false,
+      uniforms: { uColor: { value: new THREE.Vector3(...AMBIENT_RGB) } },
+      vertexShader: `
+        attribute float size;
+        void main(){
+          vec4 mv = modelViewMatrix * vec4(position, 1.0);
+          gl_PointSize = size * (250.0 / -mv.z);
+          gl_Position = projectionMatrix * mv;
+        }`,
+      fragmentShader: `
+        uniform vec3 uColor;
+        void main(){
+          if (length(gl_PointCoord - 0.5) > 0.5) discard;
+          gl_FragColor = vec4(uColor, 0.75);
+        }`,
+    }));
+    scene.add(ambient);
+
+    // ─── Resize (DPR clamped [1,2]) ───
+    function resize(){
+      const w = window.innerWidth, h = window.innerHeight;
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+    window.addEventListener("resize", resize);
+    resize();
+
+    // ─── Animation loop ───
+    const clock = new THREE.Clock();
+    function tick(){
+      const dt = clock.getDelta();
+      globe.rotation.y += dt * CONFIG.globe.rotSpeed;
+      for (const r of ringSpinners) r.spinner.rotation.y += dt * r.speed;
+      ambient.rotation.y += dt * 0.04;
+      ambient.rotation.x += dt * 0.012;
+      renderer.render(scene, camera);
+      requestAnimationFrame(tick);
+    }
+    tick();
+
+    // ─── Visual-only auth (no live OAuth) ───
+    document.getElementById("loginForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      window.location.href = "/dashboard";
+    });
+    document.getElementById("googleBtn").addEventListener("click", () => {
+      window.location.href = "/dashboard";
+    });
+    document.getElementById("walletBtn").addEventListener("click", () => {
+      window.location.href = "/dashboard";
+    });
+  </script>
+</body>
+</html>
